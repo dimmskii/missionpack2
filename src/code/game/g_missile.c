@@ -528,7 +528,8 @@ gentity_t *fire_plasma (gentity_t *self, vec3_t start, vec3_t dir) {
 	bolt->s.weapon = WP_PLASMAGUN;
 	bolt->r.ownerNum = self->s.number;
 	bolt->parent = self;
-	bolt->damage = g_damagePG.integer;
+	//bolt->damage = g_damagePG.integer;
+	bolt->damage = g_damage_pg.integer; // ~Dimmskii
 	bolt->splashDamage = g_splashDamagePG.integer;
 	bolt->splashRadius = g_splashRadiusPG.integer;
 	bolt->methodOfDeath = MOD_PLASMA;
@@ -576,7 +577,8 @@ gentity_t *fire_grenade (gentity_t *self, vec3_t start, vec3_t dir) {
 	bolt->s.eFlags = EF_BOUNCE_HALF;
 	bolt->r.ownerNum = self->s.number;
 	bolt->parent = self;
-	bolt->damage = g_damageGL.integer;
+	//bolt->damage = g_damageGL.integer;
+	bolt->damage = g_damage_gl.integer; // ~Dimmskii
 	bolt->splashDamage = g_splashDamageGL.integer;
 	bolt->splashRadius = g_splashRadiusGL.integer;
 	bolt->methodOfDeath = MOD_GRENADE;
@@ -625,7 +627,8 @@ gentity_t *fire_bfg (gentity_t *self, vec3_t start, vec3_t dir) {
 	bolt->s.weapon = WP_BFG;
 	bolt->r.ownerNum = self->s.number;
 	bolt->parent = self;
-	bolt->damage = g_damageBFG.integer;
+	//bolt->damage = g_damageBFG.integer;
+	bolt->damage = g_damage_bfg.integer; // ~Dimmskii
 	bolt->splashDamage = g_splashDamageBFG.integer;
 	bolt->splashRadius = g_splashRadiusBFG.integer;
 	bolt->methodOfDeath = MOD_BFG;
@@ -674,7 +677,8 @@ gentity_t *fire_rocket (gentity_t *self, vec3_t start, vec3_t dir) {
 	bolt->s.weapon = WP_ROCKET_LAUNCHER;
 	bolt->r.ownerNum = self->s.number;
 	bolt->parent = self;
-	bolt->damage = g_damageRL.integer;
+	//bolt->damage = g_damageRL.integer;
+	bolt->damage = g_damage_rl.integer; // ~Dimmskii
 	bolt->splashDamage = g_splashDamageRL.integer;
 	bolt->splashRadius = g_splashRadiusRL.integer;
 	bolt->methodOfDeath = MOD_ROCKET;
@@ -783,7 +787,8 @@ gentity_t *fire_nail( gentity_t *self, vec3_t start, vec3_t forward, vec3_t righ
 	// END ~DIMMSKII
 	bolt->r.ownerNum = self->s.number;
 	bolt->parent = self;
-	bolt->damage = g_damageNG.integer;
+	//bolt->damage = g_damageNG.integer;
+	bolt->damage = g_damage_ng.integer; // ~Dimmskii
 	bolt->methodOfDeath = MOD_NAIL;
 	bolt->clipmask = MASK_SHOT;
 	bolt->target_ent = NULL;
@@ -837,7 +842,8 @@ gentity_t *fire_prox( gentity_t *self, vec3_t start, vec3_t dir ) {
 	bolt->r.ownerNum = self->s.number;
 	bolt->parent = self;
 	bolt->damage = 0;
-	bolt->splashDamage = g_damagePL.integer;
+	//bolt->splashDamage = g_damagePL.integer;
+	bolt->splashDamage = g_damage_pl.integer; // ~Dimmskii
 	bolt->splashRadius = g_splashRadiusPL.integer;
 	bolt->methodOfDeath = MOD_PROXIMITY_MINE;
 	bolt->splashMethodOfDeath = MOD_PROXIMITY_MINE;
