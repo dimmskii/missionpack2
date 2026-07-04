@@ -6,6 +6,8 @@
 #include "bg_public.h"
 #include "g_public.h"
 
+#include "bg_cvar.h"		// ~Dimmskii
+
 //==================================================================
 
 // the "gameversion" client command will print this plus compile date

@@ -5,6 +5,8 @@
 #include "../game/bg_public.h"
 #include "cg_public.h"
 
+#include "../game/bg_cvar.h"		// ~Dimmskii
+
 
 // The entire cgame module is unloaded and reloaded on each level change,
 // so there is NO persistant data between levels on the client side.
