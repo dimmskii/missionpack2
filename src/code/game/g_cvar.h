@@ -207,24 +207,7 @@ G_CVAR( g_startingAmmo_hmg, "g_startingAmmo_hmg", "50", 0, 0, qfalse, qfalse )
 
 G_CVAR( g_startingWeapons, "g_startingWeapons", "3", 0, 0, qfalse, qfalse )
 
-
-// QL-compat weapon_ cvars - does nothing right now because we didn't find a way to send it from server and store it in global shared namespace for bg_pmove.c
-G_CVAR( g_weapon_reload_gauntlet, "weapon_reload_gauntlet", "400", CVAR_SERVERINFO, 0, qfalse, qfalse )
-G_CVAR( g_weapon_reload_mg, "weapon_reload_mg", "100", CVAR_SERVERINFO, 0, qfalse, qfalse )
-G_CVAR( g_weapon_reload_sg, "weapon_reload_sg", "1000", CVAR_SERVERINFO, 0, qfalse, qfalse )
-G_CVAR( g_weapon_reload_gl, "weapon_reload_gl", "800", CVAR_SERVERINFO, 0, qfalse, qfalse )
-G_CVAR( g_weapon_reload_rl, "weapon_reload_rl", "800", CVAR_SERVERINFO, 0, qfalse, qfalse )
-G_CVAR( g_weapon_reload_lg, "weapon_reload_lg", "50", CVAR_SERVERINFO, 0, qfalse, qfalse )
-G_CVAR( g_weapon_reload_rg, "weapon_reload_rg", "1500", CVAR_SERVERINFO, 0, qfalse, qfalse )
-G_CVAR( g_weapon_reload_pg, "weapon_reload_pg", "100", CVAR_SERVERINFO, 0, qfalse, qfalse )
-G_CVAR( g_weapon_reload_bfg, "weapon_reload_bfg", "200", CVAR_SERVERINFO, 0, qfalse, qfalse )
-G_CVAR( g_weapon_reload_hook, "weapon_reload_hook", "400", CVAR_SERVERINFO, 0, qfalse, qfalse )
-G_CVAR( g_weapon_reload_ng, "weapon_reload_ng", "1000", CVAR_SERVERINFO, 0, qfalse, qfalse )
-G_CVAR( g_weapon_reload_prox, "weapon_reload_prox", "800", CVAR_SERVERINFO, 0, qfalse, qfalse )
-G_CVAR( g_weapon_reload_cg, "weapon_reload_cg", "30", CVAR_SERVERINFO, 0, qfalse, qfalse )
-G_CVAR( g_weapon_reload_hmg, "weapon_reload_hmg", "75", CVAR_SERVERINFO, 0, qfalse, qfalse )
-
-// END Dimmskii
+// weapon_reload_* cvars now live in bg_cvar.h, shared between game and cgame VMs
 
 G_CVAR( g_tossWeapon, "g_tossWeapon", "1", CVAR_ARCHIVE, 0, qtrue, qtrue )
 G_CVAR( g_startingWeapon, "g_startingWeapon", "", 0, 0, qfalse, qfalse )

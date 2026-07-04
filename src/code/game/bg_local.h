@@ -2,6 +2,10 @@
 //
 // bg_local.h -- local definitions for the bg (both games) files
 
+#define EXTERN_BG_CVAR		// ~Dimmskii
+	#include "bg_cvar.h"
+#undef EXTERN_BG_CVAR
+
 #define	MIN_WALK_NORMAL	0.7f		// can't walk on very steep slopes
 
 #define	JUMP_VELOCITY	270

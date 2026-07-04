@@ -96,6 +96,10 @@ itemPos_t cg_itemPositions[MAX_GENTITIES];
 	#include "cg_cvar.h"
 #undef DECLARE_CG_CVAR
 
+#define DECLARE_BG_CVAR		// ~Dimmskii
+	#include "../game/bg_cvar.h"
+#undef DECLARE_BG_CVAR
+
 typedef struct {
 	vmCvar_t	*vmCvar;
 	const char	*cvarName;
@@ -108,6 +112,10 @@ static const cvarTable_t cvarTable[] = {
 #define CG_CVAR_LIST
 	#include "cg_cvar.h"
 #undef CG_CVAR_LIST
+
+#define BG_CVAR_LIST_CG		// ~Dimmskii
+	#include "../game/bg_cvar.h"
+#undef BG_CVAR_LIST_CG
 
 };
 
