@@ -694,7 +694,8 @@ gentity_t *fire_rocket (gentity_t *self, vec3_t start, vec3_t dir) {
 	bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME;		// move a bit on the very first frame
 	VectorCopy( start, bolt->s.pos.trBase );
 	SnapVector( bolt->s.pos.trBase );			// save net bandwidth
-	VectorScale( dir, g_velocityRL.integer, bolt->s.pos.trDelta );
+	//VectorScale( dir, g_velocityRL.integer, bolt->s.pos.trDelta );
+	VectorScale( dir, g_velocity_rl.integer, bolt->s.pos.trDelta ); // ~Dimmskii
 	SnapVector( bolt->s.pos.trDelta );			// save net bandwidth
 	VectorCopy (start, bolt->r.currentOrigin);
 

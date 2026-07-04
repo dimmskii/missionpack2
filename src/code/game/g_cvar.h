@@ -164,7 +164,7 @@ G_CVAR( g_splashRadiusGL, "g_splashRadiusGL", "150", 0, 0, qfalse, qfalse )
 G_CVAR( g_damageRL, "g_damageRL", "100", 0, 0, qfalse, qfalse )
 G_CVAR( g_splashDamageRL, "g_splashDamageRL", "100", 0, 0, qfalse, qfalse )
 G_CVAR( g_splashRadiusRL, "g_splashRadiusRL", "120", 0, 0, qfalse, qfalse )
-G_CVAR( g_velocityRL, "g_velocityRL", "900", 0, 0, qfalse, qfalse )
+//G_CVAR( g_velocityRL, "g_velocityRL", "900", 0, 0, qfalse, qfalse )
 
 G_CVAR( g_damageLG, "g_damageLG", "8", 0, 0, qfalse, qfalse )
 
@@ -191,6 +191,8 @@ G_CVAR( g_damageCG, "g_damageCG", "7", 0, 0, qfalse, qfalse )
 
 // ~Dimmskii
 G_CVAR( g_damageHMG, "g_damageHMG", "8", 0, 0, qfalse, qfalse )
+
+G_CVAR( g_velocity_rl, "g_velocity_rl", "900", 0, 0, qfalse, qfalse )
 
 G_CVAR( g_startingAmmo_mg, "g_startingAmmo_mg", "50", 0, 0, qfalse, qfalse )
 G_CVAR( g_startingAmmo_sg, "g_startingAmmo_sg", "10", 0, 0, qfalse, qfalse )
