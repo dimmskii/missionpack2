@@ -5,9 +5,11 @@
 #include "../game/bg_public.h"
 #include "cg_public.h"
 
-#define EXTERN_BG_CVAR		// ~Dimmskii
+// ~Dimmskii
+#define EXTERN_BG_CVAR
 	#include "../game/bg_cvar.h"
 #undef EXTERN_BG_CVAR
+// END Dimmskii
 
 
 // The entire cgame module is unloaded and reloaded on each level change,

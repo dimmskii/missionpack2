@@ -6,9 +6,11 @@
 #include "bg_public.h"
 #include "g_public.h"
 
-#define EXTERN_BG_CVAR		// ~Dimmskii
+// ~Dimmskii
+#define EXTERN_BG_CVAR
 	#include "bg_cvar.h"
 #undef EXTERN_BG_CVAR
+// END Dimmskii
 
 //==================================================================
 

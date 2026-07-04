@@ -32,9 +32,11 @@ void Hook_Fire( gentity_t *ent );
 	#include "g_cvar.h"
 #undef DECLARE_G_CVAR
 
-#define DECLARE_BG_CVAR		// ~Dimmskii
+// ~Dimmskii
+#define DECLARE_BG_CVAR
 	#include "bg_cvar.h"
 #undef DECLARE_BG_CVAR
+// END Dimmski
 
 static cvarTable_t gameCvarTable[] = {
 	// noset vars
@@ -45,9 +47,11 @@ static cvarTable_t gameCvarTable[] = {
 	#include "g_cvar.h"
 #undef G_CVAR_LIST
 
-#define BG_CVAR_LIST_G		// ~Dimmskii
+// ~Dimmskii
+#define BG_CVAR_LIST_G
 	#include "bg_cvar.h"
 #undef BG_CVAR_LIST_G
+// END Dimmski
 
 };
 

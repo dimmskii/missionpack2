@@ -206,8 +206,7 @@ G_CVAR( g_startingAmmo_cg, "g_startingAmmo_cg", "100", 0, 0, qfalse, qfalse )
 G_CVAR( g_startingAmmo_hmg, "g_startingAmmo_hmg", "50", 0, 0, qfalse, qfalse )
 
 G_CVAR( g_startingWeapons, "g_startingWeapons", "3", 0, 0, qfalse, qfalse )
-
-// weapon_reload_* cvars now live in bg_cvar.h, shared between game and cgame VMs
+// END Dimmskii
 
 G_CVAR( g_tossWeapon, "g_tossWeapon", "1", CVAR_ARCHIVE, 0, qtrue, qtrue )
 G_CVAR( g_startingWeapon, "g_startingWeapon", "", 0, 0, qfalse, qfalse )
