@@ -158,12 +158,12 @@ G_CVAR( g_sgPellets, "g_sgPellets", "11", 0, 0, qfalse, qfalse )
 G_CVAR( g_sgPelletSpread, "g_sgPelletSpread", "700", 0, 0, qfalse, qfalse )
 
 //G_CVAR( g_damageGL, "g_damageGL", "100", 0, 0, qfalse, qfalse )
-G_CVAR( g_splashDamageGL, "g_splashDamageGL", "100", 0, 0, qfalse, qfalse )
-G_CVAR( g_splashRadiusGL, "g_splashRadiusGL", "150", 0, 0, qfalse, qfalse )
+//G_CVAR( g_splashDamageGL, "g_splashDamageGL", "100", 0, 0, qfalse, qfalse )
+//G_CVAR( g_splashRadiusGL, "g_splashRadiusGL", "150", 0, 0, qfalse, qfalse )
 
 //G_CVAR( g_damageRL, "g_damageRL", "100", 0, 0, qfalse, qfalse )
-G_CVAR( g_splashDamageRL, "g_splashDamageRL", "100", 0, 0, qfalse, qfalse )
-G_CVAR( g_splashRadiusRL, "g_splashRadiusRL", "120", 0, 0, qfalse, qfalse )
+//G_CVAR( g_splashDamageRL, "g_splashDamageRL", "100", 0, 0, qfalse, qfalse )
+//G_CVAR( g_splashRadiusRL, "g_splashRadiusRL", "120", 0, 0, qfalse, qfalse )
 //G_CVAR( g_velocityRL, "g_velocityRL", "900", 0, 0, qfalse, qfalse )
 
 //G_CVAR( g_damageLG, "g_damageLG", "8", 0, 0, qfalse, qfalse )
@@ -171,12 +171,12 @@ G_CVAR( g_splashRadiusRL, "g_splashRadiusRL", "120", 0, 0, qfalse, qfalse )
 //G_CVAR( g_damageRG, "g_damageRG", "100", 0, 0, qfalse, qfalse )
 
 //G_CVAR( g_damagePG, "g_damagePG", "20", 0, 0, qfalse, qfalse )
-G_CVAR( g_splashDamagePG, "g_splashDamagePG", "15", 0, 0, qfalse, qfalse )
-G_CVAR( g_splashRadiusPG, "g_splashRadiusPG", "20", 0, 0, qfalse, qfalse )
+//G_CVAR( g_splashDamagePG, "g_splashDamagePG", "15", 0, 0, qfalse, qfalse )
+//G_CVAR( g_splashRadiusPG, "g_splashRadiusPG", "20", 0, 0, qfalse, qfalse )
 
 //G_CVAR( g_damageBFG, "g_damageBFG", "100", 0, 0, qfalse, qfalse )
-G_CVAR( g_splashDamageBFG, "g_splashDamageBFG", "100", 0, 0, qfalse, qfalse )
-G_CVAR( g_splashRadiusBFG, "g_splashRadiusBFG", "120", 0, 0, qfalse, qfalse )
+//G_CVAR( g_splashDamageBFG, "g_splashDamageBFG", "100", 0, 0, qfalse, qfalse )
+//G_CVAR( g_splashRadiusBFG, "g_splashRadiusBFG", "120", 0, 0, qfalse, qfalse )
 
 //#ifdef MISSIONPACK
 //G_CVAR( g_startAmmoNG, "g_startAmmoNG", "20", 0, 0, qfalse, qfalse )
@@ -185,7 +185,7 @@ G_CVAR( g_splashRadiusBFG, "g_splashRadiusBFG", "120", 0, 0, qfalse, qfalse )
 
 //G_CVAR( g_damageNG, "g_damageNG", "20", 0, 0, qfalse, qfalse )
 //G_CVAR( g_damagePL, "g_damagePL", "100", 0, 0, qfalse, qfalse )
-G_CVAR( g_splashRadiusPL, "g_splashRadiusPL", "150", 0, 0, qfalse, qfalse )
+//G_CVAR( g_splashRadiusPL, "g_splashRadiusPL", "150", 0, 0, qfalse, qfalse )
 //G_CVAR( g_damageCG, "g_damageCG", "7", 0, 0, qfalse, qfalse )
 //#endif
 
@@ -208,6 +208,17 @@ G_CVAR( g_damage_ng, "g_damage_ng", "20", 0, 0, qfalse, qfalse )
 G_CVAR( g_damage_pl, "g_damage_pl", "100", 0, 0, qfalse, qfalse )
 G_CVAR( g_damage_cg, "g_damage_cg", "7", 0, 0, qfalse, qfalse )
 G_CVAR( g_damage_hmg, "g_damage_hmg", "8", 0, 0, qfalse, qfalse )
+
+// QL-convention splash cvar renames (see ~/qldumps.txt)
+G_CVAR( g_splashdamage_gl, "g_splashdamage_gl", "100", 0, 0, qfalse, qfalse )
+G_CVAR( g_splashradius_gl, "g_splashradius_gl", "150", 0, 0, qfalse, qfalse )
+G_CVAR( g_splashdamage_rl, "g_splashdamage_rl", "100", 0, 0, qfalse, qfalse )
+G_CVAR( g_splashradius_rl, "g_splashradius_rl", "120", 0, 0, qfalse, qfalse )
+G_CVAR( g_splashdamage_pg, "g_splashdamage_pg", "15", 0, 0, qfalse, qfalse )
+G_CVAR( g_splashradius_pg, "g_splashradius_pg", "20", 0, 0, qfalse, qfalse )
+G_CVAR( g_splashdamage_bfg, "g_splashdamage_bfg", "100", 0, 0, qfalse, qfalse )
+G_CVAR( g_splashradius_bfg, "g_splashradius_bfg", "120", 0, 0, qfalse, qfalse )
+G_CVAR( g_splashradius_pl, "g_splashradius_pl", "150", 0, 0, qfalse, qfalse )
 
 G_CVAR( g_startingAmmo_mg, "g_startingAmmo_mg", "50", 0, 0, qfalse, qfalse )
 G_CVAR( g_startingAmmo_sg, "g_startingAmmo_sg", "10", 0, 0, qfalse, qfalse )
