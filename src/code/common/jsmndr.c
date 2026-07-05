@@ -27,6 +27,27 @@ static void jsmndr_fill_token(jsmndrtok_t *tok, jsmndrtype_t type, int start, in
     tok->size = 0;
 }
 
+/*
+=================
+jsmndr_copy_token
+
+Copies a JSON token's text out of the parse buffer into dst, truncating to
+dstSize - 1 and always null-terminating. json/tok point into jsonFileBuffer,
+which is not null-terminated at the token boundary, so this must never read
+past tok->end.
+=================
+*/
+void jsmndr_copy_token( char *dst, int dstSize, const char *json, jsmndrtok_t *tok ) {
+	int tokLen = tok->end - tok->start;
+	if ( tokLen < 0 ) {
+		tokLen = 0;
+	}
+	if ( tokLen >= dstSize ) {
+		tokLen = dstSize - 1;
+	}
+	Q_strncpyz( dst, json + tok->start, tokLen + 1 );
+}
+
 int jsmndr_parse(jsmndr_parser *parser, const char *js, size_t len, jsmndrtok_t *tokens, unsigned int num_tokens) {
     int count = parser->toknext;
     int i;

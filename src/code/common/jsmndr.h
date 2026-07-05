@@ -32,6 +32,8 @@ typedef struct {
 void jsmndr_init(jsmndr_parser *parser);
 int jsmndr_parse(jsmndr_parser *parser, const char *js, size_t len, jsmndrtok_t *tokens, unsigned int num_tokens);
 
+void jsmndr_copy_token( char *dst, int dstSize, const char *json, jsmndrtok_t *tok );
+
 /* Utility helpers for Quake 3 */
 qboolean JSON_ValueEquals(const char *json, jsmndrtok_t *tok, const char *s);
 int JSON_FindKey(const char *json, jsmndrtok_t *tokens, int num_tokens, int obj_tok_idx, const char *key);

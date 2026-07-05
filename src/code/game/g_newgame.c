@@ -108,27 +108,6 @@ static gfactory_t *G_FindFactoryById( const char *id ) {
 
 /*
 =================
-G_CopyJsonToken
-
-Copies a JSON token's text out of the parse buffer into dst, truncating to
-dstSize - 1 and always null-terminating. json/tok point into jsonFileBuffer,
-which is not null-terminated at the token boundary, so this must never read
-past tok->end.
-=================
-*/
-static void G_CopyJsonToken( char *dst, int dstSize, const char *json, jsmndrtok_t *tok ) {
-	int tokLen = tok->end - tok->start;
-	if ( tokLen < 0 ) {
-		tokLen = 0;
-	}
-	if ( tokLen >= dstSize ) {
-		tokLen = dstSize - 1;
-	}
-	Q_strncpyz( dst, json + tok->start, tokLen + 1 );
-}
-
-/*
-=================
 G_ApplyFactory
 
 Pushes every cvar this factory sets (non-NULL cvar_values entries) into the
@@ -278,13 +257,13 @@ void ParseFactories( const char *json, int len ) {
 			valIdx = j + 1;
 
 			if ( JSON_ValueEquals( json, &tokens[j], "id" ) ) {
-				G_CopyJsonToken( g_factoryIdStorage[g_numFactories], GFACTORY_MAX_CVAR_VALUE_LEN, json, &tokens[valIdx] );
+				jsmndr_copy_token( g_factoryIdStorage[g_numFactories], GFACTORY_MAX_CVAR_VALUE_LEN, json, &tokens[valIdx] );
 			} else if ( JSON_ValueEquals( json, &tokens[j], "title" ) ) {
-				G_CopyJsonToken( g_factoryTitleStorage[g_numFactories], GFACTORY_MAX_CVAR_VALUE_LEN, json, &tokens[valIdx] );
+				jsmndr_copy_token( g_factoryTitleStorage[g_numFactories], GFACTORY_MAX_CVAR_VALUE_LEN, json, &tokens[valIdx] );
 			} else if ( JSON_ValueEquals( json, &tokens[j], "author" ) ) {
-				G_CopyJsonToken( g_factoryAuthorStorage[g_numFactories], GFACTORY_MAX_CVAR_VALUE_LEN, json, &tokens[valIdx] );
+				jsmndr_copy_token( g_factoryAuthorStorage[g_numFactories], GFACTORY_MAX_CVAR_VALUE_LEN, json, &tokens[valIdx] );
 			} else if ( JSON_ValueEquals( json, &tokens[j], "description" ) ) {
-				G_CopyJsonToken( g_factoryDescStorage[g_numFactories], GFACTORY_MAX_DESC_LEN, json, &tokens[valIdx] );
+				jsmndr_copy_token( g_factoryDescStorage[g_numFactories], GFACTORY_MAX_DESC_LEN, json, &tokens[valIdx] );
 			} else if ( JSON_ValueEquals( json, &tokens[j], "cvars" ) ) {
 				int k;
 				if ( tokens[valIdx].type != JSON_OBJECT ) {
@@ -301,21 +280,21 @@ void ParseFactories( const char *json, int len ) {
 					}
 					cvarValIdx = k + 1;
 
-					G_CopyJsonToken( cvarName, sizeof( cvarName ), json, &tokens[k] );
+					jsmndr_copy_token( cvarName, sizeof( cvarName ), json, &tokens[k] );
 					cvarIdx = G_FactoryCvarIndex( cvarName );
 					if ( cvarIdx < 0 ) {
 						Com_Printf( "Invalid gfactory cvar: %s\n", cvarName );
 						k++; // still skip the value token
 						continue;
 					}
-					G_CopyJsonToken( g_factoryCvarStorage[g_numFactories][cvarIdx],
+					jsmndr_copy_token( g_factoryCvarStorage[g_numFactories][cvarIdx],
 					                 GFACTORY_MAX_CVAR_VALUE_LEN, json, &tokens[cvarValIdx] );
 					factory->cvar_values[cvarIdx] = g_factoryCvarStorage[g_numFactories][cvarIdx];
 
 					k++; // skip the value token on the next iteration
 				}
 			} else if ( JSON_ValueEquals( json, &tokens[j], "basegt" ) ) {
-				G_CopyJsonToken( basegt, sizeof( basegt ), json, &tokens[valIdx] );
+				jsmndr_copy_token( basegt, sizeof( basegt ), json, &tokens[valIdx] );
 			}
 			// any other unrecognized fields are intentionally ignored for now.
 		}
