@@ -139,7 +139,7 @@ itemDef {
 itemDef {
       	name gametypefield
       	style 0	
-	ownerdraw UI_NETGAMETYPE
+	ownerdraw UI_HOSTGAMEFACTORY
 	text "Type:"
 	textstyle 6
       	rect 0 10 320 31 

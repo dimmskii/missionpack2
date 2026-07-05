@@ -155,6 +155,8 @@ UI_CVAR( ui_realRoundLimit, "roundlimit", "10", CVAR_SERVERINFO | CVAR_ARCHIVE |
 UI_CVAR( ui_missionStr, "ui_missionStr", "exec missions/demo1.cfg", 0 )
 
 UI_CVAR( ui_serverFilterType, "ui_serverFilterType", "-1", 0 )
+
+UI_CVAR( ui_hostGameFactory, "ui_hostGameFactory", "0", 0 )
 // END Dimmskii
 
 #undef UI_CVAR

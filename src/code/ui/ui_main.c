@@ -1178,6 +1178,14 @@ static void UI_DrawGameType(rectDef_t *rect, float scale, vec4_t color, int text
 	}
 	Text_Paint(rect->x, rect->y, scale, color, uiInfo.gameTypes[ui_gameType.integer].gameType , 0, 0, textStyle);
 }
+
+static void UI_DrawHostGameFactory(rectDef_t *rect, float scale, vec4_t color, int textStyle) {
+	if (ui_hostGameFactory.integer < 0 || ui_hostGameFactory.integer > uiInfo.numHostGameFactories) {
+		trap_Cvar_Set("ui_hostGameFactory", "0");
+	}
+	Text_Paint(rect->x, rect->y, scale, color, uiInfo.hostGameFactories[ui_hostGameFactory.integer].title , 0, 0, textStyle);
+}
+
 // End Dimmskii
 
 static void UI_DrawJoinGameType(rectDef_t *rect, float scale, vec4_t color, int textStyle) {
@@ -1888,6 +1896,10 @@ static int UI_OwnerDrawWidth(int ownerDraw, float scale) {
 			}
 			s = va("%i. %s", ownerDraw-UI_REDTEAM1 + 1, text);
       break;
+	  
+	case UI_HOSTGAMEFACTORY:
+		s = uiInfo.hostGameFactories[ui_hostGameFactory.integer].title;
+	break;
 // END DIMMSKII
 
 /*
@@ -2257,6 +2269,11 @@ static void UI_OwnerDraw(float x, float y, float w, float h, float text_x, float
     case UI_JOINGAMETYPE:
 	  UI_DrawJoinGameType(&rect, scale, color, textStyle);
 	  break;
+// ~Dimmskii
+    case UI_HOSTGAMEFACTORY:
+	  UI_DrawHostGameFactory(&rect, scale, color, textStyle);
+	  break;
+// END Dimmskii
     case UI_MAPPREVIEW:
       UI_DrawMapPreview(&rect, scale, color, qtrue);
       break;
@@ -2702,6 +2719,28 @@ static qboolean UI_GameType_HandleKey(int flags, float *special, int key, qboole
   }
   return qfalse;
 }
+
+static qboolean UI_HostGameFactory_HandleKey(int flags, float *special, int key) {
+	if (key == K_MOUSE1 || key == K_MOUSE2 || key == K_ENTER || key == K_KP_ENTER) {
+
+		if (key == K_MOUSE2) {
+			ui_hostGameFactory.integer--;
+		} else {
+			ui_hostGameFactory.integer++;
+		}
+
+		if (ui_hostGameFactory.integer < 0) {
+			ui_hostGameFactory.integer = uiInfo.numHostGameFactories - 1;
+		} else if (ui_hostGameFactory.integer >= uiInfo.numHostGameFactories) {
+			ui_hostGameFactory.integer = 0;
+		}
+
+		trap_Cvar_Set( "ui_hostGameFactory", va("%d", ui_hostGameFactory.integer));
+		return qtrue;
+	}
+	return qfalse;
+}
+
 // End Dimmskii
 
 static qboolean UI_JoinGameType_HandleKey(int flags, float *special, int key) {
@@ -3029,6 +3068,11 @@ static qboolean UI_OwnerDrawHandleKey(int ownerDraw, int flags, float *special, 
     case UI_JOINGAMETYPE:
       return UI_JoinGameType_HandleKey(flags, special, key);
       break;
+// ~Dimmskii
+    case UI_HOSTGAMEFACTORY:
+	  return UI_HostGameFactory_HandleKey(flags, special, key);
+	  break;
+// END Dimmskii
     case UI_SKILL:
       return UI_Skill_HandleKey(flags, special, key);
       break;
@@ -3532,7 +3576,8 @@ static void UI_RunMenuScript(char **args) {
 			trap_Cvar_Set("ui_singlePlayerActive", "0");
 			trap_Cvar_SetValue( "dedicated", Com_Clamp( 0, 2, ui_dedicated.integer ) );
 			//trap_Cvar_SetValue( "g_gametype", Com_Clamp( 0, 11, uiInfo.gameTypes[ui_netGameType.integer].gtEnum ) );
-			trap_Cvar_SetValue( "g_gametype", Com_Clamp( 0, 11, uiInfo.gameTypes[ui_gameType.integer].gtEnum ) ); // ~Dimmskii
+			//trap_Cvar_SetValue( "g_gametype", Com_Clamp( 0, uiInfo.numGameTypes, uiInfo.gameTypes[ui_gameType.integer].gtEnum ) ); // ~Dimmskii
+			trap_Cvar_Set( "g_factory", uiInfo.hostGameFactories[ui_hostGameFactory.integer].id ); // ~Dimmskii -- USE G_FACTORIES INSTEAD
 			//trap_Cvar_Set("g_redTeam", UI_Cvar_VariableString("ui_teamName"));
 			//trap_Cvar_Set("g_blueTeam", UI_Cvar_VariableString("ui_opponentName"));
 			trap_Cvar_Set("g_redTeam", UI_Cvar_VariableString("ui_redTeam")); // ~Dimmskii
@@ -5367,6 +5412,50 @@ static qboolean GameType_Parse(char **p, qboolean join, qboolean host) { // ~Dim
 	return qfalse;
 }
 
+// ~DIMMSKII
+static qboolean HostGameFactory_Parse(char **p) {
+	char *token;
+
+	token = COM_ParseExt(p, qtrue);
+
+	if (token[0] != '{') {
+		return qfalse;
+	}
+
+	uiInfo.numHostGameFactories = 0;
+
+	while ( 1 ) {
+		token = COM_ParseExt(p, qtrue);
+
+		if (Q_stricmp(token, "}") == 0) {
+			return qtrue;
+		}
+
+		if ( !token || token[0] == 0 ) {
+			return qfalse;
+		}
+
+		if (token[0] == '{') {
+			if (!String_Parse(p, &uiInfo.hostGameFactories[uiInfo.numHostGameFactories].id) || !String_Parse(p, &uiInfo.hostGameFactories[uiInfo.numHostGameFactories].title)) {
+				return qfalse;
+			}
+    
+			if (uiInfo.numHostGameFactories < MAX_HOSTGAMEFACTORIES) {
+				uiInfo.numHostGameFactories++;
+			} else {
+				Com_Printf("Too many host game factories, last one replace!\n");
+			}
+     
+			token = COM_ParseExt(p, qtrue);
+			if (token[0] != '}') {
+				return qfalse;
+			}
+		}
+	}
+	return qfalse;
+}
+// END DIMMSKII
+
 static qboolean MapList_Parse(char **p) {
 	char *token;
 
@@ -5469,6 +5558,15 @@ static void UI_ParseGameInfo(const char *teamFile) {
 
 			//if (GameType_Parse(&p, qtrue)) {
 			if (GameType_Parse(&p, qfalse, qtrue)) {
+				continue;
+			} else {
+				break;
+			}
+		}
+		
+		if (Q_stricmp(token, "hostgamefactories") == 0) {
+			
+			if (HostGameFactory_Parse(&p)) {
 				continue;
 			} else {
 				break;
