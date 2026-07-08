@@ -188,7 +188,7 @@ void CG_ParseServerinfo( void ) {
 // ~Dimmskii
 	cgs.roundlimit = atoi( Info_ValueForKey( info, "roundlimit" ) );
 	cgs.g_teamVisibility = atoi( Info_ValueForKey( info, "g_teamVisibility" ) );
-	cgs.g_itemVisibility = atoi( Info_ValueForKey( info, "g_itemVisibility" ) );
+	cgs.g_itemTimers = atoi( Info_ValueForKey( info, "g_itemTimers" ) );
 // END ~Dimmskii
 	cgs.timelimit = atoi( Info_ValueForKey( info, "timelimit" ) );
 	cgs.maxclients = atoi( Info_ValueForKey( info, "sv_maxclients" ) );
@@ -1173,7 +1173,7 @@ static void CG_ServerCommand( void ) {
         CG_ParseTeamPositions();
         return;
     }
-	if ( !strcmp( cmd, "ipos" ) ) { // Server sends if g_itemVisibility is 1
+	if ( !strcmp( cmd, "ipos" ) ) { // Server sends if g_itemTimers is 1
         CG_ParseItemPositions();
         return;
     }

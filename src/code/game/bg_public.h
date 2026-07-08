@@ -146,7 +146,13 @@ static const char *GFACTORY_CVARS[] = {
 	"g_warmup",
 	"dmflags",
 	"g_instagib",
-//	"g_fastWeaponSwitch", // exists in ql?
+	"g_fastWeaponSwitch", // exists in ql?
+	
+	"g_forcerespawn",
+	
+	"g_teamVisibility",
+	"g_itemTimers",
+	"g_allSpec",
 	
 	// Starting things
 	"g_startingHealth",
@@ -171,14 +177,19 @@ static const char *GFACTORY_CVARS[] = {
 	"g_startingAmmo_hmg",
 	
 	// Pickup respawns
-	"g_ammoRespawn",
 	"g_weaponRespawn",
+	"g_ammoRespawn",
+	"g_armorRespawn",
+	"g_healthRespawn",
+	"g_megahealthRespawn",
+	"g_powerupRespawn",
+	"g_holdableRespawn",
 	
     NULL                    // Null-terminator for safe iteration loops
 };
 
 #define GFACTORY_MAX_CVAR_VALUE_LEN 64
-#define GFACTORY_CVARS_COUNT       26 /* Total elements in GFACTORY_CVARS excluding NULL */
+#define GFACTORY_CVARS_COUNT       36 	/* Total elements in GFACTORY_CVARS excluding NULL */
 
 // QL-Compatible game factories
 typedef struct {
@@ -194,7 +205,7 @@ typedef struct {
 
 } gfactory_t;
 
-#define MAX_FACTORIES 32 // factories.txt currently ships ~22 entries
+#define MAX_GFACTORIES 32		// Max game factories possible to register
 
 // END DIMMSKII
 

@@ -1083,7 +1083,7 @@ typedef struct {
 // ~Dimmskii
 	int				roundlimit;
 	int				g_teamVisibility;
-	int				g_itemVisibility;
+	int				g_itemTimers;
 // END ~Dimmskii
 	int				timelimit;
 	int				maxclients;

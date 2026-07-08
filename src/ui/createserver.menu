@@ -597,7 +597,7 @@ itemDef {
 	group grpsettings
       	type ITEM_TYPE_YESNO
 	text "Item Pos/Timers:"
-	cvar "g_itemVisibility"
+	cvar "g_itemTimers"
       	rect 260 205 128 12 
       	textalign ITEM_ALIGN_RIGHT
       	textalignx 65

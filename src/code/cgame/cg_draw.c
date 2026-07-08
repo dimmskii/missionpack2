@@ -3477,7 +3477,7 @@ static void CG_DrawItemPOIs( void ) {
 		return;
 	}
 
-	if ( cgs.g_itemVisibility ) {
+	if ( cgs.g_itemTimers ) {
 		// Iterate through all entities (up to MAX_GENTITIES)
 		for ( i = 0; i < MAX_GENTITIES; i++ ) {
 			ip = &cg_itemPositions[i]; 

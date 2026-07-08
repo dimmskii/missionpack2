@@ -7,18 +7,18 @@ static char jsonFileBuffer[MAX_JSON_FILE_SIZE];
 #define MAX_FACTORY_TOKENS 2048
 #define GFACTORY_MAX_DESC_LEN 128
 
-gfactory_t	g_factories[MAX_FACTORIES];
+gfactory_t	g_factories[MAX_GFACTORIES];
 int			g_numFactories = 0;
 
 // Backing storage for the gfactory_t pointer fields above. jsonFileBuffer
 // gets reused on every load and JSON tokens aren't null-terminated in
 // place, so every parsed string needs to be copied out somewhere that
 // outlives the parse and is safe to hand around as a real C string.
-static char g_factoryIdStorage[MAX_FACTORIES][GFACTORY_MAX_CVAR_VALUE_LEN];
-static char g_factoryTitleStorage[MAX_FACTORIES][GFACTORY_MAX_CVAR_VALUE_LEN];
-static char g_factoryAuthorStorage[MAX_FACTORIES][GFACTORY_MAX_CVAR_VALUE_LEN];
-static char g_factoryDescStorage[MAX_FACTORIES][GFACTORY_MAX_DESC_LEN];
-static char g_factoryCvarStorage[MAX_FACTORIES][GFACTORY_CVARS_COUNT][GFACTORY_MAX_CVAR_VALUE_LEN];
+static char g_factoryIdStorage[MAX_GFACTORIES][GFACTORY_MAX_CVAR_VALUE_LEN];
+static char g_factoryTitleStorage[MAX_GFACTORIES][GFACTORY_MAX_CVAR_VALUE_LEN];
+static char g_factoryAuthorStorage[MAX_GFACTORIES][GFACTORY_MAX_CVAR_VALUE_LEN];
+static char g_factoryDescStorage[MAX_GFACTORIES][GFACTORY_MAX_DESC_LEN];
+static char g_factoryCvarStorage[MAX_GFACTORIES][GFACTORY_CVARS_COUNT][GFACTORY_MAX_CVAR_VALUE_LEN];
 
 void ParseFactories( const char *json, int len );
 
@@ -226,9 +226,9 @@ void ParseFactories( const char *json, int len ) {
 			continue;
 		}
 
-		if ( g_numFactories >= MAX_FACTORIES ) {
+		if ( g_numFactories >= MAX_GFACTORIES ) {
 			Com_Printf( "ParseFactories: Too many factories in factories.txt, "
-			            "truncating at %d.\n", MAX_FACTORIES );
+			            "truncating at %d.\n", MAX_GFACTORIES );
 			break;
 		}
 
