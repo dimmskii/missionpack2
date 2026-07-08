@@ -574,12 +574,6 @@ void ClientEvents( gentity_t *ent, int oldEventSequence ) {
 			if ( g_dmflags.integer & DF_NO_FALLING ) {
 				break;
 			}
-// ~DIMMSKII
-			if ( GT_IsArenaGame(g_gametype.integer) ) {
-				// no fall damage in arena gamemodes
-				break;
-			}
-// END DIMMSKII
 			if ( event == EV_FALL_FAR ) {
 				damage = 10;
 			} else {
