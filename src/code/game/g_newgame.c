@@ -20,6 +20,12 @@ static char g_factoryAuthorStorage[MAX_GFACTORIES][GFACTORY_MAX_CVAR_VALUE_LEN];
 static char g_factoryDescStorage[MAX_GFACTORIES][GFACTORY_MAX_DESC_LEN];
 static char g_factoryCvarStorage[MAX_GFACTORIES][GFACTORY_CVARS_COUNT][GFACTORY_MAX_CVAR_VALUE_LEN];
 
+// Each factory's raw "basegt" string, kept around after parsing so
+// G_ResolveFactoryInheritance can do its own pass once every factory has
+// been loaded (a basegt may name a factory that appears later in the
+// file).
+static char g_factoryBasegtStorage[MAX_GFACTORIES][GFACTORY_MAX_CVAR_VALUE_LEN];
+
 void ParseFactories( const char *json, int len );
 
 /*
@@ -106,6 +112,122 @@ static gfactory_t *G_FindFactoryById( const char *id ) {
 	return NULL;
 }
 
+// Per-factory bookkeeping for G_ResolveFactoryInheritance's recursion -
+// which factories are fully resolved, and which are currently being
+// resolved (so a basegt cycle can be detected and broken instead of
+// recursing forever). Reset at the start of every G_ResolveFactoryInheritance
+// call.
+static qboolean g_factoryResolved[MAX_GFACTORIES];
+static qboolean g_factoryResolving[MAX_GFACTORIES];
+
+/*
+=================
+G_ResolveFactoryInheritanceFor
+
+Resolves a single factory's inheritance from its "basegt":
+
+  - basegt missing/empty/non-string: no inheritance at all.
+  - basegt equal to this factory's own id (self-referencing): treated as a
+    canonical/base gametype rather than a derived variant - g_gametype is
+    inferred from s_gametypeSpawnNames via G_GametypeFromSpawnName(),
+    unless this factory's own "cvars" already set one explicitly.
+  - basegt naming another loaded factory: every GFACTORY_CVARS slot this
+    factory didn't set itself is backfilled from that factory's own
+    cvar_values. That base is resolved first (recursively), so this is
+    deep/transitive - inheriting from a factory that itself inherits from
+    something else picks up the whole chain.
+  - basegt naming something that isn't any loaded factory's id: no
+    inheritance, just a console warning.
+
+g_factoryResolving guards against basegt cycles (A's basegt is B, B's is
+A, ...): if we're asked to resolve a factory that's already mid-resolution
+on the current call stack, we stop and treat it as no inheritance rather
+than recursing forever.
+=================
+*/
+static void G_ResolveFactoryInheritanceFor( int idx ) {
+	gfactory_t *factory;
+	const char *basegt;
+	gfactory_t *base;
+	int i;
+
+	if ( g_factoryResolved[idx] ) {
+		return;
+	}
+	if ( g_factoryResolving[idx] ) {
+		Com_Printf( "G_ResolveFactoryInheritance: basegt cycle detected at factory '%s', "
+		            "not inheriting anything.\n", g_factories[idx].id );
+		return;
+	}
+	g_factoryResolving[idx] = qtrue;
+
+	factory = &g_factories[idx];
+	basegt = g_factoryBasegtStorage[idx];
+
+	if ( !basegt[0] ) {
+		// basegt missing/empty/non-string - no inheritance.
+		goto done;
+	}
+
+	if ( !Q_stricmp( factory->id, basegt ) ) {
+		// Self-referencing - infer g_gametype via the alias cludge table,
+		// unless this factory's own cvars already set one explicitly.
+		int gtCvarIdx = G_FactoryCvarIndex( "g_gametype" );
+		if ( gtCvarIdx >= 0 && factory->cvar_values[gtCvarIdx] == NULL ) {
+			int gt = G_GametypeFromSpawnName( basegt );
+			if ( gt >= 0 ) {
+				Com_sprintf( g_factoryCvarStorage[idx][gtCvarIdx],
+				             GFACTORY_MAX_CVAR_VALUE_LEN, "%d", gt );
+				factory->cvar_values[gtCvarIdx] = g_factoryCvarStorage[idx][gtCvarIdx];
+			} else {
+				Com_Printf( "G_ResolveFactoryInheritance: self-referencing factory '%s' has "
+				            "no s_gametypeSpawnNames alias for basegt '%s', leaving "
+				            "g_gametype unset.\n", factory->id, basegt );
+			}
+		}
+		goto done;
+	}
+
+	base = G_FindFactoryById( basegt );
+	if ( !base ) {
+		// basegt doesn't match any loaded factory - no inheritance.
+		Com_Printf( "G_ResolveFactoryInheritance: factory '%s' has basegt '%s' which doesn't "
+		            "match any loaded factory, not inheriting anything.\n", factory->id, basegt );
+		goto done;
+	}
+
+	G_ResolveFactoryInheritanceFor( (int)( base - g_factories ) );
+	for ( i = 0; i < GFACTORY_CVARS_COUNT; i++ ) {
+		if ( factory->cvar_values[i] == NULL && base->cvar_values[i] != NULL ) {
+			factory->cvar_values[i] = base->cvar_values[i];
+		}
+	}
+
+done:
+	g_factoryResolving[idx] = qfalse;
+	g_factoryResolved[idx] = qtrue;
+}
+
+/*
+=================
+G_ResolveFactoryInheritance
+
+Second pass over g_factories[], run once every factory has been parsed by
+ParseFactories. See G_ResolveFactoryInheritanceFor for the per-factory
+resolution rules.
+=================
+*/
+static void G_ResolveFactoryInheritance( void ) {
+	int i;
+	for ( i = 0; i < g_numFactories; i++ ) {
+		g_factoryResolved[i] = qfalse;
+		g_factoryResolving[i] = qfalse;
+	}
+	for ( i = 0; i < g_numFactories; i++ ) {
+		G_ResolveFactoryInheritanceFor( i );
+	}
+}
+
 /*
 =================
 G_ApplyFactory
@@ -113,7 +235,7 @@ G_ApplyFactory
 Resets every GFACTORY_CVARS entry to its registered default, then overlays
 this factory's specific cvar_values on top. The reset pass means switching
 factories never leaves a cvar the new factory doesn't mention stuck at
-whatever the previously applied factory left it at. ~Dimmskii
+whatever the previously applied factory left it at.
 =================
 */
 static void G_ApplyFactory( const gfactory_t *factory ) {
@@ -123,7 +245,6 @@ static void G_ApplyFactory( const gfactory_t *factory ) {
 	}
 	Com_Printf( "G_ApplyFactory: applying '%s' (%s)\n", factory->id, factory->title );
 
-	// ~Dimmskii
 	for ( i = 0; i < GFACTORY_CVARS_COUNT; i++ ) {
 		const char *defaultString = G_GetCvarDefaultString( GFACTORY_CVARS[i] );
 		if ( defaultString ) {
@@ -132,7 +253,6 @@ static void G_ApplyFactory( const gfactory_t *factory ) {
 			Com_Printf( "G_ApplyFactory: no registered default for gfactory cvar '%s'.\n", GFACTORY_CVARS[i] );
 		}
 	}
-	// END Dimmskii
 
 	for ( i = 0; i < GFACTORY_CVARS_COUNT; i++ ) {
 		if ( factory->cvar_values[i] != NULL ) {
@@ -176,6 +296,11 @@ void G_LoadFactories( void ) {
     // Parse the factories
     ParseFactories( jsonFileBuffer, len );
 
+	// Second pass: every factory is loaded now, so basegt inheritance can
+	// be resolved (a basegt may name a factory that appears later in the
+	// file, or one that itself still needs its own basegt resolved first).
+	G_ResolveFactoryInheritance();
+
 	Com_Printf( "G_LoadFactories: %d factories loaded.\n", g_numFactories );
 
 	// g_factory is CVAR_LATCH - like g_gametype, a change only takes effect
@@ -186,7 +311,6 @@ void G_LoadFactories( void ) {
 	// before any registration would just see an empty, unregistered cvar.
 	trap_Cvar_Register( &g_factory, "g_factory", "ffa", CVAR_SERVERINFO | CVAR_USERINFO | CVAR_LATCH );
 
-	// ~Dimmskii
 	// An empty g_factory means "just expose the parsed factory list (e.g.
 	// for the UI's host game screen), don't force any cvars" - factories
 	// are still fully loaded above, we just skip lookup/apply entirely so
@@ -195,7 +319,6 @@ void G_LoadFactories( void ) {
 		Com_Printf( "G_LoadFactories: g_factory is empty, skipping factory application.\n" );
 		return;
 	}
-	// END Dimmskii
 
 	if ( g_numFactories > 0 ) {
 		gfactory_t *selected = G_FindFactoryById( g_factory.string );
@@ -244,7 +367,6 @@ void ParseFactories( const char *json, int len ) {
 	for ( i = 1; i < num_toks; i++ ) {
 		gfactory_t *factory;
 		int j;
-		char basegt[GFACTORY_MAX_CVAR_VALUE_LEN];
 
 		// Only care about objects directly inside the root array
 		if ( tokens[i].parent != 0 || tokens[i].type != JSON_OBJECT ) {
@@ -257,7 +379,7 @@ void ParseFactories( const char *json, int len ) {
 			break;
 		}
 
-		basegt[0] = '\0';
+		g_factoryBasegtStorage[g_numFactories][0] = '\0';
 		factory = &g_factories[g_numFactories];
 		factory->id = g_factoryIdStorage[g_numFactories];
 		factory->title = g_factoryTitleStorage[g_numFactories];
@@ -319,32 +441,17 @@ void ParseFactories( const char *json, int len ) {
 					k++; // skip the value token on the next iteration
 				}
 			} else if ( JSON_ValueEquals( json, &tokens[j], "basegt" ) ) {
-				jsmndr_copy_token( basegt, sizeof( basegt ), json, &tokens[valIdx] );
-			}
-			// any other unrecognized fields are intentionally ignored for now.
-		}
-
-		// QL reverse-compat shim: a factory whose "basegt" is itself (e.g.
-		// id "ca", basegt "ca") is, by happenstance, a base/canonical
-		// gametype rather than a derived variant (practice, instagib,
-		// vampiric, ...) - naively presume basegt names the same gametype
-		// s_gametypeSpawnNames already knows and force the GT_ enum into
-		// this factory's g_gametype slot, unless its own "cvars" already
-		// set one explicitly.
-		if ( basegt[0] && !Q_stricmp( g_factoryIdStorage[g_numFactories], basegt ) ) {
-			int gtCvarIdx = G_FactoryCvarIndex( "g_gametype" );
-			if ( gtCvarIdx >= 0 && factory->cvar_values[gtCvarIdx] == NULL ) {
-				int gt = G_GametypeFromSpawnName( basegt );
-				if ( gt >= 0 ) {
-					Com_sprintf( g_factoryCvarStorage[g_numFactories][gtCvarIdx],
-					             GFACTORY_MAX_CVAR_VALUE_LEN, "%d", gt );
-					factory->cvar_values[gtCvarIdx] = g_factoryCvarStorage[g_numFactories][gtCvarIdx];
+				// Only a JSON string counts as a basegt reference - anything
+				// else (missing, number, object, array, null, ...) means no
+				// inheritance, handled by G_ResolveFactoryInheritance.
+				if ( tokens[valIdx].type == JSON_STRING ) {
+					jsmndr_copy_token( g_factoryBasegtStorage[g_numFactories], GFACTORY_MAX_CVAR_VALUE_LEN, json, &tokens[valIdx] );
 				} else {
-					Com_Printf( "ParseFactories: self-referencing factory '%s' has no "
-					            "s_gametypeSpawnNames alias for basegt '%s', leaving "
-					            "g_gametype unset.\n", factory->id, basegt );
+					Com_Printf( "ParseFactories: factory '%s' has a non-string \"basegt\", ignoring.\n",
+					            g_factoryIdStorage[g_numFactories] );
 				}
 			}
+			// any other unrecognized fields are intentionally ignored for now.
 		}
 
 		g_numFactories++;
