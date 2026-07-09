@@ -112,6 +112,8 @@ hostgamefactories {
   { "ctf" "Capture the Flag" }
   { "ictf" "Instagib CTF" }
   { "oneflag" "1-Flag CTF" }
+  { "obelisk" "Overload" }
+  { "har" "Harvester" }
   { "arena" "Arena" }
 }
 

@@ -140,6 +140,36 @@
   
   {
     "cvars": {
+	  "g_gametype": "7",
+      "capturelimit": "0",
+      "timelimit": "15",
+    },
+    "author": "Dimmskii",
+    "description": "Default gametype settings.",
+    "basegt": "obelisk",
+    "id": "obelisk",
+    "title": "Overload"
+  },
+  
+  
+  
+  {
+    "cvars": {
+	  "g_gametype": "8",
+      "capturelimit": "0",
+      "timelimit": "15",
+    },
+    "author": "Dimmskii",
+    "description": "Default gametype settings.",
+    "basegt": "har",
+    "id": "har",
+    "title": "Harvester"
+  },
+  
+  
+  
+  {
+    "cvars": {
 	  "g_gametype": "14",
       "roundtimelimit": "180",
 	  "roundlimit": "5",
