@@ -28,17 +28,16 @@ static char g_factoryBasegtStorage[MAX_GFACTORIES][GFACTORY_MAX_CVAR_VALUE_LEN];
 
 void ParseFactories( const char *json, int len );
 
+
+
 /*
 =================
-G_SpawnGametypeAliases
+s_gametypeSpawnNames
 
 Mapping of gametype enum values to the spawn string tokens used by
 worldspawn "gametype" filters.
 =================
 */
-
-#define MAX_GAMETYPE_NAME_ALIASES 3
-
 const char *const s_gametypeSpawnNames[GT_MAX_GAME_TYPE][MAX_GAMETYPE_NAME_ALIASES] = {
 	{ "ffa", NULL, NULL },                          /* GT_FFA */
 	{ "tournament", "duel", NULL },                 /* GT_TOURNAMENT */
