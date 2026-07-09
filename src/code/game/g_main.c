@@ -247,6 +247,26 @@ void G_RemapTeamShaders( void ) {
 
 /*
 =================
+G_GetCvarDefaultString
+
+Returns the registered default string for cvarName (as declared via G_CVAR
+in g_cvar.h / the manual entries above), or NULL if it isn't in
+gameCvarTable. ~Dimmskii
+=================
+*/
+const char *G_GetCvarDefaultString( const char *cvarName ) {
+	int i;
+	cvarTable_t *cv;
+	for ( i = 0, cv = gameCvarTable ; i < ARRAY_LEN( gameCvarTable ) ; i++, cv++ ) {
+		if ( !Q_stricmp( cv->cvarName, cvarName ) ) {
+			return cv->defaultString;
+		}
+	}
+	return NULL;
+}
+
+/*
+=================
 G_RegisterCvars
 =================
 */

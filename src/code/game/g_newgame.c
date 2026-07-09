@@ -110,8 +110,10 @@ static gfactory_t *G_FindFactoryById( const char *id ) {
 =================
 G_ApplyFactory
 
-Pushes every cvar this factory sets (non-NULL cvar_values entries) into the
-engine. Cvars the factory leaves NULL are left untouched.
+Resets every GFACTORY_CVARS entry to its registered default, then overlays
+this factory's specific cvar_values on top. The reset pass means switching
+factories never leaves a cvar the new factory doesn't mention stuck at
+whatever the previously applied factory left it at. ~Dimmskii
 =================
 */
 static void G_ApplyFactory( const gfactory_t *factory ) {
@@ -120,6 +122,18 @@ static void G_ApplyFactory( const gfactory_t *factory ) {
 		return;
 	}
 	Com_Printf( "G_ApplyFactory: applying '%s' (%s)\n", factory->id, factory->title );
+
+	// ~Dimmskii
+	for ( i = 0; i < GFACTORY_CVARS_COUNT; i++ ) {
+		const char *defaultString = G_GetCvarDefaultString( GFACTORY_CVARS[i] );
+		if ( defaultString ) {
+			trap_Cvar_Set( GFACTORY_CVARS[i], defaultString );
+		} else {
+			Com_Printf( "G_ApplyFactory: no registered default for gfactory cvar '%s'.\n", GFACTORY_CVARS[i] );
+		}
+	}
+	// END Dimmskii
+
 	for ( i = 0; i < GFACTORY_CVARS_COUNT; i++ ) {
 		if ( factory->cvar_values[i] != NULL ) {
 			trap_Cvar_Set( GFACTORY_CVARS[i], factory->cvar_values[i] );
@@ -171,6 +185,17 @@ void G_LoadFactories( void ) {
 	// already-set value (server.cfg/+set) or the "ffa" default - reading it
 	// before any registration would just see an empty, unregistered cvar.
 	trap_Cvar_Register( &g_factory, "g_factory", "ffa", CVAR_SERVERINFO | CVAR_USERINFO | CVAR_LATCH );
+
+	// ~Dimmskii
+	// An empty g_factory means "just expose the parsed factory list (e.g.
+	// for the UI's host game screen), don't force any cvars" - factories
+	// are still fully loaded above, we just skip lookup/apply entirely so
+	// no cvar is touched under any circumstance.
+	if ( !g_factory.string[0] ) {
+		Com_Printf( "G_LoadFactories: g_factory is empty, skipping factory application.\n" );
+		return;
+	}
+	// END Dimmskii
 
 	if ( g_numFactories > 0 ) {
 		gfactory_t *selected = G_FindFactoryById( g_factory.string );
