@@ -262,42 +262,75 @@ static void G_ApplyFactory( const gfactory_t *factory ) {
 
 /*
 =================
+G_LoadFactoriesFile
+
+Reads filename and, if found, parses it as a factories.txt-shaped JSON
+array via ParseFactories, appending onto g_factories[] from whatever
+g_numFactories currently is. Callers form a load sequence and are
+responsible for resetting g_numFactories to 0 before the first call.
+=================
+*/
+static void G_LoadFactoriesFile( const char *filename ) {
+	fileHandle_t f;
+	int len;
+
+	len = trap_FS_FOpenFile( filename, &f, FS_READ );
+	if ( f == 0 || len <= 0 ) {
+		Com_Printf( "G_LoadFactoriesFile: %s not found or empty.\n", filename );
+		if ( f ) {
+			trap_FS_FCloseFile( f );
+		}
+		return;
+	}
+
+	if ( len >= MAX_JSON_FILE_SIZE ) {
+		Com_Printf( "G_LoadFactoriesFile: %s exceeds max safe QVM memory buffer size!\n", filename );
+		trap_FS_FCloseFile( f );
+		return;
+	}
+
+	trap_FS_Read( jsonFileBuffer, len, f );
+	jsonFileBuffer[len] = '\0'; // Mandatory null termination
+	trap_FS_FCloseFile( f );
+
+	Com_Printf( "G_LoadFactoriesFile: Loaded %d bytes from %s. Parsing tokens...\n", len, filename );
+
+	ParseFactories( jsonFileBuffer, len );
+}
+
+/*
+=================
 G_LoadFactories
 =================
 */
 void G_LoadFactories( void ) {
-    fileHandle_t f;
-    int len;
+	char dirlist[4096];
+	char *dirptr;
+	char filename[128];
+	int numdirs, dirlen, i;
 
-    // Open file using the early engine file system trap
-    len = trap_FS_FOpenFile( "scripts/factories.txt", &f, FS_READ );
-    if ( f == 0 || len <= 0 ) {
-        Com_Printf( "G_LoadFactories: scripts/factories.txt not found or empty.\n" );
-        if ( f ) {
-            trap_FS_FCloseFile( f );
-        }
-        return;
-    }
+	g_numFactories = 0;
 
-    if ( len >= MAX_JSON_FILE_SIZE ) {
-        Com_Printf( "G_LoadFactories: File exceeds max safe QVM memory buffer size!\n" );
-        trap_FS_FCloseFile( f );
-        return;
-    }
+	G_LoadFactoriesFile( "scripts/factories.txt" );
 
-    // Read the complete text payload into memory
-    trap_FS_Read( jsonFileBuffer, len, f );
-    jsonFileBuffer[len] = '\0'; // Mandatory null termination
-    trap_FS_FCloseFile( f );
+	// Third-party/add-on factory definitions: any scripts/*.factories file
+	// gets parsed and appended after the base list. Load order (whatever
+	// the engine's directory listing gives, alphabetical in practice)
+	// doesn't matter for correctness - G_ResolveFactoryInheritance below is
+	// a second pass over the fully combined list, run once everything from
+	// every file has been loaded.
+	numdirs = trap_FS_GetFileList( "scripts", ".factories", dirlist, sizeof( dirlist ) );
+	dirptr = dirlist;
+	for ( i = 0; i < numdirs; i++, dirptr += dirlen + 1 ) {
+		dirlen = (int)strlen( dirptr );
+		Com_sprintf( filename, sizeof( filename ), "scripts/%s", dirptr );
+		G_LoadFactoriesFile( filename );
+	}
 
-    Com_Printf( "G_LoadFactories: Loaded %d bytes. Parsing tokens...\n", len );
-
-    // Parse the factories
-    ParseFactories( jsonFileBuffer, len );
-
-	// Second pass: every factory is loaded now, so basegt inheritance can
-	// be resolved (a basegt may name a factory that appears later in the
-	// file, or one that itself still needs its own basegt resolved first).
+	// Second pass: every factory from every file is loaded now, so basegt
+	// inheritance can be resolved (a basegt may name a factory that
+	// appears later or in a different file, or one that itself still
+	// needs its own basegt resolved first).
 	G_ResolveFactoryInheritance();
 
 	Com_Printf( "G_LoadFactories: %d factories loaded.\n", g_numFactories );
@@ -334,12 +367,17 @@ void G_LoadFactories( void ) {
 =================
 ParseFactories
 
-factories.txt is a top-level JSON array of factory objects:
+json is a top-level JSON array of factory objects (scripts/factories.txt
+or a scripts/*.factories add-on, both share this shape):
 [ { "id": ..., "title": ..., "author": ..., "description": ...,
     "basegt": ..., "cvars": { "<cvar>": "<value>", ... } }, ... ]
 
 Only "cvars" entries that are also listed in GFACTORY_CVARS are accepted;
 anything else just warns to the console and is dropped.
+
+Appends onto g_factories[] starting from the current g_numFactories -
+does not reset it, so G_LoadFactories can call this once per file across
+a whole load sequence (see G_LoadFactoriesFile).
 =================
 */
 void ParseFactories( const char *json, int len ) {
@@ -360,8 +398,6 @@ void ParseFactories( const char *json, int len ) {
 		Com_Printf( "ParseFactories Error: factories.txt root must be a JSON array.\n" );
 		return;
 	}
-
-	g_numFactories = 0;
 
 	for ( i = 1; i < num_toks; i++ ) {
 		gfactory_t *factory;
