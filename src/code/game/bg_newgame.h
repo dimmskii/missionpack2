@@ -124,6 +124,22 @@ static const char *GFACTORY_CVARS[] = {
 	"g_splashradius_bfg",
 	"g_splashradius_pl",
 	
+	// Weapon reload times
+	"weapon_reload_gauntlet",
+	"weapon_reload_mg",
+	"weapon_reload_sg",
+	"weapon_reload_gl",
+	"weapon_reload_rl",
+	"weapon_reload_lg",
+	"weapon_reload_rg",
+	"weapon_reload_pg",
+	"weapon_reload_bfg",
+	"weapon_reload_hook",
+	"weapon_reload_ng",
+	"weapon_reload_prox",
+	"weapon_reload_cg",
+	"weapon_reload_hmg",
+	
 	// Grapple settings
 	"g_grappleDelayTime",
 	"g_grappleHoldTime",
@@ -134,7 +150,7 @@ static const char *GFACTORY_CVARS[] = {
 };
 
 #define GFACTORY_MAX_CVAR_VALUE_LEN 64
-#define GFACTORY_CVARS_COUNT       71 	/* Total elements in GFACTORY_CVARS excluding NULL */
+#define GFACTORY_CVARS_COUNT       85 	/* Total elements in GFACTORY_CVARS excluding NULL */
 
 // QL-Compatible game factories
 typedef struct {
