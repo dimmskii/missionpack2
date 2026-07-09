@@ -222,11 +222,17 @@ static const char *GFACTORY_CVARS[] = {
 	"g_splashradius_bfg",
 	"g_splashradius_pl",
 	
+	// Grapple settings
+	"g_grappleDelayTime",
+	"g_grappleHoldTime",
+	"g_grappleSpeed",
+	"g_grapplePull",
+	
     NULL                    // Null-terminator for safe iteration loops
 };
 
 #define GFACTORY_MAX_CVAR_VALUE_LEN 64
-#define GFACTORY_CVARS_COUNT       67 	/* Total elements in GFACTORY_CVARS excluding NULL */
+#define GFACTORY_CVARS_COUNT       71 	/* Total elements in GFACTORY_CVARS excluding NULL */
 
 // QL-Compatible game factories
 typedef struct {
