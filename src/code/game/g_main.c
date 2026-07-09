@@ -245,13 +245,14 @@ void G_RemapTeamShaders( void ) {
 }
 
 
+// ~Dimmskii
 /*
 =================
 G_GetCvarDefaultString
 
 Returns the registered default string for cvarName (as declared via G_CVAR
 in g_cvar.h / the manual entries above), or NULL if it isn't in
-gameCvarTable. ~Dimmskii
+gameCvarTable.
 =================
 */
 const char *G_GetCvarDefaultString( const char *cvarName ) {
@@ -264,6 +265,7 @@ const char *G_GetCvarDefaultString( const char *cvarName ) {
 	}
 	return NULL;
 }
+// END Dimmskii
 
 /*
 =================
