@@ -209,9 +209,6 @@ G_CVAR( g_noSelfDamage, "g_noSelfDamage", "0", 0, 0, qtrue, qtrue )
 
 G_CVAR( g_fastWeaponSwitch, "g_fastWeaponSwitch", "0", 0, 0, qfalse, qfalse )
 
-
-//G_CVAR( g_damageHMG, "g_damageHMG", "8", 0, 0, qfalse, qfalse )
-
 G_CVAR( g_velocity_rl, "g_velocity_rl", "900", 0, 0, qfalse, qfalse )
 
 // QL-convention damage cvar renames
