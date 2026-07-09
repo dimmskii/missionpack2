@@ -154,6 +154,9 @@ static const char *GFACTORY_CVARS[] = {
 	"g_railJumpDamage",
 	
 	"g_forcerespawn",
+	"g_gravity",
+	"g_knockback",
+	"g_quadfactor",
 	
 	"g_teamVisibility",
 	"g_itemTimers",
@@ -222,7 +225,7 @@ static const char *GFACTORY_CVARS[] = {
 };
 
 #define GFACTORY_MAX_CVAR_VALUE_LEN 64
-#define GFACTORY_CVARS_COUNT       63 	/* Total elements in GFACTORY_CVARS excluding NULL */
+#define GFACTORY_CVARS_COUNT       66 	/* Total elements in GFACTORY_CVARS excluding NULL */
 
 // QL-Compatible game factories
 typedef struct {
