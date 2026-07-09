@@ -126,7 +126,6 @@ G_CVAR( g_grappleHoldTime, "g_grappleHoldTime", "0", 0, 0, qtrue, qfalse )
 G_CVAR( g_grappleSpeed, "g_grappleSpeed", "1600", 0, 0, qtrue, qfalse ) // ~Dimmskii
 G_CVAR( g_grapplePull, "g_grapplePull", "800", CVAR_SERVERINFO, 0, qtrue, qfalse )
 //G_CVAR( g_grappleDamage, "g_grappleDamage", "0", 0, 0, qfalse, qfalse )
-G_CVAR( g_grappleDamage, "g_grappleDamage", "2", 0, 0, qfalse, qfalse ) // ~Dimmskii
 
 /*
 G_CVAR( g_startAmmoMG, "g_startAmmoMG", "50", 0, 0, qfalse, qfalse )
@@ -222,6 +221,7 @@ G_CVAR( g_damage_lg, "g_damage_lg", "8", 0, 0, qfalse, qfalse )
 G_CVAR( g_damage_rg, "g_damage_rg", "100", 0, 0, qfalse, qfalse )
 G_CVAR( g_damage_pg, "g_damage_pg", "20", 0, 0, qfalse, qfalse )
 G_CVAR( g_damage_bfg, "g_damage_bfg", "100", 0, 0, qfalse, qfalse )
+G_CVAR( g_damage_gh, "g_damage_gh", "10", 0, 0, qfalse, qfalse )
 G_CVAR( g_damage_ng, "g_damage_ng", "20", 0, 0, qfalse, qfalse )
 G_CVAR( g_damage_pl, "g_damage_pl", "0", 0, 0, qfalse, qfalse )			// This is DIRECT damage! Classically, in TA and QL, this is zero and has no cvar to control it. Prox mine only splash damages.
 G_CVAR( g_damage_cg, "g_damage_cg", "7", 0, 0, qfalse, qfalse )

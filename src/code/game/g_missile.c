@@ -739,7 +739,8 @@ gentity_t *fire_grapple (gentity_t *self, vec3_t start, vec3_t dir) {
 	hook->clipmask = MASK_SHOT;
 	hook->parent = self;
 	hook->target_ent = NULL;
-	hook->damage = g_grappleDamage.integer;
+	//hook->damage = g_grappleDamage.integer;
+	hook->damage = g_damage_gh.integer; // ~Dimmskii
 
 	// missile owner
 	hook->s.clientNum = self->s.clientNum;

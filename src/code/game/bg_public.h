@@ -203,6 +203,7 @@ static const char *GFACTORY_CVARS[] = {
 	"g_damage_rg",
 	"g_damage_pg",
 	"g_damage_bfg",
+	"g_damage_gh",
 	"g_damage_ng",
 	"g_damage_pl",
 	"g_damage_cg",
@@ -225,7 +226,7 @@ static const char *GFACTORY_CVARS[] = {
 };
 
 #define GFACTORY_MAX_CVAR_VALUE_LEN 64
-#define GFACTORY_CVARS_COUNT       66 	/* Total elements in GFACTORY_CVARS excluding NULL */
+#define GFACTORY_CVARS_COUNT       67 	/* Total elements in GFACTORY_CVARS excluding NULL */
 
 // QL-Compatible game factories
 typedef struct {
