@@ -18,6 +18,8 @@ set cc=q3lcc -DQ3_VM -DCGAME -S -Wf-target=bytecode -Wf-g -I..\..\cgame -I..\..\
 
 %cc% ../../game/bg_misc.c
 @if errorlevel 1 goto errorquit
+%cc% ../../game/bg_newgame.c
+@if errorlevel 1 goto errorquit
 %cc% ../../game/bg_pmove.c
 @if errorlevel 1 goto errorquit
 %cc% ../../game/bg_slidemove.c

@@ -274,7 +274,7 @@ void CG_DrawInformation( void ) {
 		s = "Arena";
 		break;
 	case GT_TEAMARENA:
-		s = "Team Arena";
+		s = "Clan Arena";
 		break;
 	case GT_FREEZETAG:
 		s = "Freeze Tag";
@@ -290,7 +290,7 @@ void CG_DrawInformation( void ) {
 	y += PROP_HEIGHT;
 		
 // ~Dimmskii
-	if (cgs.gametype != GT_ARENA && cgs.gametype != GT_TEAMARENA && cgs.gametype != GT_FREEZETAG) { // ~Dimmskii // TODO: Shared function isRoundBased(int gt) or something
+	if ( !GT_IsArenaGame(cgs.gametype) ) { // ~Dimmskii
 // END ~Dimmskii
 
 	value = atoi( Info_ValueForKey( info, "timelimit" ) );
@@ -305,7 +305,7 @@ void CG_DrawInformation( void ) {
 // END ~Dimmskii
 
 	//if (cgs.gametype < GT_CTF ) {
-	if (cgs.gametype < GT_TEAMARENA && cgs.gametype != GT_ARENA) { // ~Dimmskii // TODO: Shared function isRoundBased(int gt) or something
+	if ( !GT_IsFlagGame(cgs.gametype) && !GT_IsArenaGame(cgs.gametype) ) { // ~Dimmskii
 		value = atoi( Info_ValueForKey( info, "fraglimit" ) );
 		if ( value ) {
 			UI_DrawProportionalString( 320, y, va( "fraglimit %i", value ),
@@ -314,7 +314,8 @@ void CG_DrawInformation( void ) {
 		}
 	}
 
-	if (cgs.gametype >= GT_CTF) {
+	//if (cgs.gametype >= GT_CTF) {
+	if ( GT_IsFlagGame(cgs.gametype) ) { // ~Dimmskii
 		value = atoi( Info_ValueForKey( info, "capturelimit" ) );
 		if ( value ) {
 			UI_DrawProportionalString( 320, y, va( "capturelimit %i", value ),
@@ -324,18 +325,18 @@ void CG_DrawInformation( void ) {
 	}
 	
 // ~Dimmskii
-	if (cgs.gametype == GT_ARENA || cgs.gametype == GT_TEAMARENA || cgs.gametype == GT_FREEZETAG) {
+	if ( GT_IsArenaGame(cgs.gametype) ) {
 
-		value = atoi( Info_ValueForKey( info, "roundtime" ) );
+		value = atoi( Info_ValueForKey( info, "roundtimelimit" ) );
 		if ( value ) {
-			UI_DrawProportionalString( 320, y, va( "roundtime %i", value ),
+			UI_DrawProportionalString( 320, y, va( "roundtimelimit %i", value ),
 				UI_CENTER|UI_SMALLFONT|UI_DROPSHADOW, colorWhite );
 			y += PROP_HEIGHT;
 		}
 
-		value = atoi( Info_ValueForKey( info, "winlimit" ) );
+		value = atoi( Info_ValueForKey( info, "roundlimit" ) );
 		if ( value ) {
-			UI_DrawProportionalString( 320, y, va( "winlimit %i", value ),
+			UI_DrawProportionalString( 320, y, va( "roundlimit %i", value ),
 				UI_CENTER|UI_SMALLFONT|UI_DROPSHADOW, colorWhite );
 			y += PROP_HEIGHT;
 		}

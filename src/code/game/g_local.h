@@ -6,6 +6,12 @@
 #include "bg_public.h"
 #include "g_public.h"
 
+// ~Dimmskii
+#define EXTERN_BG_CVAR
+	#include "bg_cvar.h"
+#undef EXTERN_BG_CVAR
+// END Dimmskii
+
 //==================================================================
 
 // the "gameversion" client command will print this plus compile date
@@ -661,6 +667,7 @@ void QDECL G_LogPrintf( const char *fmt, ... );
 void QDECL G_Printf( const char *fmt, ... );
 void QDECL G_Error( const char *fmt, ... );
 void G_BroadcastServerCommand( int ignoreClient, const char *command );
+const char *G_GetCvarDefaultString( const char *cvarName ); // ~Dimmskii
 
 //
 // g_client.c
@@ -776,6 +783,7 @@ void Hook_Fire( gentity_t *ent );
 
 // ~DIMMSKII
 	#include "g_arena.h" // arena/team arena specific stuff
+	#include "g_newgame.h"
 //END ~DIMMSKII
 
 extern	level_locals_t	level;

@@ -1653,49 +1653,62 @@ static void PM_Weapon( void ) {
 	switch( pm->ps->weapon ) {
 	default:
 	case WP_GAUNTLET:
-		addTime = 400;
+		//addTime = 400;
+		addTime = weapon_reload_gauntlet.integer; // ~Dimmskii
 		break;
 	case WP_LIGHTNING:
-		addTime = 50;
+		//addTime = 50;
+		addTime = weapon_reload_lg.integer; // ~Dimmskii
 		break;
 	case WP_SHOTGUN:
-		addTime = 1000;
+		//addTime = 1000;
+		addTime = weapon_reload_sg.integer; // ~Dimmskii
 		break;
 	case WP_MACHINEGUN:
-		addTime = 100;
+		//addTime = 100;
+		addTime = weapon_reload_mg.integer; // ~Dimmskii
 		break;
 	case WP_GRENADE_LAUNCHER:
-		addTime = 800;
+		//addTime = 800;
+		addTime = weapon_reload_gl.integer; // ~Dimmskii
 		break;
 	case WP_ROCKET_LAUNCHER:
-		addTime = 800;
+		//addTime = 800;
+		addTime = weapon_reload_rl.integer; // ~Dimmskii
 		break;
 	case WP_PLASMAGUN:
-		addTime = 100;
+		//addTime = 100;
+		addTime = weapon_reload_pg.integer; // ~Dimmskii
 		break;
 	case WP_RAILGUN:
-		addTime = 1500;
+		//addTime = 1500;
+		addTime = weapon_reload_rg.integer; // ~Dimmskii
 		break;
 	case WP_BFG:
-		addTime = 200;
+		//addTime = 200;
+		addTime = weapon_reload_bfg.integer; // ~Dimmskii
 		break;
 	case WP_GRAPPLING_HOOK:
-		addTime = 400;
+		//addTime = 400;
+		addTime = weapon_reload_hook.integer; // ~Dimmskii
 		break;
 //#ifdef MISSIONPACK
 	case WP_NAILGUN:
-		addTime = 1000;
+		//addTime = 1000;
+		addTime = weapon_reload_ng.integer; // ~Dimmskii
 		break;
 	case WP_PROX_LAUNCHER:
-		addTime = 800;
+		//addTime = 800;
+		addTime = weapon_reload_prox.integer; // ~Dimmskii
 		break;
 	case WP_CHAINGUN:
-		addTime = 30;
+		//addTime = 30;
+		addTime = weapon_reload_cg.integer; // ~Dimmskii
 		break;
 //#endif
 // ~Dimmskii
 	case WP_HMG:
-		addTime = 75;
+		addTime = weapon_reload_hmg.integer;
 		break;
 // END Dimmskii
 	}

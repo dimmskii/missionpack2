@@ -101,7 +101,8 @@ qboolean CheckGauntletAttack( gentity_t *ent ) {
 
 	if (ent->client->ps.powerups[PW_QUAD] ) {
 		G_AddEvent( ent, EV_POWERUP_QUAD, 0 );
-		s_quadFactor = g_quadfactor.value;
+		//s_quadFactor = g_quadfactor.value;
+		s_quadFactor = g_quadDamageFactor.value; // ~Dimmskii
 	} else {
 		s_quadFactor = 1.0;
 	}
@@ -111,7 +112,8 @@ qboolean CheckGauntletAttack( gentity_t *ent ) {
 	}
 //#endif
 
-	damage = g_damageG.integer * s_quadFactor;
+	//damage = g_damageG.integer * s_quadFactor;
+	damage = g_damage_g.integer * s_quadFactor; // ~Dimmskii
 	G_Damage( traceEnt, ent, ent, forward, tr.endpos, damage, 0, MOD_GAUNTLET );
 
 	return qtrue;
@@ -304,7 +306,8 @@ static qboolean ShotgunPellet( const vec3_t start, const vec3_t end, gentity_t *
 		}
 
 		if ( traceEnt->takedamage ) {
-			damage = g_damageSG.integer * s_quadFactor;
+			//damage = g_damageSG.integer * s_quadFactor;
+			damage = g_damage_sg.integer * s_quadFactor; // ~Dimmskii
 //#ifdef MISSIONPACK
 			if ( traceEnt->client && traceEnt->client->invulnerabilityTime > level.time ) {
 				if (G_InvulnerabilityEffect( traceEnt, forward, tr.endpos, impactpoint, bouncedir )) {
@@ -471,7 +474,8 @@ void weapon_railgun_fire( gentity_t *ent ) {
 	int			passent;
 	gentity_t	*unlinkedEntities[MAX_RAIL_HITS];
 
-	damage = g_damageRG.integer * s_quadFactor;
+	//damage = g_damageRG.integer * s_quadFactor;
+	damage = g_damage_rg.integer * s_quadFactor; // ~Dimmskii
 
 	VectorMA( muzzle_origin, 8192.0, forward, end );
 
@@ -753,7 +757,8 @@ void Weapon_LightningFire( gentity_t *ent ) {
 	gentity_t	*traceEnt, *tent;
 	int			damage, i, passent;
 
-	damage = g_damageLG.integer * s_quadFactor;
+	//damage = g_damageLG.integer * s_quadFactor;
+	damage = g_damage_lg.integer * s_quadFactor; // ~Dimmskii
 
 	passent = ent->s.number;
 
@@ -915,7 +920,8 @@ FireWeapon
 */
 void FireWeapon( gentity_t *ent ) {
 	if ( ent->client->ps.powerups[PW_QUAD] ) {
-		s_quadFactor = g_quadfactor.value;
+		//s_quadFactor = g_quadfactor.value;
+		s_quadFactor = g_quadDamageFactor.value; // ~Dimmskii
 	} else {
 		s_quadFactor = 1.0;
 	}
@@ -957,7 +963,8 @@ void FireWeapon( gentity_t *ent ) {
 	case WP_MACHINEGUN:
 		if ( g_gametype.integer != GT_TEAM ) {
 			//Bullet_Fire( ent, MACHINEGUN_SPREAD, MACHINEGUN_DAMAGE, MOD_MACHINEGUN );
-			Bullet_Fire( ent, MACHINEGUN_SPREAD, g_damageMG.integer, MOD_MACHINEGUN );
+			//Bullet_Fire( ent, MACHINEGUN_SPREAD, g_damageMG.integer, MOD_MACHINEGUN );
+			Bullet_Fire( ent, MACHINEGUN_SPREAD, g_damage_mg.integer, MOD_MACHINEGUN ); // ~Dimmskii
 		} else {
 			//Bullet_Fire( ent, MACHINEGUN_SPREAD, MACHINEGUN_TEAM_DAMAGE, MOD_MACHINEGUN );
 			Bullet_Fire( ent, MACHINEGUN_SPREAD, g_damageTeamMG.integer, MOD_MACHINEGUN );
@@ -990,12 +997,14 @@ void FireWeapon( gentity_t *ent ) {
 		break;
 	case WP_CHAINGUN:
 		//Bullet_Fire( ent, CHAINGUN_SPREAD, MACHINEGUN_DAMAGE, MOD_CHAINGUN );
-		Bullet_Fire( ent, CHAINGUN_SPREAD, g_damageCG.integer, MOD_CHAINGUN );
+		//Bullet_Fire( ent, CHAINGUN_SPREAD, g_damageCG.integer, MOD_CHAINGUN );
+		Bullet_Fire( ent, CHAINGUN_SPREAD, g_damage_cg.integer, MOD_CHAINGUN ); // ~Dimmskii
 		break;
 //#endif
 // ~Dimmskii
 	case WP_HMG:
-		Bullet_Fire( ent, HMG_SPREAD, g_damageHMG.integer, MOD_HMG );
+		//Bullet_Fire( ent, HMG_SPREAD, g_damageHMG.integer, MOD_HMG );
+		Bullet_Fire( ent, HMG_SPREAD, g_damage_hmg.integer, MOD_HMG ); // ~Dimmskii
 		break;
 // END Dimmskii
 	default:

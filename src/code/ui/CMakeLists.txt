@@ -9,6 +9,7 @@ set(GAME_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../game")
 set(UI_SOURCES
   ui_main.c
   "${GAME_DIR}/bg_misc.c"
+  "${GAME_DIR}/bg_newgame.c"
   "${GAME_DIR}/bg_lib.c"
   "${GAME_DIR}/q_math.c"
   "${GAME_DIR}/q_shared.c"

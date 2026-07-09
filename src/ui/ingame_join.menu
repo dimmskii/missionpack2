@@ -90,7 +90,7 @@ itemDef {
       	forecolor 1 1 1 1
       	visible 1 
 		cvarTest "g_gametype"
-		disableCvar { "0" ; "1" ; "2" ; "3" }
+		disableCvar { "0" ; "1" ; "2" ; "14" }
       	action { exec "cmd team red" ; uiScript closeingame }
     	}
 
@@ -107,7 +107,7 @@ itemDef {
       	forecolor  1 1 1 1
       	visible 1 
 		cvarTest "g_gametype"
-		disableCvar { "0" ; "1" ; "2" ; "3" }
+		disableCvar { "0" ; "1" ; "2" ; "14" }
       	action { exec "cmd team blue" ; uiScript closeingame }
     	}
  
@@ -125,7 +125,7 @@ itemDef {
       	forecolor  1 1 1 1
       	visible 1 
 		cvarTest "g_gametype"
-		hideCvar { "0" ; "1" ; "2" ; "3" }
+		hideCvar { "0" ; "1" ; "2" ; "14" }
       	action { exec "cmd team free" ; uiScript closeingame }
     	}
  
@@ -143,7 +143,7 @@ itemDef {
       	forecolor  1 1 1 1
       	visible 1 
 		cvarTest "g_gametype"
-		showCvar { "0" ; "1" ; "2" ; "3" }
+		showCvar { "0" ; "1" ; "2" ; "14" }
       	action { exec "cmd team free" ; uiScript closeingame }
     	}
 

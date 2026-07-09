@@ -35,7 +35,8 @@ void CG_SetPrintString(int type, const char *p) {
 }
 
 void CG_CheckOrderPending() {
-	if (cgs.gametype < GT_CTF) {
+//	if (cgs.gametype < GT_CTF) {
+	if (!GT_IsFlagGame(cgs.gametype)) { // ~Dimmskii
 		return;
 	}
 	if (cgs.orderPending) {
@@ -808,7 +809,8 @@ static void CG_OneFlagStatus(rectDef_t *rect) {
 static void CG_DrawCTFPowerUp(rectDef_t *rect) {
 	int		value;
 
-	if (cgs.gametype < GT_CTF) {
+//	if (cgs.gametype < GT_CTF) {
+	if (!GT_IsFlagGame(cgs.gametype)) { // ~Dimmskii
 		return;
 	}
 	value = cg.snap->ps.stats[STAT_PERSISTANT_POWERUP];
@@ -1068,26 +1070,28 @@ qboolean CG_OwnerDrawVisible(int flags) {
 
 // ~Dimmskii
 	if (flags & CG_SHOW_ANYARENAGAME) {
-		if( cgs.gametype != GT_ARENA && cgs.gametype != GT_TEAMARENA ) {
+		if( !GT_IsArenaGame(cgs.gametype) ) {
 			return qfalse;
 		}
 	}
 
 	if (flags & CG_SHOW_ANYNONARENAGAME) {
-		if( cgs.gametype == GT_ARENA || cgs.gametype == GT_TEAMARENA ) {
+		if( GT_IsArenaGame(cgs.gametype)  ) {
 			return qfalse;
 		}
 	}
 // END ~Dimmskii
 
 	if (flags & CG_SHOW_ANYTEAMGAME) {
-		if( cgs.gametype >= GT_TEAM) {
+//		if( cgs.gametype >= GT_TEAM) {
+		if( GT_IsTeam(cgs.gametype) ) { // ~Dimmskii
 			return qtrue;
 		}
 	}
 
 	if (flags & CG_SHOW_ANYNONTEAMGAME) {
-		if( cgs.gametype < GT_TEAM) {
+//		if( cgs.gametype < GT_TEAM) {
+		if( !GT_IsTeam(cgs.gametype) ) { // ~Dimmskii
 			return qtrue;
 		}
 	}
@@ -1205,9 +1209,9 @@ static void CG_DrawCapFragLimit(rectDef_t *rect, float scale, vec4_t color, qhan
 	//int limit = (cgs.gametype >= GT_CTF) ? cgs.capturelimit : cgs.fraglimit;
 // ~Dimmskii
 	int limit;
-	if (cgs.gametype == GT_ARENA || cgs.gametype == GT_TEAMARENA) {
-		limit = cgs.winlimit;
-	} else if (cgs.gametype >= GT_CTF) {
+	if ( GT_IsArenaGame(cgs.gametype) ) {
+		limit = cgs.roundlimit;
+	} else if ( GT_IsFlagGame(cgs.gametype) ) {
 		limit = cgs.capturelimit;
 	} else {
 		limit = cgs.fraglimit;
@@ -1243,7 +1247,8 @@ static void CG_DrawMapName(rectDef_t *rect, float scale, vec4_t color, qhandle_t
 
 const char *CG_GetGameStatusText() {
 	const char *s = "";
-	if ( cgs.gametype < GT_TEAM) {
+//	if ( cgs.gametype < GT_TEAM) {
+	if ( !GT_IsTeam(cgs.gametype) ) { // ~Dimmskii
 		if (cg.snap->ps.persistant[PERS_TEAM] != TEAM_SPECTATOR ) {
 			s = va("%s place with %i",CG_PlaceString( cg.snap->ps.persistant[PERS_RANK] + 1 ),cg.snap->ps.persistant[PERS_SCORE] );
 		}
@@ -1278,11 +1283,20 @@ const char *CG_GameTypeString() {
 		return "Harvester";
 	}
 // ~Dimmskii
-	else if ( cgs.gametype == GT_ARENA ) { // Arener
+	else if ( cgs.gametype == GT_ARENA ) {
 		return "Arena";
-	}
-	else if ( cgs.gametype == GT_TEAMARENA ) { // Clan arener
-		return "Team Arena";
+	} else if ( cgs.gametype == GT_TEAMARENA ) {
+		return "Clan Arena";
+	} else if ( cgs.gametype == GT_FREEZE ) {
+		return "Freeze Tag";
+	} else if ( cgs.gametype == GT_DOMINATION ) {
+		return "Domination";
+	} else if ( cgs.gametype == GT_ATTACK_DEFEND ) {
+		return "Attack & Defend";
+	} else if ( cgs.gametype == GT_RED_ROVER ) {
+		return "Red Rover";
+	} else if ( cgs.gametype == GT_TEAMTOURNAMENT ) {
+		return "Team Tournament";
 	}
 // END Dimmskii
 	return "";

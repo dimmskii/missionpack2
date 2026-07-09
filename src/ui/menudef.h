@@ -479,6 +479,7 @@
 #define UI_BLUETEAMMODEL 268                      // TODO: QL Stub - Implement this
 #define UI_SERVER_SETTINGS 269                    // TODO: QL Stub - Implement this
 #define UI_STARTING_WEAPONS 270                   // TODO: QL Stub - Implement this
+#define UI_HOSTGAMEFACTORY 271		// ~Dimmskii
 
 // CG owner draw types continued (from QL)
 #define CG_1ST_PLYR_DMG_CG 271                   // TODO: QL Stub - Implement this

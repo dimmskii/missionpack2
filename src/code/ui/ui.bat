@@ -21,6 +21,8 @@ set cc=q3lcc -DQ3_VM -S -Wf-target=bytecode -Wf-g -I..\..\cgame -I..\..\game -I.
 @if errorlevel 1 goto errorquit
 %cc% ../../game/bg_misc.c
 @if errorlevel 1 goto errorquit
+%cc% ../../game/bg_newgame.c
+@if errorlevel 1 goto errorquit
 %cc% ../../game/bg_lib.c
 @if errorlevel 1 goto errorquit
 %cc% ../../game/q_math.c

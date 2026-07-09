@@ -10,6 +10,7 @@ set(UI_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../ui")
 # (relative-to-module-dir source path)
 set(CGAME_SOURCES
   "${GAME_DIR}/bg_misc.c"
+  "${GAME_DIR}/bg_newgame.c"
   "${GAME_DIR}/bg_pmove.c"
   "${GAME_DIR}/bg_slidemove.c"
   "${GAME_DIR}/bg_lib.c"

@@ -150,11 +150,13 @@ UI_CVAR( ui_realWarmUp, "g_warmup", "20", CVAR_ARCHIVE )
 UI_CVAR( ui_realCaptureLimit, "capturelimit", "8", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART )
 UI_CVAR( ui_serverStatusTimeOut, "ui_serverStatusTimeOut", "7000", CVAR_ARCHIVE )
 // ~Dimmskii
-UI_CVAR( ui_winLimit, "ui_winLimit", "10", 0 )
-UI_CVAR( ui_realWinLimit, "winLimit", "10", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART )
+UI_CVAR( ui_roundLimit, "ui_roundLimit", "10", 0 )
+UI_CVAR( ui_realRoundLimit, "roundlimit", "10", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART )
 UI_CVAR( ui_missionStr, "ui_missionStr", "exec missions/demo1.cfg", 0 )
 
 UI_CVAR( ui_serverFilterType, "ui_serverFilterType", "-1", 0 )
+
+UI_CVAR( ui_hostGameFactory, "ui_hostGameFactory", "0", 0 )
 // END Dimmskii
 
 #undef UI_CVAR

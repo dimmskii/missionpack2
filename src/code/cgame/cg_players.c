@@ -309,7 +309,8 @@ static qboolean	CG_FindClientModelFile( char *filename, int length, clientInfo_t
 	char *team, *charactersFolder;
 	int i;
 
-	if ( cgs.gametype >= GT_TEAM ) {
+//	if ( cgs.gametype >= GT_TEAM ) {
+	if ( GT_IsTeam(cgs.gametype) ) { // ~Dimmskii
 		switch ( ci->team ) {
 			case TEAM_BLUE: {
 				team = "blue";
@@ -347,7 +348,8 @@ static qboolean	CG_FindClientModelFile( char *filename, int length, clientInfo_t
 			if ( CG_FileExists( filename ) ) {
 				return qtrue;
 			}
-			if ( cgs.gametype >= GT_TEAM ) {
+//			if ( cgs.gametype >= GT_TEAM ) {
+			if ( GT_IsTeam(cgs.gametype) ) { // ~Dimmskii
 				if ( i == 0 && teamName && *teamName ) {
 					//								"models/players/characters/james/stroggs/lower_red.skin"
 					Com_sprintf( filename, length, "models/players/%s%s/%s%s_%s.%s", charactersFolder, modelName, teamName, base, team, ext );
@@ -394,7 +396,8 @@ static qboolean	CG_FindClientHeadFile( char *filename, int length, clientInfo_t 
 	char *team, *headsFolder;
 	int i;
 
-	if ( cgs.gametype >= GT_TEAM ) {
+//	if ( cgs.gametype >= GT_TEAM ) {
+	if ( GT_IsTeam(cgs.gametype) ) { // ~Dimmskii
 		switch ( ci->team ) {
 			case TEAM_RED: {
 				team = "red";
@@ -440,7 +443,8 @@ static qboolean	CG_FindClientHeadFile( char *filename, int length, clientInfo_t 
 			if ( CG_FileExists( filename ) ) {
 				return qtrue;
 			}
-			if ( cgs.gametype >= GT_TEAM ) {
+//			if ( cgs.gametype >= GT_TEAM ) {
+			if ( GT_IsTeam(cgs.gametype) ) { // ~Dimmskii
 				if ( i == 0 &&  teamName && *teamName ) {
 					Com_sprintf( filename, length, "models/players/%s%s/%s%s_%s.%s", headsFolder, headModelName, teamName, base, team, ext );
 				}
@@ -768,7 +772,8 @@ static void CG_LoadClientInfo( clientInfo_t *ci ) {
 	}
 
 //#ifdef MISSIONPACK
-	if( cgs.gametype >= GT_TEAM) {
+//	if( cgs.gametype >= GT_TEAM) {
+	if ( GT_IsTeam(cgs.gametype) ) { // ~Dimmskii
 		if( ci->team == TEAM_BLUE ) {
 			Q_strncpyz(teamname, cg_blueTeamName.string, sizeof(teamname) );
 		} else {
@@ -786,7 +791,8 @@ static void CG_LoadClientInfo( clientInfo_t *ci ) {
 		}
 
 		// fall back to default team name
-		if( cgs.gametype >= GT_TEAM) {
+//		if( cgs.gametype >= GT_TEAM) {
+		if ( GT_IsTeam(cgs.gametype) ) { // ~Dimmskii
 			// keep skin name
 			if( ci->team == TEAM_BLUE ) {
 				Q_strncpyz(teamname, DEFAULT_BLUETEAM_NAME, sizeof(teamname) );
@@ -899,7 +905,8 @@ static qboolean CG_ScanForExistingClientInfo( clientInfo_t *ci ) {
 			&& !Q_stricmp( ci->headSkinName, match->headSkinName ) 
 			//&& !Q_stricmp( ci->blueTeam, match->blueTeam ) 
 			//&& !Q_stricmp( ci->redTeam, match->redTeam )
-			&& (cgs.gametype < GT_TEAM || ci->team == match->team) ) {
+//			&& (cgs.gametype < GT_TEAM || ci->team == match->team) ) {
+			&& (!GT_IsTeam(cgs.gametype) || ci->team == match->team) ) { // ~Dimmskii
 			// this clientinfo is identical, so use it's handles
 
 			ci->deferred = qfalse;
@@ -938,7 +945,8 @@ static void CG_SetDeferredClientInfo( clientInfo_t *ci ) {
 			 Q_stricmp( ci->modelName, match->modelName ) ||
 //			 Q_stricmp( ci->headModelName, match->headModelName ) ||
 //			 Q_stricmp( ci->headSkinName, match->headSkinName ) ||
-			 (cgs.gametype >= GT_TEAM && ci->team != match->team) ) {
+//			 (cgs.gametype >= GT_TEAM && ci->team != match->team) ) {
+			 (GT_IsTeam(cgs.gametype) && ci->team != match->team) ) { // ~Dimmskii
 			continue;
 		}
 		// just load the real info cause it uses the same models and skins
@@ -947,14 +955,16 @@ static void CG_SetDeferredClientInfo( clientInfo_t *ci ) {
 	}
 
 	// if we are in teamplay, only grab a model if the skin is correct
-	if ( cgs.gametype >= GT_TEAM ) {
+//	if ( cgs.gametype >= GT_TEAM ) {
+	if ( GT_IsTeam(cgs.gametype) ) { // ~Dimmskii
 		for ( i = 0 ; i < cgs.maxclients ; i++ ) {
 			match = &cgs.clientinfo[ i ];
 			if ( !match->infoValid || match->deferred ) {
 				continue;
 			}
 			if ( Q_stricmp( ci->skinName, match->skinName ) ||
-				(cgs.gametype >= GT_TEAM && ci->team != match->team) ) {
+//				(cgs.gametype >= GT_TEAM && ci->team != match->team) ) {
+				(GT_IsTeam(cgs.gametype) && ci->team != match->team) ) { // ~Dimmskii
 				continue;
 			}
 			ci->deferred = qtrue;
@@ -1011,7 +1021,8 @@ static void CG_SetSkinAndModel( clientInfo_t *newInfo,
 
 	if ( cg_forceModel.integer || cg_enemyModel.string[0] || cg_teamModel.string[0] )
 	{
-		if ( cgs.gametype >= GT_TEAM )
+//		if ( cgs.gametype >= GT_TEAM )
+		if ( GT_IsTeam(cgs.gametype) ) // ~Dimmskii
 		{
 			// enemy model
 			if ( cg_enemyModel.string[0] && team != myTeam && team != TEAM_SPECTATOR ) {
@@ -1244,7 +1255,8 @@ void CG_NewClientInfo( int clientNum ) {
 	}
 
 	allowNativeModel = qfalse;
-	if ( cgs.gametype < GT_TEAM ) {
+//	if ( cgs.gametype < GT_TEAM ) {
+	if ( !GT_IsTeam(cgs.gametype) ) { // ~Dimmskii
 		if ( !cg.snap || ( cg.snap->ps.persistant[PERS_TEAM] == TEAM_FREE && cg.snap->ps.clientNum == clientNum ) ) {
 			if ( cg.demoPlayback || ( cg.snap && cg.snap->ps.pm_flags & PMF_FOLLOW ) ) {
 				allowNativeModel = qtrue;
@@ -2286,7 +2298,8 @@ static void CG_PlayerSprites( centity_t *cent ) {
 		return;
 	} */
 	if ((!cg.demoPlayback) || (cg_playback_follow == -1)) {
-		if ( !(cent->currentState.eFlags & EF_DEAD) && cg.snap->ps.persistant[PERS_TEAM] == team && cgs.gametype >= GT_TEAM) {
+//		if ( !(cent->currentState.eFlags & EF_DEAD) && cg.snap->ps.persistant[PERS_TEAM] == team && cgs.gametype >= GT_TEAM) {
+		if ( !(cent->currentState.eFlags & EF_DEAD) && cg.snap->ps.persistant[PERS_TEAM] == team && GT_IsTeam(cgs.gametype) ) { // ~Dimmskii
 			//if (cg_drawFriend.integer) {
 			if (cg_drawFriend.integer == 1) { // ~Dimmskii a value greater than 1 enables modern "team POIs"
 				CG_PlayerFloatSprite( cent, cgs.media.friendShader );
@@ -2294,7 +2307,8 @@ static void CG_PlayerSprites( centity_t *cent ) {
 			return;
 		}
 	} else {
-		if ( !(cent->currentState.eFlags & EF_DEAD) &&  cgs.clientinfo[cg_playback_follow].team == team && cgs.gametype >= GT_TEAM) {
+//		if ( !(cent->currentState.eFlags & EF_DEAD) &&  cgs.clientinfo[cg_playback_follow].team == team && cgs.gametype >= GT_TEAM) {
+		if ( !(cent->currentState.eFlags & EF_DEAD) &&  cgs.clientinfo[cg_playback_follow].team == team && GT_IsTeam(cgs.gametype) ) { // ~Dimmskii
 			//if (cg_drawFriend.integer) {
 			if (cg_drawFriend.integer == 1) { // ~Dimmskii a value greater than 1 enables modern "team POIs"
 				CG_PlayerFloatSprite( cent, cgs.media.friendShader );

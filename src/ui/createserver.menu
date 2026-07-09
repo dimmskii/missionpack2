@@ -82,7 +82,7 @@ itemDef {
 	backcolor 0 0 0 .25
 	visible 1
 	 cvarTest "ui_actualNetGameType"
-	  hideCvar { "0" ; "1" ; "2" ; "3" }
+	  hideCvar { "0" ; "1" ; "2"; "14" }
 	decoration
 }
 
@@ -96,7 +96,7 @@ itemDef {
 	backcolor 0 0 0 .25
 	visible 1
 	 cvarTest "ui_actualNetGameType"
-	  hideCvar { "0" ; "1" ; "2" ; "3" }
+	  hideCvar { "0" ; "1" ; "2"; "14" }
 	decoration
 }
 itemDef {
@@ -109,7 +109,7 @@ itemDef {
 	backcolor 0 0 0 .25
 	visible 1
 	 cvarTest "ui_actualNetGameType"
-	  showCvar { "0" ; "1" ; "2" ; "3" }
+	  showCvar { "0" ; "1" ; "2"; "14" }
 	decoration
 }
 
@@ -139,7 +139,7 @@ itemDef {
 itemDef {
       	name gametypefield
       	style 0	
-	ownerdraw UI_NETGAMETYPE
+	ownerdraw UI_HOSTGAMEFACTORY
 	text "Type:"
 	textstyle 6
       	rect 0 10 320 31 
@@ -417,7 +417,7 @@ itemDef {
 	forecolor 1 1 1 1
 	visible 1 
 	cvarTest "ui_actualNetGameType"
-	  showCvar { "7" ; "8" ; "9" ; "10" }
+	  showCvar { "5" ; "6" ; "7" ; "8" }
     	}
     itemDef {
       	name normal
@@ -434,14 +434,14 @@ itemDef {
       	forecolor 1 1 1 1
       	visible 1  
 			cvarTest "ui_actualNetGameType"
-	  showCvar { "0" ; "1" ; "4" }
+	  showCvar { "0" ; "1" ; "3" }
     }
     itemDef {
       	name normal
 	group grpsettings
 	type ITEM_TYPE_NUMERICFIELD
-	text "Win Limit:"
-	cvar "winlimit"
+	text "Round Limit:"
+	cvar "roundlimit"
       	rect 260 70 128 12 
       	textalign ITEM_ALIGN_RIGHT
       	textalignx 65
@@ -451,7 +451,7 @@ itemDef {
       	forecolor 1 1 1 1
       	visible 1  
 	cvarTest "ui_actualNetGameType"
-	  showCvar { "3" ; "5" }
+	  showCvar { "4" ; "14" }
     }
 
     itemDef {
@@ -469,7 +469,7 @@ itemDef {
       	forecolor 1 1 1 1
       	visible 1  
 	cvarTest "ui_actualNetGameType"
-	  showCvar { "0" ; "1" ; "2" ; "4" ; "7" ; "8" ; "9" ; "10" }
+	  showCvar { "0" ; "1" ; "2" ; "3" ; "5" ; "6" ; "7" ; "8" }
     }
 	
 	itemDef {
@@ -477,7 +477,7 @@ itemDef {
 	group grpsettings
       	type ITEM_TYPE_NUMERICFIELD
 	text "Round Time:"
-	cvar "roundtime"
+	cvar "roundtimelimit"
       	rect 260 85 128 12 
       	textalign ITEM_ALIGN_RIGHT
       	textalignx 65
@@ -487,7 +487,7 @@ itemDef {
       	forecolor 1 1 1 1
       	visible 1  
 	cvarTest "ui_actualNetGameType"
-	  showCvar { "3" ; "5" }  
+	  showCvar { "4" ; "14" }  
     }
 
 
@@ -505,7 +505,7 @@ itemDef {
       	forecolor 1 1 1 1
       	visible 1  
 		cvarTest "ui_actualNetGameType"
-		disableCvar { "0" ; "1" ; "2" ; "3" }
+		disableCvar { "0" ; "1" ; "2" ; "14" }
     }
 
 
@@ -589,7 +589,7 @@ itemDef {
       	forecolor 1 1 1 1
       	visible 1  
 		cvarTest "ui_actualNetGameType"
-		disableCvar { "0" ; "1" ; "2" ; "3" }
+		disableCvar { "0" ; "1" ; "2" ; "14" }
     	}
 
 	itemDef {
@@ -597,7 +597,7 @@ itemDef {
 	group grpsettings
       	type ITEM_TYPE_YESNO
 	text "Item Pos/Timers:"
-	cvar "g_itemVisibility"
+	cvar "g_itemTimers"
       	rect 260 205 128 12 
       	textalign ITEM_ALIGN_RIGHT
       	textalignx 65
@@ -651,7 +651,7 @@ itemDef {
       	forecolor 1 1 1 1
       	visible 1  
 		cvarTest "ui_actualNetGameType"
-		disableCvar { "0" ; "1" ; "2" ; "3" }
+		disableCvar { "0" ; "1" ; "2" ; "14" }
     	}
 
     itemDef {
@@ -769,7 +769,7 @@ itemDef {
       bordercolor 0 0 0 0
       visible 1  
 	  cvarTest "ui_actualNetGameType"
-	  hideCvar { "0" ; "1" ; "2" ; "3" }
+	  hideCvar { "0" ; "1" ; "2" ; "14" }
     }
 */
 
@@ -790,7 +790,7 @@ itemDef {
       bordercolor 0 0 0 0
       visible 1  
 	  cvarTest "ui_actualNetGameType"
-	  hideCvar { "0" ; "1" ; "2" ; "3" }
+	  hideCvar { "0" ; "1" ; "2" ; "14" }
 }
 
 
@@ -810,7 +810,7 @@ itemDef {
       bordercolor 0 0 0 0
        visible 1 
 	  cvarTest "ui_actualNetGameType"
-	  hideCvar { "0" ; "1" ; "2" ; "3" }
+	  hideCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
 	mouseExit { fadeout message_slot } 
@@ -831,7 +831,7 @@ itemDef {
       bordercolor 0 0 0 0
        visible 1 
 	  cvarTest "ui_actualNetGameType"
-	  hideCvar { "0" ; "1" ; "2" ; "3" }
+	  hideCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
 	mouseExit { fadeout message_slot } 
@@ -852,7 +852,7 @@ itemDef {
       bordercolor 0 0 0 0
        visible 1 
 	  cvarTest "ui_actualNetGameType"
-	  hideCvar { "0" ; "1" ; "2" ; "3" }
+	  hideCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
 	mouseExit { fadeout message_slot } 
@@ -873,7 +873,7 @@ itemDef {
       bordercolor 0 0 0 0
        visible 1 
 	  cvarTest "ui_actualNetGameType"
-	  hideCvar { "0" ; "1" ; "2" ; "3" }
+	  hideCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
 	mouseExit { fadeout message_slot } 
@@ -894,7 +894,7 @@ itemDef {
       bordercolor 0 0 0 0
       visible 1 
 	  cvarTest "ui_actualNetGameType"
-	  hideCvar { "0" ; "1" ; "2" ; "3" }
+	  hideCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
 	mouseExit { fadeout message_slot } 
@@ -915,7 +915,7 @@ itemDef {
       bordercolor 0 0 0 0
       visible 1 
 	  cvarTest "ui_actualNetGameType"
-	  hideCvar { "0" ; "1" ; "2" ; "3" }
+	  hideCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
 	mouseExit { fadeout message_slot } 
@@ -936,7 +936,7 @@ itemDef {
       bordercolor 0 0 0 0
       visible 1 
 	  cvarTest "ui_actualNetGameType"
-	  hideCvar { "0" ; "1" ; "2" ; "3" }
+	  hideCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
 	mouseExit { fadeout message_slot } 
@@ -960,7 +960,7 @@ itemDef {
       bordercolor 0 0 0 0
        visible 1 
 	  cvarTest "ui_actualNetGameType"
-	  hideCvar { "0" ; "1" ; "2" ; "3" }
+	  hideCvar { "0" ; "1" ; "2" ; "14" }
     }
 */
 itemDef {
@@ -980,7 +980,7 @@ itemDef {
       bordercolor 0 0 0 0
        visible 1 
 	  cvarTest "ui_actualNetGameType"
-	  hideCvar { "0" ; "1" ; "2" ; "3" }
+	  hideCvar { "0" ; "1" ; "2" ; "14" }
 }
 
 
@@ -999,7 +999,7 @@ itemDef {
       bordercolor 0 0 0 0
       visible 1 
 	  cvarTest "ui_actualNetGameType"
-	  hideCvar { "0" ; "1" ; "2" ; "3" }
+	  hideCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
 	mouseExit { fadeout message_slot } 
@@ -1020,7 +1020,7 @@ itemDef {
       bordercolor 0 0 0 0
        visible 1 
 	  cvarTest "ui_actualNetGameType"
-	  hideCvar { "0" ; "1" ; "2" ; "3" }
+	  hideCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
 	mouseExit { fadeout message_slot } 
@@ -1041,7 +1041,7 @@ itemDef {
       bordercolor 0 0 0 0
        visible 1 
 	  cvarTest "ui_actualNetGameType"
-	  hideCvar { "0" ; "1" ; "2" ; "3" }
+	  hideCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
 	mouseExit { fadeout message_slot } 
@@ -1062,7 +1062,7 @@ itemDef {
       bordercolor 0 0 0 0
       visible 1 
 	  cvarTest "ui_actualNetGameType"
-	  hideCvar { "0" ; "1" ; "2" ; "3" }
+	  hideCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
 	mouseExit { fadeout message_slot } 
@@ -1083,7 +1083,7 @@ itemDef {
       	bordercolor 0 0 0 0
       	 visible 1 
 	  cvarTest "ui_actualNetGameType"
-	  hideCvar { "0" ; "1" ; "2" ; "3" }
+	  hideCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" } 
 	mouseEnter { fadein message_slot } 
 	mouseExit { fadeout message_slot } 
@@ -1104,7 +1104,7 @@ itemDef {
       	bordercolor 0 0 0 0
       	 visible 1 
 	  cvarTest "ui_actualNetGameType"
-	  hideCvar { "0" ; "1" ; "2" ; "3" }
+	  hideCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" } 
 	mouseEnter { fadein message_slot } 
 	mouseExit { fadeout message_slot } 
@@ -1125,7 +1125,7 @@ itemDef {
       	bordercolor 0 0 0 0
       	 visible 1 
 	  cvarTest "ui_actualNetGameType"
-	  hideCvar { "0" ; "1" ; "2" ; "3" }
+	  hideCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" } 
 	mouseEnter { fadein message_slot } 
 	mouseExit { fadeout message_slot } 
@@ -1149,7 +1149,7 @@ itemDef {
       bordercolor 0 0 0 0
         visible 1 
 	  cvarTest "ui_actualNetGameType"
-	  showCvar { "0" ; "1" ; "2" ; "3" }
+	  showCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
 	mouseExit { fadeout message_slot } 
@@ -1170,7 +1170,7 @@ itemDef {
       bordercolor 0 0 0 0
         visible 1 
 	  cvarTest "ui_actualNetGameType"
-	  showCvar { "0" ; "1" ; "2" ; "3" }
+	  showCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
 	mouseExit { fadeout message_slot } 
@@ -1191,7 +1191,7 @@ itemDef {
       bordercolor 0 0 0 0
         visible 1 
 	  cvarTest "ui_actualNetGameType"
-	  showCvar { "0" ; "1" ; "2" ; "3" }
+	  showCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
 	mouseExit { fadeout message_slot } 
@@ -1212,7 +1212,7 @@ itemDef {
       bordercolor 0 0 0 0
        visible 1 
 	  cvarTest "ui_actualNetGameType"
-	  showCvar { "0" ; "1" ; "2" ; "3" }
+	  showCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
 	mouseExit { fadeout message_slot } 
@@ -1233,7 +1233,7 @@ itemDef {
       bordercolor 0 0 0 0
        visible 1 
 	  cvarTest "ui_actualNetGameType"
-	  showCvar { "0" ; "1" ; "2" ; "3" }
+	  showCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
 	mouseExit { fadeout message_slot } 
@@ -1260,7 +1260,7 @@ itemDef {
       	bordercolor 0 0 0 0
       	 visible 1 
 	  cvarTest "ui_actualNetGameType"
-	  showCvar { "0" ; "1" ; "2" ; "3" }
+	  showCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
 	mouseExit { fadeout message_slot } 
@@ -1281,7 +1281,7 @@ itemDef {
       	bordercolor 0 0 0 0
        	 visible 1 
 	  cvarTest "ui_actualNetGameType"
-	 showCvar { "0" ; "1" ; "2" ; "3" }
+	 showCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
 	mouseExit { fadeout message_slot } 
@@ -1302,7 +1302,7 @@ itemDef {
       	bordercolor 0 0 0 0
        	 visible 1 
 	  cvarTest "ui_actualNetGameType"
-	  showCvar { "0" ; "1" ; "2" ; "3" }
+	  showCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
 	mouseExit { fadeout message_slot } 
@@ -1323,7 +1323,7 @@ itemDef {
       bordercolor 0 0 0 0
       visible 1 
 	  cvarTest "ui_actualNetGameType"
-	showCvar { "0" ; "1" ; "2" ; "3" }
+	showCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
 	mouseExit { fadeout message_slot } 
@@ -1344,7 +1344,7 @@ itemDef {
       	bordercolor 0 0 0 0
        visible 1 
 	  cvarTest "ui_actualNetGameType"
-	  showCvar { "0" ; "1" ; "2" ; "3" }
+	  showCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" } 
 	mouseEnter { fadein message_slot } 
 	mouseExit { fadeout message_slot } 
@@ -1365,7 +1365,7 @@ itemDef {
       bordercolor 0 0 0 0
       visible 1 
 	  cvarTest "ui_actualNetGameType"
-	showCvar { "0" ; "1" ; "2" ; "3" }
+	showCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
 	mouseExit { fadeout message_slot } 
@@ -1386,7 +1386,7 @@ itemDef {
       	bordercolor 0 0 0 0
        visible 1 
 	  cvarTest "ui_actualNetGameType"
-	  showCvar { "0" ; "1" ; "2" ; "3" }
+	  showCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" } 
 	mouseEnter { fadein message_slot } 
 	mouseExit { fadeout message_slot } 
@@ -1407,7 +1407,7 @@ itemDef {
       bordercolor 0 0 0 0
       visible 1 
 	  cvarTest "ui_actualNetGameType"
-	showCvar { "0" ; "1" ; "2" ; "3" }
+	showCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
 	mouseExit { fadeout message_slot } 
@@ -1428,7 +1428,7 @@ itemDef {
       	bordercolor 0 0 0 0
        visible 1 
 	  cvarTest "ui_actualNetGameType"
-	  showCvar { "0" ; "1" ; "2" ; "3" }
+	  showCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" } 
 	mouseEnter { fadein message_slot } 
 	mouseExit { fadeout message_slot } 

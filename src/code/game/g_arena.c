@@ -59,8 +59,8 @@ void Arena_EndRound( team_t winningTeam ) {
 			clientEntWon->client->ps.persistant[PERS_ROUNDWINS] ++;
 			//clientEntWon->client->ps.persistant[PERS_CAPTURES] ++; // Temp hack to display
 			CalculateRanks(); // Make sure FFA arena scoreboard is sorted immediately
-			if ( g_winlimit.integer ) {
-				if ( clientEntWon->client->ps.persistant[PERS_ROUNDWINS] >= g_winlimit.integer ) {
+			if ( g_roundlimit.integer ) {
+				if ( clientEntWon->client->ps.persistant[PERS_ROUNDWINS] >= g_roundlimit.integer ) {
 					level.arenaRoundQueued = level.time; // Stops CheckExitRules from re-triggering the round timeout every frame
 					return; // Round enqueue after winning preventative measure
 				}
@@ -68,8 +68,8 @@ void Arena_EndRound( team_t winningTeam ) {
 		}
 	}
 	
-	if ( g_winlimit.integer ) {
-		if ( level.teamScores[TEAM_RED] >= g_winlimit.integer || level.teamScores[TEAM_BLUE] >= g_winlimit.integer ) {
+	if ( g_roundlimit.integer ) {
+		if ( level.teamScores[TEAM_RED] >= g_roundlimit.integer || level.teamScores[TEAM_BLUE] >= g_roundlimit.integer ) {
 			level.arenaRoundQueued = level.time; // Stops CheckExitRules from re-triggering the round timeout every frame
 			return; // Round enqueue after winning preventative measure
 		}
@@ -101,14 +101,14 @@ void Arena_TimeoutRound( void ) {
 =============
 Arena_MatchDecided
 
-True once a side/player has already reached g_winlimit. Lets callers in the
+True once a side/player has already reached g_roundlimit. Lets callers in the
 round-timeout path know the match outcome is final so they don't keep
 re-triggering round-end logic (and re-broadcasting/re-scoring) while waiting
 for CheckExitRules to queue the intermission.
 =============
 */
 qboolean Arena_MatchDecided( void ) {
-	if ( !g_winlimit.integer ) {
+	if ( !g_roundlimit.integer ) {
 		return qfalse;
 	}
 
@@ -124,13 +124,13 @@ qboolean Arena_MatchDecided( void ) {
 			if ( cl->sess.sessionTeam != TEAM_FREE ) {
 				continue;
 			}
-			if ( cl->ps.persistant[PERS_ROUNDWINS] >= g_winlimit.integer ) {
+			if ( cl->ps.persistant[PERS_ROUNDWINS] >= g_roundlimit.integer ) {
 				return qtrue;
 			}
 		}
 		return qfalse;
-	} else if ( g_gametype.integer == GT_TEAMARENA ) {
-		return ( level.teamScores[TEAM_RED] >= g_winlimit.integer || level.teamScores[TEAM_BLUE] >= g_winlimit.integer );
+	} else if ( g_gametype.integer == GT_CLAN_ARENA || g_gametype.integer == GT_FREEZE ) {
+		return ( level.teamScores[TEAM_RED] >= g_roundlimit.integer || level.teamScores[TEAM_BLUE] >= g_roundlimit.integer );
 	}
 
 	return qfalse;
@@ -163,7 +163,7 @@ void Arena_CheckRules( void ) {
 		if ( Team_PlayerCountAlive(TEAM_FREE) < 2 ) {
 			Arena_EndRound( TEAM_FREE ); // The round wins the round
 		}
-	} else if ( g_gametype.integer == GT_TEAMARENA ) {
+	} else if ( g_gametype.integer == GT_CLAN_ARENA || g_gametype.integer == GT_FREEZE ) {
 		// Check if either team has no players remaining ; if so, call Arena_EndRound
 		if ( Team_PlayerCountAlive(TEAM_RED) < 1 ) {
 			Arena_EndRound( TEAM_BLUE ); // Blue wins the round

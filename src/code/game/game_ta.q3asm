@@ -1,7 +1,9 @@
 -o "qagame"
 g_main
 ..\g_syscalls
+jsmndr
 bg_misc
+bg_newgame
 bg_lib
 bg_pmove
 bg_slidemove
@@ -15,6 +17,7 @@ ai_chat
 ai_cmd
 g_active
 g_arena
+g_newgame
 g_arenas
 g_bot
 g_client
