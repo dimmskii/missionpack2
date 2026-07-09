@@ -236,6 +236,7 @@ G_CVAR( g_splashradius_pg, "g_splashradius_pg", "20", 0, 0, qfalse, qfalse )
 G_CVAR( g_splashdamage_bfg, "g_splashdamage_bfg", "100", 0, 0, qfalse, qfalse )
 G_CVAR( g_splashradius_bfg, "g_splashradius_bfg", "120", 0, 0, qfalse, qfalse )
 G_CVAR( g_splashradius_pl, "g_splashradius_pl", "150", 0, 0, qfalse, qfalse )
+G_CVAR( g_splashdamage_pl, "g_splashdamage_pl", "100", 0, 0, qfalse, qfalse )		// TODO: implement
 
 // QL-convention starting ammo cvars
 G_CVAR( g_startingAmmo_mg, "g_startingAmmo_mg", "50", 0, 0, qfalse, qfalse )

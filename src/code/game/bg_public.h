@@ -189,11 +189,39 @@ static const char *GFACTORY_CVARS[] = {
 	"g_powerupRespawn",
 	"g_holdableRespawn",
 	
+	// Direct hit damage cvars
+	"g_damage_g",
+	"g_damage_mg",
+	"g_damage_sg",
+	"g_damage_gl",
+	"g_damage_rl",
+	"g_damage_lg",
+	"g_damage_rg",
+	"g_damage_pg",
+	"g_damage_bfg",
+	"g_damage_ng",
+	"g_damage_pl",
+	"g_damage_cg",
+	"g_damage_hmg",
+	
+	// Splash damage and radius cvars
+	"g_splashdamage_gl",
+	"g_splashdamage_rl",
+	"g_splashdamage_pg",
+	"g_splashdamage_bfg",
+	"g_splashdamage_pl",
+	
+	"g_splashradius_gl",
+	"g_splashradius_rl",
+	"g_splashradius_pg",
+	"g_splashradius_bfg",
+	"g_splashradius_pl",
+	
     NULL                    // Null-terminator for safe iteration loops
 };
 
 #define GFACTORY_MAX_CVAR_VALUE_LEN 64
-#define GFACTORY_CVARS_COUNT       39 	/* Total elements in GFACTORY_CVARS excluding NULL */
+#define GFACTORY_CVARS_COUNT       62 	/* Total elements in GFACTORY_CVARS excluding NULL */
 
 // QL-Compatible game factories
 typedef struct {
