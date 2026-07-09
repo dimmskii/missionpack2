@@ -152,3 +152,21 @@ typedef struct {
 
 #define MAX_GFACTORIES 32		// Max game factories possible to register
 
+#define MAX_GAMETYPE_NAME_ALIASES 3
+extern const char *const s_gametypeSpawnNames[GT_MAX_GAME_TYPE][MAX_GAMETYPE_NAME_ALIASES];
+
+// Factories parsed from scripts/factories.txt plus any scripts/*.factories
+// add-ons. Shared storage/loading so any module can parse these files -
+// currently the canonical entrypoint is server-side (G_LoadFactories in
+// g_newgame.c), with a UI-side loader (e.g. UI_LoadFactories) able to
+// reuse the same parsing/inheritance machinery. Note bg_newgame.c can't
+// itself enumerate scripts/*.factories (that needs trap_FS_GetFileList,
+// which cgame doesn't have) - each module's own wrapper does that scan
+// and calls BG_LoadFactoriesFile per matched file.
+extern gfactory_t	bg_factories[MAX_GFACTORIES];
+extern int			bg_numFactories;
+
+void        BG_LoadFactoriesFile( const char *filename );
+void        BG_ResolveFactoryInheritance( void );
+gfactory_t *BG_FindFactoryById( const char *id );
+

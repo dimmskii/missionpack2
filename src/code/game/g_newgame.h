@@ -1,16 +1,21 @@
 // By Dimmskii
 
 // g_newgame.c
-#define MAX_GAMETYPE_NAME_ALIASES 3
-extern const char *const s_gametypeSpawnNames[GT_MAX_GAME_TYPE][MAX_GAMETYPE_NAME_ALIASES];
-
-// Factories parsed from scripts/factories.txt. Server side only for now -
-// client visibility (e.g. exposing the active factory via serverinfo) is a
-// later problem.
-extern gfactory_t	g_factories[MAX_GFACTORIES];
-extern int			g_numFactories;
-
+//
+// Factory storage/parsing/inheritance now lives in bg_newgame.c/.h
+// (bg_factories, bg_numFactories, BG_LoadFactoriesFile,
+// BG_ResolveFactoryInheritance, BG_FindFactoryById) since it's shared,
+// module-agnostic machinery. What stays server-side here is: scanning
+// scripts/*.factories (needs trap_FS_GetFileList, which cgame lacks - see
+// bg_newgame.h), and actually applying a factory's cvars to the engine.
+//
+// G_LoadFactories is the canonical (re-)load entrypoint, called at map
+// init. G_ApplySelectedFactory is split out separately so the "which
+// factory does g_factory currently name, and apply it" step can be
+// re-run later (e.g. after g_factory changes mid-game) without repeating
+// the full file load.
 void G_LoadFactories( void );
+void G_ApplySelectedFactory( void );
 
 
 
