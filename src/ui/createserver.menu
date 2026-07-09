@@ -477,7 +477,7 @@ itemDef {
 	group grpsettings
       	type ITEM_TYPE_NUMERICFIELD
 	text "Round Time:"
-	cvar "roundtime"
+	cvar "roundtimelimit"
       	rect 260 85 128 12 
       	textalign ITEM_ALIGN_RIGHT
       	textalignx 65

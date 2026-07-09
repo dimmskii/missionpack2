@@ -327,9 +327,9 @@ void CG_DrawInformation( void ) {
 // ~Dimmskii
 	if ( GT_IsArenaGame(cgs.gametype) ) {
 
-		value = atoi( Info_ValueForKey( info, "roundtime" ) );
+		value = atoi( Info_ValueForKey( info, "roundtimelimit" ) );
 		if ( value ) {
-			UI_DrawProportionalString( 320, y, va( "roundtime %i", value ),
+			UI_DrawProportionalString( 320, y, va( "roundtimelimit %i", value ),
 				UI_CENTER|UI_SMALLFONT|UI_DROPSHADOW, colorWhite );
 			y += PROP_HEIGHT;
 		}

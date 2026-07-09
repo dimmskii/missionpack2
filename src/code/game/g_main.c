@@ -1799,8 +1799,8 @@ static void CheckExitRules_old( void ) { // ~Dimmskii
 	}
 	
 // ~Dimmskii
-	if ( GT_IsArenaGame(g_gametype.integer) && g_roundtime.integer && !level.warmupTime && !level.arenaRoundQueued && !Arena_MatchDecided() ) {
-		if ( level.time - level.startTime >= g_roundtime.integer*1000 ) {
+	if ( GT_IsArenaGame(g_gametype.integer) && g_roundtimelimit.integer && !level.warmupTime && !level.arenaRoundQueued && !Arena_MatchDecided() ) {
+		if ( level.time - level.startTime >= g_roundtimelimit.integer*1000 ) {
 			G_BroadcastServerCommand( -1, "print \"Round timelimit hit.\n\"");
 			Arena_TimeoutRound();
 			return;

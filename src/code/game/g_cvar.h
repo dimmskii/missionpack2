@@ -189,7 +189,7 @@ G_CVAR( g_timelimit, "timelimit", "0", CVAR_SERVERINFO | CVAR_NORESTART, 0, qtru
 G_CVAR( g_capturelimit, "capturelimit", "8", CVAR_SERVERINFO | CVAR_NORESTART, 0, qtrue, qfalse )
 
 G_CVAR( g_roundlimit, "roundlimit", "10", CVAR_SERVERINFO | CVAR_NORESTART, 0, qtrue, qfalse )
-G_CVAR( g_roundtime, "roundtime", "300", CVAR_SERVERINFO | CVAR_NORESTART, 0, qtrue, qfalse )
+G_CVAR( g_roundtimelimit, "roundtimelimit", "180", CVAR_SERVERINFO | CVAR_NORESTART, 0, qtrue, qfalse )
 
 G_CVAR( g_teamVisibility, "g_teamVisibility", "1", CVAR_SERVERINFO, 0, qtrue, qfalse )
 G_CVAR( g_itemTimers, "g_itemTimers", "1", CVAR_SERVERINFO, 0, qtrue, qfalse )

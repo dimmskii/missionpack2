@@ -62,7 +62,7 @@
   {
     "cvars": {
 	  "g_gametype": "4",
-      "roundtime": "180",
+      "roundtimelimit": "180",
 	  "roundlimit": "10",
 	  "g_warmup": "15",
 	  "dmflags": "8",
@@ -141,7 +141,7 @@
   {
     "cvars": {
 	  "g_gametype": "14",
-      "roundtime": "180",
+      "roundtimelimit": "180",
 	  "roundlimit": "5",
 	  "g_warmup": "15",
 	  "dmflags": "8",
