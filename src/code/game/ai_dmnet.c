@@ -302,7 +302,7 @@ int BotGetItemLongTermGoal(bot_state_t *bs, int tfl, bot_goal_t *goal) {
 			trap_BotResetAvoidReach(bs->ms);
 // ~DIMMSKII
 // TODO: Move this out of here
-			if (gametype == GT_TEAMARENA || gametype == GT_ARENA) {
+			if ( GT_IsArenaGame(g_gametype.integer) ) {
 				// Hackish Dimmskii fix for bots not moving in Arena gametypes where all pickups are absent
 				BotArenaPickEnemyToKill(bs);
 			}
@@ -2024,7 +2024,8 @@ int AINode_Battle_Fight(bot_state_t *bs) {
 #endif
 	}
 	//if no enemy
-	if (bs->enemy < 0 || ( g_gametype.integer >= GT_TEAM && bs->enemy < level.maxclients &&
+//	if (bs->enemy < 0 || ( g_gametype.integer >= GT_TEAM && bs->enemy < level.maxclients &&
+	if (bs->enemy < 0 || ( GT_IsTeam(g_gametype.integer) && bs->enemy < level.maxclients && // ~Dimmskii
 							level.clients[bs->client].sess.sessionTeam == level.clients[bs->enemy].sess.sessionTeam ) ) {
 		bs->enemy = -1;
 		AIEnter_Seek_LTG(bs, "battle fight: no enemy");

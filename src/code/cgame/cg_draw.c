@@ -1101,7 +1101,8 @@ static void CG_DrawUpperRight(stereoFrame_t stereoFrame)
 
 	y = cgs.screenYmin;
 
-	if ( cgs.gametype >= GT_TEAM && cg_drawTeamOverlay.integer == 1 ) {
+//	if ( cgs.gametype >= GT_TEAM && cg_drawTeamOverlay.integer == 1 ) {
+	if ( GT_IsTeam(cgs.gametype) && cg_drawTeamOverlay.integer == 1 ) { // ~Dimmskii
 		y = CG_DrawTeamOverlay( y, qtrue, qtrue );
 	} 
 	if ( cg_drawSnapshot.integer ) {
@@ -2186,7 +2187,8 @@ static void CG_DrawSpectator( void ) {
 	CG_DrawString( 320, cgs.screenYmax - 40 + 1, "SPECTATOR", colorWhite, BIGCHAR_WIDTH, BIGCHAR_HEIGHT, 0, DS_SHADOW | DS_CENTER | DS_PROPORTIONAL );
 	if ( cgs.gametype == GT_TOURNAMENT ) {
 		CG_DrawString( 320, cgs.screenYmax - 20 + 1, "waiting to play", colorWhite, BIGCHAR_WIDTH, BIGCHAR_HEIGHT, 0, DS_SHADOW | DS_CENTER | DS_PROPORTIONAL );
-	} else if ( cgs.gametype >= GT_TEAM ) {
+//	} else if ( cgs.gametype >= GT_TEAM ) {
+	} else if ( GT_IsTeam(cgs.gametype) ) { // ~Dimmskii
 		CG_DrawString( 320, cgs.screenYmax - 20 + 1, "press ESC and use the JOIN menu to play", colorWhite, BIGCHAR_WIDTH, BIGCHAR_HEIGHT, 0, DS_SHADOW | DS_CENTER | DS_PROPORTIONAL );
 	}
 }
@@ -2295,7 +2297,7 @@ static qboolean CG_DrawScoreboard( void ) {
 // As always, TODO: implement some sort of cg isDeadArenaPlayer canned method and/or use a shared method isArenaGame(int gt)
 	if ( cg.showScores || cg.predictedPlayerState.pm_type == PM_INTERMISSION
 		|| ( cg.predictedPlayerState.pm_type == PM_DEAD
-			&& !( ( cgs.gametype == GT_ARENA || cgs.gametype == GT_TEAMARENA )
+			&& !( GT_IsArenaGame(cgs.gametype)
 				&& ( cg.snap->ps.pm_flags & PMF_FOLLOW ) ) ) ) {
 // END Dimmskii
 		fade = 1.0;
@@ -2314,7 +2316,8 @@ static qboolean CG_DrawScoreboard( void ) {
 
 
 	if (menuScoreboard == NULL) {
-		if ( cgs.gametype >= GT_TEAM ) {
+//		if ( cgs.gametype >= GT_TEAM ) {
+		if ( GT_IsTeam(cgs.gametype) ) { // ~Dimmskii
 			menuScoreboard = Menus_FindByName("teamscore_menu");
 		} else {
 			menuScoreboard = Menus_FindByName("score_menu");
@@ -2526,7 +2529,17 @@ static void CG_DrawWarmup( void ) {
 		} else if ( cgs.gametype == GT_ARENA ) {
 			s = "Arena";
 		} else if ( cgs.gametype == GT_TEAMARENA ) {
-			s = "Team Arena";
+			s = "Clan Arena";
+		} else if ( cgs.gametype == GT_FREEZE ) {
+			s = "Freeze Tag";
+		} else if ( cgs.gametype == GT_DOMINATION ) {
+			s = "Domination";
+		} else if ( cgs.gametype == GT_ATTACK_DEFEND ) {
+			s = "Attack & Defend";
+		} else if ( cgs.gametype == GT_RED_ROVER ) {
+			s = "Red Rover";
+		} else if ( cgs.gametype == GT_TEAMTOURNAMENT ) {
+			s = "Team Tournament";
 //END Dimmskii
 		} else {
 			s = "";
@@ -2642,7 +2655,7 @@ static void CG_Draw2D( stereoFrame_t stereoFrame )
 		CG_DrawCrosshair();
 		CG_DrawCrosshairNames();
 // ~Dimmskii
-	} else if ( ( cgs.gametype == GT_ARENA || cgs.gametype == GT_TEAMARENA )
+	} else if ( GT_IsArenaGame(cgs.gametype)
 		&& cg.snap->ps.stats[STAT_HEALTH] <= 0
 		&& ( cg.snap->ps.pm_flags & PMF_FOLLOW ) ) {
 		CG_DrawCrosshair();
@@ -2682,8 +2695,9 @@ static void CG_Draw2D( stereoFrame_t stereoFrame )
 		CG_DrawItemPOIs();
 		// END DIMMSKII
 		
-		if ( cgs.gametype >= GT_TEAM ) {
+//		if ( cgs.gametype >= GT_TEAM ) {
 			// ~DIMMSKII
+		if ( GT_IsTeam(cgs.gametype) ) {
 			CG_DrawTeammatePOIs();
 			// END DIMMSKII
 //		#ifndef MISSIONPACK
@@ -2905,7 +2919,8 @@ void CG_TrackClientTeamChange( void )
 			return;
 		}
 
-		if ( cgs.gametype >= GT_TEAM ) 
+//		if ( cgs.gametype >= GT_TEAM ) 
+		if ( GT_IsTeam(cgs.gametype) ) 
 		{
 			spec_client = cg.snap->ps.clientNum;
 			return;
@@ -3017,7 +3032,8 @@ static qboolean CG_ShouldDrawTeammatePOIs( void ) {
 	team_t	myTeam;
 
 	// Make sure it's a team game
-	if ( !cg.snap || cgs.gametype < GT_TEAM ) {
+	//if ( !cg.snap || cgs.gametype < GT_TEAM ) {
+	if ( !cg.snap || !GT_IsTeam(cgs.gametype) ) {
 		return qfalse;
 	}
 
@@ -3461,7 +3477,7 @@ static void CG_DrawItemPOIs( void ) {
 		return;
 	}
 
-	if ( cgs.g_itemVisibility ) {
+	if ( cgs.g_itemTimers ) {
 		// Iterate through all entities (up to MAX_GENTITIES)
 		for ( i = 0; i < MAX_GENTITIES; i++ ) {
 			ip = &cg_itemPositions[i]; 

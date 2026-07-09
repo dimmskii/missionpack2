@@ -127,7 +127,8 @@ void ProximityMine_Trigger( gentity_t *trigger, gentity_t *other, trace_t *trace
 	}
 
 
-	if ( g_gametype.integer >= GT_TEAM ) {
+//	if ( g_gametype.integer >= GT_TEAM ) {
+	if ( GT_IsTeam(g_gametype.integer) ) { // ~Dimmskii
 		// don't trigger same team mines
 		if (trigger->parent->s.generic1 == other->client->sess.sessionTeam) {
 			return;
@@ -527,9 +528,12 @@ gentity_t *fire_plasma (gentity_t *self, vec3_t start, vec3_t dir) {
 	bolt->s.weapon = WP_PLASMAGUN;
 	bolt->r.ownerNum = self->s.number;
 	bolt->parent = self;
-	bolt->damage = g_damagePG.integer;
-	bolt->splashDamage = g_splashDamagePG.integer;
-	bolt->splashRadius = g_splashRadiusPG.integer;
+	//bolt->damage = g_damagePG.integer;
+	bolt->damage = g_damage_pg.integer; // ~Dimmskii
+	//bolt->splashDamage = g_splashDamagePG.integer;
+	bolt->splashDamage = g_splashdamage_pg.integer; // ~Dimmskii
+	//bolt->splashRadius = g_splashRadiusPG.integer;
+	bolt->splashRadius = g_splashradius_pg.integer; // ~Dimmskii
 	bolt->methodOfDeath = MOD_PLASMA;
 	bolt->splashMethodOfDeath = MOD_PLASMA_SPLASH;
 	bolt->clipmask = MASK_SHOT;
@@ -575,9 +579,12 @@ gentity_t *fire_grenade (gentity_t *self, vec3_t start, vec3_t dir) {
 	bolt->s.eFlags = EF_BOUNCE_HALF;
 	bolt->r.ownerNum = self->s.number;
 	bolt->parent = self;
-	bolt->damage = g_damageGL.integer;
-	bolt->splashDamage = g_splashDamageGL.integer;
-	bolt->splashRadius = g_splashRadiusGL.integer;
+	//bolt->damage = g_damageGL.integer;
+	bolt->damage = g_damage_gl.integer; // ~Dimmskii
+	//bolt->splashDamage = g_splashDamageGL.integer;
+	bolt->splashDamage = g_splashdamage_gl.integer; // ~Dimmskii
+	//bolt->splashRadius = g_splashRadiusGL.integer;
+	bolt->splashRadius = g_splashradius_gl.integer; // ~Dimmskii
 	bolt->methodOfDeath = MOD_GRENADE;
 	bolt->splashMethodOfDeath = MOD_GRENADE_SPLASH;
 	bolt->clipmask = MASK_SHOT;
@@ -624,9 +631,12 @@ gentity_t *fire_bfg (gentity_t *self, vec3_t start, vec3_t dir) {
 	bolt->s.weapon = WP_BFG;
 	bolt->r.ownerNum = self->s.number;
 	bolt->parent = self;
-	bolt->damage = g_damageBFG.integer;
-	bolt->splashDamage = g_splashDamageBFG.integer;
-	bolt->splashRadius = g_splashRadiusBFG.integer;
+	//bolt->damage = g_damageBFG.integer;
+	bolt->damage = g_damage_bfg.integer; // ~Dimmskii
+	//bolt->splashDamage = g_splashDamageBFG.integer;
+	bolt->splashDamage = g_splashdamage_bfg.integer; // ~Dimmskii
+	//bolt->splashRadius = g_splashRadiusBFG.integer;
+	bolt->splashRadius = g_splashradius_bfg.integer; // ~Dimmskii
 	bolt->methodOfDeath = MOD_BFG;
 	bolt->splashMethodOfDeath = MOD_BFG_SPLASH;
 	bolt->clipmask = MASK_SHOT;
@@ -673,9 +683,12 @@ gentity_t *fire_rocket (gentity_t *self, vec3_t start, vec3_t dir) {
 	bolt->s.weapon = WP_ROCKET_LAUNCHER;
 	bolt->r.ownerNum = self->s.number;
 	bolt->parent = self;
-	bolt->damage = g_damageRL.integer;
-	bolt->splashDamage = g_splashDamageRL.integer;
-	bolt->splashRadius = g_splashRadiusRL.integer;
+	//bolt->damage = g_damageRL.integer;
+	bolt->damage = g_damage_rl.integer; // ~Dimmskii
+	//bolt->splashDamage = g_splashDamageRL.integer;
+	bolt->splashDamage = g_splashdamage_rl.integer; // ~Dimmskii
+	//bolt->splashRadius = g_splashRadiusRL.integer;
+	bolt->splashRadius = g_splashradius_rl.integer; // ~Dimmskii
 	bolt->methodOfDeath = MOD_ROCKET;
 	bolt->splashMethodOfDeath = MOD_ROCKET_SPLASH;
 	bolt->clipmask = MASK_SHOT;
@@ -693,7 +706,8 @@ gentity_t *fire_rocket (gentity_t *self, vec3_t start, vec3_t dir) {
 	bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME;		// move a bit on the very first frame
 	VectorCopy( start, bolt->s.pos.trBase );
 	SnapVector( bolt->s.pos.trBase );			// save net bandwidth
-	VectorScale( dir, g_velocityRL.integer, bolt->s.pos.trDelta );
+	//VectorScale( dir, g_velocityRL.integer, bolt->s.pos.trDelta );
+	VectorScale( dir, g_velocity_rl.integer, bolt->s.pos.trDelta ); // ~Dimmskii
 	SnapVector( bolt->s.pos.trDelta );			// save net bandwidth
 	VectorCopy (start, bolt->r.currentOrigin);
 
@@ -725,7 +739,8 @@ gentity_t *fire_grapple (gentity_t *self, vec3_t start, vec3_t dir) {
 	hook->clipmask = MASK_SHOT;
 	hook->parent = self;
 	hook->target_ent = NULL;
-	hook->damage = g_grappleDamage.integer;
+	//hook->damage = g_grappleDamage.integer;
+	hook->damage = g_damage_gh.integer; // ~Dimmskii
 
 	// missile owner
 	hook->s.clientNum = self->s.clientNum;
@@ -781,7 +796,8 @@ gentity_t *fire_nail( gentity_t *self, vec3_t start, vec3_t forward, vec3_t righ
 	// END ~DIMMSKII
 	bolt->r.ownerNum = self->s.number;
 	bolt->parent = self;
-	bolt->damage = g_damageNG.integer;
+	//bolt->damage = g_damageNG.integer;
+	bolt->damage = g_damage_ng.integer; // ~Dimmskii
 	bolt->methodOfDeath = MOD_NAIL;
 	bolt->clipmask = MASK_SHOT;
 	bolt->target_ent = NULL;
@@ -834,9 +850,12 @@ gentity_t *fire_prox( gentity_t *self, vec3_t start, vec3_t dir ) {
 	bolt->s.eFlags = 0;
 	bolt->r.ownerNum = self->s.number;
 	bolt->parent = self;
-	bolt->damage = 0;
-	bolt->splashDamage = g_damagePL.integer;
-	bolt->splashRadius = g_splashRadiusPL.integer;
+	//bolt->damage = 0;
+	bolt->damage = g_damage_pl.integer; // ~Dimmskii -- this is classically zero and we have an additional direct damage cvar defaulting to "0". Let's just use it and whatever happens happens.
+	//bolt->splashDamage = g_damagePL.integer;
+	bolt->splashDamage = g_splashdamage_pl.integer; // ~Dimmskii
+	//bolt->splashRadius = g_splashRadiusPL.integer;
+	bolt->splashRadius = g_splashradius_pl.integer; // ~Dimmskii
 	bolt->methodOfDeath = MOD_PROXIMITY_MINE;
 	bolt->splashMethodOfDeath = MOD_PROXIMITY_MINE;
 	bolt->clipmask = MASK_SHOT;

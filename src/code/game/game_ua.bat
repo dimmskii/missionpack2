@@ -16,6 +16,9 @@ mkdir vm
 cd vm
 set cc=q3lcc -DQ3_VM -S -Wf-target=bytecode -Wf-g -I..\..\cgame -I..\..\game -I..\..\ui %1
 
+%cc% ../../common/jsmndr.c
+@if errorlevel 1 goto errorquit
+
 %cc%  ../g_main.c
 @if errorlevel 1 goto errorquit
 
@@ -40,13 +43,17 @@ rem @if errorlevel 1 goto errorquit
 @if errorlevel 1 goto errorquit
 %cc% ../bg_misc.c 
 @if errorlevel 1 goto errorquit
+%cc% ../bg_newgame.c 
+@if errorlevel 1 goto errorquit
 %cc% ../bg_pmove.c
 @if errorlevel 1 goto errorquit
-%cc% ../bg_slidemove.c 
+%cc% ../bg_slidemove.c
 @if errorlevel 1 goto errorquit
 %cc% ../g_active.c
 @if errorlevel 1 goto errorquit
-%cc% ../g_arena.c
+%cc% ../g_arena.c 
+@if errorlevel 1 goto errorquit
+%cc% ../g_newgame.c 
 @if errorlevel 1 goto errorquit
 %cc% ../g_arenas.c
 @if errorlevel 1 goto errorquit

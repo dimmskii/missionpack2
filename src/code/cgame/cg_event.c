@@ -208,7 +208,7 @@ static void CG_Obituary( entityState_t *ent ) {
 
 //		if ( cgs.gametype < GT_TEAM ) {
 // ~Dimmskii
-		if ( cgs.gametype < GT_ARENA) { // Only on non-team gametypes < 3 (0=ffa, 1=tourney, 2=ffa)
+		if ( GT_IsTeam(cgs.gametype) && !GT_IsArenaGame(cgs.gametype) ) { // Show only in FFA non-Arena modes
 // END ~Dimmskii
 			s = va("You fragged %s\n%s place with %i", targetName, 
 				CG_PlaceString( cg.snap->ps.persistant[PERS_RANK] + 1 ),

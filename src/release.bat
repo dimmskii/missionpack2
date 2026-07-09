@@ -3,7 +3,7 @@ setlocal
 
 set oldcd=%cd%
 
-set VERSION=060
+set VERSION=061
 set PK3_NAME=pak%VERSION%
 
 :: Extract the first digit

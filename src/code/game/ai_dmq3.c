@@ -193,8 +193,8 @@ qboolean EntityIsDead(aas_entityinfo_t *entinfo) {
 		if (ps.pm_type != PM_NORMAL) return qtrue;
 // ~Dimmskii
 		// dead arena players in follow mode have PM_NORMAL copied from followed player
-		if ( ( g_gametype.integer == GT_ARENA || g_gametype.integer == GT_TEAMARENA )
-			&& g_entities[entinfo->number].health <= 0 ) return qtrue;
+		if ( GT_IsArenaGame(g_gametype.integer) && g_entities[entinfo->number].health <= 0 )
+			return qtrue;
 // END Dimmskii
 	}
 	return qfalse;
@@ -1634,7 +1634,8 @@ void BotCheckItemPickup(bot_state_t *bs, int *oldinventory) {
 //#ifdef MISSIONPACK
 	int offence, leader;
 
-	if (gametype <= GT_TEAM)
+//	if (gametype <= GT_TEAM)
+	if ( GT_IsDMGame(gametype) ) // ~Dimmskii
 		return;
 
 	offence = -1;
@@ -2211,7 +2212,8 @@ TeamPlayIsOn
 ==================
 */
 int TeamPlayIsOn(void) {
-	return ( gametype >= GT_TEAM );
+//	return ( gametype >= GT_TEAM );
+	return GT_IsTeam(gametype); // ~Dimmskii
 }
 
 /*
@@ -2221,7 +2223,7 @@ BotAggression
 */
 float BotAggression(bot_state_t *bs) {
 // BEGIN ~DIMMSKII
-	if ( gametype == GT_ARENA || gametype == GT_TEAMARENA ) {
+	if ( GT_IsArenaGame(gametype) ) {
 		return 100; // Always agressive in arena gamemodes
 	}
 // END ~DIMMSKII
@@ -2274,7 +2276,7 @@ BotFeelingBad
 */
 float BotFeelingBad(bot_state_t *bs) {
 // BEGIN ~DIMMSKII
-	if ( gametype == GT_ARENA || gametype == GT_TEAMARENA ) {
+	if ( GT_IsArenaGame(gametype) ) {
 		return 0; // Bots never feel bad in arena gamemodes
 	}
 // END ~DIMMSKII
@@ -2810,7 +2812,8 @@ int BotSameTeam(bot_state_t *bs, int entnum) {
 		//BotAI_Print(PRT_ERROR, "BotSameTeam: client out of range\n");
 		return qfalse;
 	}
-	if ( gametype >= GT_TEAM ) {
+//	if ( gametype >= GT_TEAM ) {
+	if ( GT_IsTeam(gametype) ) { // ~Dimmskii
 		if ( g_clients[bs->client].sess.sessionTeam == g_clients[entnum].sess.sessionTeam )
 			return qtrue;
 	}
@@ -5522,7 +5525,8 @@ void BotArenaPickEnemyToKill(bot_state_t *bs) {
 			continue;
 		
 		// If on specified team and alive (health > 0), add to alive count
-		if ( gametype < GT_TEAM || clientEnt->client->sess.sessionTeam != BotTeam(bs) ) {
+//		if ( gametype < GT_TEAM || clientEnt->client->sess.sessionTeam != BotTeam(bs) ) {
+		if ( !GT_IsTeam(gametype) || clientEnt->client->sess.sessionTeam != BotTeam(bs) ) { // ~Dimmskii
 			if ( bs->client != clientEnt->client->ps.clientNum && clientEnt->client->sess.sessionTeam != TEAM_SPECTATOR && clientEnt->health > 0 ) {
 	#ifdef DEBUG
 				ClientName(bs->client, botname, sizeof(botname));

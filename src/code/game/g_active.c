@@ -442,7 +442,7 @@ void ClientTimerActions( gentity_t *ent, int msec ) {
 
 // ~DIMMSKII
 			// count down health when over max on any gametype except for arena ones
-			if ( g_gametype.integer != GT_ARENA && g_gametype.integer != GT_TEAMARENA && ent->health > client->ps.stats[STAT_MAX_HEALTH] ) {
+			if ( !GT_IsArenaGame(g_gametype.integer) && ent->health > client->ps.stats[STAT_MAX_HEALTH] ) {
 				ent->health--;
 			}
 // END DIMMSKII
@@ -454,7 +454,7 @@ void ClientTimerActions( gentity_t *ent, int msec ) {
 //		}
 // ~DIMMSKII		
 		// count down armor when over max on any gametype except for arena ones
-		if ( g_gametype.integer != GT_ARENA && g_gametype.integer != GT_TEAMARENA && client->ps.stats[STAT_ARMOR] > client->ps.stats[STAT_MAX_HEALTH] ) {
+		if ( !GT_IsArenaGame(g_gametype.integer) && client->ps.stats[STAT_ARMOR] > client->ps.stats[STAT_MAX_HEALTH] ) {
 			client->ps.stats[STAT_ARMOR]--;
 		}
 // END DIMMSKII
@@ -574,12 +574,6 @@ void ClientEvents( gentity_t *ent, int oldEventSequence ) {
 			if ( g_dmflags.integer & DF_NO_FALLING ) {
 				break;
 			}
-// ~DIMMSKII
-			if ( g_gametype.integer == GT_ARENA || g_gametype.integer == GT_TEAMARENA ) {
-				// no fall damage in arena gamemodes
-				break;
-			}
-// END DIMMSKII
 			if ( event == EV_FALL_FAR ) {
 				damage = 10;
 			} else {
@@ -852,7 +846,7 @@ void ClientThink_real( gentity_t *ent ) {
 
 // ~DIMMSKII
 	// dead players in arena modes act as spectators
-	if ( ( g_gametype.integer == GT_ARENA || g_gametype.integer == GT_TEAMARENA )
+	if ( GT_IsArenaGame(g_gametype.integer)
 		&& !level.warmupTime
 		&& client->sess.sessionTeam != TEAM_SPECTATOR
 		&& client->sess.spectatorState == SPECTATOR_FOLLOW ) {
@@ -967,7 +961,7 @@ void ClientThink_real( gentity_t *ent ) {
 	
 // ~DIMMSKII
 	// Set fast weapon switch on pmove
-	pm.fastWeapSwitch = ( g_fastWeaponSwitch.integer || g_gametype.integer == GT_ARENA || g_gametype.integer == GT_TEAMARENA ) ? qtrue : qfalse;
+	pm.fastWeapSwitch = ( g_fastWeaponSwitch.integer ) ? qtrue : qfalse;
 // END DIMMSKII
 
 	VectorCopy( client->ps.origin, client->oldOrigin );
@@ -1044,7 +1038,7 @@ void ClientThink_real( gentity_t *ent ) {
 	if ( client->ps.stats[STAT_HEALTH] <= 0 ) {
 // ~DIMMSKII
 		// in arena modes, transition to spectator follow after death anim plays
-		if ( ( g_gametype.integer == GT_ARENA || g_gametype.integer == GT_TEAMARENA )
+		if ( GT_IsArenaGame(g_gametype.integer)
 			&& !level.warmupTime ) {
 			if ( level.time > client->respawnTime ) {
 				BG_PlayerStateToEntityState( &ent->client->ps, &ent->s, qtrue );
@@ -1128,7 +1122,7 @@ void SpectatorClientEndFrame( gentity_t *ent ) {
 // ~DIMMSKII
 	qboolean	isDeadArenaPlayer;
 
-	isDeadArenaPlayer = ( ( g_gametype.integer == GT_ARENA || g_gametype.integer == GT_TEAMARENA )
+	isDeadArenaPlayer = ( GT_IsArenaGame(g_gametype.integer)
 		&& !level.warmupTime
 		&& ent->client->sess.sessionTeam != TEAM_SPECTATOR
 		&& ent->client->sess.spectatorState == SPECTATOR_FOLLOW );
@@ -1232,7 +1226,7 @@ void ClientEndFrame( gentity_t *ent ) {
 
 // ~DIMMSKII
 	// dead players in arena modes follow like spectators
-	if ( ( g_gametype.integer == GT_ARENA || g_gametype.integer == GT_TEAMARENA )
+	if ( GT_IsArenaGame(g_gametype.integer)
 		&& !level.warmupTime
 		&& ent->client->sess.sessionTeam != TEAM_SPECTATOR
 		&& ent->client->sess.spectatorState == SPECTATOR_FOLLOW ) {

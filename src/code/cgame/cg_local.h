@@ -5,6 +5,12 @@
 #include "../game/bg_public.h"
 #include "cg_public.h"
 
+// ~Dimmskii
+#define EXTERN_BG_CVAR
+	#include "../game/bg_cvar.h"
+#undef EXTERN_BG_CVAR
+// END Dimmskii
+
 
 // The entire cgame module is unloaded and reloaded on each level change,
 // so there is NO persistant data between levels on the client side.
@@ -1075,9 +1081,9 @@ typedef struct {
 	int				fraglimit;
 	int				capturelimit;
 // ~Dimmskii
-	int				winlimit;
+	int				roundlimit;
 	int				g_teamVisibility;
-	int				g_itemVisibility;
+	int				g_itemTimers;
 // END ~Dimmskii
 	int				timelimit;
 	int				maxclients;

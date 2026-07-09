@@ -64,7 +64,8 @@ void UpdateTournamentInfo( void ) {
 		}
 //#ifdef MISSIONPACK
 		won = qfalse;
-		if (g_gametype.integer >= GT_CTF) {
+//		if (g_gametype.integer >= GT_CTF) {
+		if ( GT_IsFlagGame(g_gametype.integer) ) { // ~Dimmskii
 			score1 = level.teamScores[TEAM_RED];
 			score2 = level.teamScores[TEAM_BLUE];
 			if (level.clients[playerClientNum].sess.sessionTeam	== TEAM_RED) {

@@ -178,7 +178,7 @@ itemDef {
 	text "GameType:"
 	type ITEM_TYPE_MULTI	
 	cvar "G_GAMETYPE"	
-      	cvarFloatList { "Free For All" 0 "Tournament" 1 "Free For All" 2 "Team Deathmatch" 3 "Capture the Flag" 4 "One Flag CTF" 5 "Overload" 6 "Harvester" 7 "Team Arena" 8 }		
+      	cvarFloatList { "Free For All" 0 "Tournament" 1 "SP" 2 "Team Deathmatch" 3 "Clan Arena" 4 "Capture the Flag" 5 "One Flag CTF" 6 "Overload" 7 "Harvester" 8 "Freeze Tag" 9 "Domination" 10 "Attack & Defend" 11 "Red Rover" 12 "Team Tournament" 13 "Arena" 14 }		
       	
 	textalignx 128
 	textaligny 12    

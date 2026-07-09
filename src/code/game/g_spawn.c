@@ -380,6 +380,42 @@ void G_ParseField( const char *key, const char *value, gentity_t *ent ) {
 
 
 
+// ~Dimmskii
+
+/*
+===================
+G_SpawnGametypeMatchesFilter
+
+QL-SRP function backport
+Returns qtrue when the current gametype is permitted by the entity's
+"gametype" spawn value, or when no filter is defined.
+===================
+*/
+static qboolean G_SpawnGametypeMatchesFilter( const char *value ) {
+	int				aliasIndex;
+
+	if ( !value || !*value ) {
+		return qtrue;
+	}
+
+	if ( g_gametype.integer < GT_FFA || g_gametype.integer >= GT_MAX_GAME_TYPE ) {
+		return qtrue;
+	}
+
+	for ( aliasIndex = 0; aliasIndex < MAX_GAMETYPE_NAME_ALIASES; aliasIndex++ ) {
+		const char *token = s_gametypeSpawnNames[g_gametype.integer][aliasIndex];
+
+		if ( token && strstr( value, token ) ) {
+			return qtrue;
+		}
+	}
+
+	return qfalse;
+}
+
+// END Dimmskii
+
+
 
 /*
 ===================
@@ -394,9 +430,6 @@ void G_SpawnGEntityFromSpawnVars( void ) {
 	gentity_t	*ent;
 	char		*s, *value, *gametypeName;
 //	static char *gametypeNames[] = {"ffa", "tournament", "single", "team", "ctf", "oneflag", "obelisk", "harvester", "teamtournament"};
-// ~Dimmskii
-	static char *gametypeNames[] = {"ffa", "tournament", "single", "arena", "team", "teamarena", "ft", "ctf", "oneflag", "obelisk", "harvester", "teamtournament"};
-// END Dimmskii
 
 	// get the next free entity
 	ent = G_Spawn();
@@ -414,7 +447,8 @@ void G_SpawnGEntityFromSpawnVars( void ) {
 		}
 	}
 	// check for "notteam" flag (GT_FFA, GT_TOURNAMENT, GT_SINGLE_PLAYER)
-	if ( g_gametype.integer >= GT_TEAM ) {
+//	if ( g_gametype.integer >= GT_TEAM ) {
+	if ( GT_IsTeam(g_gametype.integer) ) { // ~Dimmskii
 		G_SpawnInt( "notteam", "0", &i );
 		if ( i ) {
 			G_FreeEntity( ent );
@@ -444,6 +478,7 @@ void G_SpawnGEntityFromSpawnVars( void ) {
 
 	if( G_SpawnString( "gametype", NULL, &value ) ) {
 		if( g_gametype.integer >= GT_FFA && g_gametype.integer < GT_MAX_GAME_TYPE ) {
+			/*
 			gametypeName = gametypeNames[g_gametype.integer];
 
 			s = strstr( value, gametypeName );
@@ -451,6 +486,14 @@ void G_SpawnGEntityFromSpawnVars( void ) {
 				G_FreeEntity( ent );
 				return;
 			}
+			*/
+
+			// ~Dimmskii - Use QL function port above
+			if (!G_SpawnGametypeMatchesFilter(value)) {
+				G_FreeEntity( ent );
+				return;
+			}
+			// END Dimmskii
 		}
 	}
 

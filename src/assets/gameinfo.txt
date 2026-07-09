@@ -3,31 +3,37 @@
 // description, g_gametype enum
 //
 // 0 - GT_FFA,				// free for all
-// 1 - GT_TOURNAMENT,		// one on one tournament
-// 2 - GT_SINGLE_PLAYER,	// single player ffa
-// 3 - GT_ARENA,			// arena AKA last man standing
-// 4 - GT_TEAM,				// team deathmatch
-// 5 - GT_TEAMARENA,		// team arena AKA clan arena
-// 6 - GT_FREEZETAG,		// freeze tag
-// 7 - GT_CTF,				// capture the flag
-// 8 - GT_1FCTF,			// one flag ctf
-// 9 - GT_OBELISK,			// obelisk
-// 10 - GT_HARVESTER,		// harvester
-// 11 - GT_TEAMTOURNAMENT	// team tournament
+// 1 - GT_TOURNAMENT,	// one on one tournament
+// 2 - GT_SINGLE_PLAYER,	// race replaces the original single player slot
+// 3 - GT_TEAM,			// team deathmatch
+// 4 - GT_CLAN_ARENA,	// clan arena
+// 5 - GT_CTF,				// capture the flag
+// 6 - GT_1FCTF,			// one flag ctf
+// 7 - GT_OBELISK,    // overload
+// 8 - GT_HARVESTER,		// harvester
+// 9 - GT_FREEZE,		// freeze tag
+// 10 - GT_DOMINATION,
+// 11 - GT_ATTACK_DEFEND,
+// 12 - GT_RED_ROVER,
+// 13 - GT_TEAMTOURNAMENT	// team tournament
+// 14 - GT_ARENA,			// arena AKA last man standing
 
 gametypes {
   { "Free For All" 0 }
   { "Tournament" 1 }
   { "SP" 2 }
-  { "Arena" 3 }
-  { "Team Deathmatch" 4 }
-  { "Team Arena" 5 }
-  { "Freeze Tag" 6 }
-  { "Capture the Flag" 7 }
-  { "One Flag CTF" 8 }
-  { "Overload" 9 }
-  { "Harvester" 10 }
-//  { "Team Tournament" 11 }
+  { "Team Deathmatch" 3 }
+  { "Clan Arena" 4 }
+  { "Capture the Flag" 5 }
+  { "One Flag CTF" 6 }
+  { "Overload" 7 }
+  { "Harvester" 8 }
+  { "Freeze Tag" 9 }
+  { "Domination" 10 }
+  { "Attack & Defend" 11 }
+  { "Red Rover" 12 }
+  { "Team Tournament" 13 }
+  { "Arena" 14 }
 }
 
 
@@ -57,15 +63,18 @@ hostgametypes {
   { "Free For All" 0 }
   { "Tournament" 1 }
 //  { "SP" 2 }
-  { "Arena" 3 }
-  { "Team Deathmatch" 4 } 
-  { "Team Arena" 5 }
-//  { "Freeze Tag" 6 }
-  { "Capture the Flag" 7 }
-  { "One Flag CTF" 8 }
-  { "Overload" 9 }
-  { "Harvester" 10 }
-//  { "Team Tournament" 11 }
+  { "Team Deathmatch" 3 }
+  { "Clan Arena" 4 }
+  { "Capture the Flag" 5 }
+  { "One Flag CTF" 6 }
+  { "Overload" 7 }
+  { "Harvester" 8 }
+//  { "Freeze Tag" 9 }
+//  { "Domination" 10 }
+//  { "Attack & Defend" 11 }
+//  { "Red Rover" 12 }
+//  { "Team Tournament" 13 }
+  { "Arena" 14 }
 }
 
 joingametypes {
@@ -73,15 +82,18 @@ joingametypes {
   { "Free For All" 0 }
   { "Tournament" 1 }
 //  { "SP" 2 }
-  { "Arena" 3 }
-  { "Team Deathmatch" 4 } 
-  { "Team Arena" 5 }
-  { "Freeze Tag" 6 }
-  { "Capture the Flag" 7 }
-  { "One Flag CTF" 8 }
-  { "Overload" 9 }
-  { "Harvester" 10 }
-//  { "Team Tournament" 11 }
+  { "Team Deathmatch" 3 }
+  { "Clan Arena" 4 }
+  { "Capture the Flag" 5 }
+  { "One Flag CTF" 6 }
+  { "Overload" 7 }
+  { "Harvester" 8 }
+  { "Freeze Tag" 9 }
+//  { "Domination" 10 }
+//  { "Attack & Defend" 11 }
+  { "Red Rover" 12 }
+//  { "Team Tournament" 13 }
+  { "Arena" 14 }
 }
 
 
@@ -90,4 +102,18 @@ joingametypes {
 //  { "Final Strike" "mpterra3" "3" "180" 4 5 6 7 }
 //  { "Beyond Reality" "mpq3tourney6" "3" "180" 4 5 6 7 }
   
+
+hostgamefactories {
+  { "ffa" "Free For All" }
+  { "iffa" "Instagib FFA" }
+  { "duel" "Duel" }
+  { "tdm" "Team Deathmatch" }
+  { "ca" "Clan Arena" }
+  { "ctf" "Capture the Flag" }
+  { "ictf" "Instagib CTF" }
+  { "oneflag" "1-Flag CTF" }
+  { "obelisk" "Overload" }
+  { "har" "Harvester" }
+  { "arena" "Arena" }
+}
 

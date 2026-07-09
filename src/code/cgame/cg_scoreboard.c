@@ -169,7 +169,8 @@ static void CG_DrawClientScore( int y, score_t *score, float *color, float fade,
 		localClient = qtrue;
 
 		if ( cg.snap->ps.persistant[PERS_TEAM] == TEAM_SPECTATOR 
-			|| cgs.gametype >= GT_TEAM ) {
+//			|| cgs.gametype >= GT_TEAM ) {
+			|| GT_IsTeam(cgs.gametype) ) { // ~Dimmskii
 			rank = -1;
 		} else {
 			rank = cg.snap->ps.persistant[PERS_RANK] & ~RANK_TIED_FLAG;
@@ -328,7 +329,7 @@ qboolean CG_DrawOldScoreboard( void ) {
 // ~DIMMSKII
 	if ( cg.showScores || cg.predictedPlayerState.pm_type == PM_INTERMISSION
 		 || ( cg.predictedPlayerState.pm_type == PM_DEAD
-			&& !( ( cgs.gametype == GT_ARENA || cgs.gametype == GT_TEAMARENA ) && ( cg.snap->ps.pm_flags & PMF_FOLLOW ) ) )) { // TODO: Un-eff this
+			&& !( GT_IsArenaGame(cgs.gametype) && ( cg.snap->ps.pm_flags & PMF_FOLLOW ) ) )) { // TODO: Un-eff this
 // END DIMMSKII
 		fade = 1.0;
 		fadeColor = colorWhite;
@@ -351,7 +352,8 @@ qboolean CG_DrawOldScoreboard( void ) {
 	}
 
 	// current rank
-	if ( cgs.gametype < GT_TEAM) {
+//	if ( cgs.gametype < GT_TEAM) {
+	if ( !GT_IsTeam(cgs.gametype) ) { // ~Dimmskii
 		if (cg.snap->ps.persistant[PERS_TEAM] != TEAM_SPECTATOR ) {
 			s = va( "%s place with %i",
 				CG_PlaceString( cg.snap->ps.persistant[PERS_RANK] + 1 ),
@@ -396,7 +398,8 @@ qboolean CG_DrawOldScoreboard( void ) {
 
 	localClient = qfalse;
 
-	if ( cgs.gametype >= GT_TEAM ) {
+//	if ( cgs.gametype >= GT_TEAM ) {
+	if ( GT_IsTeam(cgs.gametype) ) { // ~Dimmskii
 		//
 		// teamplay scoreboard
 		//
@@ -502,7 +505,8 @@ void CG_DrawOldTourneyScoreboard( void ) {
 	// print the two scores
 
 	y = 160;
-	if ( cgs.gametype >= GT_TEAM ) {
+//	if ( cgs.gametype >= GT_TEAM ) {
+	if ( GT_IsTeam(cgs.gametype) ) { // ~Dimmskii
 		//
 		// teamplay scoreboard
 		//

@@ -1,0 +1,201 @@
+[
+  {
+    "cvars": {
+	  "g_gametype": "0",
+      "timelimit": "15",
+	  "fraglimit": "0",
+      "g_overtime": "0",
+	  "dmflags": "0",
+	  "g_itemTimers": "1",
+    },
+    "author": "Dimmskii",
+    "description": "Default gametype settings.",
+    "basegt": "ffa",
+    "id": "ffa",
+    "title": "Free For All"
+  },
+  
+
+  {
+    "cvars": {
+      "g_instagib": "1",
+      "g_startingWeapons": "65",
+    },
+    "author": "Dimmskii",
+    "description": "Railgun and Gauntlet only. One shot, one kill.",
+    "basegt": "ffa",
+    "id": "iffa",
+    "title": "Instagib FFA"
+  },
+  
+  
+  {
+    "cvars": {
+	  "g_gametype": "1",
+      "timelimit": "10",
+      "g_itemTimers": "0",
+      "fraglimit": "0",
+    },
+    "author": "Dimmskii",
+    "description": "Default gametype settings.",
+    "basegt": "duel",
+    "id": "duel",
+    "title": "Duel"
+  },
+  
+  
+  {
+    "cvars": {
+	  "g_gametype": "3",
+      "timelimit": "15",
+      "g_itemTimers": "1",
+      "fraglimit": "0",
+    },
+    "author": "Dimmskii",
+    "description": "Default gametype settings.",
+    "basegt": "tdm",
+    "id": "tdm",
+    "title": "Team Deathmatch"
+  },
+  
+  
+  {
+    "cvars": {
+	  "g_gametype": "4",
+      "roundtimelimit": "180",
+	  "roundlimit": "10",
+	  "g_warmup": "15",
+	  "dmflags": "8",
+	  "g_noselfdamage": "1",
+      "g_fastWeaponSwitch": "1",
+	  "g_teamVisibility": "1",
+      "g_startingHealth": "200",
+      "g_startingArmor": "100",
+      "g_startingHealthBonus": "0",
+      "g_startingWeapons": "8447",
+	  "g_startingAmmo_sg": "50",
+      "g_startingAmmo_mg": "100",
+      "g_startingAmmo_lg": "150",
+      "g_startingAmmo_hmg": "150",
+      "g_startingAmmo_rl": "50",
+      "g_startingAmmo_pg": "100",
+      "g_startingAmmo_rg": "25",
+      "g_startingAmmo_gl": "25",
+      "g_allowKill": "0",
+    },
+    "author": "Dimmskii",
+    "description": "Default gametype settings.",
+    "basegt": "ca",
+    "id": "ca",
+    "title": "Clan Arena"
+  },
+  
+  
+  {
+    "cvars": {
+	  "g_gametype": "5",
+      "g_startingWeapons": "3",
+      "capturelimit": "10",
+      "g_dropCmds": "1",
+      "timelimit": "20",
+      "dmflags": "0",
+    },
+    "author": "Dimmskii",
+    "description": "Default gametype settings.",
+    "basegt": "ctf",
+    "id": "ctf",
+    "title": "Capture the Flag"
+  },
+  
+  
+  {
+    "cvars": {
+      "g_startingWeapons": "65",
+      "g_instagib": "1",
+    },
+    "author": "Dimmskii",
+    "description": "Railgun and Gauntlet only. One shot, one kill.",
+    "basegt": "ctf",
+    "id": "ictf",
+    "title": "Instagib CTF"
+  },
+  
+  
+  
+  {
+    "cvars": {
+	  "g_gametype": "6",
+      "g_ammoRespawn": "10",
+      "capturelimit": "0",
+      "timelimit": "15",
+    },
+    "author": "Dimmskii",
+    "description": "Default gametype settings.",
+    "basegt": "oneflag",
+    "id": "oneflag",
+    "title": "1-Flag CTF"
+  },
+  
+  
+  
+  {
+    "cvars": {
+	  "g_gametype": "7",
+      "capturelimit": "0",
+      "timelimit": "15",
+    },
+    "author": "Dimmskii",
+    "description": "Default gametype settings.",
+    "basegt": "obelisk",
+    "id": "obelisk",
+    "title": "Overload"
+  },
+  
+  
+  
+  {
+    "cvars": {
+	  "g_gametype": "8",
+      "capturelimit": "0",
+      "timelimit": "15",
+    },
+    "author": "Dimmskii",
+    "description": "Default gametype settings.",
+    "basegt": "har",
+    "id": "har",
+    "title": "Harvester"
+  },
+  
+  
+  
+  {
+    "cvars": {
+	  "g_gametype": "14",
+      "roundtimelimit": "180",
+	  "roundlimit": "5",
+	  "g_warmup": "15",
+	  "dmflags": "8",
+	  "g_noselfdamage": "1",
+      "g_fastWeaponSwitch": "1",
+	  "g_teamVisibility": "1",
+      "g_startingHealth": "200",
+      "g_startingArmor": "100",
+      "g_startingHealthBonus": "0",
+      "g_startingWeapons": "8447",
+	  "g_startingAmmo_sg": "50",
+      "g_startingAmmo_mg": "100",
+      "g_startingAmmo_lg": "150",
+      "g_startingAmmo_hmg": "150",
+      "g_startingAmmo_rl": "50",
+      "g_startingAmmo_pg": "100",
+      "g_startingAmmo_rg": "25",
+      "g_startingAmmo_gl": "25",
+      "g_allowKill": "0",
+    },
+    "author": "Dimmskii",
+    "description": "Default gametype settings.",
+    "basegt": "arena",
+    "id": "arena",
+    "title": "Arena"
+  },
+]
