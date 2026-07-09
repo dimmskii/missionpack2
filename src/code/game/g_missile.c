@@ -849,9 +849,10 @@ gentity_t *fire_prox( gentity_t *self, vec3_t start, vec3_t dir ) {
 	bolt->s.eFlags = 0;
 	bolt->r.ownerNum = self->s.number;
 	bolt->parent = self;
-	bolt->damage = 0;
+	//bolt->damage = 0;
+	bolt->damage = g_damage_pl.integer; // ~Dimmskii -- this is classically zero and we have an additional direct damage cvar defaulting to "0". Let's just use it and whatever happens happens.
 	//bolt->splashDamage = g_damagePL.integer;
-	bolt->splashDamage = g_damage_pl.integer; // ~Dimmskii
+	bolt->splashDamage = g_splashdamage_pl.integer; // ~Dimmskii
 	//bolt->splashRadius = g_splashRadiusPL.integer;
 	bolt->splashRadius = g_splashradius_pl.integer; // ~Dimmskii
 	bolt->methodOfDeath = MOD_PROXIMITY_MINE;

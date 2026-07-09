@@ -222,7 +222,7 @@ G_CVAR( g_damage_rg, "g_damage_rg", "100", 0, 0, qfalse, qfalse )
 G_CVAR( g_damage_pg, "g_damage_pg", "20", 0, 0, qfalse, qfalse )
 G_CVAR( g_damage_bfg, "g_damage_bfg", "100", 0, 0, qfalse, qfalse )
 G_CVAR( g_damage_ng, "g_damage_ng", "20", 0, 0, qfalse, qfalse )
-G_CVAR( g_damage_pl, "g_damage_pl", "100", 0, 0, qfalse, qfalse )
+G_CVAR( g_damage_pl, "g_damage_pl", "0", 0, 0, qfalse, qfalse )			// This is DIRECT damage! Classically, in TA and QL, this is zero and has no cvar to control it. Prox mine only splash damages.
 G_CVAR( g_damage_cg, "g_damage_cg", "7", 0, 0, qfalse, qfalse )
 G_CVAR( g_damage_hmg, "g_damage_hmg", "8", 0, 0, qfalse, qfalse )
 
@@ -236,7 +236,7 @@ G_CVAR( g_splashradius_pg, "g_splashradius_pg", "20", 0, 0, qfalse, qfalse )
 G_CVAR( g_splashdamage_bfg, "g_splashdamage_bfg", "100", 0, 0, qfalse, qfalse )
 G_CVAR( g_splashradius_bfg, "g_splashradius_bfg", "120", 0, 0, qfalse, qfalse )
 G_CVAR( g_splashradius_pl, "g_splashradius_pl", "150", 0, 0, qfalse, qfalse )
-G_CVAR( g_splashdamage_pl, "g_splashdamage_pl", "100", 0, 0, qfalse, qfalse )		// TODO: implement
+G_CVAR( g_splashdamage_pl, "g_splashdamage_pl", "100", 0, 0, qfalse, qfalse )
 
 // QL-convention starting ammo cvars
 G_CVAR( g_startingAmmo_mg, "g_startingAmmo_mg", "50", 0, 0, qfalse, qfalse )
