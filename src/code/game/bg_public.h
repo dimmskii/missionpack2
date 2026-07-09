@@ -156,7 +156,7 @@ static const char *GFACTORY_CVARS[] = {
 	"g_forcerespawn",
 	"g_gravity",
 	"g_knockback",
-	"g_quadfactor",
+	"g_quadDamageFactor",
 	
 	"g_teamVisibility",
 	"g_itemTimers",
