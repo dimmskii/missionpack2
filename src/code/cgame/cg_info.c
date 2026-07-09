@@ -274,7 +274,7 @@ void CG_DrawInformation( void ) {
 		s = "Arena";
 		break;
 	case GT_TEAMARENA:
-		s = "Team Arena";
+		s = "Clan Arena";
 		break;
 	case GT_FREEZETAG:
 		s = "Freeze Tag";
