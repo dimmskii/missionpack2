@@ -4,9 +4,10 @@
 
 set(GAME_VM_DIR "${CMAKE_CURRENT_SOURCE_DIR}/vm")
 file(MAKE_DIRECTORY "${GAME_VM_DIR}")
+set(COMMON_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../common")
 
 set(GAME_SOURCES
-  ../common/jsmndr.c
+  "${COMMON_DIR}/jsmndr.c"
   g_main.c
   ai_chat.c
   ai_cmd.c
@@ -21,7 +22,6 @@ set(GAME_SOURCES
   bg_pmove.c
   bg_slidemove.c
   g_active.c
-  g_arena.c
   g_newgame.c
   g_arenas.c
   g_bot.c

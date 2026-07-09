@@ -4,9 +4,11 @@
 
 set(UI_VM_DIR "${CMAKE_CURRENT_SOURCE_DIR}/vm")
 file(MAKE_DIRECTORY "${UI_VM_DIR}")
+set(COMMON_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../common")
 set(GAME_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../game")
 
 set(UI_SOURCES
+  "${COMMON_DIR}/jsmndr.c"
   ui_main.c
   "${GAME_DIR}/bg_misc.c"
   "${GAME_DIR}/bg_newgame.c"

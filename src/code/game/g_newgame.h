@@ -11,3 +11,16 @@ extern gfactory_t	g_factories[MAX_GFACTORIES];
 extern int			g_numFactories;
 
 void G_LoadFactories( void );
+
+
+
+// CA and FFA Arena gamemode stuff
+
+#define	ARENA_ROUND_DELAY_TIME	2000
+
+void 		Arena_BeginRound(void);
+void 		Arena_EndRound(team_t winningTeam);
+void 		Arena_TimeoutRound(void);
+void 		Arena_CheckRules(void);
+
+qboolean	Arena_MatchDecided(void);

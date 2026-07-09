@@ -4,11 +4,13 @@
 
 set(CGAME_VM_DIR "${CMAKE_CURRENT_SOURCE_DIR}/vm")
 file(MAKE_DIRECTORY "${CGAME_VM_DIR}")
+set(COMMON_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../common")
 set(GAME_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../game")
 set(UI_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../ui")
 
 # (relative-to-module-dir source path)
 set(CGAME_SOURCES
+  "${COMMON_DIR}/jsmndr.c"
   "${GAME_DIR}/bg_misc.c"
   "${GAME_DIR}/bg_newgame.c"
   "${GAME_DIR}/bg_pmove.c"
