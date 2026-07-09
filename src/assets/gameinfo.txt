@@ -105,6 +105,13 @@ joingametypes {
 
 hostgamefactories {
   { "ffa" "Free For All" }
+  { "iffa" "Instagib FFA" }
+  { "duel" "Duel" }
+  { "tdm" "Team Deathmatch" }
   { "ca" "Clan Arena" }
+  { "ctf" "Capture the Flag" }
+  { "ictf" "Instagib CTF" }
+  { "oneflag" "1-Flag CTF" }
+  { "arena" "Arena" }
 }
 
