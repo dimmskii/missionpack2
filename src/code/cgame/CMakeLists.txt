@@ -1,6 +1,6 @@
 # Translates cgame_ua.bat: compiles each listed .c (drawn from both
 # code/cgame and shared code/game / code/ui files) to bytecode .asm via
-# q3lcc, then links them per cgame_ta.q3asm via q3asm into cgame.qvm.
+# q3lcc, then links them per cgame_ua.q3asm via q3asm into cgame.qvm.
 
 set(CGAME_VM_DIR "${CMAKE_CURRENT_SOURCE_DIR}/vm")
 file(MAKE_DIRECTORY "${CGAME_VM_DIR}")
@@ -64,10 +64,10 @@ endforeach()
 
 add_custom_command(
   OUTPUT "${CGAME_VM_DIR}/cgame.qvm"
-  COMMAND "${Q3ASM}" -vq3 -r -m -v -f "${CMAKE_CURRENT_SOURCE_DIR}/cgame_ta"
+  COMMAND "${Q3ASM}" -vq3 -r -m -v -f "${CMAKE_CURRENT_SOURCE_DIR}/cgame_ua"
   WORKING_DIRECTORY "${CGAME_VM_DIR}"
   DEPENDS ${CGAME_ASM_FILES}
-          "${CMAKE_CURRENT_SOURCE_DIR}/cgame_ta.q3asm"
+          "${CMAKE_CURRENT_SOURCE_DIR}/cgame_ua.q3asm"
           "${CMAKE_CURRENT_SOURCE_DIR}/cg_syscalls.asm"
   COMMENT "q3asm -> cgame.qvm"
   VERBATIM
@@ -105,10 +105,10 @@ endforeach()
 add_custom_command(
   OUTPUT "${CGAME_VM_DEBUG_DIR}/cgame.qvm"
   COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/cg_syscalls.asm" "${CGAME_VM_DIR}/cg_syscalls.asm"
-  COMMAND "${Q3ASM}" -vq3 -r -m -v -f "${CMAKE_CURRENT_SOURCE_DIR}/cgame_ta"
+  COMMAND "${Q3ASM}" -vq3 -r -m -v -f "${CMAKE_CURRENT_SOURCE_DIR}/cgame_ua"
   WORKING_DIRECTORY "${CGAME_VM_DEBUG_DIR}"
   DEPENDS ${CGAME_DEBUG_ASM_FILES}
-          "${CMAKE_CURRENT_SOURCE_DIR}/cgame_ta.q3asm"
+          "${CMAKE_CURRENT_SOURCE_DIR}/cgame_ua.q3asm"
           "${CMAKE_CURRENT_SOURCE_DIR}/cg_syscalls.asm"
   COMMENT "q3asm -> debug/cgame.qvm"
   VERBATIM

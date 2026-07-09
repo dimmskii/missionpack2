@@ -100,7 +100,7 @@ rem @if errorlevel 1 goto errorquit
 
 
 
-q3asm -vq3 -r -m -v -f ../game_ta
+q3asm -vq3 -r -m -v -f ../game_ua
 
 @echo off
 
