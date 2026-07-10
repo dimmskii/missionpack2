@@ -40,7 +40,7 @@ typedef enum {
 // QL Factory cvars
 static const char *GFACTORY_CVARS[] = {
 	// General gameplay params
-    "g_gametype",           // GT_ enum Gametype -- MUST ALWAYS BE FIRST IN THIS ARRAY WITH INDEX OF 0!
+    "g_gametype",           // GT_ enum Gametype
     "fraglimit",
     "timelimit",
 	"roundlimit",
