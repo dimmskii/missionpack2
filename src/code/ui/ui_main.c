@@ -2743,9 +2743,9 @@ static qboolean UI_HostGameFactory_HandleKey(int flags, float *special, int key)
 		trap_Cvar_Set( "ui_hostGameFactory", va("%d", ui_hostGameFactory.integer));
 		
 		// Now set the UI gametype cvars for reverse-compat with any .menu logic that uses ui_gameType/ui_netGameType/ui_actualGameType
-		trap_Cvar_Set( "ui_gameType", bg_factories[ui_hostGameFactory.integer].cvar_values[0]);
-		trap_Cvar_Set( "ui_netGameType", bg_factories[ui_hostGameFactory.integer].cvar_values[0]);
-		trap_Cvar_Set( "ui_actualnetGameType", bg_factories[ui_hostGameFactory.integer].cvar_values[0]);
+		trap_Cvar_Set( "ui_gameType", bg_factories[ui_hostGameFactory.integer].cvar_values[BG_FactoryCvarIndex("g_gametype")]);
+		trap_Cvar_Set( "ui_netGameType", bg_factories[ui_hostGameFactory.integer].cvar_values[BG_FactoryCvarIndex("g_gametype")]);
+		trap_Cvar_Set( "ui_actualnetGameType", bg_factories[ui_hostGameFactory.integer].cvar_values[BG_FactoryCvarIndex("g_gametype")]);
 		
 		return qtrue;
 	}
