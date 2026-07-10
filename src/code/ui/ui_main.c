@@ -267,7 +267,7 @@ This must be the very first function compiled into the .qvm file
 vmCvar_t  ui_new;
 vmCvar_t  ui_debug;
 vmCvar_t  ui_initialized;
-vmCvar_t  ui_teamArenaFirstRun;
+//vmCvar_t  ui_teamArenaFirstRun;
 
 void _UI_Init( qboolean );
 void _UI_Shutdown( void );
