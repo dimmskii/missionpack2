@@ -5,10 +5,12 @@ Mod based off of Kr3m's [missionpackplus](https://github.com/Kr3m/missionpackplu
 **This is not a replacement for Team Arena! TA maps and virtually all their textures aren't included, meaning you'd still have to legally purchase Team Arena in order to enjoy all of its maps, along with most custom ones designed for TA!**
 
 ## Features
-* FFA and Clan Arena gametypes. Eventually QL-compatible expanded factories with `g_freeze` for any GT_ enum within reason.
+* FFA Arena and Clan Arena gametypes.
 * Heavy Machinegun from Quake Live
-* QL-Style Nail Bounce
+* `factories.txt` and `*.factories` scripts support (partially QL-compatible, except for unimplemented gcvars and dmflags)
+* QL-Style nail bounce
 * QL-Style Teammate POIs (`cg_drawFriend 2`)
+* Green armor
 * Item POIs and timers
 * HUD files from QL parse without error. This project strives for near-total CG and UI scripts compatibility with both MPP and QL.
 * Unlagged, Instagib, PM/FB skins and much more from missionpackplus
@@ -80,21 +82,16 @@ The build system included should be completely portable on both Windows (the ori
 7. FIGHT!
 
 ## To do
-* 0.58
-   * Show dead players in round-based gamemodes (scoreboard and team info)
-* 0.60
-   * Refactor source
-   * undef `MISSIONPACK` and `MISSIONPACK2`
-   * Quake Live-ify thigs
-* 0.62+
-   * QL game factories, `g_freeze`
-   * Implement at least Freeze Tag
+* 0.62
+   * Implement Freeze Tag
 * TBD
-   * New bot difficulty 'Competitive' overrides weapon preferences and bunnyhops at least(?)
-   * Off-hand hook
-   * Bots can use either type of hook
    * Domination, Attack/Defend, Red Rover, Race
+   * Implement fully the QL dmflags
+   * Complete QL HUD support
    * Fix scores still being weird pre-round and spectator
+   * Bot improvements: bunny hop and use grapple(?)
+   * Off-hand hook(?)
+   * Figure out a nice way to show dead players in scoreboard for round-based gamemodes(?)
 
  ## Credits
  - **Kevin "Kr3m" Remisoski** for missionpackplus and foundation mods (see <https://github.com/Kr3m/missionpackplus> for additional credits for unlagged code, etc)
