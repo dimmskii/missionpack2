@@ -202,72 +202,72 @@ G_CVAR( g_itemTimers, "g_itemTimers", "1", CVAR_SERVERINFO, 0, qtrue, qfalse )
 G_CVAR( g_allSpec, "g_allSpec", "0", CVAR_SERVERINFO, 0, qtrue, qfalse )
 
 // Starting health/armor
-G_CVAR( g_startingArmor, "g_startingArmor", "0", 0, 0, qfalse, qfalse )
-G_CVAR( g_startingHealth, "g_startingHealth", "0", 0, 0, qfalse, qfalse )
-G_CVAR( g_startingHealthBonus, "g_startingHealthBonus", "0", 0, 0, qfalse, qfalse )
+G_CVAR( g_startingArmor, "g_startingArmor", "0", 0, 0, qtrue, qfalse )
+G_CVAR( g_startingHealth, "g_startingHealth", "0", 0, 0, qtrue, qfalse )
+G_CVAR( g_startingHealthBonus, "g_startingHealthBonus", "0", 0, 0, qtrue, qfalse )
 
 // Team/self damage settings
 G_CVAR( g_friendlyFire, "g_friendlyFire", "0", 0, 0, qtrue, qfalse )
-G_CVAR( g_noSelfDamage, "g_noSelfDamage", "0", 0, 0, qtrue, qtrue )
+G_CVAR( g_noSelfDamage, "g_noSelfDamage", "0", 0, 0, qtrue, qfalse )
 
 G_CVAR( g_warmup, "g_warmup", "20", 0, 0, qtrue, qfalse )
 
-G_CVAR( g_startingWeapons, "g_startingWeapons", "3", 0, 0, qfalse, qfalse )
-G_CVAR( g_startingWeapon, "g_startingWeapon", "", 0, 0, qfalse, qfalse )
-G_CVAR( g_fastWeaponSwitch, "g_fastWeaponSwitch", "0", 0, 0, qfalse, qfalse )
+G_CVAR( g_startingWeapons, "g_startingWeapons", "3", 0, 0, qtrue, qfalse )
+G_CVAR( g_startingWeapon, "g_startingWeapon", "", 0, 0, qtrue, qfalse )
+G_CVAR( g_fastWeaponSwitch, "g_fastWeaponSwitch", "0", 0, 0, qtrue, qfalse )
 
 // QL-convention damage cvar renames
-G_CVAR( g_damage_g, "g_damage_g", "50", 0, 0, qfalse, qfalse )
-G_CVAR( g_damage_mg, "g_damage_mg", "7", 0, 0, qfalse, qfalse )
-G_CVAR( g_damage_sg, "g_damage_sg", "10", 0, 0, qfalse, qfalse )
-G_CVAR( g_damage_gl, "g_damage_gl", "100", 0, 0, qfalse, qfalse )
-G_CVAR( g_damage_rl, "g_damage_rl", "100", 0, 0, qfalse, qfalse )
-G_CVAR( g_damage_lg, "g_damage_lg", "8", 0, 0, qfalse, qfalse )
-G_CVAR( g_damage_rg, "g_damage_rg", "100", 0, 0, qfalse, qfalse )
-G_CVAR( g_damage_pg, "g_damage_pg", "20", 0, 0, qfalse, qfalse )
-G_CVAR( g_damage_bfg, "g_damage_bfg", "100", 0, 0, qfalse, qfalse )
-G_CVAR( g_damage_gh, "g_damage_gh", "10", 0, 0, qfalse, qfalse )
-G_CVAR( g_damage_ng, "g_damage_ng", "20", 0, 0, qfalse, qfalse )
-G_CVAR( g_damage_pl, "g_damage_pl", "0", 0, 0, qfalse, qfalse )			// This is DIRECT damage! Classically, in TA and QL, this is zero and has no cvar to control it. Prox mine only splash damages.
-G_CVAR( g_damage_cg, "g_damage_cg", "7", 0, 0, qfalse, qfalse )
-G_CVAR( g_damage_hmg, "g_damage_hmg", "8", 0, 0, qfalse, qfalse )
+G_CVAR( g_damage_g, "g_damage_g", "50", 0, 0, qtrue, qfalse )
+G_CVAR( g_damage_mg, "g_damage_mg", "7", 0, 0, qtrue, qfalse )
+G_CVAR( g_damage_sg, "g_damage_sg", "10", 0, 0, qtrue, qfalse )
+G_CVAR( g_damage_gl, "g_damage_gl", "100", 0, 0, qtrue, qfalse )
+G_CVAR( g_damage_rl, "g_damage_rl", "100", 0, 0, qtrue, qfalse )
+G_CVAR( g_damage_lg, "g_damage_lg", "8", 0, 0, qtrue, qfalse )
+G_CVAR( g_damage_rg, "g_damage_rg", "100", 0, 0, qtrue, qfalse )
+G_CVAR( g_damage_pg, "g_damage_pg", "20", 0, 0, qtrue, qfalse )
+G_CVAR( g_damage_bfg, "g_damage_bfg", "100", 0, 0, qtrue, qfalse )
+G_CVAR( g_damage_gh, "g_damage_gh", "10", 0, 0, qtrue, qfalse )
+G_CVAR( g_damage_ng, "g_damage_ng", "20", 0, 0, qtrue, qfalse )
+G_CVAR( g_damage_pl, "g_damage_pl", "0", 0, 0, qtrue, qfalse )			// This is DIRECT damage! Classically, in TA and QL, this is zero and has no cvar to control it. Prox mine only splash damages.
+G_CVAR( g_damage_cg, "g_damage_cg", "7", 0, 0, qtrue, qfalse )
+G_CVAR( g_damage_hmg, "g_damage_hmg", "8", 0, 0, qtrue, qfalse )
 
 // QL-convention splash cvar renames
-G_CVAR( g_splashdamage_gl, "g_splashdamage_gl", "100", 0, 0, qfalse, qfalse )
-G_CVAR( g_splashradius_gl, "g_splashradius_gl", "150", 0, 0, qfalse, qfalse )
-G_CVAR( g_splashdamage_rl, "g_splashdamage_rl", "100", 0, 0, qfalse, qfalse )
-G_CVAR( g_splashradius_rl, "g_splashradius_rl", "120", 0, 0, qfalse, qfalse )
-G_CVAR( g_splashdamage_pg, "g_splashdamage_pg", "15", 0, 0, qfalse, qfalse )
-G_CVAR( g_splashradius_pg, "g_splashradius_pg", "20", 0, 0, qfalse, qfalse )
-G_CVAR( g_splashdamage_bfg, "g_splashdamage_bfg", "100", 0, 0, qfalse, qfalse )
-G_CVAR( g_splashradius_bfg, "g_splashradius_bfg", "120", 0, 0, qfalse, qfalse )
-G_CVAR( g_splashradius_pl, "g_splashradius_pl", "150", 0, 0, qfalse, qfalse )
-G_CVAR( g_splashdamage_pl, "g_splashdamage_pl", "100", 0, 0, qfalse, qfalse )
+G_CVAR( g_splashdamage_gl, "g_splashdamage_gl", "100", 0, 0, qtrue, qfalse )
+G_CVAR( g_splashradius_gl, "g_splashradius_gl", "150", 0, 0, qtrue, qfalse )
+G_CVAR( g_splashdamage_rl, "g_splashdamage_rl", "100", 0, 0, qtrue, qfalse )
+G_CVAR( g_splashradius_rl, "g_splashradius_rl", "120", 0, 0, qtrue, qfalse )
+G_CVAR( g_splashdamage_pg, "g_splashdamage_pg", "15", 0, 0, qtrue, qfalse )
+G_CVAR( g_splashradius_pg, "g_splashradius_pg", "20", 0, 0, qtrue, qfalse )
+G_CVAR( g_splashdamage_bfg, "g_splashdamage_bfg", "100", 0, 0, qtrue, qfalse )
+G_CVAR( g_splashradius_bfg, "g_splashradius_bfg", "120", 0, 0, qtrue, qfalse )
+G_CVAR( g_splashradius_pl, "g_splashradius_pl", "150", 0, 0, qtrue, qfalse )
+G_CVAR( g_splashdamage_pl, "g_splashdamage_pl", "100", 0, 0, qtrue, qfalse )
 
 // QL-convention starting ammo cvars
-G_CVAR( g_startingAmmo_mg, "g_startingAmmo_mg", "50", 0, 0, qfalse, qfalse )
-G_CVAR( g_startingAmmo_sg, "g_startingAmmo_sg", "10", 0, 0, qfalse, qfalse )
-G_CVAR( g_startingAmmo_gl, "g_startingAmmo_gl", "5", 0, 0, qfalse, qfalse )
-G_CVAR( g_startingAmmo_rl, "g_startingAmmo_rl", "5", 0, 0, qfalse, qfalse )
-G_CVAR( g_startingAmmo_lg, "g_startingAmmo_lg", "60", 0, 0, qfalse, qfalse )
-G_CVAR( g_startingAmmo_rg, "g_startingAmmo_rg", "10", 0, 0, qfalse, qfalse )
-G_CVAR( g_startingAmmo_pg, "g_startingAmmo_pg", "30", 0, 0, qfalse, qfalse )
-G_CVAR( g_startingAmmo_bfg, "g_startingAmmo_bfg", "15", 0, 0, qfalse, qfalse )
-G_CVAR( g_startingAmmo_ng, "g_startingAmmo_ng", "20", 0, 0, qfalse, qfalse )
-G_CVAR( g_startingAmmo_pl, "g_startingAmmo_pl", "10", 0, 0, qfalse, qfalse )
-G_CVAR( g_startingAmmo_cg, "g_startingAmmo_cg", "100", 0, 0, qfalse, qfalse )
-G_CVAR( g_startingAmmo_hmg, "g_startingAmmo_hmg", "50", 0, 0, qfalse, qfalse )
+G_CVAR( g_startingAmmo_mg, "g_startingAmmo_mg", "50", 0, 0, qtrue, qfalse )
+G_CVAR( g_startingAmmo_sg, "g_startingAmmo_sg", "10", 0, 0, qtrue, qfalse )
+G_CVAR( g_startingAmmo_gl, "g_startingAmmo_gl", "5", 0, 0, qtrue, qfalse )
+G_CVAR( g_startingAmmo_rl, "g_startingAmmo_rl", "5", 0, 0, qtrue, qfalse )
+G_CVAR( g_startingAmmo_lg, "g_startingAmmo_lg", "60", 0, 0, qtrue, qfalse )
+G_CVAR( g_startingAmmo_rg, "g_startingAmmo_rg", "10", 0, 0, qtrue, qfalse )
+G_CVAR( g_startingAmmo_pg, "g_startingAmmo_pg", "30", 0, 0, qtrue, qfalse )
+G_CVAR( g_startingAmmo_bfg, "g_startingAmmo_bfg", "15", 0, 0, qtrue, qfalse )
+G_CVAR( g_startingAmmo_ng, "g_startingAmmo_ng", "20", 0, 0, qtrue, qfalse )
+G_CVAR( g_startingAmmo_pl, "g_startingAmmo_pl", "10", 0, 0, qtrue, qfalse )
+G_CVAR( g_startingAmmo_cg, "g_startingAmmo_cg", "100", 0, 0, qtrue, qfalse )
+G_CVAR( g_startingAmmo_hmg, "g_startingAmmo_hmg", "50", 0, 0, qtrue, qfalse )
 
 // SG Settings
-G_CVAR( g_sgPellets, "g_sgPellets", "11", 0, 0, qfalse, qfalse )
-G_CVAR( g_sgPelletSpread, "g_sgPelletSpread", "700", 0, 0, qfalse, qfalse )
+G_CVAR( g_sgPellets, "g_sgPellets", "11", 0, 0, qtrue, qfalse )
+G_CVAR( g_sgPelletSpread, "g_sgPelletSpread", "700", 0, 0, qtrue, qfalse )
 
 // RL Settings
-G_CVAR( g_velocity_rl, "g_velocity_rl", "900", 0, 0, qfalse, qfalse )
+G_CVAR( g_velocity_rl, "g_velocity_rl", "900", 0, 0, qtrue, qfalse )
 
 // RG Settings
-G_CVAR( g_railJump, "g_railJump", "0", 0, 0, qtrue, qtrue )
-G_CVAR( g_railJumpDamage, "g_railJumpDamage", "100", 0, 0, qtrue, qtrue )
+G_CVAR( g_railJump, "g_railJump", "0", 0, 0, qtrue, qfalse )
+G_CVAR( g_railJumpDamage, "g_railJumpDamage", "100", 0, 0, qtrue, qfalse )
 
 // Grapple Settings
 G_CVAR( g_grapple, "g_grapple", "0", CVAR_ROM, 0, qtrue, qfalse ) // NOW SYMBOLIC. Auto-sets based on the flipping of bit 512 in ql factory cvar g_startingWeapons
@@ -277,28 +277,28 @@ G_CVAR( g_grappleSpeed, "g_grappleSpeed", "1600", 0, 0, qtrue, qfalse )
 G_CVAR( g_grapplePull, "g_grapplePull", "800", CVAR_SERVERINFO, 0, qtrue, qfalse )
 
 // NG Settings
-G_CVAR( g_nailBounce, "g_nailBounce", "1", 0, 0, qtrue, qtrue )
+G_CVAR( g_nailBounce, "g_nailBounce", "1", 0, 0, qtrue, qfalse )
 
 // PG Settings
-G_CVAR( g_proxMineTimeout, "g_proxMineTimeout", "20000", 0, 0, qfalse, qfalse )
+G_CVAR( g_proxMineTimeout, "g_proxMineTimeout", "20000", 0, 0, qtrue, qfalse )
 
 // Respawn
-G_CVAR( g_1FRespawn, "g_1FRespawn", "0", 0, 0, qfalse, qfalse)
+G_CVAR( g_1FRespawn, "g_1FRespawn", "0", 0, 0, qtrue, qfalse)
 
 // Powerup settings
 G_CVAR( g_quadDamageFactor, "g_quadDamageFactor", "3", 0, 0, qtrue, qfalse )
 
 // OBELISK (Overload)
-G_CVAR( g_obeliskHealth, "g_obeliskHealth", "2500", 0, 0, qfalse, qfalse )
-G_CVAR( g_obeliskRegenPeriod, "g_obeliskRegenPeriod", "1", 0, 0, qfalse, qfalse )
-G_CVAR( g_obeliskRegenAmount, "g_obeliskRegenAmount", "15", 0, 0, qfalse, qfalse )
-G_CVAR( g_obeliskRespawnDelay, "g_obeliskRespawnDelay", "10", CVAR_SERVERINFO, 0, qfalse, qfalse )
+G_CVAR( g_obeliskHealth, "g_obeliskHealth", "2500", 0, 0, qtrue, qfalse )
+G_CVAR( g_obeliskRegenPeriod, "g_obeliskRegenPeriod", "1", 0, 0, qtrue, qfalse )
+G_CVAR( g_obeliskRegenAmount, "g_obeliskRegenAmount", "15", 0, 0, qtrue, qfalse )
+G_CVAR( g_obeliskRespawnDelay, "g_obeliskRespawnDelay", "10", CVAR_SERVERINFO, 0, qtrue, qfalse )
 
 // Pickup removal flagged cvars
-G_CVAR( g_removeammo, "removeammo", "0", 0, 0, qfalse, qfalse )
-G_CVAR( g_removeitem, "removeitem", "0", 0, 0, qfalse, qfalse )
-G_CVAR( g_removepowerup, "removepowerup", "0", 0, 0, qfalse, qfalse )
-G_CVAR( g_removeweapon, "removeweapon", "0", 0, 0, qfalse, qfalse )
+G_CVAR( g_removeammo, "removeammo", "0", 0, 0, qtrue, qfalse )
+G_CVAR( g_removeitem, "removeitem", "0", 0, 0, qtrue, qfalse )
+G_CVAR( g_removepowerup, "removepowerup", "0", 0, 0, qtrue, qfalse )
+G_CVAR( g_removeweapon, "removeweapon", "0", 0, 0, qtrue, qfalse )
 
 // END DIMMSKII
 
