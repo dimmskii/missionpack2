@@ -50,12 +50,20 @@ static const char *GFACTORY_CVARS[] = {
 	"dmflags",
 	"g_instagib",
 	"g_fastWeaponSwitch",
+	"g_friendlyFire",
 	"g_noSelfDamage",
+	
+	"removeammo",
+	"removeitem",
+	"removepowerup",
+	"removeweapon",
 	
 	"g_railJump",
 	"g_railJumpDamage",
 	
 	"g_forcerespawn",
+	"g_1FRespawn",
+	
 	"g_gravity",
 	"g_knockback",
 	"g_quadDamageFactor",
@@ -71,6 +79,7 @@ static const char *GFACTORY_CVARS[] = {
 	
 	// Weapon and loadout related
 	"g_startingWeapons",
+	"g_startingWeapon",
 	
 	// Starting ammo
 	"g_startingAmmo_mg",
@@ -140,11 +149,30 @@ static const char *GFACTORY_CVARS[] = {
 	"weapon_reload_cg",
 	"weapon_reload_hmg",
 	
+	// SG Settings
+	"g_sgPellets",
+	"g_sgPelletSpread",
+	
+	// RL Settings
+	"g_velocity_rl",
+	
 	// Grapple settings
 	"g_grappleDelayTime",
 	"g_grappleHoldTime",
 	"g_grappleSpeed",
 	"g_grapplePull",
+	
+	// NG Settings
+	"g_nailBounce",
+	
+	// PG Settings
+	"g_proxMineTimeout",
+	
+	// Obelisk (Overload)
+	"g_obeliskHealth",
+	"g_obeliskRegenPeriod",
+	"g_obeliskRegenAmount",
+	"g_obeliskRespawnDelay",
 	
     NULL                    // Null-terminator for safe iteration loops
 };
