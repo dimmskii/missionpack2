@@ -49,7 +49,7 @@ itemDef {
 
 itemDef {
 	name window
-	rect 204 50 227 113	
+	rect 204 50 227 136	
 	style WINDOW_STYLE_FILLED
 	border 1
 	bordercolor 1 1 1 .25
@@ -62,7 +62,7 @@ itemDef {
 
 itemDef {
 	name window
-	rect 204 165 227 255	
+	rect 204 188 227 232	
 	style WINDOW_STYLE_FILLED
 	border 1
 	bordercolor 1 1 1 .25
@@ -150,8 +150,8 @@ itemDef {
       	forecolor 1 1 1 1
       	visible 1
 	action { play "sound/misc/menu1.wav" }
-	mouseEnter { fadein message_gametype } 
-	mouseExit { fadeout message_gametype } 
+	mouseEnter { fadein message_rules } 
+	mouseExit { fadeout message_rules } 
     }
 
 itemDef {
@@ -184,8 +184,8 @@ itemDef {
       	bordercolor 0 0 0 .75
       	visible 1 
 		action { play "sound/misc/menu1.wav" ; close createserver ; open maps }
-		mouseEnter { setcolor bordercolor .25 .25 .25 .75 ; play "sound/misc/menu2.wav" }
-      	mouseExit { setcolor bordercolor 0 0 0 .75 }
+		mouseEnter { setcolor bordercolor .25 .25 .25 .75 ; play "sound/misc/menu2.wav"; fadein message_arena }
+      	mouseExit { setcolor bordercolor 0 0 0 .75 ; fadeout message_arena }
     	}
 
 itemDef {
@@ -218,6 +218,8 @@ itemDef {
 	textscale .25        
       	forecolor 1 1 1 1
       	visible 1  
+	mouseEnter { fadein message_host } 
+	mouseExit { fadeout message_host } 
     }
 
     
@@ -236,6 +238,8 @@ itemDef {
 	textscale .25        
       	forecolor 1 1 1 1
       	visible 1  
+	mouseEnter { fadein message_host } 
+	mouseExit { fadeout message_host } 
     	}
 		
     itemDef {
@@ -251,6 +255,8 @@ itemDef {
 	textscale .25        
       	forecolor 1 1 1 1
       	visible 1  
+	mouseEnter { fadein message_host } 
+	mouseExit { fadeout message_host } 
     	}
 
     itemDef {
@@ -268,6 +274,8 @@ itemDef {
 	textscale .25        
       	forecolor 1 1 1 1
       	visible 1  
+	mouseEnter { fadein message_host } 
+	mouseExit { fadeout message_host } 
     	}
 
     itemDef {
@@ -283,6 +291,8 @@ itemDef {
 	textscale .25        
       	forecolor 1 1 1 1
       	visible 1  
+	mouseEnter { fadein message_host } 
+	mouseExit { fadeout message_host } 
     	}
 
     itemDef {
@@ -301,6 +311,8 @@ itemDef {
 	textscale .25        
       	forecolor 1 1 1 1
      	visible 1 
+	mouseEnter { fadein message_host } 
+	mouseExit { fadeout message_host } 
     	}
 
 	itemDef {
@@ -317,6 +329,8 @@ itemDef {
 		textscale .25        
 		forecolor 1 1 1 1
 		visible 1 
+	mouseEnter { fadein message_host } 
+	mouseExit { fadeout message_host } 
 	}
 	
 	itemDef {
@@ -332,6 +346,8 @@ itemDef {
 	textscale .25        
 	forecolor 1 1 1 1
 	visible 1  
+	mouseEnter { fadein message_host } 
+	mouseExit { fadeout message_host } 
     }
 	
 	itemDef {
@@ -348,6 +364,8 @@ itemDef {
 	textscale .25        
       	forecolor 1 1 1 1
       	visible 1  
+	mouseEnter { fadein message_host } 
+	mouseExit { fadeout message_host } 
     	}
 
     itemDef {
@@ -364,6 +382,8 @@ itemDef {
 	textscale .25        
       	forecolor 1 1 1 1
       	visible 1  
+	mouseEnter { fadein message_host } 
+	mouseExit { fadeout message_host } 
     	}
 		
 	itemDef {
@@ -380,6 +400,8 @@ itemDef {
 	textscale .25        
       	forecolor 1 1 1 1
       	visible 1  
+	mouseEnter { fadein message_host } 
+	mouseExit { fadeout message_host } 
     }
 	
 	itemDef {
@@ -396,6 +418,8 @@ itemDef {
 	textscale .25        
       	forecolor 1 1 1 1
       	visible 1  
+	mouseEnter { fadein message_host } 
+	mouseExit { fadeout message_host } 
     }
 
 
@@ -410,65 +434,36 @@ itemDef {
 		textalignx 4
 		textaligny 23
 		textscale .25
-		forecolor 1 1 1 1
+		forecolor .8 .8 .8 1
 		visible 1
 		decoration
 		style 1
 }
 
 
-// 	EXPERT	//	
+// 	ADVANCED HOST (non-factory g_ cvars	mostly) //	
 
     itemDef {
-	name expert
+      	name advhost
 	group grpsettings
-      	type ITEM_TYPE_NUMERICFIELD
-	text "Warmup time:"
-	cvar "g_warmup"
-      	rect 260 175 128 12 
-      	textalign ITEM_ALIGN_RIGHT
-      	textalignx 65
-      	textaligny 12
-	textscale .25  
-	maxchars 4
-      	forecolor 1 1 1 1
-      	visible 1  
-    	}
-
-    itemDef {
-      	name expert
-	group grpsettings
-      	type ITEM_TYPE_YESNO
-	text "Full Team Visibility:"
-	cvar "g_teamVisibility"
-      	rect 260 190 128 12 
-      	textalign ITEM_ALIGN_RIGHT
-      	textalignx 65
-      	textaligny 12
-	textscale .25        
-      	forecolor 1 1 1 1
-      	visible 1  
-		cvarTest "ui_actualNetGameType"
-		disableCvar { "0" ; "1" ; "2" ; "14" }
-    	}
-
-	itemDef {
-      	name expert
-	group grpsettings
-      	type ITEM_TYPE_YESNO
-	text "Item Pos/Timers:"
-	cvar "g_itemTimers"
+      	type ITEM_TYPE_EDITFIELD
+	text "Server MOTD:"
+	cvar "g_motd"
+	maxChars 32
+	maxPaintChars 10
       	rect 260 205 128 12 
       	textalign ITEM_ALIGN_RIGHT
       	textalignx 65
       	textaligny 12
 	textscale .25        
       	forecolor 1 1 1 1
-      	visible 1
+      	visible 1  
+	mouseEnter { fadein message_advhost } 
+	mouseExit { fadeout message_advhost } 
     	}
 
     itemDef {
-      	name expert
+      	name advhost
 	group grpsettings
       	type ITEM_TYPE_YESNO
 	text "Enable Voting:"
@@ -480,14 +475,16 @@ itemDef {
 	textscale .25        
       	forecolor 1 1 1 1
       	visible 1  
+	mouseEnter { fadein message_advhost } 
+	mouseExit { fadeout message_advhost } 
     	}
 
-    itemDef {
-	name expert
+    itemDef { // Also consider g_teamautojoin as well, when an appropriate gtenum is selected in ui
+	name advhost
 	group grpsettings
       	type ITEM_TYPE_YESNO
-	text "Force Join:"
-	cvar "g_teamautojoin"
+	text "Auto-Join:"	// text "Team Auto-Join:"
+	cvar "g_autojoin"	// cvar "g_teamautojoin"
       	rect 260 235 128 12 
       	textalign ITEM_ALIGN_RIGHT
       	textalignx 65
@@ -495,10 +492,12 @@ itemDef {
 	textscale .25        
       	forecolor 1 1 1 1
       	visible 1  
+	mouseEnter { fadein message_advhost } 
+	mouseExit { fadeout message_advhost } 
     	}
 
-	itemDef {
-      	name expert
+	itemDef { // TODO BROKEN
+      	name advhost
 	group grpsettings
       	type ITEM_TYPE_YESNO
 	text "Even Teams:"
@@ -510,12 +509,14 @@ itemDef {
 	textscale .25        
       	forecolor 1 1 1 1
       	visible 1  
+	mouseEnter { fadein message_advhost } 
+	mouseExit { fadeout message_advhost } 
 		cvarTest "ui_actualNetGameType"
 		disableCvar { "0" ; "1" ; "2" ; "14" }
     	}
 
     itemDef {
-      	name expert
+      	name advhost
 	group grpsettings
       	type ITEM_TYPE_YESNO
 	text "Synchronous Client:"
@@ -527,10 +528,12 @@ itemDef {
 	textscale .25        
       	forecolor 1 1 1 1
       	visible 1  
+	mouseEnter { fadein message_advhost } 
+	mouseExit { fadeout message_advhost } 
     	}
 
     itemDef {
-      	name expert
+      	name advhost
 	group grpsettings
       	type ITEM_TYPE_YESNO
 	text "Unlagged:"
@@ -542,18 +545,33 @@ itemDef {
 	textscale .25        
       	forecolor 1 1 1 1
       	visible 1  
+	mouseEnter { fadein message_advhost } 
+	mouseExit { fadeout message_advhost } 
     	}
 
-
-
-
-
-	itemDef {
-      	name expert
+    itemDef {
+      	name advhost
 	group grpsettings
       	type ITEM_TYPE_YESNO
-	text "Grappling Hook:"
-	cvar "g_grapple"
+	text "Smooth Clients:"
+	cvar "g_smoothClients"
+      	rect 260 295 128 12 
+      	textalign ITEM_ALIGN_RIGHT
+      	textalignx 65
+      	textaligny 12
+	textscale .25        
+      	forecolor 1 1 1 1
+      	visible 1  
+	mouseEnter { fadein message_advhost } 
+	mouseExit { fadeout message_advhost } 
+    	}
+
+    itemDef {
+      	name advhost
+	group grpsettings
+      	type ITEM_TYPE_YESNO
+	text "Filter Bans:"
+	cvar "g_filterBan"
       	rect 260 310 128 12 
       	textalign ITEM_ALIGN_RIGHT
       	textalignx 65
@@ -561,52 +579,9 @@ itemDef {
 	textscale .25        
       	forecolor 1 1 1 1
       	visible 1  
-    }
-
-	itemDef {
-      	name expert
-		group grpsettings
-		type ITEM_TYPE_YESNO
-		text "Rail Jump:"
-		cvar "g_railJump"
-      	rect 260 325 128 12 
-      	textalign ITEM_ALIGN_RIGHT
-      	textalignx 65
-      	textaligny 12
-		textscale .25        
-      	forecolor 1 1 1 1
-      	visible 1  
-    }
-	
-	itemDef {
-    name expert
-		group grpsettings
-		type ITEM_TYPE_NUMERICFIELD
-		text "Rail Jump Damage:"
-		cvar "g_railJumpDamage"
-      	rect 260 340 128 12 
-      	textalign ITEM_ALIGN_RIGHT
-      	textalignx 65
-      	textaligny 12
-		textscale .25        
-      	forecolor 1 1 1 1
-      	visible 1  
-    }
-
-	itemDef {
-      	name expert
-		group grpsettings
-		type ITEM_TYPE_YESNO
-		text "Nail Bounce:"
-		cvar "g_nailBounce"
-      	rect 260 355 128 12 
-      	textalign ITEM_ALIGN_RIGHT
-      	textalignx 65
-      	textaligny 12
-		textscale .25        
-      	forecolor 1 1 1 1
-      	visible 1  
-    }
+	mouseEnter { fadein message_advhost } 
+	mouseExit { fadeout message_advhost } 
+    	}
 
 
 
@@ -1410,7 +1385,7 @@ itemDef {
 	textalignx 0
 	textaligny 25
 	textscale .416
-	text "Exit to Main Menu"
+	text "Exit to main menu"
 	forecolor 1 1 1 1
 	decoration 
 	visible 0
@@ -1426,14 +1401,14 @@ itemDef {
 	textstyle 1
 	textaligny 25
 	textscale .416
-	text "Start Server"
+	text "Start server"
 	forecolor 1 1 1 1
 	decoration 
 	visible 0
 	}
 
 itemDef {
-	name message_gametype
+	name message_rules
 	group grpmessage
 	style 0 
 	rect 320 430 128 30
@@ -1442,7 +1417,7 @@ itemDef {
 	textalignx 0
 	textaligny 25
 	textscale .416
-	text "Set GameType"
+	text "Click to change match rule set"
 	forecolor 1 1 1 1
 	decoration 
 	visible 0
@@ -1458,7 +1433,7 @@ itemDef {
 	textalignx 0
 	textaligny 25
 	textscale .416
-	text "Set Skill Level"
+	text "Set skill level"
 	forecolor 1 1 1 1
 	decoration 
 	visible 0
@@ -1473,22 +1448,7 @@ itemDef {
 	textalignx 0
 	textaligny 25
 	textscale .416
-	text "Choose Your Arena"
-	forecolor 1 1 1 1
-	decoration 
-	visible 0
-	}
-itemDef {
-	name message_clan
-	group grpmessage
-	style 0 
-	rect 320 430 128 30
-	textalign 1
-	textstyle 1
-	textalignx 0
-	textaligny 25
-	textscale .416
-	text "Click to toggle through clan list"
+	text "Choose your arena"
 	forecolor 1 1 1 1
 	decoration 
 	visible 0
@@ -1509,7 +1469,7 @@ itemDef {
 	visible 0
 	}
 itemDef {
-	name message_normal
+	name message_host
 	group grpmessage
 	style 0 
 	rect 320 430 128 30
@@ -1518,13 +1478,13 @@ itemDef {
 	textalignx 0
 	textaligny 25
 	textscale .416
-	text "Select to Modify Normal Server Settings"
+	text "Select to modify normal host settings"
 	forecolor 1 1 1 1
 	decoration 
 	visible 0
 	}
 itemDef {
-	name message_expert
+	name message_advhost
 	group grpmessage
 	style 0 
 	rect 320 430 128 30
@@ -1533,7 +1493,7 @@ itemDef {
 	textalignx 0
 	textaligny 25
 	textscale .416
-	text "Select to Modify Expert Server Settings"
+	text "Select to modify advanced host settings"
 	forecolor 1 1 1 1
 	decoration 
 	visible 0

@@ -157,6 +157,8 @@ UI_CVAR( ui_missionStr, "ui_missionStr", "exec missions/demo1.cfg", 0 )
 UI_CVAR( ui_serverFilterType, "ui_serverFilterType", "-1", 0 )
 
 UI_CVAR( ui_hostGameFactory, "ui_hostGameFactory", "0", 0 )
+
+UI_CVAR( ui_realSmoothClients, "g_smoothClients", "1", CVAR_ARCHIVE )
 // END Dimmskii
 
 #undef UI_CVAR
