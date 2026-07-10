@@ -1180,10 +1180,10 @@ static void UI_DrawGameType(rectDef_t *rect, float scale, vec4_t color, int text
 }
 
 static void UI_DrawHostGameFactory(rectDef_t *rect, float scale, vec4_t color, int textStyle) {
-	if (ui_hostGameFactory.integer < 0 || ui_hostGameFactory.integer > uiInfo.numHostGameFactories) {
+	if (ui_hostGameFactory.integer < 0 || ui_hostGameFactory.integer > bg_numFactories) {
 		trap_Cvar_Set("ui_hostGameFactory", "0");
 	}
-	Text_Paint(rect->x, rect->y, scale, color, uiInfo.hostGameFactories[ui_hostGameFactory.integer].title , 0, 0, textStyle);
+	Text_Paint(rect->x, rect->y, scale, color, bg_factories[ui_hostGameFactory.integer].title , 0, 0, textStyle);
 }
 
 // End Dimmskii
@@ -1898,7 +1898,7 @@ static int UI_OwnerDrawWidth(int ownerDraw, float scale) {
       break;
 	  
 	case UI_HOSTGAMEFACTORY:
-		s = uiInfo.hostGameFactories[ui_hostGameFactory.integer].title;
+		s = bg_factories[ui_hostGameFactory.integer].title;
 	break;
 // END DIMMSKII
 
@@ -2400,6 +2400,11 @@ static void UI_OwnerDraw(float x, float y, float w, float h, float text_x, float
 		case UI_KEYBINDSTATUS:
 			UI_DrawKeyBindStatus(&rect,scale, color, textStyle);
 			break;
+// ~Dimmskii
+		case UI_GAMEFACTORYINFO:
+			UI_DrawGameFactoryInfo(&rect,scale, color, textStyle);
+			break;
+// END Dimmskii
     default:
       break;
   }
@@ -2730,12 +2735,18 @@ static qboolean UI_HostGameFactory_HandleKey(int flags, float *special, int key)
 		}
 
 		if (ui_hostGameFactory.integer < 0) {
-			ui_hostGameFactory.integer = uiInfo.numHostGameFactories - 1;
-		} else if (ui_hostGameFactory.integer >= uiInfo.numHostGameFactories) {
+			ui_hostGameFactory.integer = bg_numFactories - 1;
+		} else if (ui_hostGameFactory.integer >= bg_numFactories) {
 			ui_hostGameFactory.integer = 0;
 		}
 
 		trap_Cvar_Set( "ui_hostGameFactory", va("%d", ui_hostGameFactory.integer));
+		
+		// Now set the UI gametype cvars for reverse-compat with any .menu logic that uses ui_gameType/ui_netGameType/ui_actualGameType
+		trap_Cvar_Set( "ui_gameType", bg_factories[ui_hostGameFactory.integer].cvar_values[BG_FactoryCvarIndex("g_gametype")]);
+		trap_Cvar_Set( "ui_netGameType", bg_factories[ui_hostGameFactory.integer].cvar_values[BG_FactoryCvarIndex("g_gametype")]);
+		trap_Cvar_Set( "ui_actualnetGameType", bg_factories[ui_hostGameFactory.integer].cvar_values[BG_FactoryCvarIndex("g_gametype")]);
+		
 		return qtrue;
 	}
 	return qfalse;
@@ -3577,7 +3588,7 @@ static void UI_RunMenuScript(char **args) {
 			trap_Cvar_SetValue( "dedicated", Com_Clamp( 0, 2, ui_dedicated.integer ) );
 			//trap_Cvar_SetValue( "g_gametype", Com_Clamp( 0, 11, uiInfo.gameTypes[ui_netGameType.integer].gtEnum ) );
 			//trap_Cvar_SetValue( "g_gametype", Com_Clamp( 0, uiInfo.numGameTypes, uiInfo.gameTypes[ui_gameType.integer].gtEnum ) ); // ~Dimmskii
-			trap_Cvar_Set( "g_factory", uiInfo.hostGameFactories[ui_hostGameFactory.integer].id ); // ~Dimmskii -- USE G_FACTORIES INSTEAD
+			trap_Cvar_Set( "g_factory", bg_factories[ui_hostGameFactory.integer].id ); // ~Dimmskii -- USE G_FACTORIES INSTEAD
 			//trap_Cvar_Set("g_redTeam", UI_Cvar_VariableString("ui_teamName"));
 			//trap_Cvar_Set("g_blueTeam", UI_Cvar_VariableString("ui_opponentName"));
 			trap_Cvar_Set("g_redTeam", UI_Cvar_VariableString("ui_redTeam")); // ~Dimmskii
@@ -5412,50 +5423,6 @@ static qboolean GameType_Parse(char **p, qboolean join, qboolean host) { // ~Dim
 	return qfalse;
 }
 
-// ~DIMMSKII
-static qboolean HostGameFactory_Parse(char **p) {
-	char *token;
-
-	token = COM_ParseExt(p, qtrue);
-
-	if (token[0] != '{') {
-		return qfalse;
-	}
-
-	uiInfo.numHostGameFactories = 0;
-
-	while ( 1 ) {
-		token = COM_ParseExt(p, qtrue);
-
-		if (Q_stricmp(token, "}") == 0) {
-			return qtrue;
-		}
-
-		if ( !token || token[0] == 0 ) {
-			return qfalse;
-		}
-
-		if (token[0] == '{') {
-			if (!String_Parse(p, &uiInfo.hostGameFactories[uiInfo.numHostGameFactories].id) || !String_Parse(p, &uiInfo.hostGameFactories[uiInfo.numHostGameFactories].title)) {
-				return qfalse;
-			}
-    
-			if (uiInfo.numHostGameFactories < MAX_HOSTGAMEFACTORIES) {
-				uiInfo.numHostGameFactories++;
-			} else {
-				Com_Printf("Too many host game factories, last one replace!\n");
-			}
-     
-			token = COM_ParseExt(p, qtrue);
-			if (token[0] != '}') {
-				return qfalse;
-			}
-		}
-	}
-	return qfalse;
-}
-// END DIMMSKII
-
 static qboolean MapList_Parse(char **p) {
 	char *token;
 
@@ -5558,15 +5525,6 @@ static void UI_ParseGameInfo(const char *teamFile) {
 
 			//if (GameType_Parse(&p, qtrue)) {
 			if (GameType_Parse(&p, qfalse, qtrue)) {
-				continue;
-			} else {
-				break;
-			}
-		}
-		
-		if (Q_stricmp(token, "hostgamefactories") == 0) {
-			
-			if (HostGameFactory_Parse(&p)) {
 				continue;
 			} else {
 				break;
@@ -5811,6 +5769,8 @@ void _UI_Init( qboolean inGameLoad ) {
   uiInfo.teamCount = 0;
   uiInfo.characterCount = 0;
   uiInfo.aliasCount = 0;
+  
+  UI_LoadFactories(); // ~Dimmskii -- LOAD FACTORIES ON UI SIDE AS WELL!
 
 #ifdef PRE_RELEASE_TADEMO
 	UI_ParseTeamInfo("demoteaminfo.txt");
@@ -6505,6 +6465,41 @@ static void UI_StartServerRefresh(qboolean full)
 
 
 // ~DIMMSKII
+
+static void UI_DrawGameFactoryInfo(rectDef_t *rect, float scale, vec4_t color, int textStyle) {
+	int gt;
+	float smolScale;
+	gfactory_t *fact;
+
+	smolScale = scale*0.75f;
+	fact = &bg_factories[ui_hostGameFactory.integer];
+	gt=atoi(fact->cvar_values[BG_FactoryCvarIndex("g_gametype")]);
+	
+	Text_Paint( rect->x + 2, rect->y, scale, color, fact->title, 0, 64, textStyle );
+	Text_Paint( rect->x + 2, rect->y+12, smolScale, color, va("by %s", fact->author), 0, 64, textStyle );
+	Text_Paint( rect->x + 2, rect->y+30, smolScale, color, fact->description, 0, 64, textStyle );
+
+	Text_Paint( rect->x + 2, rect->y+50, smolScale, color, "Base Type:", 0, 64, textStyle );
+	Text_Paint( rect->x + 70, rect->y+50, smolScale, color, uiInfo.gameTypes[gt].gameType, 0, 64, textStyle );
+	if ( GT_IsArenaGame(uiInfo.gameTypes[ui_gameType.integer].gtEnum) ) {
+		Text_Paint( rect->x + 2, rect->y+60, smolScale, color, "Round Limit:", 0, 64, textStyle );
+		Text_Paint( rect->x + 70, rect->y+60, smolScale, color, fact->cvar_values[BG_FactoryCvarIndex("roundlimit")], 0, 64, textStyle );
+		Text_Paint( rect->x + 2, rect->y+70, smolScale, color, "Round Time:", 0, 64, textStyle );
+		Text_Paint( rect->x + 70, rect->y+70, smolScale, color, fact->cvar_values[BG_FactoryCvarIndex("roundtimelimit")], 0, 64, textStyle );
+	} else {
+		if ( GT_IsFlagGame(uiInfo.gameTypes[ui_gameType.integer].gtEnum) ) {
+			Text_Paint( rect->x + 2, rect->y+60, smolScale, color, "Capture Limit:", 0, 64, textStyle );
+			Text_Paint( rect->x + 70, rect->y+60, smolScale, color, fact->cvar_values[BG_FactoryCvarIndex("capturelimit")], 0, 64, textStyle );
+		} else {
+			Text_Paint( rect->x + 2, rect->y+60, smolScale, color, "Frag Limit:", 0, 64, textStyle );
+			Text_Paint( rect->x + 70, rect->y+60, smolScale, color, fact->cvar_values[BG_FactoryCvarIndex("fraglimit")], 0, 64, textStyle );
+		}
+		Text_Paint( rect->x + 2, rect->y+70, smolScale, color, "Time Limit:", 0, 64, textStyle );
+		Text_Paint( rect->x + 70, rect->y+70, smolScale, color, fact->cvar_values[BG_FactoryCvarIndex("timelimit")], 0, 64, textStyle );
+	}
+
+}
+
 static const char *UI_GetServerFilterTypeText() {
 	
 	if (ui_serverFilterType.integer < -1 || ui_serverFilterType.integer > numGameTypeLists) {
@@ -6515,5 +6510,51 @@ static const char *UI_GetServerFilterTypeText() {
 	}
 	
 	return va("Filter: %s", gameTypeLists[ui_serverFilterType.integer].name );
+}
+
+
+
+
+/*
+=================
+UI_LoadFactories
+
+Invokes same shared JSON parsing code as the qagame module G_LoadFactories
+method which it mirrors.
+=================
+*/
+void UI_LoadFactories( void ) {
+	char dirlist[4096];
+	char *dirptr;
+	char filename[128];
+	int numdirs, dirlen, i;
+
+	bg_numFactories = 0;
+
+	BG_LoadFactoriesFile( "scripts/factories.txt" );
+
+	// Third-party/add-on factory definitions: any scripts/*.factories file
+	// gets parsed and appended after the base list. Load order (whatever
+	// the engine's directory listing gives, alphabetical in practice)
+	// doesn't matter for correctness - BG_ResolveFactoryInheritance below
+	// is a second pass over the fully combined list, run once everything
+	// from every file has been loaded.
+	numdirs = trap_FS_GetFileList( "scripts", ".factories", dirlist, sizeof( dirlist ) );
+	dirptr = dirlist;
+	for ( i = 0; i < numdirs; i++, dirptr += dirlen + 1 ) {
+		dirlen = (int)strlen( dirptr );
+		Com_sprintf( filename, sizeof( filename ), "scripts/%s", dirptr );
+		BG_LoadFactoriesFile( filename );
+	}
+
+	// Second pass: every factory from every file is loaded now, so basegt
+	// inheritance can be resolved (a basegt may name a factory that
+	// appears later or in a different file, or one that itself still
+	// needs its own basegt resolved first).
+	BG_ResolveFactoryInheritance();
+
+	Com_Printf( "UI_LoadFactories: %d factories loaded.\n", bg_numFactories );
+
+	//G_ApplySelectedFactory();
 }
 // END DIMMSKII

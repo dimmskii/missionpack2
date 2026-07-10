@@ -51,8 +51,6 @@ rem @if errorlevel 1 goto errorquit
 @if errorlevel 1 goto errorquit
 %cc% ../g_active.c
 @if errorlevel 1 goto errorquit
-%cc% ../g_arena.c 
-@if errorlevel 1 goto errorquit
 %cc% ../g_newgame.c 
 @if errorlevel 1 goto errorquit
 %cc% ../g_arenas.c
@@ -102,7 +100,7 @@ rem @if errorlevel 1 goto errorquit
 
 
 
-q3asm -vq3 -r -m -v -f ../game_ta
+q3asm -vq3 -r -m -v -f ../game_ua
 
 @echo off
 

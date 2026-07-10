@@ -1,6 +1,7 @@
 -o "cgame"
 cg_main
 ..\cg_syscalls
+jsmndr
 cg_consolecmds
 cg_draw
 cg_drawtools

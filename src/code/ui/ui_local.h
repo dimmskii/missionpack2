@@ -493,7 +493,6 @@ typedef struct {
 #define MAX_HEADNAME  32
 #define MAX_TEAMS 64
 #define MAX_GAMETYPES 16
-#define MAX_HOSTGAMEFACTORIES 32	// ~Dimmskii
 #define MAX_MAPS 128
 #define MAX_SPMAPS 16
 //#define PLAYERS_PER_TEAM 5
@@ -554,13 +553,6 @@ typedef struct {
   const char *gameType;
   int gtEnum;
 } gameTypeInfo;
-
-// ~Dimmskii
-typedef struct {
-  const char *id;
-  const char *title;
-} gameFactoryInfo;
-// END Dimmskii
 
 typedef struct {
   const char *mapName;
@@ -677,9 +669,6 @@ typedef struct {
 
 	int numHostGameTypes; // ~Dimmskii
 	gameTypeInfo hostGameTypes[MAX_GAMETYPES]; // ~Dimmskii
-
-	int numHostGameFactories; // ~Dimmskii
-	gameFactoryInfo hostGameFactories[MAX_HOSTGAMEFACTORIES]; // ~Dimmskii
 
 	int redBlue;
 	int playerCount;
