@@ -129,7 +129,7 @@ G_CVAR( g_instagib, "g_instagib", "0", CVAR_SYSTEMINFO | CVAR_LATCH, 0, qtrue, q
 //G_CVAR( g_damageG, "g_damageG", "50", 0, 0, qfalse, qfalse )
 
 //G_CVAR( g_damageMG, "g_damageMG", "7", 0, 0, qfalse, qfalse )
-G_CVAR( g_damageTeamMG, "g_damageTeamMG", "5", 0, 0, qfalse, qfalse )
+//G_CVAR( g_damageTeamMG, "g_damageTeamMG", "5", 0, 0, qfalse, qfalse )
 
 //G_CVAR( g_damageSG, "g_damageSG", "10", 0, 0, qfalse, qfalse )
 //G_CVAR( g_sgPellets, "g_sgPellets", "11", 0, 0, qfalse, qfalse )
