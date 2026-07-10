@@ -6467,23 +6467,35 @@ static void UI_StartServerRefresh(qboolean full)
 // ~DIMMSKII
 
 static void UI_DrawGameFactoryInfo(rectDef_t *rect, float scale, vec4_t color, int textStyle) {
+	int gt;
 	float smolScale;
 	gfactory_t *fact;
 
 	smolScale = scale*0.75f;
 	fact = &bg_factories[ui_hostGameFactory.integer];
+	gt=atoi(fact->cvar_values[BG_FactoryCvarIndex("g_gametype")]);
 	
 	Text_Paint( rect->x + 2, rect->y, scale, color, fact->title, 0, 64, textStyle );
 	Text_Paint( rect->x + 2, rect->y+12, smolScale, color, va("by %s", fact->author), 0, 64, textStyle );
 	Text_Paint( rect->x + 2, rect->y+30, smolScale, color, fact->description, 0, 64, textStyle );
 
 	Text_Paint( rect->x + 2, rect->y+50, smolScale, color, "Base Type:", 0, 64, textStyle );
-	Text_Paint( rect->x + 60, rect->y+50, smolScale, color, fact->cvar_values[0], 0, 64, textStyle );
+	Text_Paint( rect->x + 70, rect->y+50, smolScale, color, uiInfo.gameTypes[gt].gameType, 0, 64, textStyle );
 	if ( GT_IsArenaGame(uiInfo.gameTypes[ui_gameType.integer].gtEnum) ) {
-		Text_Paint( rect->x + 2, rect->y+60, smolScale, color, "Timelimit:", 0, 64, textStyle );
-		Text_Paint( rect->x + 60, rect->y+60, smolScale, color, fact->cvar_values[0], 0, 64, textStyle );
-		Text_Paint( rect->x + 2, rect->y+70, smolScale, color, "Timelimit:", 0, 64, textStyle );
-		Text_Paint( rect->x + 60, rect->y+70, smolScale, color, fact->cvar_values[0], 0, 64, textStyle );
+		Text_Paint( rect->x + 2, rect->y+60, smolScale, color, "Round Limit:", 0, 64, textStyle );
+		Text_Paint( rect->x + 70, rect->y+60, smolScale, color, fact->cvar_values[BG_FactoryCvarIndex("roundlimit")], 0, 64, textStyle );
+		Text_Paint( rect->x + 2, rect->y+70, smolScale, color, "Round Time:", 0, 64, textStyle );
+		Text_Paint( rect->x + 70, rect->y+70, smolScale, color, fact->cvar_values[BG_FactoryCvarIndex("roundtimelimit")], 0, 64, textStyle );
+	} else {
+		if ( GT_IsFlagGame(uiInfo.gameTypes[ui_gameType.integer].gtEnum) ) {
+			Text_Paint( rect->x + 2, rect->y+60, smolScale, color, "Capture Limit:", 0, 64, textStyle );
+			Text_Paint( rect->x + 70, rect->y+60, smolScale, color, fact->cvar_values[BG_FactoryCvarIndex("capturelimit")], 0, 64, textStyle );
+		} else {
+			Text_Paint( rect->x + 2, rect->y+60, smolScale, color, "Frag Limit:", 0, 64, textStyle );
+			Text_Paint( rect->x + 70, rect->y+60, smolScale, color, fact->cvar_values[BG_FactoryCvarIndex("fraglimit")], 0, 64, textStyle );
+		}
+		Text_Paint( rect->x + 2, rect->y+70, smolScale, color, "Time Limit:", 0, 64, textStyle );
+		Text_Paint( rect->x + 70, rect->y+70, smolScale, color, fact->cvar_values[BG_FactoryCvarIndex("timelimit")], 0, 64, textStyle );
 	}
 
 }
