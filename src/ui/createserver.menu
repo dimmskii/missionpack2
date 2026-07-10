@@ -441,6 +441,29 @@ itemDef {
 }
 
 
+// CUSTOM GAME RULES //
+
+	itemDef {
+		name customrules
+		group grpsettings
+		type ITEM_TYPE_MULTI
+		text "Game Type:"
+		cvar "ui_actualNetGameType"
+		cvarFloatList { "Free For All" 0 "Tournament" 1 "TDM" 3 "Clan Arena" 4 "Capture the Flag" 5 "One Flag CTF" 6 "Overload" 7 "Harvester" 8 "Arena" 14 }
+		rect 260 60 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		textaligny 12
+		textscale .25
+		forecolor 1 1 1 1
+		visible 1
+		cvarTest "ui_hostGameFactory"
+		showCvar { "-1" }
+		mouseEnter { fadein message_customrules }
+		mouseExit { fadeout message_customrules }
+	}
+
+
 // 	ADVANCED HOST (non-factory g_ cvars	mostly) //	
 
     itemDef {
@@ -1479,6 +1502,21 @@ itemDef {
 	textaligny 25
 	textscale .416
 	text "Select to modify normal host settings"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+itemDef {
+	name message_customrules
+	group grpmessage
+	style 0 
+	rect 320 430 128 30
+	textalign 1
+	textstyle 1
+	textalignx 0
+	textaligny 25
+	textscale .416
+	text "Select to customize your game rules"
 	forecolor 1 1 1 1
 	decoration 
 	visible 0
