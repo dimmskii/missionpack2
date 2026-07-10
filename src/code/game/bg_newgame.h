@@ -215,3 +215,7 @@ void        BG_LoadFactoriesFile( const char *filename );
 void        BG_ResolveFactoryInheritance( void );
 gfactory_t *BG_FindFactoryById( const char *id );
 
+// Returns the index of cvarName in GFACTORY_CVARS (case-insensitive), or
+// -1 if it isn't one of the permitted factory cvars.
+int         BG_FactoryCvarIndex( const char *cvarName );
+

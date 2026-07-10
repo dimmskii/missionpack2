@@ -141,7 +141,7 @@ Returns the index of cvarName in GFACTORY_CVARS, or -1 if it isn't one of
 the permitted factory cvars.
 =================
 */
-static int BG_FactoryCvarIndex( const char *cvarName ) {
+int BG_FactoryCvarIndex( const char *cvarName ) {
 	int i;
 	for ( i = 0; i < GFACTORY_CVARS_COUNT; i++ ) {
 		if ( !Q_stricmp( GFACTORY_CVARS[i], cvarName ) ) {
