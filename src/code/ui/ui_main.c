@@ -2400,6 +2400,11 @@ static void UI_OwnerDraw(float x, float y, float w, float h, float text_x, float
 		case UI_KEYBINDSTATUS:
 			UI_DrawKeyBindStatus(&rect,scale, color, textStyle);
 			break;
+// ~Dimmskii
+		case UI_GAMEFACTORYINFO:
+			UI_DrawGameFactoryInfo(&rect,scale, color, textStyle);
+			break;
+// END Dimmskii
     default:
       break;
   }
@@ -6460,6 +6465,29 @@ static void UI_StartServerRefresh(qboolean full)
 
 
 // ~DIMMSKII
+
+static void UI_DrawGameFactoryInfo(rectDef_t *rect, float scale, vec4_t color, int textStyle) {
+	float smolScale;
+	gfactory_t *fact;
+
+	smolScale = scale*0.75f;
+	fact = &bg_factories[ui_hostGameFactory.integer];
+	
+	Text_Paint( rect->x + 2, rect->y, scale, color, fact->title, 0, 64, textStyle );
+	Text_Paint( rect->x + 2, rect->y+12, smolScale, color, va("by %s", fact->author), 0, 64, textStyle );
+	Text_Paint( rect->x + 2, rect->y+30, smolScale, color, fact->description, 0, 64, textStyle );
+
+	Text_Paint( rect->x + 2, rect->y+50, smolScale, color, "Base Type:", 0, 64, textStyle );
+	Text_Paint( rect->x + 60, rect->y+50, smolScale, color, fact->cvar_values[0], 0, 64, textStyle );
+	if ( GT_IsArenaGame(uiInfo.gameTypes[ui_gameType.integer].gtEnum) ) {
+		Text_Paint( rect->x + 2, rect->y+60, smolScale, color, "Timelimit:", 0, 64, textStyle );
+		Text_Paint( rect->x + 60, rect->y+60, smolScale, color, fact->cvar_values[0], 0, 64, textStyle );
+		Text_Paint( rect->x + 2, rect->y+70, smolScale, color, "Timelimit:", 0, 64, textStyle );
+		Text_Paint( rect->x + 60, rect->y+70, smolScale, color, fact->cvar_values[0], 0, 64, textStyle );
+	}
+
+}
+
 static const char *UI_GetServerFilterTypeText() {
 	
 	if (ui_serverFilterType.integer < -1 || ui_serverFilterType.integer > numGameTypeLists) {
