@@ -782,8 +782,7 @@ void Hook_Fire( gentity_t *ent );
 #include "g_team.h" // teamplay specific stuff
 
 // ~DIMMSKII
-	#include "g_arena.h" // arena/team arena specific stuff
-	#include "g_newgame.h"
+	#include "g_newgame.h" // arena/team arena and QL factory/newgame wiring
 //END ~DIMMSKII
 
 extern	level_locals_t	level;

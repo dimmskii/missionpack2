@@ -1,12 +1,13 @@
 # Translates game_ua.bat: compiles each listed .c to bytecode .asm via
-# q3lcc, then links them per game_ta.q3asm via q3asm into qagame.qvm.
+# q3lcc, then links them per game_ua.q3asm via q3asm into qagame.qvm.
 # Source list and flags are copied verbatim from game_ua.bat.
 
 set(GAME_VM_DIR "${CMAKE_CURRENT_SOURCE_DIR}/vm")
 file(MAKE_DIRECTORY "${GAME_VM_DIR}")
+set(COMMON_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../common")
 
 set(GAME_SOURCES
-  ../common/jsmndr.c
+  "${COMMON_DIR}/jsmndr.c"
   g_main.c
   ai_chat.c
   ai_cmd.c
@@ -21,7 +22,6 @@ set(GAME_SOURCES
   bg_pmove.c
   bg_slidemove.c
   g_active.c
-  g_arena.c
   g_newgame.c
   g_arenas.c
   g_bot.c
@@ -50,15 +50,20 @@ set(GAME_SOURCES
 set(GAME_ASM_FILES "")
 foreach(src ${GAME_SOURCES})
   get_filename_component(name "${src}" NAME_WE)
+  if(IS_ABSOLUTE "${src}")
+    set(src_path "${src}")
+  else()
+    set(src_path "${CMAKE_CURRENT_SOURCE_DIR}/${src}")
+  endif()
   set(asm_out "${GAME_VM_DIR}/${name}.asm")
   add_custom_command(
     OUTPUT "${asm_out}"
     COMMAND "${Q3LCC}" -DQ3_VM ${Q3_DEBUG_FLAG}
             -S -Wf-target=bytecode -Wf-g ${Q3_INCLUDE_FLAGS}
-            "${CMAKE_CURRENT_SOURCE_DIR}/${src}"
+            "${src_path}"
     WORKING_DIRECTORY "${GAME_VM_DIR}"
-    DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/${src}"
-    COMMENT "q3lcc game/${src}"
+    DEPENDS "${src_path}"
+    COMMENT "q3lcc game/${name}.c"
     VERBATIM
   )
   list(APPEND GAME_ASM_FILES "${asm_out}")
@@ -66,10 +71,10 @@ endforeach()
 
 add_custom_command(
   OUTPUT "${GAME_VM_DIR}/qagame.qvm"
-  COMMAND "${Q3ASM}" -vq3 -r -m -v -f "${CMAKE_CURRENT_SOURCE_DIR}/game_ta"
+  COMMAND "${Q3ASM}" -vq3 -r -m -v -f "${CMAKE_CURRENT_SOURCE_DIR}/game_ua"
   WORKING_DIRECTORY "${GAME_VM_DIR}"
   DEPENDS ${GAME_ASM_FILES}
-          "${CMAKE_CURRENT_SOURCE_DIR}/game_ta.q3asm"
+          "${CMAKE_CURRENT_SOURCE_DIR}/game_ua.q3asm"
           "${CMAKE_CURRENT_SOURCE_DIR}/g_syscalls.asm"
   COMMENT "q3asm -> qagame.qvm"
   VERBATIM
@@ -87,15 +92,20 @@ file(MAKE_DIRECTORY "${GAME_VM_DEBUG_DIR}")
 set(GAME_DEBUG_ASM_FILES "")
 foreach(src ${GAME_SOURCES})
   get_filename_component(name "${src}" NAME_WE)
+  if(IS_ABSOLUTE "${src}")
+    set(src_path "${src}")
+  else()
+    set(src_path "${CMAKE_CURRENT_SOURCE_DIR}/${src}")
+  endif()
   set(asm_out "${GAME_VM_DEBUG_DIR}/${name}.asm")
   add_custom_command(
     OUTPUT "${asm_out}"
     COMMAND "${Q3LCC}" -DQ3_VM -DDEBUG
             -S -Wf-target=bytecode -Wf-g ${Q3_INCLUDE_FLAGS}
-            "${CMAKE_CURRENT_SOURCE_DIR}/${src}"
+            "${src_path}"
     WORKING_DIRECTORY "${GAME_VM_DEBUG_DIR}"
-    DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/${src}"
-    COMMENT "q3lcc -DDEBUG game/${src}"
+    DEPENDS "${src_path}"
+    COMMENT "q3lcc -DDEBUG game/${name}.c"
     VERBATIM
   )
   list(APPEND GAME_DEBUG_ASM_FILES "${asm_out}")
@@ -104,10 +114,10 @@ endforeach()
 add_custom_command(
   OUTPUT "${GAME_VM_DEBUG_DIR}/qagame.qvm"
   COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/g_syscalls.asm" "${GAME_VM_DIR}/g_syscalls.asm"
-  COMMAND "${Q3ASM}" -vq3 -r -m -v -f "${CMAKE_CURRENT_SOURCE_DIR}/game_ta"
+  COMMAND "${Q3ASM}" -vq3 -r -m -v -f "${CMAKE_CURRENT_SOURCE_DIR}/game_ua"
   WORKING_DIRECTORY "${GAME_VM_DEBUG_DIR}"
   DEPENDS ${GAME_DEBUG_ASM_FILES}
-          "${CMAKE_CURRENT_SOURCE_DIR}/game_ta.q3asm"
+          "${CMAKE_CURRENT_SOURCE_DIR}/game_ua.q3asm"
           "${CMAKE_CURRENT_SOURCE_DIR}/g_syscalls.asm"
   COMMENT "q3asm -> debug/qagame.qvm"
   VERBATIM

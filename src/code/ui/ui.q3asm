@@ -1,6 +1,7 @@
 -o "ui"
 ui_main
 ..\ui_syscalls
+jsmndr
 ui_atoms
 ui_players
 ui_util

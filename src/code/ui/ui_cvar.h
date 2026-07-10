@@ -77,10 +77,13 @@ UI_CVAR( ui_redteam, "ui_redteam", "Red", CVAR_ARCHIVE )
 UI_CVAR( ui_blueteam, "ui_blueteam", "Blue", CVAR_ARCHIVE )
 // END Dimmskii
 UI_CVAR( ui_dedicated, "ui_dedicated", "0", CVAR_ARCHIVE )
-UI_CVAR( ui_gameType, "ui_gametype", "3", CVAR_ARCHIVE )
+//UI_CVAR( ui_gameType, "ui_gametype", "3", CVAR_ARCHIVE )
+UI_CVAR( ui_gameType, "ui_gametype", "0", CVAR_ARCHIVE )	// ~Dimmskii
 UI_CVAR( ui_joinGameType, "ui_joinGametype", "0", CVAR_ARCHIVE )
-UI_CVAR( ui_netGameType, "ui_netGametype", "3", CVAR_ARCHIVE )
-UI_CVAR( ui_actualNetGameType, "ui_actualNetGametype", "3", CVAR_ARCHIVE )
+//UI_CVAR( ui_netGameType, "ui_netGametype", "3", CVAR_ARCHIVE )
+//UI_CVAR( ui_actualNetGameType, "ui_actualNetGametype", "3", CVAR_ARCHIVE )
+UI_CVAR( ui_netGameType, "ui_netGametype", "0", CVAR_ARCHIVE )				// ~Dimmskii
+UI_CVAR( ui_actualNetGameType, "ui_actualNetGametype", "0", CVAR_ARCHIVE )	// ~Dimmskii
 //UI_CVAR( ui_redteam1, "ui_redteam1", "0", CVAR_ARCHIVE )
 //UI_CVAR( ui_redteam2, "ui_redteam2", "0", CVAR_ARCHIVE )
 //UI_CVAR( ui_redteam3, "ui_redteam3", "0", CVAR_ARCHIVE )
@@ -157,6 +160,8 @@ UI_CVAR( ui_missionStr, "ui_missionStr", "exec missions/demo1.cfg", 0 )
 UI_CVAR( ui_serverFilterType, "ui_serverFilterType", "-1", 0 )
 
 UI_CVAR( ui_hostGameFactory, "ui_hostGameFactory", "0", 0 )
+
+UI_CVAR( ui_realSmoothClients, "g_smoothClients", "1", CVAR_ARCHIVE )
 // END Dimmskii
 
 #undef UI_CVAR

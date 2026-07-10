@@ -16,7 +16,6 @@ ai_main
 ai_chat
 ai_cmd
 g_active
-g_arena
 g_newgame
 g_arenas
 g_bot
