@@ -270,7 +270,7 @@ G_CVAR( g_railJump, "g_railJump", "0", 0, 0, qtrue, qfalse )
 G_CVAR( g_railJumpDamage, "g_railJumpDamage", "100", 0, 0, qtrue, qfalse )
 
 // Grapple Settings
-G_CVAR( g_grapple, "g_grapple", "0", CVAR_ROM, 0, qtrue, qfalse ) // NOW SYMBOLIC. Auto-sets based on the flipping of bit 512 in ql factory cvar g_startingWeapons
+G_CVAR( g_grapple, "g_grapple", "0", CVAR_ROM, 0, qfalse, qfalse ) // NOW SYMBOLIC. Auto-sets based on the flipping of bit 512 in ql factory cvar g_startingWeapons
 G_CVAR( g_grappleDelayTime, "g_grappleDelayTime", "400", CVAR_SERVERINFO, 0, qtrue, qfalse )
 G_CVAR( g_grappleHoldTime, "g_grappleHoldTime", "0", 0, 0, qtrue, qfalse )
 G_CVAR( g_grappleSpeed, "g_grappleSpeed", "1600", 0, 0, qtrue, qfalse )
