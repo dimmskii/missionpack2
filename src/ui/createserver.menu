@@ -463,6 +463,106 @@ itemDef {
 		mouseExit { fadeout message_customrules }
 	}
 
+	itemDef {
+		name customrules
+		group grpsettings
+		type ITEM_TYPE_NUMERICFIELD
+		text "Capture Limit:"
+		cvar "capturelimit"
+		rect 260 75 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		textaligny 12
+		textscale .25
+		forecolor 1 1 1 1
+		visible 1
+		ownerdrawflag  UI_SHOW_ANYTEAMGAME_NOTARENAGAME
+		cvarTest "ui_hostGameFactory"
+		showCvar { "-1" }
+		mouseEnter { fadein message_customrules }
+		mouseExit { fadeout message_customrules }
+	}
+
+	itemDef {
+		name customrules
+		group grpsettings
+		type ITEM_TYPE_NUMERICFIELD
+		text "Frag Limit:"
+		cvar "fraglimit"
+		rect 260 75 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		textaligny 12
+		textscale .25
+		forecolor 1 1 1 1
+		visible 1
+		ownerdrawflag UI_SHOW_ANYNONTEAMGAME_NOTARENAGAME
+		cvarTest "ui_hostGameFactory"
+		showCvar { "-1" }
+		mouseEnter { fadein message_customrules }
+		mouseExit { fadeout message_customrules }
+	}
+
+	itemDef {
+		name customrules
+		group grpsettings
+		type ITEM_TYPE_NUMERICFIELD
+		text "Round Limit:"
+		cvar "roundlimit"
+		rect 260 75 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		textaligny 12
+		textscale .25
+		forecolor 1 1 1 1
+		visible 1
+		ownerdrawflag UI_SHOW_ARENAGAME
+		cvarTest "ui_hostGameFactory"
+		showCvar { "-1" }
+		mouseEnter { fadein message_customrules }
+		mouseExit { fadeout message_customrules }
+	}
+
+	itemDef {
+		name customrules
+		group grpsettings
+		type ITEM_TYPE_NUMERICFIELD
+		text "Time Limit:"
+		cvar "timelimit"
+		rect 260 90 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		textaligny 12
+		textscale .25
+		forecolor 1 1 1 1
+		visible 1
+		ownerdrawflag UI_SHOW_NOTARENAGAME
+		cvarTest "ui_hostGameFactory"
+		showCvar { "-1" }
+		mouseEnter { fadein message_customrules }
+		mouseExit { fadeout message_customrules }
+	}
+
+	itemDef {
+		name customrules
+		group grpsettings
+		type ITEM_TYPE_NUMERICFIELD
+		text "Round Time:"
+		cvar "roundtimelimit"
+		rect 260 90 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		textaligny 12
+		textscale .25
+		forecolor 1 1 1 1
+		visible 1
+		ownerdrawflag UI_SHOW_ARENAGAME
+		cvarTest "ui_hostGameFactory"
+		showCvar { "-1" }
+		mouseEnter { fadein message_customrules }
+		mouseExit { fadeout message_customrules }
+	}
+
 
 // 	ADVANCED HOST (non-factory g_ cvars	mostly) //	
 

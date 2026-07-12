@@ -178,9 +178,9 @@
 #define UI_SHOW_FFA												0x00000100
 #define UI_SHOW_NOTFFA										0x00000200
 //#define UI_SHOW_NETANYNONTEAMGAME	 				0x00000400
-#define UI_SHOW_NETANYNONTEAMGAME   UI_SHOW_ANYNONTEAMGAME  // ~Dimmskii
+#define UI_SHOW_NETANYNONTEAMGAME   UI_SHOW_ANYNONTEAMGAME  // ~Dimmskii - Aliased. ui_actualNetGameType, ui_netGameType should now always equal to ui_gameType
 //#define UI_SHOW_NETANYTEAMGAME		 				0x00000800
-#define UI_SHOW_NETANYTEAMGAME      UI_SHOW_ANYTEAMGAME     // ~Dimmskii
+#define UI_SHOW_NETANYTEAMGAME      UI_SHOW_ANYTEAMGAME     // ~Dimmskii - Aliased. ui_actualNetGameType, ui_netGameType should now always equal to ui_gameType
 #define UI_SHOW_NOTFAVORITESERVERS				0x00001000
 #define UI_SHOW_ARENAGAME				0x00002000
 #define UI_SHOW_NOTARENAGAME				0x00004000
@@ -189,6 +189,9 @@
 #define UI_SHOW_IF_NOT_INTERMISSION			0x00020000  // TODO: QL Stub - Implement this
 #define UI_SHOW_IF_WARMUP					0x00040000  // TODO: QL Stub - Implement this
 #define UI_SHOW_IF_NOT_WARMUP				0x00080000  // TODO: QL Stub - Implement this
+
+#define UI_SHOW_ANYTEAMGAME_NOTARENAGAME 		0x00004010 	//UI_SHOW_ANYTEAMGAME | UI_SHOW_NOTARENAGAME
+#define UI_SHOW_ANYNONTEAMGAME_NOTARENAGAME 	0x00004008 	//UI_SHOW_ANYNONTEAMGAME | UI_SHOW_NOTARENAGAME
 
 
 
@@ -457,7 +460,7 @@
 #define UI_SELECTEDPLAYER 247
 #define UI_MAPCINEMATIC 248
 //#define UI_NETGAMETYPE 249
-#define UI_NETGAMETYPE UI_GAMETYPE      // ~Dimmskii Removal of confusion
+#define UI_NETGAMETYPE UI_GAMETYPE      // ~Dimmskii - Aliased. ui_actualNetGameType, ui_netGameType should now always equal to ui_gameType
 #define UI_NETMAPCINEMATIC 250
 #define UI_SERVERREFRESHDATE 251
 #define UI_SERVERMOTD 252
