@@ -280,6 +280,7 @@
 #define CG_CAPTURES 70
 #define CG_MAP_NAME 71
 
+// CG owner draw types continued (from QL)
 #define CG_SERVER_SETTINGS 72                     // TODO: QL Stub - Implement this
 #define CG_STARTING_WEAPONS 73                    // TODO: QL Stub - Implement this
 #define CG_GAME_LIMIT 74                          // TODO: QL Stub - Implement this
@@ -408,8 +409,6 @@
 #define CG_1ST_PLYR_DMG_RG 197                    // TODO: QL Stub - Implement this
 #define CG_1ST_PLYR_DMG_PG 198                    // TODO: QL Stub - Implement this
 #define CG_1ST_PLYR_DMG_BFG 199                   // TODO: QL Stub - Implement this
-
-// CG owner draw types continued (from QL)
 #define CG_1ST_PLYR_DMG_CG 200                   // TODO: QL Stub - Implement this
 #define CG_1ST_PLYR_DMG_NG 201                    // TODO: QL Stub - Implement this
 #define CG_1ST_PLYR_DMG_PL 202                    // TODO: QL Stub - Implement this
@@ -582,6 +581,7 @@
 #define CG_HEALTH_COLORIZED 369                   // TODO: QL Stub - Implement this
 #define CG_MATCH_STATE 370                        // TODO: QL Stub - Implement this
 
+// UI owner draw types  -- MUST COME AFTER UI_OWNERDRAW_BASE!
 #define UI_OWNERDRAW_BASE 371
 #define UI_HANDICAP 371
 #define UI_EFFECTS 372
