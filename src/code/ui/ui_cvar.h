@@ -139,8 +139,8 @@ UI_CVAR( ui_scoreTime, "ui_scoreTime", "00:00", CVAR_ARCHIVE )
 UI_CVAR( ui_scoreTimeBonus, "ui_scoreTimeBonus", "0", CVAR_ARCHIVE )
 UI_CVAR( ui_scoreSkillBonus, "ui_scoreSkillBonus", "0", CVAR_ARCHIVE )
 UI_CVAR( ui_scoreShutoutBonus, "ui_scoreShutoutBonus", "0", CVAR_ARCHIVE )
-UI_CVAR( ui_fragLimit, "ui_fragLimit", "10", 0 )
-UI_CVAR( ui_captureLimit, "ui_captureLimit", "5", 0 )
+//UI_CVAR( ui_fragLimit, "ui_fragLimit", "10", 0 )
+//UI_CVAR( ui_captureLimit, "ui_captureLimit", "5", 0 )
 UI_CVAR( ui_smallFont, "ui_smallFont", "0.25", CVAR_ARCHIVE )
 UI_CVAR( ui_bigFont, "ui_bigFont", "0.4", CVAR_ARCHIVE )
 UI_CVAR( ui_findPlayer, "ui_findPlayer", "Sarge", CVAR_ARCHIVE )
@@ -149,16 +149,23 @@ UI_CVAR( ui_findPlayer, "ui_findPlayer", "Sarge", CVAR_ARCHIVE )
 UI_CVAR( ui_hudFiles, "cg_hudFiles", "ui/hud.txt", CVAR_ARCHIVE ) // ~Dimmskii
 UI_CVAR( ui_recordSPDemo, "ui_recordSPDemo", "0", CVAR_ARCHIVE )
 //UI_CVAR( ui_teamArenaFirstRun, "ui_teamArenaFirstRun", "0", CVAR_ARCHIVE )
-UI_CVAR( ui_realWarmUp, "g_warmup", "20", CVAR_ARCHIVE )
-UI_CVAR( ui_realCaptureLimit, "capturelimit", "8", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART )
+//UI_CVAR( ui_realWarmUp, "g_warmup", "20", CVAR_ARCHIVE )
+//UI_CVAR( ui_realCaptureLimit, "capturelimit", "8", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART )
 UI_CVAR( ui_serverStatusTimeOut, "ui_serverStatusTimeOut", "7000", CVAR_ARCHIVE )
+
 // ~Dimmskii
-UI_CVAR( ui_realRoundLimit, "roundlimit", "10", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART )
-UI_CVAR( ui_realRoundTimeLimit, "roundtimelimit", "10", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART )
 UI_CVAR( ui_missionStr, "ui_missionStr", "exec missions/demo1.cfg", 0 )
 UI_CVAR( ui_serverFilterType, "ui_serverFilterType", "-1", 0 )
 UI_CVAR( ui_hostGameFactory, "ui_hostGameFactory", "0", 0 )
 UI_CVAR( ui_realSmoothClients, "g_smoothClients", "1", CVAR_ARCHIVE )
+// Below this line are UI cvars to be transformed into real factory cvars on menuscript 'StartServer' run
+// These cvars are archived so that selecting "Custom" factory will recall the user's custom rules
+UI_CVAR( ui_fraglimit, "ui_fraglimit", "50", CVAR_ARCHIVE )
+UI_CVAR( ui_roundlimit, "ui_roundlimit", "10", CVAR_ARCHIVE )
+UI_CVAR( ui_capturelimit, "ui_capturelimit", "10", CVAR_ARCHIVE )
+UI_CVAR( ui_timelimit, "ui_timelimit", "15", CVAR_ARCHIVE )
+UI_CVAR( ui_roundtimelimit, "ui_roundtimelimit", "180", CVAR_ARCHIVE )
+UI_CVAR( ui_warmup, "ui_warmup", "15", CVAR_ARCHIVE )
 // END Dimmskii
 
 #undef UI_CVAR

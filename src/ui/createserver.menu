@@ -468,7 +468,7 @@ itemDef {
 		group grpsettings
 		type ITEM_TYPE_NUMERICFIELD
 		text "Capture Limit:"
-		cvar "capturelimit"
+		cvar "ui_capturelimit"
 		rect 260 75 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
@@ -488,7 +488,7 @@ itemDef {
 		group grpsettings
 		type ITEM_TYPE_NUMERICFIELD
 		text "Frag Limit:"
-		cvar "fraglimit"
+		cvar "ui_fraglimit"
 		rect 260 75 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
@@ -508,7 +508,7 @@ itemDef {
 		group grpsettings
 		type ITEM_TYPE_NUMERICFIELD
 		text "Round Limit:"
-		cvar "roundlimit"
+		cvar "ui_roundlimit"
 		rect 260 75 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
@@ -528,7 +528,7 @@ itemDef {
 		group grpsettings
 		type ITEM_TYPE_NUMERICFIELD
 		text "Time Limit:"
-		cvar "timelimit"
+		cvar "ui_timelimit"
 		rect 260 90 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
@@ -548,7 +548,7 @@ itemDef {
 		group grpsettings
 		type ITEM_TYPE_NUMERICFIELD
 		text "Round Time:"
-		cvar "roundtimelimit"
+		cvar "ui_roundtimelimit"
 		rect 260 90 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
@@ -561,6 +561,44 @@ itemDef {
 		showCvar { "-1" }
 		mouseEnter { fadein message_customrules }
 		mouseExit { fadeout message_customrules }
+	}
+
+	itemDef {
+		name customrules
+		group grpsettings
+		type ITEM_TYPE_NUMERICFIELD
+		text "Warmup Time:"
+		cvar "ui_warmup"
+		rect 260 105 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		textaligny 12
+		textscale .25
+		forecolor 1 1 1 1
+		visible 1
+		cvarTest "ui_hostGameFactory"
+		showCvar { "-1" }
+		mouseEnter { fadein message_customrules }
+		mouseExit { fadeout message_customrules }
+	}
+
+	itemDef {
+		name customrules
+		group grpsettings
+		type ITEM_TYPE_BUTTON
+		text "Customize Rules"
+		rect 260 165 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		textaligny 12
+		textscale .25
+		forecolor 1 1 1 1
+		visible 1
+		cvarTest "ui_hostGameFactory"
+		showCvar { "-1" }
+		mouseEnter { fadein message_customrules }
+		mouseExit { fadeout message_customrules }
+		action { play "sound/misc/menu1.wav" }
 	}
 
 

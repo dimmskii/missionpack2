@@ -3585,6 +3585,20 @@ static void UI_Update(const char *name) {
 	}
 }
 
+// ~Dimmskii
+static void UI_SetFactoryCvarsFromCustom( void ) {
+	trap_Cvar_SetValue( "g_gametype", Com_Clamp( 0, uiInfo.numGameTypes, uiInfo.gameTypes[ui_gameType.integer].gtEnum ) );
+	
+	trap_Cvar_SetValue( "fraglimit", ui_fraglimit.integer );
+	trap_Cvar_SetValue( "roundlimit", ui_roundlimit.integer );
+	trap_Cvar_SetValue( "capturelimit", ui_capturelimit.integer );
+	trap_Cvar_SetValue( "timelimit", ui_timelimit.integer );
+	trap_Cvar_SetValue( "roundtimelimit", ui_roundtimelimit.integer );
+	
+	trap_Cvar_SetValue( "g_warmup", ui_warmup.integer );
+}
+// END Dimmskii
+
 static void UI_RunMenuScript(char **args) {
 	const char *name, *name2;
 	char buff[1024];
@@ -3598,8 +3612,17 @@ static void UI_RunMenuScript(char **args) {
 			trap_Cvar_Set("ui_singlePlayerActive", "0");
 			trap_Cvar_SetValue( "dedicated", Com_Clamp( 0, 2, ui_dedicated.integer ) );
 			//trap_Cvar_SetValue( "g_gametype", Com_Clamp( 0, 11, uiInfo.gameTypes[ui_netGameType.integer].gtEnum ) );
-			trap_Cvar_SetValue( "g_gametype", Com_Clamp( 0, uiInfo.numGameTypes, uiInfo.gameTypes[ui_gameType.integer].gtEnum ) ); // ~Dimmskii
-			trap_Cvar_Set( "g_factory", (ui_hostGameFactory.integer < 0 || ui_hostGameFactory.integer >= bg_numFactories ? "" : bg_factories[ui_hostGameFactory.integer].id) ); // ~Dimmskii
+// ~Dimmskii
+			if ( ui_hostGameFactory.integer < 0 || ui_hostGameFactory.integer >= bg_numFactories ) {
+				// Host custom (g_factory equals empty string) game
+				trap_Cvar_Set( "g_factory", "" );
+				UI_SetFactoryCvarsFromCustom();
+			} else {
+				// Host preset factory game
+				trap_Cvar_Set( "g_factory", bg_factories[ui_hostGameFactory.integer].id );
+			}
+			
+// END Dimmskii
 			//trap_Cvar_Set("g_redTeam", UI_Cvar_VariableString("ui_teamName"));
 			//trap_Cvar_Set("g_blueTeam", UI_Cvar_VariableString("ui_opponentName"));
 			trap_Cvar_Set("g_redTeam", UI_Cvar_VariableString("ui_redTeam")); // ~Dimmskii
