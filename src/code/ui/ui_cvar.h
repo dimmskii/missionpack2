@@ -183,6 +183,22 @@ UI_CVAR( ui_1FRespawn, "ui_1FRespawn", "0", CVAR_ARCHIVE )
 UI_CVAR( ui_dmflags_noFalling, "ui_dmflags_noFalling", "0", CVAR_ARCHIVE )
 UI_CVAR( ui_dmflags_fixedFov, "ui_dmflags_fixedFov", "0", CVAR_ARCHIVE )
 UI_CVAR( ui_dmflags_noFootsteps, "ui_dmflags_noFootsteps", "0", CVAR_ARCHIVE )
+
+// g_startingWeapons deconstructed
+UI_CVAR( ui_wpflags_g, "ui_wpflags_g", "1", CVAR_ARCHIVE )
+UI_CVAR( ui_wpflags_mg, "ui_wpflags_mg", "1", CVAR_ARCHIVE )
+UI_CVAR( ui_wpflags_sg, "ui_wpflags_sg", "0", CVAR_ARCHIVE )
+UI_CVAR( ui_wpflags_gl, "ui_wpflags_gl", "0", CVAR_ARCHIVE )
+UI_CVAR( ui_wpflags_rl, "ui_wpflags_rl", "0", CVAR_ARCHIVE )
+UI_CVAR( ui_wpflags_lg, "ui_wpflags_lg", "0", CVAR_ARCHIVE )
+UI_CVAR( ui_wpflags_rg, "ui_wpflags_rg", "0", CVAR_ARCHIVE )
+UI_CVAR( ui_wpflags_pg, "ui_wpflags_pg", "0", CVAR_ARCHIVE )
+UI_CVAR( ui_wpflags_bfg, "ui_wpflags_bfg", "0", CVAR_ARCHIVE )
+UI_CVAR( ui_wpflags_grapple, "ui_wpflags_grapple", "0", CVAR_ARCHIVE )
+UI_CVAR( ui_wpflags_ng, "ui_wpflags_ng", "0", CVAR_ARCHIVE )
+UI_CVAR( ui_wpflags_pl, "ui_wpflags_pl", "0", CVAR_ARCHIVE )
+UI_CVAR( ui_wpflags_cg, "ui_wpflags_cg", "0", CVAR_ARCHIVE )
+UI_CVAR( ui_wpflags_hmg, "ui_wpflags_hmg", "0", CVAR_ARCHIVE )
 // END Dimmskii
 
 #undef UI_CVAR

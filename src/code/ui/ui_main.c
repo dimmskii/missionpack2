@@ -3587,7 +3587,7 @@ static void UI_Update(const char *name) {
 
 // ~Dimmskii
 static void UI_SetFactoryCvarsFromCustom( void ) {
-	int dmflags;
+	int dmflags, wpflags;
 	
 	trap_Cvar_SetValue( "g_gametype", Com_Clamp( 0, uiInfo.numGameTypes-1, uiInfo.gameTypes[ui_gameType.integer].gtEnum ) );
 	
@@ -3621,6 +3621,24 @@ static void UI_SetFactoryCvarsFromCustom( void ) {
 		dmflags |= DF_NO_FOOTSTEPS;
 	}
 	trap_Cvar_SetValue( "dmflags", dmflags );
+	
+	// Re-assemble g_startingWeapons from split UI cvars
+	wpflags = 0;
+	if ( ui_wpflags_g.integer > 0 ) { wpflags |= 1; }
+	if ( ui_wpflags_mg.integer > 0 ) { wpflags |= 2; }
+	if ( ui_wpflags_sg.integer > 0 ) { wpflags |= 4; }
+	if ( ui_wpflags_gl.integer > 0 ) { wpflags |= 8; }
+	if ( ui_wpflags_rl.integer > 0 ) { wpflags |= 16; }
+	if ( ui_wpflags_lg.integer > 0 ) { wpflags |= 32; }
+	if ( ui_wpflags_rg.integer > 0 ) { wpflags |= 64; }
+	if ( ui_wpflags_pg.integer > 0 ) { wpflags |= 128; }
+	if ( ui_wpflags_bfg.integer > 0 ) { wpflags |= 256; }
+	if ( ui_wpflags_grapple.integer > 0 ) { wpflags |= 512; }
+	if ( ui_wpflags_ng.integer > 0 ) { wpflags |= 1024; }
+	if ( ui_wpflags_pl.integer > 0 ) { wpflags |= 2048; }
+	if ( ui_wpflags_cg.integer > 0 ) { wpflags |= 4096; }
+	if ( ui_wpflags_hmg.integer > 0 ) { wpflags |= 8192; }
+	trap_Cvar_SetValue( "g_startingWeapons", wpflags );
 }
 // END Dimmskii
 
