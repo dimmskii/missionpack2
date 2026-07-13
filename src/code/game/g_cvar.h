@@ -279,7 +279,7 @@ G_CVAR( g_grapplePull, "g_grapplePull", "800", CVAR_SERVERINFO, 0, qtrue, qfalse
 // NG Settings
 G_CVAR( g_nailBounce, "g_nailBounce", "1", 0, 0, qtrue, qfalse )
 
-// PG Settings
+// PL Settings
 G_CVAR( g_proxMineTimeout, "g_proxMineTimeout", "20000", 0, 0, qtrue, qfalse )
 
 // Respawn
