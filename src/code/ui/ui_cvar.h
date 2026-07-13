@@ -178,6 +178,11 @@ UI_CVAR( ui_friendlyFire, "ui_friendlyFire", "0", CVAR_ARCHIVE )
 UI_CVAR( ui_teamVisibility, "ui_teamVisibility", "1", CVAR_ARCHIVE )
 UI_CVAR( ui_allSpec, "ui_allSpec", "0", CVAR_ARCHIVE )
 UI_CVAR( ui_1FRespawn, "ui_1FRespawn", "0", CVAR_ARCHIVE )
+
+//dmflags deconstructed
+UI_CVAR( ui_dmflags_noFalling, "ui_dmflags_noFalling", "0", CVAR_ARCHIVE )
+UI_CVAR( ui_dmflags_fixedFov, "ui_dmflags_fixedFov", "0", CVAR_ARCHIVE )
+UI_CVAR( ui_dmflags_noFootsteps, "ui_dmflags_noFootsteps", "0", CVAR_ARCHIVE )
 // END Dimmskii
 
 #undef UI_CVAR

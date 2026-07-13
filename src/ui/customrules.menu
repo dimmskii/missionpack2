@@ -249,6 +249,60 @@
 		mouseEnter { fadein message_rule } 
 		mouseExit { fadeout message_rule } 
 	}
+	
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
+		text "No Fall Damage:"
+		cvar "ui_dmflags_noFalling"
+		rect 70 205 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
+		text "Fixed FOV:"
+		cvar "ui_dmflags_fixedFov"
+		rect 70 220 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
+		text "No Footsteps:"
+		cvar "ui_dmflags_noFootsteps"
+		rect 70 235 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
 
 
 

@@ -3587,6 +3587,8 @@ static void UI_Update(const char *name) {
 
 // ~Dimmskii
 static void UI_SetFactoryCvarsFromCustom( void ) {
+	int dmflags;
+	
 	trap_Cvar_SetValue( "g_gametype", Com_Clamp( 0, uiInfo.numGameTypes-1, uiInfo.gameTypes[ui_gameType.integer].gtEnum ) );
 	
 	trap_Cvar_SetValue( "fraglimit", ui_fraglimit.integer );
@@ -3606,6 +3608,19 @@ static void UI_SetFactoryCvarsFromCustom( void ) {
 	trap_Cvar_SetValue( "g_teamVisibility", ui_teamVisibility.integer );
 	trap_Cvar_SetValue( "g_allSpec", ui_allSpec.integer );
 	trap_Cvar_SetValue( "g_1FRespawn", ui_1FRespawn.integer );
+	
+	// Re-assemble dmflags from split UI cvars
+	dmflags = 0;
+	if ( ui_dmflags_noFalling.integer > 0 ) {
+		dmflags |= DF_NO_FALLING;
+	}
+	if ( ui_dmflags_fixedFov.integer > 0 ) {
+		dmflags |= DF_FIXED_FOV;
+	}
+	if ( ui_dmflags_noFootsteps.integer > 0 ) {
+		dmflags |= DF_NO_FOOTSTEPS;
+	}
+	trap_Cvar_SetValue( "dmflags", dmflags );
 }
 // END Dimmskii
 
