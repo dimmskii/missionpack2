@@ -23,6 +23,20 @@
 	show back ;
 	hide grpmessage }
 	
+// Spanning BG
+itemDef {
+	name window
+	rect 2 50 630 370	
+	style WINDOW_STYLE_FILLED
+	border 1
+	bordercolor 1 1 1 .25
+	forecolor 1 1 1 1
+	backcolor 0 0 0 .25
+	visible 1
+	decoration
+}
+
+// Column BGs
 itemDef {
 	name window
       	rect 2 50 200 151	
@@ -596,9 +610,9 @@ itemDef {
 		visible 1
 		cvarTest "ui_hostGameFactory"
 		showCvar { "-1" }
+		action { play "sound/misc/menu1.wav" ; close createserver ; open customrules }
 		mouseEnter { fadein message_customrules }
 		mouseExit { fadeout message_customrules }
-		action { play "sound/misc/menu1.wav" }
 	}
 
 
@@ -1462,7 +1476,7 @@ itemDef {
       	background "ui/assets/backarrow.tga"
 	rect 16 424 50 50 
       	visible 1 
-      	action {  close maps ; close createserver ; open main }
+      	action {  close maps ; close customrules ; close createserver ; open main }
 	mouseEnter { hide back ; show back_alt ; fadein message_back }
     	}
 
@@ -1476,7 +1490,7 @@ itemDef {
       	visible 0
 	type ITEM_TYPE_BUTTON
       	mouseExit { hide back_alt ; show back ; fadeout message_back }	  
-      	action { close maps ; close createserver ; open main }	  
+      	action { close maps ; close customrules ; close createserver ; open main }	  
     	}
 
 
