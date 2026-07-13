@@ -3638,6 +3638,7 @@ static void UI_SetFactoryCvarsFromCustom( void ) {
 	if ( ui_wpflags_pl.integer > 0 ) { wpflags |= 1 << WP_PROX_LAUNCHER; }
 	if ( ui_wpflags_cg.integer > 0 ) { wpflags |= 1 << WP_CHAINGUN; }
 	if ( ui_wpflags_hmg.integer > 0 ) { wpflags |= 1 << WP_HMG; }
+	wpflags >>= 1; // shift it all once because of WP_ enum mismatch
 	trap_Cvar_SetValue( "g_startingWeapons", wpflags );
 	
 	// Starting ammo
