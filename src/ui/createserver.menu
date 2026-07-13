@@ -483,7 +483,7 @@ itemDef {
 		type ITEM_TYPE_NUMERICFIELD
 		text "Capture Limit:"
 		cvar "ui_capturelimit"
-		rect 260 75 128 12
+		rect 260 90 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
 		textaligny 12
@@ -503,7 +503,7 @@ itemDef {
 		type ITEM_TYPE_NUMERICFIELD
 		text "Frag Limit:"
 		cvar "ui_fraglimit"
-		rect 260 75 128 12
+		rect 260 90 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
 		textaligny 12
@@ -523,7 +523,7 @@ itemDef {
 		type ITEM_TYPE_NUMERICFIELD
 		text "Round Limit:"
 		cvar "ui_roundlimit"
-		rect 260 75 128 12
+		rect 260 90 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
 		textaligny 12
@@ -543,7 +543,7 @@ itemDef {
 		type ITEM_TYPE_NUMERICFIELD
 		text "Time Limit:"
 		cvar "ui_timelimit"
-		rect 260 90 128 12
+		rect 260 105 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
 		textaligny 12
@@ -563,7 +563,7 @@ itemDef {
 		type ITEM_TYPE_NUMERICFIELD
 		text "Round Time:"
 		cvar "ui_roundtimelimit"
-		rect 260 90 128 12
+		rect 260 105 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
 		textaligny 12
@@ -583,7 +583,7 @@ itemDef {
 		type ITEM_TYPE_NUMERICFIELD
 		text "Warmup Time:"
 		cvar "ui_warmup"
-		rect 260 105 128 12
+		rect 260 120 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
 		textaligny 12
@@ -602,7 +602,7 @@ itemDef {
 		type ITEM_TYPE_BUTTON
 		text "Customize Rules"
 		rect 260 165 128 12
-		textalign ITEM_ALIGN_RIGHT
+		textalign ITEM_ALIGN_CENTER
 		textalignx 65
 		textaligny 12
 		textscale .25
