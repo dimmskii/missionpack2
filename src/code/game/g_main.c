@@ -472,13 +472,13 @@ void G_SpawnWeapon ( gclient_t *client ) {
 	}
 
 	else {
-		if ( !( wpflags & 1 ) ) {
-			client->ps.stats[ STAT_WEAPONS ] &= ~( 1 << WP_MACHINEGUN );
-			client->ps.ammo[ WP_MACHINEGUN ] = 0;
+		if ( wpflags & 1 ) {
+			client->ps.stats[ STAT_WEAPONS ] |= 1 << WP_GAUNTLET;
+			client->ps.ammo[ WP_GAUNTLET ] = -1;
 		}
-		if ( g_removeweapon.integer & 1 && !( wpflags & 2 ) ) {
-			client->ps.stats[ STAT_WEAPONS ] &= ~( 1 << WP_MACHINEGUN );
-			client->ps.ammo[ WP_MACHINEGUN ] = 0;
+		if ( wpflags & 2 ) {
+			client->ps.stats[ STAT_WEAPONS ] |= 1 << WP_MACHINEGUN;
+			client->ps.ammo[ WP_MACHINEGUN ] = getAmmoValue ( "mg" );
 		}
 		if ( wpflags & 4 ) {
 			client->ps.stats[ STAT_WEAPONS ] |= 1 << WP_SHOTGUN;
@@ -510,6 +510,7 @@ void G_SpawnWeapon ( gclient_t *client ) {
 		}
 		if ( wpflags & 512 ) {
 			client->ps.stats[ STAT_WEAPONS ] |= 1 << WP_GRAPPLING_HOOK;
+			client->ps.ammo[ WP_GRAPPLING_HOOK ] = -1;
 			trap_Cvar_Set("g_grapple", "1");
 		} else {
 			trap_Cvar_Set("g_grapple", "0");

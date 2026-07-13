@@ -1199,24 +1199,21 @@ void ClientSpawn(gentity_t *ent) {
 
 	client->ps.clientNum = index;
 
+/*
 	if ( g_instagib.integer ) {
 		client->ps.stats[STAT_WEAPONS] = ( 1 << WP_RAILGUN );
 		client->ps.ammo[WP_RAILGUN] = 999;
 	} else {
 		client->ps.stats[STAT_WEAPONS] = ( 1 << WP_MACHINEGUN );
 		if ( g_gametype.integer == GT_TEAM ) {
-			//if ( g_startAmmoMG.integer ) {
-				//client->ps.ammo[WP_MACHINEGUN] = g_startAmmoMG.integer;
-			if ( g_startingAmmo_mg.integer ) { // ~Dimmskii
-				client->ps.ammo[WP_MACHINEGUN] = g_startingAmmo_mg.integer; // ~Dimmskii
+			if ( g_startAmmoMG.integer ) {
+				client->ps.ammo[WP_MACHINEGUN] = g_startAmmoMG.integer;
 			} else {
 				client->ps.ammo[WP_MACHINEGUN] = 50;
 			}			
 		} else {
-			//if ( g_startAmmoMG.integer ) {
-				//client->ps.ammo[WP_MACHINEGUN] = g_startAmmoMG.integer;
-			if ( g_startingAmmo_mg.integer ) { // ~Dimmskii
-				client->ps.ammo[WP_MACHINEGUN] = g_startingAmmo_mg.integer; // ~Dimmskii
+			if ( g_startAmmoMG.integer ) {
+				client->ps.ammo[WP_MACHINEGUN] = g_startAmmoMG.integer;
 			} else {
 				client->ps.ammo[WP_MACHINEGUN] = 100;
 			}			
@@ -1230,7 +1227,6 @@ void ClientSpawn(gentity_t *ent) {
 	// health will count down towards max_health
 	ent->health = client->ps.stats[STAT_HEALTH] = client->ps.stats[STAT_MAX_HEALTH] + 25;
 
-/*
 	if (g_startHealth.integer > 0) {
 		client->ps.stats[STAT_HEALTH] = g_startHealth.integer;
 		if (client->ps.stats[STAT_HEALTH] > client->ps.stats[STAT_MAX_HEALTH] * 2)
@@ -1250,6 +1246,16 @@ void ClientSpawn(gentity_t *ent) {
 	
 // ~Dimmskii
 
+	// If g_instagib is enabled, overwrite weapons with what we need
+	if ( g_instagib.integer ) {
+		client->ps.stats[STAT_WEAPONS] = ( 1 << WP_GAUNTLET ) | ( 1 << WP_RAILGUN ); // Set to gauntlet and railgun
+		client->ps.ammo[WP_RAILGUN] = 999;			// Give "unlimited" slugs. TODO: Also implement QL-style cvar for true unlimited ammo and use it here
+	}
+	
+	// Ensure -1 ammo as it apparently should always be for weapons like gaunt and grapple
+	client->ps.ammo[WP_GAUNTLET] = -1;				
+	client->ps.ammo[WP_GRAPPLING_HOOK] = -1;
+
 	// Disable shooting upon respawn in Arena gamemodes if there is warmup time (  re-enabled on G_WarmupEnd in g_main.c  )
 	if ( GT_IsArenaGame(g_gametype.integer) ) {
 		if (g_warmup.integer > 0) {
@@ -1260,14 +1266,20 @@ void ClientSpawn(gentity_t *ent) {
 	// Starting health
 	startHealth = g_startingHealth.integer;
 	startHealthBonus = g_startingHealthBonus.integer;
+	
 	if (startHealth > 0) {
 		client->ps.stats[STAT_HEALTH] = startHealth;
-		if (startHealthBonus > 0) {
-			client->ps.stats[STAT_HEALTH] += startHealthBonus;
-		}
-		if (client->ps.stats[STAT_HEALTH] > client->ps.stats[STAT_MAX_HEALTH] * 2)
+		if (client->ps.stats[STAT_HEALTH] > client->ps.stats[STAT_MAX_HEALTH] * 2) {
 			client->ps.stats[STAT_HEALTH] = client->ps.stats[STAT_MAX_HEALTH] * 2;
-		ent->health = client->ps.stats[STAT_HEALTH];
+		}
+	} else {
+		client->ps.stats[STAT_HEALTH] = client->ps.stats[STAT_MAX_HEALTH];
+	}
+	
+	ent->health = client->ps.stats[STAT_HEALTH];
+	
+	if (startHealthBonus > 0) {
+		ent->health += startHealthBonus;
 	}
 
 	// Starting armor
