@@ -199,6 +199,20 @@ UI_CVAR( ui_wpflags_ng, "ui_wpflags_ng", "0", CVAR_ARCHIVE )
 UI_CVAR( ui_wpflags_pl, "ui_wpflags_pl", "0", CVAR_ARCHIVE )
 UI_CVAR( ui_wpflags_cg, "ui_wpflags_cg", "0", CVAR_ARCHIVE )
 UI_CVAR( ui_wpflags_hmg, "ui_wpflags_hmg", "0", CVAR_ARCHIVE )
+
+// Start ammo
+UI_CVAR( ui_startingAmmo_mg, "ui_startingAmmo_mg", "50", CVAR_ARCHIVE )
+UI_CVAR( ui_startingAmmo_sg, "ui_startingAmmo_sg", "10", CVAR_ARCHIVE )
+UI_CVAR( ui_startingAmmo_gl, "ui_startingAmmo_gl", "5", CVAR_ARCHIVE )
+UI_CVAR( ui_startingAmmo_rl, "ui_startingAmmo_rl", "5", CVAR_ARCHIVE )
+UI_CVAR( ui_startingAmmo_lg, "ui_startingAmmo_lg", "60", CVAR_ARCHIVE )
+UI_CVAR( ui_startingAmmo_rg, "ui_startingAmmo_rg", "10", CVAR_ARCHIVE )
+UI_CVAR( ui_startingAmmo_pg, "ui_startingAmmo_pg", "30", CVAR_ARCHIVE )
+UI_CVAR( ui_startingAmmo_bfg, "ui_startingAmmo_bfg", "15", CVAR_ARCHIVE )
+UI_CVAR( ui_startingAmmo_ng, "ui_startingAmmo_ng", "20", CVAR_ARCHIVE )
+UI_CVAR( ui_startingAmmo_pl, "ui_startingAmmo_pl", "10", CVAR_ARCHIVE )
+UI_CVAR( ui_startingAmmo_cg, "ui_startingAmmo_cg", "100", CVAR_ARCHIVE )
+UI_CVAR( ui_startingAmmo_hmg, "ui_startingAmmo_hmg", "50", CVAR_ARCHIVE )
 // END Dimmskii
 
 #undef UI_CVAR

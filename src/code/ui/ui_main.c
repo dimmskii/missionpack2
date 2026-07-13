@@ -3639,6 +3639,20 @@ static void UI_SetFactoryCvarsFromCustom( void ) {
 	if ( ui_wpflags_cg.integer > 0 ) { wpflags |= 4096; }
 	if ( ui_wpflags_hmg.integer > 0 ) { wpflags |= 8192; }
 	trap_Cvar_SetValue( "g_startingWeapons", wpflags );
+	
+	// Starting ammo
+	trap_Cvar_SetValue( "g_startingAmmo_mg", ui_startingAmmo_mg.integer );
+	trap_Cvar_SetValue( "g_startingAmmo_sg", ui_startingAmmo_sg.integer );
+	trap_Cvar_SetValue( "g_startingAmmo_gl", ui_startingAmmo_gl.integer );
+	trap_Cvar_SetValue( "g_startingAmmo_rl", ui_startingAmmo_rl.integer );
+	trap_Cvar_SetValue( "g_startingAmmo_lg", ui_startingAmmo_lg.integer );
+	trap_Cvar_SetValue( "g_startingAmmo_rg", ui_startingAmmo_rg.integer );
+	trap_Cvar_SetValue( "g_startingAmmo_pg", ui_startingAmmo_pg.integer );
+	trap_Cvar_SetValue( "g_startingAmmo_bfg", ui_startingAmmo_bfg.integer );
+	trap_Cvar_SetValue( "g_startingAmmo_ng", ui_startingAmmo_ng.integer );
+	trap_Cvar_SetValue( "g_startingAmmo_pl", ui_startingAmmo_pl.integer );
+	trap_Cvar_SetValue( "g_startingAmmo_cg", ui_startingAmmo_cg.integer );
+	trap_Cvar_SetValue( "g_startingAmmo_hmg", ui_startingAmmo_hmg.integer );
 }
 // END Dimmskii
 
