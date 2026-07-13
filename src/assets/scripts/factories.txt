@@ -46,6 +46,20 @@
   
   {
     "cvars": {
+	  "g_gametype": "1",
+	  "timelimit": "10",
+      "fraglimit": "0",
+    },
+    "author": "UA Dev Team",
+    "description": "Duel with Arena starting weapons and rules.",
+    "basegt": "ca",
+    "id": "caduel",
+    "title": "CA Duel"
+  },
+  
+  
+  {
+    "cvars": {
 	  "g_gametype": "3",
       "timelimit": "15",
       "g_itemTimers": "1",
