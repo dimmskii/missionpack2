@@ -3624,20 +3624,20 @@ static void UI_SetFactoryCvarsFromCustom( void ) {
 	
 	// Re-assemble g_startingWeapons from split UI cvars
 	wpflags = 0;
-	if ( ui_wpflags_g.integer > 0 ) { wpflags |= 1; }
-	if ( ui_wpflags_mg.integer > 0 ) { wpflags |= 2; }
-	if ( ui_wpflags_sg.integer > 0 ) { wpflags |= 4; }
-	if ( ui_wpflags_gl.integer > 0 ) { wpflags |= 8; }
-	if ( ui_wpflags_rl.integer > 0 ) { wpflags |= 16; }
-	if ( ui_wpflags_lg.integer > 0 ) { wpflags |= 32; }
-	if ( ui_wpflags_rg.integer > 0 ) { wpflags |= 64; }
-	if ( ui_wpflags_pg.integer > 0 ) { wpflags |= 128; }
-	if ( ui_wpflags_bfg.integer > 0 ) { wpflags |= 256; }
-	if ( ui_wpflags_grapple.integer > 0 ) { wpflags |= 512; }
-	if ( ui_wpflags_ng.integer > 0 ) { wpflags |= 1024; }
-	if ( ui_wpflags_pl.integer > 0 ) { wpflags |= 2048; }
-	if ( ui_wpflags_cg.integer > 0 ) { wpflags |= 4096; }
-	if ( ui_wpflags_hmg.integer > 0 ) { wpflags |= 8192; }
+	if ( ui_wpflags_g.integer > 0 ) { wpflags |= 1 << WP_GAUNTLET; }
+	if ( ui_wpflags_mg.integer > 0 ) { wpflags |= 1 << WP_MACHINEGUN; }
+	if ( ui_wpflags_sg.integer > 0 ) { wpflags |= 1 << WP_SHOTGUN; }
+	if ( ui_wpflags_gl.integer > 0 ) { wpflags |= 1 << WP_GRENADE_LAUNCHER; }
+	if ( ui_wpflags_rl.integer > 0 ) { wpflags |= 1 << WP_ROCKET_LAUNCHER; }
+	if ( ui_wpflags_lg.integer > 0 ) { wpflags |= 1 << WP_LIGHTNING; }
+	if ( ui_wpflags_rg.integer > 0 ) { wpflags |= 1 << WP_RAILGUN; }
+	if ( ui_wpflags_pg.integer > 0 ) { wpflags |= 1 << WP_PLASMAGUN; }
+	if ( ui_wpflags_bfg.integer > 0 ) { wpflags |= 1 << WP_BFG; }
+	if ( ui_wpflags_grapple.integer > 0 ) { wpflags |= 1 << WP_GRAPPLING_HOOK; }
+	if ( ui_wpflags_ng.integer > 0 ) { wpflags |= 1 << WP_NAILGUN; }
+	if ( ui_wpflags_pl.integer > 0 ) { wpflags |= 1 << WP_PROX_LAUNCHER; }
+	if ( ui_wpflags_cg.integer > 0 ) { wpflags |= 1 << WP_CHAINGUN; }
+	if ( ui_wpflags_hmg.integer > 0 ) { wpflags |= 1 << WP_HMG; }
 	trap_Cvar_SetValue( "g_startingWeapons", wpflags );
 	
 	// Starting ammo
