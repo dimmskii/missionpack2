@@ -158,6 +158,7 @@ UI_CVAR( ui_missionStr, "ui_missionStr", "exec missions/demo1.cfg", 0 )
 UI_CVAR( ui_serverFilterType, "ui_serverFilterType", "-1", 0 )
 UI_CVAR( ui_hostGameFactory, "ui_hostGameFactory", "0", 0 )
 UI_CVAR( ui_realSmoothClients, "g_smoothClients", "1", CVAR_ARCHIVE )
+
 // Below this line are UI cvars to be transformed into real factory cvars on menuscript 'StartServer' run
 // These cvars are archived so that selecting "Custom" factory will recall the user's custom rules
 UI_CVAR( ui_fraglimit, "ui_fraglimit", "50", CVAR_ARCHIVE )
@@ -166,6 +167,17 @@ UI_CVAR( ui_capturelimit, "ui_capturelimit", "10", CVAR_ARCHIVE )
 UI_CVAR( ui_timelimit, "ui_timelimit", "15", CVAR_ARCHIVE )
 UI_CVAR( ui_roundtimelimit, "ui_roundtimelimit", "180", CVAR_ARCHIVE )
 UI_CVAR( ui_warmup, "ui_warmup", "15", CVAR_ARCHIVE )
+
+// Below this line factory cont'd -- "Customize" gamerules separate menu
+UI_CVAR( ui_instagib, "ui_instagib", "0", CVAR_ARCHIVE )
+UI_CVAR( ui_fastWeaponSwitch, "ui_fastWeaponSwitch", "0", CVAR_ARCHIVE )
+UI_CVAR( ui_noSelfDamage, "ui_noSelfDamage", "0", CVAR_ARCHIVE )
+UI_CVAR( ui_itemTimers, "ui_itemTimers", "0", CVAR_ARCHIVE )
+
+UI_CVAR( ui_friendlyFire, "ui_friendlyFire", "0", CVAR_ARCHIVE )
+UI_CVAR( ui_teamVisibility, "ui_teamVisibility", "1", CVAR_ARCHIVE )
+UI_CVAR( ui_allSpec, "ui_allSpec", "0", CVAR_ARCHIVE )
+UI_CVAR( ui_1FRespawn, "ui_1FRespawn", "0", CVAR_ARCHIVE )
 // END Dimmskii
 
 #undef UI_CVAR

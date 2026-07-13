@@ -3587,7 +3587,7 @@ static void UI_Update(const char *name) {
 
 // ~Dimmskii
 static void UI_SetFactoryCvarsFromCustom( void ) {
-	trap_Cvar_SetValue( "g_gametype", Com_Clamp( 0, uiInfo.numGameTypes, uiInfo.gameTypes[ui_gameType.integer].gtEnum ) );
+	trap_Cvar_SetValue( "g_gametype", Com_Clamp( 0, uiInfo.numGameTypes-1, uiInfo.gameTypes[ui_gameType.integer].gtEnum ) );
 	
 	trap_Cvar_SetValue( "fraglimit", ui_fraglimit.integer );
 	trap_Cvar_SetValue( "roundlimit", ui_roundlimit.integer );
@@ -3596,6 +3596,16 @@ static void UI_SetFactoryCvarsFromCustom( void ) {
 	trap_Cvar_SetValue( "roundtimelimit", ui_roundtimelimit.integer );
 	
 	trap_Cvar_SetValue( "g_warmup", ui_warmup.integer );
+	
+	trap_Cvar_SetValue( "g_instagib", ui_instagib.integer );
+	trap_Cvar_SetValue( "g_fastWeaponSwitch", ui_fastWeaponSwitch.integer );
+	trap_Cvar_SetValue( "g_noSelfDamage", ui_noSelfDamage.integer );
+	trap_Cvar_SetValue( "g_itemTimers", ui_itemTimers.integer );
+
+	trap_Cvar_SetValue( "g_friendlyFire", ui_friendlyFire.integer );
+	trap_Cvar_SetValue( "g_teamVisibility", ui_teamVisibility.integer );
+	trap_Cvar_SetValue( "g_allSpec", ui_allSpec.integer );
+	trap_Cvar_SetValue( "g_1FRespawn", ui_1FRespawn.integer );
 }
 // END Dimmskii
 

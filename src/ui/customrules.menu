@@ -104,6 +104,153 @@
 
 
 
+// GENERAL  //
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
+		text "Instagib:"
+		cvar "ui_instagib"
+		rect 70 55 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
+		text "Fast Weapon Switch:"
+		cvar "ui_fastWeaponSwitch"
+		rect 70 70 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
+		text "Self-damage off:"
+		cvar "ui_noSelfDamage"
+		rect 70 85 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
+		text "Item Timers:"
+		cvar "ui_itemTimers"
+		rect 70 100 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
+		text "Friendly Fire:"
+		cvar "ui_friendlyFire"
+		rect 70 130 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
+		text "Full Team Visibility:"
+		cvar "ui_teamVisibility"
+		rect 70 145 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
+		text "Maximum Players:"
+		cvar "ui_allSpec"
+		rect 70 160 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
+		text "1F Respawn:"
+		cvar "ui_1FRespawn"
+		rect 70 175 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+
 
 // BACK BAR	//
 
@@ -155,6 +302,22 @@
 
 
 //	MESSAGES	//
+
+	itemDef {
+		name message_rule
+		group grpmessage
+		style 0 
+		rect 320 430 128 30
+		textalign 1
+		textstyle 1
+		textalignx 0
+		textaligny 25
+		textscale .416
+		text "Select to edit game rule"
+		forecolor 1 1 1 1
+		decoration 
+		visible 0
+	}
 
 	itemDef {
 		name message_back
