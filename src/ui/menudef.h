@@ -178,9 +178,9 @@
 #define UI_SHOW_FFA												0x00000100
 #define UI_SHOW_NOTFFA										0x00000200
 //#define UI_SHOW_NETANYNONTEAMGAME	 				0x00000400
-#define UI_SHOW_NETANYNONTEAMGAME   UI_SHOW_ANYNONTEAMGAME  // ~Dimmskii
+#define UI_SHOW_NETANYNONTEAMGAME   UI_SHOW_ANYNONTEAMGAME  // ~Dimmskii - Aliased. ui_actualNetGameType, ui_netGameType should now always equal to ui_gameType
 //#define UI_SHOW_NETANYTEAMGAME		 				0x00000800
-#define UI_SHOW_NETANYTEAMGAME      UI_SHOW_ANYTEAMGAME     // ~Dimmskii
+#define UI_SHOW_NETANYTEAMGAME      UI_SHOW_ANYTEAMGAME     // ~Dimmskii - Aliased. ui_actualNetGameType, ui_netGameType should now always equal to ui_gameType
 #define UI_SHOW_NOTFAVORITESERVERS				0x00001000
 #define UI_SHOW_ARENAGAME				0x00002000
 #define UI_SHOW_NOTARENAGAME				0x00004000
@@ -189,6 +189,9 @@
 #define UI_SHOW_IF_NOT_INTERMISSION			0x00020000  // TODO: QL Stub - Implement this
 #define UI_SHOW_IF_WARMUP					0x00040000  // TODO: QL Stub - Implement this
 #define UI_SHOW_IF_NOT_WARMUP				0x00080000  // TODO: QL Stub - Implement this
+
+#define UI_SHOW_ANYTEAMGAME_NOTARENAGAME 		0x00004010 	//UI_SHOW_ANYTEAMGAME | UI_SHOW_NOTARENAGAME
+#define UI_SHOW_ANYNONTEAMGAME_NOTARENAGAME 	0x00004008 	//UI_SHOW_ANYNONTEAMGAME | UI_SHOW_NOTARENAGAME
 
 
 
@@ -277,6 +280,7 @@
 #define CG_CAPTURES 70
 #define CG_MAP_NAME 71
 
+// CG owner draw types continued (from QL)
 #define CG_SERVER_SETTINGS 72                     // TODO: QL Stub - Implement this
 #define CG_STARTING_WEAPONS 73                    // TODO: QL Stub - Implement this
 #define CG_GAME_LIMIT 74                          // TODO: QL Stub - Implement this
@@ -405,255 +409,254 @@
 #define CG_1ST_PLYR_DMG_RG 197                    // TODO: QL Stub - Implement this
 #define CG_1ST_PLYR_DMG_PG 198                    // TODO: QL Stub - Implement this
 #define CG_1ST_PLYR_DMG_BFG 199                   // TODO: QL Stub - Implement this
+#define CG_1ST_PLYR_DMG_CG 200                   // TODO: QL Stub - Implement this
+#define CG_1ST_PLYR_DMG_NG 201                    // TODO: QL Stub - Implement this
+#define CG_1ST_PLYR_DMG_PL 202                    // TODO: QL Stub - Implement this
+#define CG_1ST_PLYR_DMG_HMG 203                   // TODO: QL Stub - Implement this
+#define CG_1ST_PLYR_ACC_MG 204                    // TODO: QL Stub - Implement this
+#define CG_1ST_PLYR_ACC_SG 205                    // TODO: QL Stub - Implement this
+#define CG_1ST_PLYR_ACC_GL 206                    // TODO: QL Stub - Implement this
+#define CG_1ST_PLYR_ACC_RL 207                    // TODO: QL Stub - Implement this
+#define CG_1ST_PLYR_ACC_LG 208                    // TODO: QL Stub - Implement this
+#define CG_1ST_PLYR_ACC_RG 209                    // TODO: QL Stub - Implement this
+#define CG_1ST_PLYR_ACC_PG 210                    // TODO: QL Stub - Implement this
+#define CG_1ST_PLYR_ACC_BFG 211                   // TODO: QL Stub - Implement this
+#define CG_1ST_PLYR_ACC_CG 212                    // TODO: QL Stub - Implement this
+#define CG_1ST_PLYR_ACC_NG 213                    // TODO: QL Stub - Implement this
+#define CG_1ST_PLYR_ACC_PL 214                    // TODO: QL Stub - Implement this
+#define CG_1ST_PLYR_ACC_HMG 215                   // TODO: QL Stub - Implement this
+#define CG_1ST_PLYR_PICKUPS 216                   // TODO: QL Stub - Implement this
+#define CG_1ST_PLYR_PICKUPS_RA 217                // TODO: QL Stub - Implement this
+#define CG_1ST_PLYR_PICKUPS_YA 218                // TODO: QL Stub - Implement this
+#define CG_1ST_PLYR_PICKUPS_GA 219                // TODO: QL Stub - Implement this
+#define CG_1ST_PLYR_PICKUPS_MH 220                // TODO: QL Stub - Implement this
+#define CG_1ST_PLYR_AVG_PICKUP_TIME_RA 221        // TODO: QL Stub - Implement this
+#define CG_1ST_PLYR_AVG_PICKUP_TIME_YA 222        // TODO: QL Stub - Implement this
+#define CG_1ST_PLYR_AVG_PICKUP_TIME_GA 223        // TODO: QL Stub - Implement this
+#define CG_1ST_PLYR_AVG_PICKUP_TIME_MH 224        // TODO: QL Stub - Implement this
+#define CG_1ST_PLYR_EXCELLENT 225                 // TODO: QL Stub - Implement this
+#define CG_1ST_PLYR_IMPRESSIVE 226                // TODO: QL Stub - Implement this
+#define CG_1ST_PLYR_HUMILIATION 227               // TODO: QL Stub - Implement this
+#define CG_1ST_PLYR_PR 228                        // TODO: QL Stub - Implement this
+#define CG_1ST_PLYR_TIER 229                      // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR 230                           // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_READY 231                     // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_SCORE 232                     // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_FRAGS 233                     // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_DEATHS 234                    // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_DMG 235                       // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_TIME 236                      // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_PING 237                      // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_WINS 238                      // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_ACC 239                       // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_FLAG 240                      // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_AVATAR 241                    // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_TIMEOUT_COUNT 242             // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_HEALTH_ARMOR 243              // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_FRAGS_G 244                   // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_FRAGS_MG 245                  // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_FRAGS_SG 246                  // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_FRAGS_GL 247                  // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_FRAGS_RL 248                  // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_FRAGS_LG 249                  // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_FRAGS_RG 250                  // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_FRAGS_PG 251                  // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_FRAGS_BFG 252                 // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_FRAGS_CG 253                  // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_FRAGS_NG 254                  // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_FRAGS_PL 255                  // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_FRAGS_HMG 256                 // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_HITS_MG 257                   // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_HITS_SG 258                   // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_HITS_GL 259                   // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_HITS_RL 260                   // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_HITS_LG 261                   // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_HITS_RG 262                   // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_HITS_PG 263                   // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_HITS_BFG 264                  // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_HITS_CG 265                   // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_HITS_NG 266                   // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_HITS_PL 267                   // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_HITS_HMG 268                  // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_SHOTS_MG 269                  // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_SHOTS_SG 270                  // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_SHOTS_GL 271                  // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_SHOTS_RL 272                  // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_SHOTS_LG 273                  // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_SHOTS_RG 274                  // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_SHOTS_PG 275                  // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_SHOTS_BFG 276                 // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_SHOTS_CG 277                  // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_SHOTS_NG 278                  // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_SHOTS_PL 279                  // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_SHOTS_HMG 280                 // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_DMG_G 281                     // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_DMG_MG 282                    // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_DMG_SG 283                    // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_DMG_GL 284                    // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_DMG_RL 285                    // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_DMG_LG 286                    // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_DMG_RG 287                    // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_DMG_PG 288                    // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_DMG_BFG 289                   // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_DMG_CG 290                    // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_DMG_NG 291                    // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_DMG_PL 292                    // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_DMG_HMG 293                   // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_ACC_MG 294                    // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_ACC_SG 295                    // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_ACC_GL 296                    // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_ACC_RL 297                    // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_ACC_LG 298                    // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_ACC_RG 299                    // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_ACC_PG 300                    // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_ACC_BFG 301                   // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_ACC_CG 302                    // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_ACC_NG 303                    // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_ACC_PL 304                    // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_ACC_HMG 305                   // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_PICKUPS 306                   // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_PICKUPS_RA 307                // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_PICKUPS_YA 308                // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_PICKUPS_GA 309                // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_PICKUPS_MH 310                // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_AVG_PICKUP_TIME_RA 311        // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_AVG_PICKUP_TIME_YA 312        // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_AVG_PICKUP_TIME_GA 313        // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_AVG_PICKUP_TIME_MH 314        // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_EXCELLENT 315                 // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_IMPRESSIVE 316                // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_HUMILIATION 317               // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_PR 318                        // TODO: QL Stub - Implement this
+#define CG_2ND_PLYR_TIER 319                      // TODO: QL Stub - Implement this
+#define CG_RED_OWNED_FLAGS 320                    // TODO: QL Stub - Implement this
+#define CG_RED_AVG_PING 321                       // TODO: QL Stub - Implement this
+#define CG_RED_BASESTATUS 322                     // TODO: QL Stub - Implement this
+#define CG_RED_PLAYER_COUNT 323                   // TODO: QL Stub - Implement this
+#define CG_RED_CLAN_PLYRS 324                     // TODO: QL Stub - Implement this
+#define CG_RED_TIMEOUT_COUNT 325                  // TODO: QL Stub - Implement this
+#define CG_RED_TEAM_MAP_PICKUPS 326               // TODO: QL Stub - Implement this
+#define CG_RED_TEAM_PICKUPS_RA 327                // TODO: QL Stub - Implement this
+#define CG_RED_TEAM_PICKUPS_YA 328                // TODO: QL Stub - Implement this
+#define CG_RED_TEAM_PICKUPS_GA 329                // TODO: QL Stub - Implement this
+#define CG_RED_TEAM_PICKUPS_MH 330                // TODO: QL Stub - Implement this
+#define CG_RED_TEAM_PICKUPS_QUAD 331              // TODO: QL Stub - Implement this
+#define CG_RED_TEAM_PICKUPS_BS 332                // TODO: QL Stub - Implement this
+#define CG_RED_TEAM_TIMEHELD_QUAD 333             // TODO: QL Stub - Implement this
+#define CG_RED_TEAM_TIMEHELD_BS 334               // TODO: QL Stub - Implement this
+#define CG_RED_TEAM_PICKUPS_FLAG 335              // TODO: QL Stub - Implement this
+#define CG_RED_TEAM_PICKUPS_MEDKIT 336            // TODO: QL Stub - Implement this
+#define CG_RED_TEAM_PICKUPS_REGEN 337             // TODO: QL Stub - Implement this
+#define CG_RED_TEAM_PICKUPS_HASTE 338             // TODO: QL Stub - Implement this
+#define CG_RED_TEAM_PICKUPS_INVIS 339             // TODO: QL Stub - Implement this
+#define CG_RED_TEAM_TIMEHELD_FLAG 340             // TODO: QL Stub - Implement this
+#define CG_RED_TEAM_TIMEHELD_REGEN 341            // TODO: QL Stub - Implement this
+#define CG_RED_TEAM_TIMEHELD_HASTE 342            // TODO: QL Stub - Implement this
+#define CG_RED_TEAM_TIMEHELD_INVIS 343            // TODO: QL Stub - Implement this
+#define CG_BLUE_OWNED_FLAGS 344                   // TODO: QL Stub - Implement this
+#define CG_BLUE_AVG_PING 345                      // TODO: QL Stub - Implement this
+#define CG_BLUE_BASESTATUS 346                    // TODO: QL Stub - Implement this
+#define CG_BLUE_PLAYER_COUNT 347                  // TODO: QL Stub - Implement this
+#define CG_BLUE_CLAN_PLYRS 348                    // TODO: QL Stub - Implement this
+#define CG_BLUE_TIMEOUT_COUNT 349                 // TODO: QL Stub - Implement this
+#define CG_BLUE_TEAM_MAP_PICKUPS 350              // TODO: QL Stub - Implement this
+#define CG_BLUE_TEAM_PICKUPS_RA 351               // TODO: QL Stub - Implement this
+#define CG_BLUE_TEAM_PICKUPS_YA 352               // TODO: QL Stub - Implement this
+#define CG_BLUE_TEAM_PICKUPS_GA 353               // TODO: QL Stub - Implement this
+#define CG_BLUE_TEAM_PICKUPS_MH 354               // TODO: QL Stub - Implement this
+#define CG_BLUE_TEAM_PICKUPS_QUAD 355             // TODO: QL Stub - Implement this
+#define CG_BLUE_TEAM_PICKUPS_BS 356               // TODO: QL Stub - Implement this
+#define CG_BLUE_TEAM_TIMEHELD_QUAD 357            // TODO: QL Stub - Implement this
+#define CG_BLUE_TEAM_TIMEHELD_BS 358              // TODO: QL Stub - Implement this
+#define CG_BLUE_TEAM_PICKUPS_FLAG 359             // TODO: QL Stub - Implement this
+#define CG_BLUE_TEAM_PICKUPS_MEDKIT 360           // TODO: QL Stub - Implement this
+#define CG_BLUE_TEAM_PICKUPS_REGEN 361            // TODO: QL Stub - Implement this
+#define CG_BLUE_TEAM_PICKUPS_HASTE 362            // TODO: QL Stub - Implement this
+#define CG_BLUE_TEAM_PICKUPS_INVIS 363            // TODO: QL Stub - Implement this
+#define CG_BLUE_TEAM_TIMEHELD_FLAG 364            // TODO: QL Stub - Implement this
+#define CG_BLUE_TEAM_TIMEHELD_REGEN 365           // TODO: QL Stub - Implement this
+#define CG_BLUE_TEAM_TIMEHELD_HASTE 366           // TODO: QL Stub - Implement this
+#define CG_BLUE_TEAM_TIMEHELD_INVIS 367           // TODO: QL Stub - Implement this
+#define CG_FLAG_STATUS 368                        // TODO: QL Stub - Implement this
+#define CG_HEALTH_COLORIZED 369                   // TODO: QL Stub - Implement this
+#define CG_MATCH_STATE 370                        // TODO: QL Stub - Implement this
 
-#define UI_OWNERDRAW_BASE 200
-#define UI_HANDICAP 200
-#define UI_EFFECTS 201
-#define UI_PLAYERMODEL 202
-#define UI_CLANNAME 203
-#define UI_CLANLOGO 204
-#define UI_GAMETYPE 205
-#define UI_MAPPREVIEW 206
-#define UI_SKILL 207
-#define UI_BLUETEAMNAME 208
-#define UI_REDTEAMNAME 209
-#define UI_BLUETEAM1 210
-#define UI_BLUETEAM2 211
-#define UI_BLUETEAM3 212
-#define UI_BLUETEAM4 213
-#define UI_BLUETEAM5 214
-#define UI_BLUETEAM6 215
-#define UI_BLUETEAM7 216
-#define UI_REDTEAM1 217
-#define UI_REDTEAM2 218
-#define UI_REDTEAM3 219
-#define UI_REDTEAM4 220
-#define UI_REDTEAM5 221
-#define UI_REDTEAM6 222
-#define UI_REDTEAM7 223
-#define UI_NETSOURCE 224
-#define UI_NETMAPPREVIEW 225
-#define UI_NETFILTER 226
-#define UI_TIER 227
-#define UI_OPPONENTMODEL 228
-#define UI_TIERMAP1 229
-#define UI_TIERMAP2 230
-#define UI_TIERMAP3 231
-#define UI_PLAYERLOGO 232
-#define UI_OPPONENTLOGO 233
-#define UI_PLAYERLOGO_METAL 234
-#define UI_OPPONENTLOGO_METAL 235
-#define UI_PLAYERLOGO_NAME 236
-#define UI_OPPONENTLOGO_NAME 237
-#define UI_TIER_MAPNAME 238
-#define UI_TIER_GAMETYPE 239
-#define UI_ALLMAPS_SELECTION 240
-#define UI_OPPONENT_NAME 241
-#define UI_VOTE_KICK 242
-#define UI_BOTNAME 243
-#define UI_BOTSKILL 244
-#define UI_REDBLUE 245
-#define UI_CROSSHAIR 246
-#define UI_SELECTEDPLAYER 247
-#define UI_MAPCINEMATIC 248
+// UI owner draw types  -- MUST COME AFTER UI_OWNERDRAW_BASE!
+#define UI_OWNERDRAW_BASE 371
+#define UI_HANDICAP 371
+#define UI_EFFECTS 372
+#define UI_PLAYERMODEL 373
+#define UI_CLANNAME 374
+#define UI_CLANLOGO 375
+#define UI_GAMETYPE 376
+#define UI_MAPPREVIEW 377
+#define UI_SKILL 378
+#define UI_BLUETEAMNAME 379
+#define UI_REDTEAMNAME 380
+#define UI_BLUETEAM1 381
+#define UI_BLUETEAM2 382
+#define UI_BLUETEAM3 383
+#define UI_BLUETEAM4 384
+#define UI_BLUETEAM5 385
+#define UI_BLUETEAM6 386
+#define UI_BLUETEAM7 387
+#define UI_REDTEAM1 388
+#define UI_REDTEAM2 389
+#define UI_REDTEAM3 390
+#define UI_REDTEAM4 391
+#define UI_REDTEAM5 392
+#define UI_REDTEAM6 393
+#define UI_REDTEAM7 394
+#define UI_NETSOURCE 395
+#define UI_NETMAPPREVIEW 396
+#define UI_NETFILTER 397
+#define UI_TIER 398
+#define UI_OPPONENTMODEL 399
+#define UI_TIERMAP1 400
+#define UI_TIERMAP2 401
+#define UI_TIERMAP3 402
+#define UI_PLAYERLOGO 403
+#define UI_OPPONENTLOGO 404
+#define UI_PLAYERLOGO_METAL 405
+#define UI_OPPONENTLOGO_METAL 406
+#define UI_PLAYERLOGO_NAME 407
+#define UI_OPPONENTLOGO_NAME 408
+#define UI_TIER_MAPNAME 409
+#define UI_TIER_GAMETYPE 410
+#define UI_ALLMAPS_SELECTION 411
+#define UI_OPPONENT_NAME 412
+#define UI_VOTE_KICK 413
+#define UI_BOTNAME 414
+#define UI_BOTSKILL 415
+#define UI_REDBLUE 416
+#define UI_CROSSHAIR 417
+#define UI_SELECTEDPLAYER 418
+#define UI_MAPCINEMATIC 419
 //#define UI_NETGAMETYPE 249
-#define UI_NETGAMETYPE UI_GAMETYPE      // ~Dimmskii Removal of confusion
-#define UI_NETMAPCINEMATIC 250
-#define UI_SERVERREFRESHDATE 251
-#define UI_SERVERMOTD 252
-#define UI_GLINFO  253
-#define UI_KEYBINDSTATUS 254
-#define UI_CLANCINEMATIC 255
-#define UI_MAP_TIMETOBEAT 256
-#define UI_JOINGAMETYPE 257
-#define UI_PREVIEWCINEMATIC 258
-#define UI_STARTMAPCINEMATIC 259
-#define UI_MAPS_SELECTION 260
-#define UI_ADVERT 261                             // TODO: QL Stub - Implement this
-#define UI_CROSSHAIR_COLOR 262                    // TODO: QL Stub - Implement this
-#define UI_NEXTMAP 263                            // TODO: QL Stub - Implement this
-#define UI_VOTESTRING 264                         // TODO: QL Stub - Implement this
-#define UI_TEAMPLAYERMODEL 265                    // TODO: QL Stub - Implement this
-#define UI_ENEMYPLAYERMODEL 266                   // TODO: QL Stub - Implement this
-#define UI_REDTEAMMODEL 267                       // TODO: QL Stub - Implement this
-#define UI_BLUETEAMMODEL 268                      // TODO: QL Stub - Implement this
-#define UI_SERVER_SETTINGS 269                    // TODO: QL Stub - Implement this
-#define UI_STARTING_WEAPONS 270                   // TODO: QL Stub - Implement this
-#define UI_HOSTGAMEFACTORY 271		// ~Dimmskii
-#define UI_GAMEFACTORYINFO 272		// ~Dimmskii
-
-// CG owner draw types continued (from QL)
-#define CG_1ST_PLYR_DMG_CG 271                   // TODO: QL Stub - Implement this
-#define CG_1ST_PLYR_DMG_NG 272                    // TODO: QL Stub - Implement this
-#define CG_1ST_PLYR_DMG_PL 273                    // TODO: QL Stub - Implement this
-#define CG_1ST_PLYR_DMG_HMG 274                   // TODO: QL Stub - Implement this
-#define CG_1ST_PLYR_ACC_MG 275                    // TODO: QL Stub - Implement this
-#define CG_1ST_PLYR_ACC_SG 276                    // TODO: QL Stub - Implement this
-#define CG_1ST_PLYR_ACC_GL 277                    // TODO: QL Stub - Implement this
-#define CG_1ST_PLYR_ACC_RL 278                    // TODO: QL Stub - Implement this
-#define CG_1ST_PLYR_ACC_LG 279                    // TODO: QL Stub - Implement this
-#define CG_1ST_PLYR_ACC_RG 280                    // TODO: QL Stub - Implement this
-#define CG_1ST_PLYR_ACC_PG 281                    // TODO: QL Stub - Implement this
-#define CG_1ST_PLYR_ACC_BFG 282                   // TODO: QL Stub - Implement this
-#define CG_1ST_PLYR_ACC_CG 283                    // TODO: QL Stub - Implement this
-#define CG_1ST_PLYR_ACC_NG 284                    // TODO: QL Stub - Implement this
-#define CG_1ST_PLYR_ACC_PL 285                    // TODO: QL Stub - Implement this
-#define CG_1ST_PLYR_ACC_HMG 286                   // TODO: QL Stub - Implement this
-#define CG_1ST_PLYR_PICKUPS 287                   // TODO: QL Stub - Implement this
-#define CG_1ST_PLYR_PICKUPS_RA 288                // TODO: QL Stub - Implement this
-#define CG_1ST_PLYR_PICKUPS_YA 289                // TODO: QL Stub - Implement this
-#define CG_1ST_PLYR_PICKUPS_GA 290                // TODO: QL Stub - Implement this
-#define CG_1ST_PLYR_PICKUPS_MH 291                // TODO: QL Stub - Implement this
-#define CG_1ST_PLYR_AVG_PICKUP_TIME_RA 292        // TODO: QL Stub - Implement this
-#define CG_1ST_PLYR_AVG_PICKUP_TIME_YA 293        // TODO: QL Stub - Implement this
-#define CG_1ST_PLYR_AVG_PICKUP_TIME_GA 294        // TODO: QL Stub - Implement this
-#define CG_1ST_PLYR_AVG_PICKUP_TIME_MH 295        // TODO: QL Stub - Implement this
-#define CG_1ST_PLYR_EXCELLENT 296                 // TODO: QL Stub - Implement this
-#define CG_1ST_PLYR_IMPRESSIVE 297                // TODO: QL Stub - Implement this
-#define CG_1ST_PLYR_HUMILIATION 298               // TODO: QL Stub - Implement this
-#define CG_1ST_PLYR_PR 299                        // TODO: QL Stub - Implement this
-#define CG_1ST_PLYR_TIER 300                      // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR 301                           // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_READY 302                     // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_SCORE 303                     // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_FRAGS 304                     // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_DEATHS 305                    // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_DMG 306                       // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_TIME 307                      // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_PING 308                      // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_WINS 309                      // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_ACC 310                       // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_FLAG 311                      // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_AVATAR 312                    // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_TIMEOUT_COUNT 313             // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_HEALTH_ARMOR 314              // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_FRAGS_G 315                   // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_FRAGS_MG 316                  // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_FRAGS_SG 317                  // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_FRAGS_GL 318                  // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_FRAGS_RL 319                  // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_FRAGS_LG 320                  // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_FRAGS_RG 321                  // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_FRAGS_PG 322                  // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_FRAGS_BFG 323                 // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_FRAGS_CG 324                  // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_FRAGS_NG 325                  // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_FRAGS_PL 326                  // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_FRAGS_HMG 327                 // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_HITS_MG 328                   // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_HITS_SG 329                   // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_HITS_GL 330                   // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_HITS_RL 331                   // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_HITS_LG 332                   // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_HITS_RG 333                   // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_HITS_PG 334                   // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_HITS_BFG 335                  // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_HITS_CG 336                   // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_HITS_NG 337                   // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_HITS_PL 338                   // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_HITS_HMG 339                  // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_SHOTS_MG 340                  // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_SHOTS_SG 341                  // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_SHOTS_GL 342                  // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_SHOTS_RL 343                  // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_SHOTS_LG 344                  // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_SHOTS_RG 345                  // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_SHOTS_PG 346                  // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_SHOTS_BFG 347                 // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_SHOTS_CG 348                  // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_SHOTS_NG 349                  // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_SHOTS_PL 350                  // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_SHOTS_HMG 351                 // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_DMG_G 352                     // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_DMG_MG 353                    // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_DMG_SG 354                    // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_DMG_GL 355                    // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_DMG_RL 356                    // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_DMG_LG 357                    // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_DMG_RG 358                    // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_DMG_PG 359                    // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_DMG_BFG 360                   // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_DMG_CG 361                    // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_DMG_NG 362                    // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_DMG_PL 363                    // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_DMG_HMG 364                   // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_ACC_MG 365                    // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_ACC_SG 366                    // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_ACC_GL 367                    // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_ACC_RL 368                    // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_ACC_LG 369                    // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_ACC_RG 370                    // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_ACC_PG 371                    // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_ACC_BFG 372                   // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_ACC_CG 373                    // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_ACC_NG 374                    // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_ACC_PL 375                    // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_ACC_HMG 376                   // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_PICKUPS 377                   // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_PICKUPS_RA 378                // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_PICKUPS_YA 379                // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_PICKUPS_GA 380                // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_PICKUPS_MH 381                // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_AVG_PICKUP_TIME_RA 382        // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_AVG_PICKUP_TIME_YA 383        // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_AVG_PICKUP_TIME_GA 384        // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_AVG_PICKUP_TIME_MH 385        // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_EXCELLENT 386                 // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_IMPRESSIVE 387                // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_HUMILIATION 388               // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_PR 389                        // TODO: QL Stub - Implement this
-#define CG_2ND_PLYR_TIER 390                      // TODO: QL Stub - Implement this
-#define CG_RED_OWNED_FLAGS 391                    // TODO: QL Stub - Implement this
-#define CG_RED_AVG_PING 392                       // TODO: QL Stub - Implement this
-#define CG_RED_BASESTATUS 393                     // TODO: QL Stub - Implement this
-#define CG_RED_PLAYER_COUNT 394                   // TODO: QL Stub - Implement this
-#define CG_RED_CLAN_PLYRS 395                     // TODO: QL Stub - Implement this
-#define CG_RED_TIMEOUT_COUNT 396                  // TODO: QL Stub - Implement this
-#define CG_RED_TEAM_MAP_PICKUPS 397               // TODO: QL Stub - Implement this
-#define CG_RED_TEAM_PICKUPS_RA 398                // TODO: QL Stub - Implement this
-#define CG_RED_TEAM_PICKUPS_YA 399                // TODO: QL Stub - Implement this
-#define CG_RED_TEAM_PICKUPS_GA 400                // TODO: QL Stub - Implement this
-#define CG_RED_TEAM_PICKUPS_MH 401                // TODO: QL Stub - Implement this
-#define CG_RED_TEAM_PICKUPS_QUAD 402              // TODO: QL Stub - Implement this
-#define CG_RED_TEAM_PICKUPS_BS 403                // TODO: QL Stub - Implement this
-#define CG_RED_TEAM_TIMEHELD_QUAD 404             // TODO: QL Stub - Implement this
-#define CG_RED_TEAM_TIMEHELD_BS 405               // TODO: QL Stub - Implement this
-#define CG_RED_TEAM_PICKUPS_FLAG 406              // TODO: QL Stub - Implement this
-#define CG_RED_TEAM_PICKUPS_MEDKIT 407            // TODO: QL Stub - Implement this
-#define CG_RED_TEAM_PICKUPS_REGEN 408             // TODO: QL Stub - Implement this
-#define CG_RED_TEAM_PICKUPS_HASTE 409             // TODO: QL Stub - Implement this
-#define CG_RED_TEAM_PICKUPS_INVIS 410             // TODO: QL Stub - Implement this
-#define CG_RED_TEAM_TIMEHELD_FLAG 411             // TODO: QL Stub - Implement this
-#define CG_RED_TEAM_TIMEHELD_REGEN 412            // TODO: QL Stub - Implement this
-#define CG_RED_TEAM_TIMEHELD_HASTE 413            // TODO: QL Stub - Implement this
-#define CG_RED_TEAM_TIMEHELD_INVIS 414            // TODO: QL Stub - Implement this
-#define CG_BLUE_OWNED_FLAGS 415                   // TODO: QL Stub - Implement this
-#define CG_BLUE_AVG_PING 416                      // TODO: QL Stub - Implement this
-#define CG_BLUE_BASESTATUS 417                    // TODO: QL Stub - Implement this
-#define CG_BLUE_PLAYER_COUNT 418                  // TODO: QL Stub - Implement this
-#define CG_BLUE_CLAN_PLYRS 419                    // TODO: QL Stub - Implement this
-#define CG_BLUE_TIMEOUT_COUNT 420                 // TODO: QL Stub - Implement this
-#define CG_BLUE_TEAM_MAP_PICKUPS 421              // TODO: QL Stub - Implement this
-#define CG_BLUE_TEAM_PICKUPS_RA 422               // TODO: QL Stub - Implement this
-#define CG_BLUE_TEAM_PICKUPS_YA 423               // TODO: QL Stub - Implement this
-#define CG_BLUE_TEAM_PICKUPS_GA 424               // TODO: QL Stub - Implement this
-#define CG_BLUE_TEAM_PICKUPS_MH 425               // TODO: QL Stub - Implement this
-#define CG_BLUE_TEAM_PICKUPS_QUAD 426             // TODO: QL Stub - Implement this
-#define CG_BLUE_TEAM_PICKUPS_BS 427               // TODO: QL Stub - Implement this
-#define CG_BLUE_TEAM_TIMEHELD_QUAD 428            // TODO: QL Stub - Implement this
-#define CG_BLUE_TEAM_TIMEHELD_BS 429              // TODO: QL Stub - Implement this
-#define CG_BLUE_TEAM_PICKUPS_FLAG 430             // TODO: QL Stub - Implement this
-#define CG_BLUE_TEAM_PICKUPS_MEDKIT 431           // TODO: QL Stub - Implement this
-#define CG_BLUE_TEAM_PICKUPS_REGEN 432            // TODO: QL Stub - Implement this
-#define CG_BLUE_TEAM_PICKUPS_HASTE 433            // TODO: QL Stub - Implement this
-#define CG_BLUE_TEAM_PICKUPS_INVIS 434            // TODO: QL Stub - Implement this
-#define CG_BLUE_TEAM_TIMEHELD_FLAG 435            // TODO: QL Stub - Implement this
-#define CG_BLUE_TEAM_TIMEHELD_REGEN 436           // TODO: QL Stub - Implement this
-#define CG_BLUE_TEAM_TIMEHELD_HASTE 437           // TODO: QL Stub - Implement this
-#define CG_BLUE_TEAM_TIMEHELD_INVIS 438           // TODO: QL Stub - Implement this
-#define CG_FLAG_STATUS 439                        // TODO: QL Stub - Implement this
-#define CG_HEALTH_COLORIZED 440                   // TODO: QL Stub - Implement this
-#define CG_MATCH_STATE 441                        // TODO: QL Stub - Implement this
+#define UI_NETGAMETYPE UI_GAMETYPE      // ~Dimmskii - Aliased. ui_actualNetGameType, ui_netGameType should now always equal to ui_gameType
+#define UI_NETMAPCINEMATIC 420
+#define UI_SERVERREFRESHDATE 421
+#define UI_SERVERMOTD 422
+#define UI_GLINFO  423
+#define UI_KEYBINDSTATUS 424
+#define UI_CLANCINEMATIC 425
+#define UI_MAP_TIMETOBEAT 426
+#define UI_JOINGAMETYPE 427
+#define UI_PREVIEWCINEMATIC 428
+#define UI_STARTMAPCINEMATIC 429
+#define UI_MAPS_SELECTION 430
+#define UI_ADVERT 431                             // TODO: QL Stub - Implement this
+#define UI_CROSSHAIR_COLOR 432                    // TODO: QL Stub - Implement this
+#define UI_NEXTMAP 433                            // TODO: QL Stub - Implement this
+#define UI_VOTESTRING 434                         // TODO: QL Stub - Implement this
+#define UI_TEAMPLAYERMODEL 435                    // TODO: QL Stub - Implement this
+#define UI_ENEMYPLAYERMODEL 436                   // TODO: QL Stub - Implement this
+#define UI_REDTEAMMODEL 437                       // TODO: QL Stub - Implement this
+#define UI_BLUETEAMMODEL 438                      // TODO: QL Stub - Implement this
+#define UI_SERVER_SETTINGS 439                    // TODO: QL Stub - Implement this
+#define UI_STARTING_WEAPONS 440                   // TODO: QL Stub - Implement this
+#define UI_HOSTGAMEFACTORY 441		// ~Dimmskii
+#define UI_GAMEFACTORYINFO 442		// ~Dimmskii
 
 #define VOICECHAT_GETFLAG			"getflag"				// command someone to get the flag
 #define VOICECHAT_OFFENSE			"offense"				// command someone to go on offense

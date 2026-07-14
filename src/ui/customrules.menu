@@ -1,0 +1,944 @@
+#include "ui/menudef.h"
+
+{
+\\ ADVANCED RULE EDITING MENU FOR WHEN ui_hostGameFactory="-1" -- RESULTING IN g_factory="" \\
+
+  menuDef {
+	name "customrules"
+	visible 0
+	fullscreen MENU_TRUE
+	rect 0 0 640 480
+	background "menuback_b"
+	outOfBoundsClick	
+	focusColor 1 .75 0 1
+	onEsc {
+		play "sound/misc/menu3.wav" ; close customrules ; open createserver }
+		onOpen { setitemcolor fadebox backcolor 0 0 0 1 ; 
+		fadeout fadebox ; 
+		uiScript loadArenas_new ;
+		hide lightning ; 
+		hide accept_alt ; 
+		show accept ;
+		hide back_alt ;
+		show back ;
+		hide grpmessage
+	}
+
+
+// Spanning BG
+
+	itemDef {
+		name window
+		rect 2 50 630 370	
+		style WINDOW_STYLE_FILLED
+		border 1
+		bordercolor 1 1 1 .25
+		forecolor 1 1 1 1
+		backcolor 0 0 0 .25
+		visible 1
+		decoration
+	}
+
+
+// Column BGs
+
+	itemDef {
+		name window
+		rect 2 50 208 370	
+		style WINDOW_STYLE_FILLED
+		border 1
+		bordercolor 1 1 1 .25
+		forecolor 1 1 1 1
+		backcolor 0 0 0 .25
+		visible 1
+		decoration
+	}
+
+	itemDef {
+		name window
+		rect 212 50 209 370	
+		style WINDOW_STYLE_FILLED
+		border 1
+		bordercolor 1 1 1 .25
+		forecolor 1 1 1 1
+		backcolor 0 0 0 .25
+		visible 1
+		decoration
+	}
+
+	itemDef {
+		name window
+		rect 423 50 208 370	
+		style WINDOW_STYLE_FILLED
+		border 1
+		bordercolor 1 1 1 .25
+		forecolor 1 1 1 1
+		backcolor 0 0 0 .25
+		visible 1
+		decoration
+	}
+
+// TOP BAR	//
+
+  itemDef {
+		name levelbar
+		style 2
+		text "CUSTOMIZE GAME RULES"
+		rect 0 5 640 40 
+		textstyle 6
+		textscale 0.416
+		textalign 1 		// center
+		textalignx 320 		// x alignment point for text
+							// use it to offset left/right text from the edge 
+							// or to center the text on a different point
+		textaligny 27 
+		forecolor 1 1 1 1       
+		style 2
+		border 4
+		bordercolor 0.5 0.5 0.5 0.75
+		bordersize 2
+		backcolor 0.25 0.25 0.25 0.75
+		visible 1 
+		decoration 
+    }
+
+
+
+// GENERAL  //
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
+		text "Instagib:"
+		cvar "ui_instagib"
+		rect 70 60 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
+		text "Fast Weapon Switch:"
+		cvar "ui_fastWeaponSwitch"
+		rect 70 75 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
+		text "Self-damage off:"
+		cvar "ui_noSelfDamage"
+		rect 70 90 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
+		text "Item Timers:"
+		cvar "ui_itemTimers"
+		rect 70 105 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
+		text "Friendly Fire:"
+		cvar "ui_friendlyFire"
+		rect 70 135 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
+		text "Full Team Visibility:"
+		cvar "ui_teamVisibility"
+		rect 70 150 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
+		text "Spectate Enemies:"
+		cvar "ui_allSpec"
+		rect 70 165 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
+		text "1F Respawn:"
+		cvar "ui_1FRespawn"
+		rect 70 180 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+	
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
+		text "No Fall Damage:"
+		cvar "ui_dmflags_noFalling"
+		rect 70 210 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
+		text "Fixed FOV:"
+		cvar "ui_dmflags_fixedFov"
+		rect 70 225 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
+		text "No Footsteps:"
+		cvar "ui_dmflags_noFootsteps"
+		rect 70 240 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+
+// SECOND COL -- STARTING WEAPONS/AMMO	//
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_TEXT
+		text "Give Weapon:"
+		rect 231 60 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor .8 .8 .8 1
+		visible 1
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_TEXT
+		text "  (Y/N)            (Ammo)"
+		rect 231 60 128 12
+		textalign ITEM_ALIGN_LEFT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor .8 .8 .8 1
+		visible 1
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
+		text "Gauntlet:"
+		cvar "ui_wpflags_g"
+		rect 231 75 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
+		text "Machinegun:"
+		cvar "ui_wpflags_mg"
+		rect 231 90 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
+		text "Shotgun:"
+		cvar "ui_wpflags_sg"
+		rect 231 105 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
+		text "Grenade:"
+		cvar "ui_wpflags_gl"
+		rect 231 120 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
+		text "Rocket:"
+		cvar "ui_wpflags_rl"
+		rect 231 135 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
+		text "Lightning:"
+		cvar "ui_wpflags_lg"
+		rect 231 150 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
+		text "Railgun:"
+		cvar "ui_wpflags_rg"
+		rect 231 165 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
+		text "Plasma:"
+		cvar "ui_wpflags_pg"
+		rect 231 180 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
+		text "BFG:"
+		cvar "ui_wpflags_bfg"
+		rect 231 195 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
+		text "Grapple:"
+		cvar "ui_wpflags_grapple"
+		rect 231 210 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
+		text "Nail Gun:"
+		cvar "ui_wpflags_ng"
+		rect 231 225 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
+		text "Prox:"
+		cvar "ui_wpflags_pl"
+		rect 231 240 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
+		text "Chaingun:"
+		cvar "ui_wpflags_cg"
+		rect 231 255 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
+		text "HMG:"
+		cvar "ui_wpflags_hmg"
+		rect 231 270 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+
+
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_TEXT
+		text "---"
+		rect 320 75 128 12
+		textalign ITEM_ALIGN_LEFT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor .8 .8 .8 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_NUMERICFIELD
+		text ""
+		cvar "ui_startingAmmo_mg"
+		rect 320 90 128 12
+		textalign ITEM_ALIGN_LEFT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_NUMERICFIELD
+		text ""
+		cvar "ui_startingAmmo_sg"
+		rect 320 105 128 12
+		textalign ITEM_ALIGN_LEFT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_NUMERICFIELD
+		text ""
+		cvar "ui_startingAmmo_gl"
+		rect 320 120 128 12
+		textalign ITEM_ALIGN_LEFT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_NUMERICFIELD
+		text ""
+		cvar "ui_startingAmmo_rl"
+		rect 320 135 128 12
+		textalign ITEM_ALIGN_LEFT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_NUMERICFIELD
+		text ""
+		cvar "ui_startingAmmo_lg"
+		rect 320 150 128 12
+		textalign ITEM_ALIGN_LEFT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_NUMERICFIELD
+		text ""
+		cvar "ui_startingAmmo_rg"
+		rect 320 165 128 12
+		textalign ITEM_ALIGN_LEFT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_NUMERICFIELD
+		text ""
+		cvar "ui_startingAmmo_pg"
+		rect 320 180 128 12
+		textalign ITEM_ALIGN_LEFT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_NUMERICFIELD
+		text ""
+		cvar "ui_startingAmmo_bfg"
+		rect 320 195 128 12
+		textalign ITEM_ALIGN_LEFT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_TEXT
+		text "---"
+		rect 320 210 128 12
+		textalign ITEM_ALIGN_LEFT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor .8 .8 .8 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_NUMERICFIELD
+		text ""
+		cvar "ui_startingAmmo_ng"
+		rect 320 225 128 12
+		textalign ITEM_ALIGN_LEFT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_NUMERICFIELD
+		text ""
+		cvar "ui_startingAmmo_pl"
+		rect 320 240 128 12
+		textalign ITEM_ALIGN_LEFT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_NUMERICFIELD
+		text ""
+		cvar "ui_startingAmmo_cg"
+		rect 320 255 128 12
+		textalign ITEM_ALIGN_LEFT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_NUMERICFIELD
+		text ""
+		cvar "ui_startingAmmo_hmg"
+		rect 320 270 128 12
+		textalign ITEM_ALIGN_LEFT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+
+
+// BACK BAR	//
+
+
+	itemDef {
+		name gotobar
+		style 2
+		rect 0 430 640 30 
+		textscale 0.4
+		textalign 0 		// center
+		textalignx 60 		// x alignment point for text
+							// use it to offset left/right text from the edge 
+							// or to center the text on a different point
+		textaligny 21        
+		style 2
+		border 4
+		bordercolor 0.5 0.5 0.5 0.75
+		bordersize 2
+		backcolor 0 0 0 .75
+		visible 1 
+		mouseEnter { setcolor backcolor .25 .25 .25 .75 }
+		mouseExit { setcolor backcolor 0 0 0 .75 }
+		decoration 
+	}
+
+	itemDef {
+		name back
+		style 3
+		background "ui/assets/backarrow.tga"
+		rect 16 424 50 50 
+		visible 1 
+		action {  play "sound/misc/menu3.wav" ; close customrules ; open createserver }
+		mouseEnter { hide back ; show back_alt ; fadein message_back }
+	}
+
+	itemDef {
+		name back_alt
+		style WINDOW_STYLE_SHADER
+		background "ui/assets/backarrow_alt.tga"
+		rect 14 422 54 54 
+		backcolor 0 0 0 0
+		forecolor 1 1 1 1
+		visible 0
+		type ITEM_TYPE_BUTTON
+		mouseExit { hide back_alt ; show back ; fadeout message_back }	  
+		action { play "sound/misc/menu3.wav" ; close customrules ; open createserver }	  
+	}
+
+
+
+//	MESSAGES	//
+
+	itemDef {
+		name message_rule
+		group grpmessage
+		style 0 
+		rect 320 430 128 30
+		textalign 1
+		textstyle 1
+		textalignx 0
+		textaligny 25
+		textscale .416
+		text "Select to edit game rule"
+		forecolor 1 1 1 1
+		decoration 
+		visible 0
+	}
+
+	itemDef {
+		name message_back
+		group grpmessage
+		style 0 
+		rect 320 430 128 30
+		textalign 1
+		textstyle 1
+		textalignx 0
+		textaligny 25
+		textscale .416
+		text "Back"
+		forecolor 1 1 1 1
+		decoration 
+		visible 0
+	}
+
+
+	itemDef {
+		name fadebox
+		style WINDOW_STYLE_FILLED
+		background "ui/assets/fadebox.tga"
+		forecolor 0 0 0 1
+		backcolor 0 0 0 1
+		rect 0 0 640 480
+		visible 1 
+		decoration
+	}
+
+}
+
+}

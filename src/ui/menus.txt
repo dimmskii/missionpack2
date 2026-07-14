@@ -10,6 +10,7 @@
  	loadMenu { "ui/fight.menu" }
 	loadMenu { "ui/sp_demo.menu" }
  	loadMenu { "ui/createserver.menu" }
+	loadMenu { "ui/customrules.menu" }
 	loadMenu { "ui/maps.menu" }
 	loadMenu { "ui/controls.menu" }
 	loadMenu { "ui/cdkey.menu" }

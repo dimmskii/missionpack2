@@ -573,7 +573,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 
 		// ~Dimmskii
 		if ( !GT_IsArenaGame(g_gametype.integer) ) {  // Suicides don't subtract points in arena gamemodes.
-			AddScore( attacker, self->r.currentOrigin, -1 );
+			AddScore( self, self->r.currentOrigin, -1 );
 		}
 		// END Dimmskii
 	}
@@ -909,7 +909,8 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 			max /= 2;
 		}
 //#endif
-		damage = damage * max / 100;
+		//damage = damage * max / 100;
+		damage = damage * max / getHealthSoftLimit(); 	// ~Dimmskii
 	}
 
 	client = targ->client;
