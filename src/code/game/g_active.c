@@ -1340,7 +1340,8 @@ void ClientEndFrame( gentity_t *ent ) {
 		client->ps.persistant[PERS_HITS] += client->damage.enemy;
 		client->damage.enemy = 0;
 		// scale damage by max.health
-		i = client->damage.amount * getHealthSoftLimit() / client->ps.stats[STAT_MAX_HEALTH];
+		//i = client->damage.amount * 100 / client->ps.stats[STAT_MAX_HEALTH];
+		i = client->damage.amount * getHealthSoftLimit() / client->ps.stats[STAT_MAX_HEALTH]; 	// ~Dimmskii
 		// avoid high-byte setup
 		if ( i > 255 )
 			i = 255;

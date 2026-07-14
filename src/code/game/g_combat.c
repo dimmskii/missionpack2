@@ -909,7 +909,8 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 			max /= 2;
 		}
 //#endif
-		damage = damage * max / getHealthSoftLimit();
+		//damage = damage * max / 100;
+		damage = damage * max / getHealthSoftLimit(); 	// ~Dimmskii
 	}
 
 	client = targ->client;
