@@ -218,7 +218,7 @@
 		name general
 		group grpsettings
 		type ITEM_TYPE_YESNO
-		text "Maximum Players:"
+		text "Spectate Enemies:"
 		cvar "ui_allSpec"
 		rect 70 165 128 12
 		textalign ITEM_ALIGN_RIGHT
@@ -377,7 +377,7 @@
 		name general
 		group grpsettings
 		type ITEM_TYPE_YESNO
-		text "Shotgoon:"
+		text "Shotgun:"
 		cvar "ui_wpflags_sg"
 		rect 231 105 128 12
 		textalign ITEM_ALIGN_RIGHT
