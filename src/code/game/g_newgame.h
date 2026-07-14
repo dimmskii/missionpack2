@@ -29,3 +29,5 @@ void 		Arena_TimeoutRound(void);
 void 		Arena_CheckRules(void);
 
 qboolean	Arena_MatchDecided(void);
+
+int getHealthSoftLimit( void );

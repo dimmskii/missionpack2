@@ -11,7 +11,7 @@
 #define	GIB_HEALTH			-40
 #define	ARMOR_PROTECTION	0.66
 
-#define	HEALTH_SOFT_LIMIT	100
+//#define	HEALTH_SOFT_LIMIT	100
 #define	AMMO_HARD_LIMIT		200
 
 #define	MAX_ITEMS			256

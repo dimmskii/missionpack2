@@ -1496,23 +1496,3 @@ void ClientDisconnect( int clientNum ) {
 		BotAIShutdownClient( clientNum, qfalse );
 	}
 }
-
-
-// ~DIMMSKII
-
-/*
-===========
-getHealthSoftLimit
-
-Returns dynamic replacement for #define HEALTH_SOFT_LIMIT, which is the
-health we count down towards not adjusted for handicap userinfo
-============
-*/
-static int getHealthSoftLimit( void ) {
-	if (g_startingHealth.integer < 1) {
-		return HEALTH_SOFT_LIMIT;
-	}
-	return g_startingHealth.integer;
-}
-	
-// END DIMMSKII
