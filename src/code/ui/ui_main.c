@@ -267,7 +267,7 @@ This must be the very first function compiled into the .qvm file
 vmCvar_t  ui_new;
 vmCvar_t  ui_debug;
 vmCvar_t  ui_initialized;
-vmCvar_t  ui_teamArenaFirstRun;
+//vmCvar_t  ui_teamArenaFirstRun;
 
 void _UI_Init( qboolean );
 void _UI_Shutdown( void );
@@ -1180,10 +1180,10 @@ static void UI_DrawGameType(rectDef_t *rect, float scale, vec4_t color, int text
 }
 
 static void UI_DrawHostGameFactory(rectDef_t *rect, float scale, vec4_t color, int textStyle) {
-	if (ui_hostGameFactory.integer < 0 || ui_hostGameFactory.integer > bg_numFactories) {
+	if (ui_hostGameFactory.integer < -1 || ui_hostGameFactory.integer > bg_numFactories) {
 		trap_Cvar_Set("ui_hostGameFactory", "0");
 	}
-	Text_Paint(rect->x, rect->y, scale, color, bg_factories[ui_hostGameFactory.integer].title , 0, 0, textStyle);
+	Text_Paint(rect->x, rect->y, scale, color, (ui_hostGameFactory.integer < 0 || ui_hostGameFactory.integer >= bg_numFactories ? "Custom" : bg_factories[ui_hostGameFactory.integer].title) , 0, 0, textStyle);
 }
 
 // End Dimmskii
@@ -1898,7 +1898,11 @@ static int UI_OwnerDrawWidth(int ownerDraw, float scale) {
       break;
 	  
 	case UI_HOSTGAMEFACTORY:
-		s = bg_factories[ui_hostGameFactory.integer].title;
+		if (ui_hostGameFactory.integer < 0 || ui_hostGameFactory.integer >= bg_numFactories) {
+			s = "Custom";
+		} else {
+			s = bg_factories[ui_hostGameFactory.integer].title;
+		}
 	break;
 // END DIMMSKII
 
@@ -2734,18 +2738,25 @@ static qboolean UI_HostGameFactory_HandleKey(int flags, float *special, int key)
 			ui_hostGameFactory.integer++;
 		}
 
-		if (ui_hostGameFactory.integer < 0) {
+		if (ui_hostGameFactory.integer < -1) {
 			ui_hostGameFactory.integer = bg_numFactories - 1;
 		} else if (ui_hostGameFactory.integer >= bg_numFactories) {
-			ui_hostGameFactory.integer = 0;
+			ui_hostGameFactory.integer = -1;
 		}
 
 		trap_Cvar_Set( "ui_hostGameFactory", va("%d", ui_hostGameFactory.integer));
 		
-		// Now set the UI gametype cvars for reverse-compat with any .menu logic that uses ui_gameType/ui_netGameType/ui_actualGameType
-		trap_Cvar_Set( "ui_gameType", bg_factories[ui_hostGameFactory.integer].cvar_values[BG_FactoryCvarIndex("g_gametype")]);
-		trap_Cvar_Set( "ui_netGameType", bg_factories[ui_hostGameFactory.integer].cvar_values[BG_FactoryCvarIndex("g_gametype")]);
-		trap_Cvar_Set( "ui_actualnetGameType", bg_factories[ui_hostGameFactory.integer].cvar_values[BG_FactoryCvarIndex("g_gametype")]);
+		if (ui_hostGameFactory.integer > -1) {
+			// Now set the UI gametype cvars for reverse-compat with any .menu logic that uses ui_gameType/ui_netGameType/ui_actualGameType
+			trap_Cvar_Set( "ui_gameType", bg_factories[ui_hostGameFactory.integer].cvar_values[BG_FactoryCvarIndex("g_gametype")]);
+			trap_Cvar_Set( "ui_netGameType", bg_factories[ui_hostGameFactory.integer].cvar_values[BG_FactoryCvarIndex("g_gametype")]);
+			trap_Cvar_Set( "ui_actualnetGameType", bg_factories[ui_hostGameFactory.integer].cvar_values[BG_FactoryCvarIndex("g_gametype")]);
+		} else {
+				// TODO: recall a custom config from somewhere maybe to retrieve gametype
+			trap_Cvar_Set( "ui_gameType", "0");
+			trap_Cvar_Set( "ui_netGameType", "0");
+			trap_Cvar_Set( "ui_actualnetGameType", "0");
+		}
 		
 		return qtrue;
 	}
@@ -3574,6 +3585,78 @@ static void UI_Update(const char *name) {
 	}
 }
 
+// ~Dimmskii
+static void UI_SetFactoryCvarsFromCustom( void ) {
+	int dmflags, wpflags;
+	
+	trap_Cvar_SetValue( "g_gametype", Com_Clamp( 0, uiInfo.numGameTypes-1, uiInfo.gameTypes[ui_gameType.integer].gtEnum ) );
+	
+	trap_Cvar_SetValue( "fraglimit", ui_fraglimit.integer );
+	trap_Cvar_SetValue( "roundlimit", ui_roundlimit.integer );
+	trap_Cvar_SetValue( "capturelimit", ui_capturelimit.integer );
+	trap_Cvar_SetValue( "timelimit", ui_timelimit.integer );
+	trap_Cvar_SetValue( "roundtimelimit", ui_roundtimelimit.integer );
+	
+	trap_Cvar_SetValue( "g_warmup", ui_warmup.integer );
+	
+	trap_Cvar_SetValue( "g_instagib", ui_instagib.integer );
+	trap_Cvar_SetValue( "g_fastWeaponSwitch", ui_fastWeaponSwitch.integer );
+	trap_Cvar_SetValue( "g_noSelfDamage", ui_noSelfDamage.integer );
+	trap_Cvar_SetValue( "g_itemTimers", ui_itemTimers.integer );
+
+	trap_Cvar_SetValue( "g_friendlyFire", ui_friendlyFire.integer );
+	trap_Cvar_SetValue( "g_teamVisibility", ui_teamVisibility.integer );
+	trap_Cvar_SetValue( "g_allSpec", ui_allSpec.integer );
+	trap_Cvar_SetValue( "g_1FRespawn", ui_1FRespawn.integer );
+	
+	// Re-assemble dmflags from split UI cvars
+	dmflags = 0;
+	if ( ui_dmflags_noFalling.integer > 0 ) {
+		dmflags |= DF_NO_FALLING;
+	}
+	if ( ui_dmflags_fixedFov.integer > 0 ) {
+		dmflags |= DF_FIXED_FOV;
+	}
+	if ( ui_dmflags_noFootsteps.integer > 0 ) {
+		dmflags |= DF_NO_FOOTSTEPS;
+	}
+	trap_Cvar_SetValue( "dmflags", dmflags );
+	
+	// Re-assemble g_startingWeapons from split UI cvars
+	wpflags = 0;
+	if ( ui_wpflags_g.integer > 0 ) { wpflags |= 1 << WP_GAUNTLET; }
+	if ( ui_wpflags_mg.integer > 0 ) { wpflags |= 1 << WP_MACHINEGUN; }
+	if ( ui_wpflags_sg.integer > 0 ) { wpflags |= 1 << WP_SHOTGUN; }
+	if ( ui_wpflags_gl.integer > 0 ) { wpflags |= 1 << WP_GRENADE_LAUNCHER; }
+	if ( ui_wpflags_rl.integer > 0 ) { wpflags |= 1 << WP_ROCKET_LAUNCHER; }
+	if ( ui_wpflags_lg.integer > 0 ) { wpflags |= 1 << WP_LIGHTNING; }
+	if ( ui_wpflags_rg.integer > 0 ) { wpflags |= 1 << WP_RAILGUN; }
+	if ( ui_wpflags_pg.integer > 0 ) { wpflags |= 1 << WP_PLASMAGUN; }
+	if ( ui_wpflags_bfg.integer > 0 ) { wpflags |= 1 << WP_BFG; }
+	if ( ui_wpflags_grapple.integer > 0 ) { wpflags |= 1 << WP_GRAPPLING_HOOK; }
+	if ( ui_wpflags_ng.integer > 0 ) { wpflags |= 1 << WP_NAILGUN; }
+	if ( ui_wpflags_pl.integer > 0 ) { wpflags |= 1 << WP_PROX_LAUNCHER; }
+	if ( ui_wpflags_cg.integer > 0 ) { wpflags |= 1 << WP_CHAINGUN; }
+	if ( ui_wpflags_hmg.integer > 0 ) { wpflags |= 1 << WP_HMG; }
+	wpflags >>= 1; // shift it all once because of WP_ enum mismatch
+	trap_Cvar_SetValue( "g_startingWeapons", wpflags );
+	
+	// Starting ammo
+	trap_Cvar_SetValue( "g_startingAmmo_mg", ui_startingAmmo_mg.integer );
+	trap_Cvar_SetValue( "g_startingAmmo_sg", ui_startingAmmo_sg.integer );
+	trap_Cvar_SetValue( "g_startingAmmo_gl", ui_startingAmmo_gl.integer );
+	trap_Cvar_SetValue( "g_startingAmmo_rl", ui_startingAmmo_rl.integer );
+	trap_Cvar_SetValue( "g_startingAmmo_lg", ui_startingAmmo_lg.integer );
+	trap_Cvar_SetValue( "g_startingAmmo_rg", ui_startingAmmo_rg.integer );
+	trap_Cvar_SetValue( "g_startingAmmo_pg", ui_startingAmmo_pg.integer );
+	trap_Cvar_SetValue( "g_startingAmmo_bfg", ui_startingAmmo_bfg.integer );
+	trap_Cvar_SetValue( "g_startingAmmo_ng", ui_startingAmmo_ng.integer );
+	trap_Cvar_SetValue( "g_startingAmmo_pl", ui_startingAmmo_pl.integer );
+	trap_Cvar_SetValue( "g_startingAmmo_cg", ui_startingAmmo_cg.integer );
+	trap_Cvar_SetValue( "g_startingAmmo_hmg", ui_startingAmmo_hmg.integer );
+}
+// END Dimmskii
+
 static void UI_RunMenuScript(char **args) {
 	const char *name, *name2;
 	char buff[1024];
@@ -3587,8 +3670,17 @@ static void UI_RunMenuScript(char **args) {
 			trap_Cvar_Set("ui_singlePlayerActive", "0");
 			trap_Cvar_SetValue( "dedicated", Com_Clamp( 0, 2, ui_dedicated.integer ) );
 			//trap_Cvar_SetValue( "g_gametype", Com_Clamp( 0, 11, uiInfo.gameTypes[ui_netGameType.integer].gtEnum ) );
-			//trap_Cvar_SetValue( "g_gametype", Com_Clamp( 0, uiInfo.numGameTypes, uiInfo.gameTypes[ui_gameType.integer].gtEnum ) ); // ~Dimmskii
-			trap_Cvar_Set( "g_factory", bg_factories[ui_hostGameFactory.integer].id ); // ~Dimmskii -- USE G_FACTORIES INSTEAD
+// ~Dimmskii
+			if ( ui_hostGameFactory.integer < 0 || ui_hostGameFactory.integer >= bg_numFactories ) {
+				// Host custom (g_factory equals empty string) game
+				trap_Cvar_Set( "g_factory", "" );
+				UI_SetFactoryCvarsFromCustom();
+			} else {
+				// Host preset factory game
+				trap_Cvar_Set( "g_factory", bg_factories[ui_hostGameFactory.integer].id );
+			}
+			
+// END Dimmskii
 			//trap_Cvar_Set("g_redTeam", UI_Cvar_VariableString("ui_teamName"));
 			//trap_Cvar_Set("g_blueTeam", UI_Cvar_VariableString("ui_opponentName"));
 			trap_Cvar_Set("g_redTeam", UI_Cvar_VariableString("ui_redTeam")); // ~Dimmskii
@@ -6470,6 +6562,11 @@ static void UI_DrawGameFactoryInfo(rectDef_t *rect, float scale, vec4_t color, i
 	int gt;
 	float smolScale;
 	gfactory_t *fact;
+	
+	// Don't draw anything if selected gfactory index is < 0 (Custom) or if it's greater than last index -- or it will crash and burn
+	if ( ui_hostGameFactory.integer < 0 || ui_hostGameFactory.integer >= bg_numFactories ) {
+		return;
+	}
 
 	smolScale = scale*0.75f;
 	fact = &bg_factories[ui_hostGameFactory.integer];
@@ -6479,7 +6576,7 @@ static void UI_DrawGameFactoryInfo(rectDef_t *rect, float scale, vec4_t color, i
 	Text_Paint( rect->x + 2, rect->y+12, smolScale, color, va("by %s", fact->author), 0, 64, textStyle );
 	Text_Paint( rect->x + 2, rect->y+30, smolScale, color, fact->description, 0, 64, textStyle );
 
-	Text_Paint( rect->x + 2, rect->y+50, smolScale, color, "Base Type:", 0, 64, textStyle );
+	Text_Paint( rect->x + 2, rect->y+50, smolScale, color, "Game Type:", 0, 64, textStyle );
 	Text_Paint( rect->x + 70, rect->y+50, smolScale, color, uiInfo.gameTypes[gt].gameType, 0, 64, textStyle );
 	if ( GT_IsArenaGame(uiInfo.gameTypes[ui_gameType.integer].gtEnum) ) {
 		Text_Paint( rect->x + 2, rect->y+60, smolScale, color, "Round Limit:", 0, 64, textStyle );

@@ -166,7 +166,7 @@ static const char *GFACTORY_CVARS[] = {
 	// NG Settings
 	"g_nailBounce",
 	
-	// PG Settings
+	// PL Settings
 	"g_proxMineTimeout",
 	
 	// Obelisk (Overload)

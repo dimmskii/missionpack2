@@ -2,6 +2,8 @@
   {
     "cvars": {
 	  "g_gametype": "0",
+	  "g_startingHealth": "100",
+	  "g_startingHealthBonus": "25",
       "timelimit": "15",
 	  "fraglimit": "0",
       "g_overtime": "0",
@@ -32,6 +34,8 @@
   {
     "cvars": {
 	  "g_gametype": "1",
+	  "g_startingHealth": "100",
+	  "g_startingHealthBonus": "25",
       "timelimit": "10",
       "g_itemTimers": "0",
       "fraglimit": "0",
@@ -46,7 +50,27 @@
   
   {
     "cvars": {
+	  "g_gametype": "1",
+	  "timelimit": "10",
+      "fraglimit": "0",
+	  "removeammo": "4095",
+	  "removeitem": "16383",
+	  "removepowerup": "1023",
+	  "removeweapon": "1023",
+    },
+    "author": "UA Dev Team",
+    "description": "Duel with Arena starting weapons and rules.",
+    "basegt": "ca",
+    "id": "caduel",
+    "title": "CA Duel"
+  },
+  
+  
+  {
+    "cvars": {
 	  "g_gametype": "3",
+	  "g_startingHealth": "100",
+	  "g_startingHealthBonus": "25",
       "timelimit": "15",
       "g_itemTimers": "1",
       "fraglimit": "0",
@@ -94,6 +118,8 @@
   {
     "cvars": {
 	  "g_gametype": "5",
+	  "g_startingHealth": "100",
+	  "g_startingHealthBonus": "25",
       "g_startingWeapons": "3",
       "capturelimit": "10",
       "g_dropCmds": "1",
@@ -125,6 +151,8 @@
   {
     "cvars": {
 	  "g_gametype": "6",
+	  "g_startingHealth": "100",
+	  "g_startingHealthBonus": "25",
       "g_ammoRespawn": "10",
       "capturelimit": "0",
       "timelimit": "15",
@@ -141,6 +169,8 @@
   {
     "cvars": {
 	  "g_gametype": "7",
+	  "g_startingHealth": "100",
+	  "g_startingHealthBonus": "25",
       "capturelimit": "0",
       "timelimit": "15",
     },
@@ -156,6 +186,8 @@
   {
     "cvars": {
 	  "g_gametype": "8",
+	  "g_startingHealth": "100",
+	  "g_startingHealthBonus": "25",
       "capturelimit": "0",
       "timelimit": "15",
     },

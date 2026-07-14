@@ -23,6 +23,20 @@
 	show back ;
 	hide grpmessage }
 	
+// Spanning BG
+itemDef {
+	name window
+	rect 2 50 630 370	
+	style WINDOW_STYLE_FILLED
+	border 1
+	bordercolor 1 1 1 .25
+	forecolor 1 1 1 1
+	backcolor 0 0 0 .25
+	visible 1
+	decoration
+}
+
+// Column BGs
 itemDef {
 	name window
       	rect 2 50 200 151	
@@ -81,7 +95,7 @@ itemDef {
 	forecolor 1 1 1 1
 	backcolor 0 0 0 .25
 	visible 1
-	 cvarTest "ui_actualNetGameType"
+	 cvarTest "ui_gametype"
 	  hideCvar { "0" ; "1" ; "2"; "14" }
 	decoration
 }
@@ -95,7 +109,7 @@ itemDef {
 	forecolor 1 1 1 1
 	backcolor 0 0 0 .25
 	visible 1
-	 cvarTest "ui_actualNetGameType"
+	 cvarTest "ui_gametype"
 	  hideCvar { "0" ; "1" ; "2"; "14" }
 	decoration
 }
@@ -108,7 +122,7 @@ itemDef {
 	forecolor 1 1 1 1
 	backcolor 0 0 0 .25
 	visible 1
-	 cvarTest "ui_actualNetGameType"
+	 cvarTest "ui_gametype"
 	  showCvar { "0" ; "1" ; "2"; "14" }
 	decoration
 }
@@ -441,6 +455,167 @@ itemDef {
 }
 
 
+// CUSTOM GAME RULES //
+
+	itemDef {
+		name customrules
+		group grpsettings
+		type ITEM_TYPE_MULTI
+		text "Game Type:"
+		cvar "ui_gametype"
+		cvarFloatList { "Free For All" 0 "Tournament" 1 "TDM" 3 "Clan Arena" 4 "Capture the Flag" 5 "One Flag CTF" 6 "Overload" 7 "Harvester" 8 "Arena" 14 }
+		rect 260 60 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		textaligny 12
+		textscale .25
+		forecolor 1 1 1 1
+		visible 1
+		cvarTest "ui_hostGameFactory"
+		showCvar { "-1" }
+		mouseEnter { fadein message_customrules }
+		mouseExit { fadeout message_customrules }
+	}
+
+	itemDef {
+		name customrules
+		group grpsettings
+		type ITEM_TYPE_NUMERICFIELD
+		text "Capture Limit:"
+		cvar "ui_capturelimit"
+		rect 260 90 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		textaligny 12
+		textscale .25
+		forecolor 1 1 1 1
+		visible 1
+		ownerdrawflag  UI_SHOW_ANYTEAMGAME_NOTARENAGAME
+		cvarTest "ui_hostGameFactory"
+		showCvar { "-1" }
+		mouseEnter { fadein message_customrules }
+		mouseExit { fadeout message_customrules }
+	}
+
+	itemDef {
+		name customrules
+		group grpsettings
+		type ITEM_TYPE_NUMERICFIELD
+		text "Frag Limit:"
+		cvar "ui_fraglimit"
+		rect 260 90 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		textaligny 12
+		textscale .25
+		forecolor 1 1 1 1
+		visible 1
+		ownerdrawflag UI_SHOW_ANYNONTEAMGAME_NOTARENAGAME
+		cvarTest "ui_hostGameFactory"
+		showCvar { "-1" }
+		mouseEnter { fadein message_customrules }
+		mouseExit { fadeout message_customrules }
+	}
+
+	itemDef {
+		name customrules
+		group grpsettings
+		type ITEM_TYPE_NUMERICFIELD
+		text "Round Limit:"
+		cvar "ui_roundlimit"
+		rect 260 90 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		textaligny 12
+		textscale .25
+		forecolor 1 1 1 1
+		visible 1
+		ownerdrawflag UI_SHOW_ARENAGAME
+		cvarTest "ui_hostGameFactory"
+		showCvar { "-1" }
+		mouseEnter { fadein message_customrules }
+		mouseExit { fadeout message_customrules }
+	}
+
+	itemDef {
+		name customrules
+		group grpsettings
+		type ITEM_TYPE_NUMERICFIELD
+		text "Time Limit:"
+		cvar "ui_timelimit"
+		rect 260 105 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		textaligny 12
+		textscale .25
+		forecolor 1 1 1 1
+		visible 1
+		ownerdrawflag UI_SHOW_NOTARENAGAME
+		cvarTest "ui_hostGameFactory"
+		showCvar { "-1" }
+		mouseEnter { fadein message_customrules }
+		mouseExit { fadeout message_customrules }
+	}
+
+	itemDef {
+		name customrules
+		group grpsettings
+		type ITEM_TYPE_NUMERICFIELD
+		text "Round Time:"
+		cvar "ui_roundtimelimit"
+		rect 260 105 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		textaligny 12
+		textscale .25
+		forecolor 1 1 1 1
+		visible 1
+		ownerdrawflag UI_SHOW_ARENAGAME
+		cvarTest "ui_hostGameFactory"
+		showCvar { "-1" }
+		mouseEnter { fadein message_customrules }
+		mouseExit { fadeout message_customrules }
+	}
+
+	itemDef {
+		name customrules
+		group grpsettings
+		type ITEM_TYPE_NUMERICFIELD
+		text "Warmup Time:"
+		cvar "ui_warmup"
+		rect 260 120 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		textaligny 12
+		textscale .25
+		forecolor 1 1 1 1
+		visible 1
+		cvarTest "ui_hostGameFactory"
+		showCvar { "-1" }
+		mouseEnter { fadein message_customrules }
+		mouseExit { fadeout message_customrules }
+	}
+
+	itemDef {
+		name customrules
+		group grpsettings
+		type ITEM_TYPE_BUTTON
+		text "Customize Rules"
+		rect 260 165 128 12
+		textalign ITEM_ALIGN_CENTER
+		textalignx 65
+		textaligny 12
+		textscale .25
+		forecolor 1 1 1 1
+		visible 1
+		cvarTest "ui_hostGameFactory"
+		showCvar { "-1" }
+		action { play "sound/misc/menu1.wav" ; close createserver ; open customrules }
+		mouseEnter { fadein message_customrules }
+		mouseExit { fadeout message_customrules }
+	}
+
+
 // 	ADVANCED HOST (non-factory g_ cvars	mostly) //	
 
     itemDef {
@@ -511,7 +686,7 @@ itemDef {
       	visible 1  
 	mouseEnter { fadein message_advhost } 
 	mouseExit { fadeout message_advhost } 
-		cvarTest "ui_actualNetGameType"
+		cvarTest "ui_gametype"
 		disableCvar { "0" ; "1" ; "2" ; "14" }
     	}
 
@@ -603,7 +778,7 @@ itemDef {
       border 0
       bordercolor 0 0 0 0
       visible 1  
-	  cvarTest "ui_actualNetGameType"
+	  cvarTest "ui_gametype"
 	  hideCvar { "0" ; "1" ; "2" ; "14" }
     }
 */
@@ -624,7 +799,7 @@ itemDef {
       border 0
       bordercolor 0 0 0 0
       visible 1  
-	  cvarTest "ui_actualNetGameType"
+	  cvarTest "ui_gametype"
 	  hideCvar { "0" ; "1" ; "2" ; "14" }
 }
 
@@ -644,7 +819,7 @@ itemDef {
       border 0
       bordercolor 0 0 0 0
        visible 1 
-	  cvarTest "ui_actualNetGameType"
+	  cvarTest "ui_gametype"
 	  hideCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
@@ -665,7 +840,7 @@ itemDef {
       border 0
       bordercolor 0 0 0 0
        visible 1 
-	  cvarTest "ui_actualNetGameType"
+	  cvarTest "ui_gametype"
 	  hideCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
@@ -686,7 +861,7 @@ itemDef {
       border 0
       bordercolor 0 0 0 0
        visible 1 
-	  cvarTest "ui_actualNetGameType"
+	  cvarTest "ui_gametype"
 	  hideCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
@@ -707,7 +882,7 @@ itemDef {
       border 0
       bordercolor 0 0 0 0
        visible 1 
-	  cvarTest "ui_actualNetGameType"
+	  cvarTest "ui_gametype"
 	  hideCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
@@ -728,7 +903,7 @@ itemDef {
       border 0
       bordercolor 0 0 0 0
       visible 1 
-	  cvarTest "ui_actualNetGameType"
+	  cvarTest "ui_gametype"
 	  hideCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
@@ -749,7 +924,7 @@ itemDef {
       border 0
       bordercolor 0 0 0 0
       visible 1 
-	  cvarTest "ui_actualNetGameType"
+	  cvarTest "ui_gametype"
 	  hideCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
@@ -770,7 +945,7 @@ itemDef {
       border 0
       bordercolor 0 0 0 0
       visible 1 
-	  cvarTest "ui_actualNetGameType"
+	  cvarTest "ui_gametype"
 	  hideCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
@@ -794,7 +969,7 @@ itemDef {
       border 0
       bordercolor 0 0 0 0
        visible 1 
-	  cvarTest "ui_actualNetGameType"
+	  cvarTest "ui_gametype"
 	  hideCvar { "0" ; "1" ; "2" ; "14" }
     }
 */
@@ -814,7 +989,7 @@ itemDef {
       border 0
       bordercolor 0 0 0 0
        visible 1 
-	  cvarTest "ui_actualNetGameType"
+	  cvarTest "ui_gametype"
 	  hideCvar { "0" ; "1" ; "2" ; "14" }
 }
 
@@ -833,7 +1008,7 @@ itemDef {
       border 0
       bordercolor 0 0 0 0
       visible 1 
-	  cvarTest "ui_actualNetGameType"
+	  cvarTest "ui_gametype"
 	  hideCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
@@ -854,7 +1029,7 @@ itemDef {
       border 0
       bordercolor 0 0 0 0
        visible 1 
-	  cvarTest "ui_actualNetGameType"
+	  cvarTest "ui_gametype"
 	  hideCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
@@ -875,7 +1050,7 @@ itemDef {
       border 0
       bordercolor 0 0 0 0
        visible 1 
-	  cvarTest "ui_actualNetGameType"
+	  cvarTest "ui_gametype"
 	  hideCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
@@ -896,7 +1071,7 @@ itemDef {
       border 0
       bordercolor 0 0 0 0
       visible 1 
-	  cvarTest "ui_actualNetGameType"
+	  cvarTest "ui_gametype"
 	  hideCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
@@ -917,7 +1092,7 @@ itemDef {
       	border 0
       	bordercolor 0 0 0 0
       	 visible 1 
-	  cvarTest "ui_actualNetGameType"
+	  cvarTest "ui_gametype"
 	  hideCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" } 
 	mouseEnter { fadein message_slot } 
@@ -938,7 +1113,7 @@ itemDef {
       	border 0
       	bordercolor 0 0 0 0
       	 visible 1 
-	  cvarTest "ui_actualNetGameType"
+	  cvarTest "ui_gametype"
 	  hideCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" } 
 	mouseEnter { fadein message_slot } 
@@ -959,7 +1134,7 @@ itemDef {
       	border 0
       	bordercolor 0 0 0 0
       	 visible 1 
-	  cvarTest "ui_actualNetGameType"
+	  cvarTest "ui_gametype"
 	  hideCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" } 
 	mouseEnter { fadein message_slot } 
@@ -983,7 +1158,7 @@ itemDef {
       border 0
       bordercolor 0 0 0 0
         visible 1 
-	  cvarTest "ui_actualNetGameType"
+	  cvarTest "ui_gametype"
 	  showCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
@@ -1004,7 +1179,7 @@ itemDef {
       border 0
       bordercolor 0 0 0 0
         visible 1 
-	  cvarTest "ui_actualNetGameType"
+	  cvarTest "ui_gametype"
 	  showCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
@@ -1025,7 +1200,7 @@ itemDef {
       border 0
       bordercolor 0 0 0 0
         visible 1 
-	  cvarTest "ui_actualNetGameType"
+	  cvarTest "ui_gametype"
 	  showCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
@@ -1046,7 +1221,7 @@ itemDef {
       border 0
       bordercolor 0 0 0 0
        visible 1 
-	  cvarTest "ui_actualNetGameType"
+	  cvarTest "ui_gametype"
 	  showCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
@@ -1067,7 +1242,7 @@ itemDef {
       border 0
       bordercolor 0 0 0 0
        visible 1 
-	  cvarTest "ui_actualNetGameType"
+	  cvarTest "ui_gametype"
 	  showCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
@@ -1094,7 +1269,7 @@ itemDef {
       	border 0
       	bordercolor 0 0 0 0
       	 visible 1 
-	  cvarTest "ui_actualNetGameType"
+	  cvarTest "ui_gametype"
 	  showCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
@@ -1115,7 +1290,7 @@ itemDef {
       	border 0
       	bordercolor 0 0 0 0
        	 visible 1 
-	  cvarTest "ui_actualNetGameType"
+	  cvarTest "ui_gametype"
 	 showCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
@@ -1136,7 +1311,7 @@ itemDef {
  	border 0
       	bordercolor 0 0 0 0
        	 visible 1 
-	  cvarTest "ui_actualNetGameType"
+	  cvarTest "ui_gametype"
 	  showCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
@@ -1157,7 +1332,7 @@ itemDef {
       border 0
       bordercolor 0 0 0 0
       visible 1 
-	  cvarTest "ui_actualNetGameType"
+	  cvarTest "ui_gametype"
 	showCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
@@ -1178,7 +1353,7 @@ itemDef {
       	border 0
       	bordercolor 0 0 0 0
        visible 1 
-	  cvarTest "ui_actualNetGameType"
+	  cvarTest "ui_gametype"
 	  showCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" } 
 	mouseEnter { fadein message_slot } 
@@ -1199,7 +1374,7 @@ itemDef {
       border 0
       bordercolor 0 0 0 0
       visible 1 
-	  cvarTest "ui_actualNetGameType"
+	  cvarTest "ui_gametype"
 	showCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
@@ -1220,7 +1395,7 @@ itemDef {
       	border 0
       	bordercolor 0 0 0 0
        visible 1 
-	  cvarTest "ui_actualNetGameType"
+	  cvarTest "ui_gametype"
 	  showCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" } 
 	mouseEnter { fadein message_slot } 
@@ -1241,7 +1416,7 @@ itemDef {
       border 0
       bordercolor 0 0 0 0
       visible 1 
-	  cvarTest "ui_actualNetGameType"
+	  cvarTest "ui_gametype"
 	showCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" }
 	mouseEnter { fadein message_slot } 
@@ -1262,7 +1437,7 @@ itemDef {
       	border 0
       	bordercolor 0 0 0 0
        visible 1 
-	  cvarTest "ui_actualNetGameType"
+	  cvarTest "ui_gametype"
 	  showCvar { "0" ; "1" ; "2" ; "14" }
 	action { play "sound/misc/menu1.wav" } 
 	mouseEnter { fadein message_slot } 
@@ -1301,7 +1476,7 @@ itemDef {
       	background "ui/assets/backarrow.tga"
 	rect 16 424 50 50 
       	visible 1 
-      	action {  close maps ; close createserver ; open main }
+      	action {  close maps ; close customrules ; close createserver ; open main }
 	mouseEnter { hide back ; show back_alt ; fadein message_back }
     	}
 
@@ -1315,7 +1490,7 @@ itemDef {
       	visible 0
 	type ITEM_TYPE_BUTTON
       	mouseExit { hide back_alt ; show back ; fadeout message_back }	  
-      	action { close maps ; close createserver ; open main }	  
+      	action { close maps ; close customrules ; close createserver ; open main }	  
     	}
 
 
@@ -1332,7 +1507,7 @@ itemDef {
       	action { close fight ; uiScript StartServer }
 /*	
 	//	demo_only
-	cvarTest "ui_actualNetGameType"
+	cvarTest "ui_gametype"
 	hideCvar { "0" ; "1" }
 */
   	}
@@ -1350,7 +1525,7 @@ itemDef {
       	mouseExit { hide lightning ; hide accept_alt ; show accept ; fadeout message_accept }	
 /*	
 	//	demo_only
-	cvarTest "ui_actualNetGameType"
+	cvarTest "ui_gametype"
 	hideCvar { "0" ; "1" }
 */
   	}
@@ -1479,6 +1654,21 @@ itemDef {
 	textaligny 25
 	textscale .416
 	text "Select to modify normal host settings"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+itemDef {
+	name message_customrules
+	group grpmessage
+	style 0 
+	rect 320 430 128 30
+	textalign 1
+	textstyle 1
+	textalignx 0
+	textaligny 25
+	textscale .416
+	text "Select to customize your game rules"
 	forecolor 1 1 1 1
 	decoration 
 	visible 0

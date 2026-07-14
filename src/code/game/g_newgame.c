@@ -296,3 +296,26 @@ void Arena_CheckRules( void ) {
 		}
 	} 
 }
+
+
+
+
+//   MISC THINGS   //
+
+#define	DEFAULT_HEALTH_SOFT_LIMIT	100
+
+/*
+===========
+getHealthSoftLimit
+
+Returns whatever HEALTH_SOFT_LIMIT was used for.
+Also, some places still had hard-coded literal
+int 100.
+============
+*/
+int getHealthSoftLimit( void ) {
+	if (g_startingHealth.integer < 1) {
+		return DEFAULT_HEALTH_SOFT_LIMIT;
+	}
+	return g_startingHealth.integer;
+}

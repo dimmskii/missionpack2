@@ -677,7 +677,8 @@ qboolean ClientUserinfoChanged( int clientNum ) {
 	}
 
 	// set max health
-//#ifdef MISSIONPACK
+/*
+#ifdef MISSIONPACK
 	if (client->ps.powerups[PW_GUARD]) {
 		client->pers.maxHealth = HEALTH_SOFT_LIMIT*2;
 	} else {
@@ -687,13 +688,24 @@ qboolean ClientUserinfoChanged( int clientNum ) {
 			client->pers.maxHealth = HEALTH_SOFT_LIMIT;
 		}
 	}
-//#else
-//	health = atoi( Info_ValueForKey( userinfo, "handicap" ) );
-//	client->pers.maxHealth = health;
-//	if ( client->pers.maxHealth < 1 || client->pers.maxHealth > HEALTH_SOFT_LIMIT ) {
-//		client->pers.maxHealth = HEALTH_SOFT_LIMIT;
-//	}
-//#endif
+#else
+	health = atoi( Info_ValueForKey( userinfo, "handicap" ) );
+	client->pers.maxHealth = health;
+	if ( client->pers.maxHealth < 1 || client->pers.maxHealth > HEALTH_SOFT_LIMIT ) {
+		client->pers.maxHealth = HEALTH_SOFT_LIMIT;
+	}
+#endif
+*/
+// ~DIMMSKII
+	if (client->ps.powerups[PW_GUARD]) {
+		client->pers.maxHealth = getHealthSoftLimit()*2;
+	} else {
+		client->pers.maxHealth = (int)((float)atoi( Info_ValueForKey( userinfo, "handicap" ) )/100.0f*(float)getHealthSoftLimit()); // TODO: Also combob this into a method with check of some g_allowHandicap cvar
+		if ( client->pers.maxHealth < 1 || client->pers.maxHealth > getHealthSoftLimit() ) {
+			client->pers.maxHealth = getHealthSoftLimit();
+		}
+	}
+// END DIMMSKII
 	client->ps.stats[STAT_MAX_HEALTH] = client->pers.maxHealth;
 
 //#ifdef MISSIONPACK
@@ -1061,7 +1073,6 @@ void ClientSpawn(gentity_t *ent) {
 	int		eventSequence;
 	char	userinfo[MAX_INFO_STRING];
 	qboolean isSpectator;
-	int startHealth, startHealthBonus, startArmor; 	// ~Dimmskii
 	char *classname;				// ~Dimmskii
 
 	index = ent - g_entities;
@@ -1166,10 +1177,19 @@ void ClientSpawn(gentity_t *ent) {
 
 	trap_GetUserinfo( index, userinfo, sizeof(userinfo) );
 	// set max health
+	/*
 	client->pers.maxHealth = atoi( Info_ValueForKey( userinfo, "handicap" ) );
 	if ( client->pers.maxHealth < 1 || client->pers.maxHealth > HEALTH_SOFT_LIMIT ) {
 		client->pers.maxHealth = HEALTH_SOFT_LIMIT;
 	}
+	*/
+// ~Dimmskii	
+	client->pers.maxHealth = (int)((float)atoi( Info_ValueForKey( userinfo, "handicap" ) )/100.0f*(float)getHealthSoftLimit()); // TODO: Also combob this into a method with check of some g_allowHandicap cvar
+	if ( client->pers.maxHealth < 1 || client->pers.maxHealth > getHealthSoftLimit() ) {
+		client->pers.maxHealth = getHealthSoftLimit();
+	}
+// END Dimmskii
+
 	// clear entity values
 	client->ps.stats[STAT_MAX_HEALTH] = client->pers.maxHealth;
 	client->ps.eFlags = flags;
@@ -1199,24 +1219,21 @@ void ClientSpawn(gentity_t *ent) {
 
 	client->ps.clientNum = index;
 
+/*
 	if ( g_instagib.integer ) {
 		client->ps.stats[STAT_WEAPONS] = ( 1 << WP_RAILGUN );
 		client->ps.ammo[WP_RAILGUN] = 999;
 	} else {
 		client->ps.stats[STAT_WEAPONS] = ( 1 << WP_MACHINEGUN );
 		if ( g_gametype.integer == GT_TEAM ) {
-			//if ( g_startAmmoMG.integer ) {
-				//client->ps.ammo[WP_MACHINEGUN] = g_startAmmoMG.integer;
-			if ( g_startingAmmo_mg.integer ) { // ~Dimmskii
-				client->ps.ammo[WP_MACHINEGUN] = g_startingAmmo_mg.integer; // ~Dimmskii
+			if ( g_startAmmoMG.integer ) {
+				client->ps.ammo[WP_MACHINEGUN] = g_startAmmoMG.integer;
 			} else {
 				client->ps.ammo[WP_MACHINEGUN] = 50;
 			}			
 		} else {
-			//if ( g_startAmmoMG.integer ) {
-				//client->ps.ammo[WP_MACHINEGUN] = g_startAmmoMG.integer;
-			if ( g_startingAmmo_mg.integer ) { // ~Dimmskii
-				client->ps.ammo[WP_MACHINEGUN] = g_startingAmmo_mg.integer; // ~Dimmskii
+			if ( g_startAmmoMG.integer ) {
+				client->ps.ammo[WP_MACHINEGUN] = g_startAmmoMG.integer;
 			} else {
 				client->ps.ammo[WP_MACHINEGUN] = 100;
 			}			
@@ -1230,7 +1247,6 @@ void ClientSpawn(gentity_t *ent) {
 	// health will count down towards max_health
 	ent->health = client->ps.stats[STAT_HEALTH] = client->ps.stats[STAT_MAX_HEALTH] + 25;
 
-/*
 	if (g_startHealth.integer > 0) {
 		client->ps.stats[STAT_HEALTH] = g_startHealth.integer;
 		if (client->ps.stats[STAT_HEALTH] > client->ps.stats[STAT_MAX_HEALTH] * 2)
@@ -1250,34 +1266,26 @@ void ClientSpawn(gentity_t *ent) {
 	
 // ~Dimmskii
 
+	// If g_instagib is enabled, overwrite weapons with what we need
+	if ( g_instagib.integer ) {
+		client->ps.stats[STAT_WEAPONS] = ( 1 << WP_GAUNTLET ) | ( 1 << WP_RAILGUN ); // Set to gauntlet and railgun
+		client->ps.ammo[WP_RAILGUN] = 999;			// Give "unlimited" slugs. TODO: Also implement QL-style cvar for true unlimited ammo and use it here
+	}
+	
+	// Ensure -1 ammo as it apparently should always be for weapons like gaunt and grapple
+	client->ps.ammo[WP_GAUNTLET] = -1;				
+	client->ps.ammo[WP_GRAPPLING_HOOK] = -1;
+
 	// Disable shooting upon respawn in Arena gamemodes if there is warmup time (  re-enabled on G_WarmupEnd in g_main.c  )
 	if ( GT_IsArenaGame(g_gametype.integer) ) {
 		if (g_warmup.integer > 0) {
 			client->ps.pm_flags |= PMF_NOSHOOT;
 		}
 	}
-
-	// Starting health
-	startHealth = g_startingHealth.integer;
-	startHealthBonus = g_startingHealthBonus.integer;
-	if (startHealth > 0) {
-		client->ps.stats[STAT_HEALTH] = startHealth;
-		if (startHealthBonus > 0) {
-			client->ps.stats[STAT_HEALTH] += startHealthBonus;
-		}
-		if (client->ps.stats[STAT_HEALTH] > client->ps.stats[STAT_MAX_HEALTH] * 2)
-			client->ps.stats[STAT_HEALTH] = client->ps.stats[STAT_MAX_HEALTH] * 2;
-		ent->health = client->ps.stats[STAT_HEALTH];
-	}
-
-	// Starting armor
-	startArmor = g_startingArmor.integer;
-	if (startArmor > 0) {
-		client->ps.stats[STAT_ARMOR] = startArmor;
-		if (client->ps.stats[STAT_ARMOR] > client->ps.stats[STAT_MAX_HEALTH] * 2) {
-			client->ps.stats[STAT_ARMOR] = client->ps.stats[STAT_MAX_HEALTH] * 2;
-		}
-	}
+	
+	// health will count down towards max_health
+	ent->health = client->ps.stats[STAT_HEALTH] = client->ps.stats[STAT_MAX_HEALTH] + Com_Clamp( 0, client->ps.stats[STAT_MAX_HEALTH], g_startingHealthBonus.integer );
+	
 // END Dimmskii
 
 	G_SetOrigin( ent, spawn_origin );
@@ -1331,8 +1339,10 @@ void ClientSpawn(gentity_t *ent) {
 		} else {
 			client->ps.weapon = g_startingWeapon.integer;
 		}
-		if (startArmor > 0) {
-			client->ps.stats[STAT_ARMOR] = startArmor;
+//		if (g_startArmor.integer > 0) {
+//			client->ps.stats[STAT_ARMOR] = g_startArmor.integer;
+		if (g_startingArmor.integer > 0) {								// ~Dimmskii
+			client->ps.stats[STAT_ARMOR] = g_startingArmor.integer;		// ~Dimmskii
 			if (client->ps.stats[STAT_ARMOR] > client->ps.stats[STAT_MAX_HEALTH] * 2) {
 				client->ps.stats[STAT_ARMOR] = client->ps.stats[STAT_MAX_HEALTH] * 2;
 			}
