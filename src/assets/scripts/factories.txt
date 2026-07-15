@@ -21,6 +21,7 @@
   {
     "cvars": {
       "g_instagib": "1",
+      "g_startingHealthBonus": "0",
       "g_startingWeapons": "65"
     },
     "author": "UA Dev Team",
@@ -136,6 +137,7 @@
   
   {
     "cvars": {
+      "g_startingHealthBonus": "0",
       "g_startingWeapons": "65",
       "g_instagib": "1"
     },
