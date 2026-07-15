@@ -8,7 +8,7 @@
 	  "fraglimit": "0",
       "g_overtime": "0",
 	  "dmflags": "0",
-	  "g_itemTimers": "1",
+	  "g_itemTimers": "1"
     },
     "author": "UA Dev Team",
     "description": "Default gametype settings.",
@@ -21,7 +21,8 @@
   {
     "cvars": {
       "g_instagib": "1",
-      "g_startingWeapons": "65",
+      "g_startingHealthBonus": "0",
+      "g_startingWeapons": "65"
     },
     "author": "UA Dev Team",
     "description": "Railgun and Gauntlet only. One shot, one kill.",
@@ -38,7 +39,7 @@
 	  "g_startingHealthBonus": "25",
       "timelimit": "10",
       "g_itemTimers": "0",
-      "fraglimit": "0",
+      "fraglimit": "0"
     },
     "author": "UA Dev Team",
     "description": "Default gametype settings.",
@@ -56,7 +57,7 @@
 	  "removeammo": "4095",
 	  "removeitem": "16383",
 	  "removepowerup": "1023",
-	  "removeweapon": "1023",
+	  "removeweapon": "1023"
     },
     "author": "UA Dev Team",
     "description": "Duel with Arena starting weapons and rules.",
@@ -73,7 +74,7 @@
 	  "g_startingHealthBonus": "25",
       "timelimit": "15",
       "g_itemTimers": "1",
-      "fraglimit": "0",
+      "fraglimit": "0"
     },
     "author": "UA Dev Team",
     "description": "Default gametype settings.",
@@ -105,7 +106,7 @@
       "g_startingAmmo_pg": "100",
       "g_startingAmmo_rg": "25",
       "g_startingAmmo_gl": "25",
-      "g_allowKill": "0",
+      "g_allowKill": "0"
     },
     "author": "UA Dev Team",
     "description": "Default gametype settings.",
@@ -124,7 +125,7 @@
       "capturelimit": "10",
       "g_dropCmds": "1",
       "timelimit": "20",
-      "dmflags": "0",
+      "dmflags": "0"
     },
     "author": "UA Dev Team",
     "description": "Default gametype settings.",
@@ -136,8 +137,9 @@
   
   {
     "cvars": {
+      "g_startingHealthBonus": "0",
       "g_startingWeapons": "65",
-      "g_instagib": "1",
+      "g_instagib": "1"
     },
     "author": "UA Dev Team",
     "description": "Railgun and Gauntlet only. One shot, one kill.",
@@ -155,7 +157,7 @@
 	  "g_startingHealthBonus": "25",
       "g_ammoRespawn": "10",
       "capturelimit": "0",
-      "timelimit": "15",
+      "timelimit": "15"
     },
     "author": "UA Dev Team",
     "description": "Default gametype settings.",
@@ -172,7 +174,7 @@
 	  "g_startingHealth": "100",
 	  "g_startingHealthBonus": "25",
       "capturelimit": "0",
-      "timelimit": "15",
+      "timelimit": "15"
     },
     "author": "UA Dev Team",
     "description": "Default gametype settings.",
@@ -189,7 +191,7 @@
 	  "g_startingHealth": "100",
 	  "g_startingHealthBonus": "25",
       "capturelimit": "0",
-      "timelimit": "15",
+      "timelimit": "15"
     },
     "author": "UA Dev Team",
     "description": "Default gametype settings.",
@@ -222,12 +224,12 @@
       "g_startingAmmo_pg": "100",
       "g_startingAmmo_rg": "25",
       "g_startingAmmo_gl": "25",
-      "g_allowKill": "0",
+      "g_allowKill": "0"
     },
     "author": "UA Dev Team",
     "description": "Default gametype settings.",
     "basegt": "arena",
     "id": "arena",
     "title": "Arena"
-  },
+  }
 ]

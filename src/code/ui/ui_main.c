@@ -3603,6 +3603,7 @@ static void UI_SetFactoryCvarsFromCustom( void ) {
 	trap_Cvar_SetValue( "g_fastWeaponSwitch", ui_fastWeaponSwitch.integer );
 	trap_Cvar_SetValue( "g_noSelfDamage", ui_noSelfDamage.integer );
 	trap_Cvar_SetValue( "g_itemTimers", ui_itemTimers.integer );
+	trap_Cvar_SetValue( "g_allowHandicap", ui_allowHandicap.integer );
 
 	trap_Cvar_SetValue( "g_friendlyFire", ui_friendlyFire.integer );
 	trap_Cvar_SetValue( "g_teamVisibility", ui_teamVisibility.integer );

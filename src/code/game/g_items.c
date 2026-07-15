@@ -206,7 +206,8 @@ int Pickup_PersistantPowerup( gentity_t *ent, gentity_t *other ) {
 	case PW_GUARD:
 		clientNum = other->client->ps.clientNum;
 		trap_GetUserinfo( clientNum, userinfo, sizeof(userinfo) );
-		handicap = atof( Info_ValueForKey( userinfo, "handicap" ) );
+		//handicap = atof( Info_ValueForKey( userinfo, "handicap" ) );
+		handicap = g_allowHandicap.integer>0 ? atof( Info_ValueForKey( userinfo, "handicap" ) ) : 100.0f; 	// ~Dimmskii
 		if( handicap<=0.0f || handicap>100.0f) {
 			handicap = 100.0f;
 		}
@@ -223,7 +224,8 @@ int Pickup_PersistantPowerup( gentity_t *ent, gentity_t *other ) {
 	case PW_SCOUT:
 		clientNum = other->client->ps.clientNum;
 		trap_GetUserinfo( clientNum, userinfo, sizeof(userinfo) );
-		handicap = atof( Info_ValueForKey( userinfo, "handicap" ) );
+		//handicap = atof( Info_ValueForKey( userinfo, "handicap" ) );
+		handicap = g_allowHandicap.integer>0 ? atof( Info_ValueForKey( userinfo, "handicap" ) ) : 100.0f; 	// ~Dimmskii
 		if( handicap<=0.0f || handicap>100.0f) {
 			handicap = 100.0f;
 		}
@@ -234,7 +236,8 @@ int Pickup_PersistantPowerup( gentity_t *ent, gentity_t *other ) {
 	case PW_DOUBLER:
 		clientNum = other->client->ps.clientNum;
 		trap_GetUserinfo( clientNum, userinfo, sizeof(userinfo) );
-		handicap = atof( Info_ValueForKey( userinfo, "handicap" ) );
+		//handicap = atof( Info_ValueForKey( userinfo, "handicap" ) );
+		handicap = g_allowHandicap.integer>0 ? atof( Info_ValueForKey( userinfo, "handicap" ) ) : 100.0f; 	// ~Dimmskii
 		if( handicap<=0.0f || handicap>100.0f) {
 			handicap = 100.0f;
 		}
@@ -243,7 +246,8 @@ int Pickup_PersistantPowerup( gentity_t *ent, gentity_t *other ) {
 	case PW_AMMOREGEN:
 		clientNum = other->client->ps.clientNum;
 		trap_GetUserinfo( clientNum, userinfo, sizeof(userinfo) );
-		handicap = atof( Info_ValueForKey( userinfo, "handicap" ) );
+		//handicap = atof( Info_ValueForKey( userinfo, "handicap" ) );
+		handicap = g_allowHandicap.integer>0 ? atof( Info_ValueForKey( userinfo, "handicap" ) ) : 100.0f; 	// ~Dimmskii
 		if( handicap<=0.0f || handicap>100.0f) {
 			handicap = 100.0f;
 		}
@@ -253,7 +257,8 @@ int Pickup_PersistantPowerup( gentity_t *ent, gentity_t *other ) {
 	default:
 		clientNum = other->client->ps.clientNum;
 		trap_GetUserinfo( clientNum, userinfo, sizeof(userinfo) );
-		handicap = atof( Info_ValueForKey( userinfo, "handicap" ) );
+		//handicap = atof( Info_ValueForKey( userinfo, "handicap" ) );
+		handicap = g_allowHandicap.integer>0 ? atof( Info_ValueForKey( userinfo, "handicap" ) ) : 100.0f; 	// ~Dimmskii
 		if( handicap<=0.0f || handicap>100.0f) {
 			handicap = 100.0f;
 		}
