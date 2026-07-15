@@ -52,6 +52,7 @@ static const char *GFACTORY_CVARS[] = {
 	"g_fastWeaponSwitch",
 	"g_friendlyFire",
 	"g_noSelfDamage",
+	"g_allowHandicap",
 	
 	"removeammo",
 	"removeitem",
