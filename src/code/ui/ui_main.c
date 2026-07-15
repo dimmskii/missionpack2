@@ -3659,10 +3659,76 @@ static void UI_SetFactoryCvarsFromCustom( void ) {
 	// TODO: Implement into frontend
 	// Remaining GFACTORY_CVARS with no UI representation yet (see ui_cvar.h).
 
-	trap_Cvar_SetValue( "removeammo", ui_removeammo.integer );
-	trap_Cvar_SetValue( "removeitem", ui_removeitem.integer );
-	trap_Cvar_SetValue( "removepowerup", ui_removepowerup.integer );
-	trap_Cvar_SetValue( "removeweapon", ui_removeweapon.integer );
+	// Re-assemble removeweapon from split UI cvars
+	{
+		int removeweapon = 0;
+		if ( ui_removeweapon_mg.integer > 0 ) { removeweapon |= 1; }
+		if ( ui_removeweapon_sg.integer > 0 ) { removeweapon |= 2; }
+		if ( ui_removeweapon_gl.integer > 0 ) { removeweapon |= 4; }
+		if ( ui_removeweapon_rl.integer > 0 ) { removeweapon |= 8; }
+		if ( ui_removeweapon_lg.integer > 0 ) { removeweapon |= 16; }
+		if ( ui_removeweapon_rg.integer > 0 ) { removeweapon |= 32; }
+		if ( ui_removeweapon_pg.integer > 0 ) { removeweapon |= 64; }
+		if ( ui_removeweapon_bfg.integer > 0 ) { removeweapon |= 128; }
+		if ( ui_removeweapon_ng.integer > 0 ) { removeweapon |= 256; }
+		if ( ui_removeweapon_pl.integer > 0 ) { removeweapon |= 512; }
+		if ( ui_removeweapon_cg.integer > 0 ) { removeweapon |= 1024; }
+		if ( ui_removeweapon_hmg.integer > 0 ) { removeweapon |= 2048; }
+		trap_Cvar_SetValue( "removeweapon", removeweapon );
+	}
+
+	// Re-assemble removeammo from split UI cvars
+	{
+		int removeammo = 0;
+		if ( ui_removeammo_mg.integer > 0 ) { removeammo |= 1; }
+		if ( ui_removeammo_sg.integer > 0 ) { removeammo |= 2; }
+		if ( ui_removeammo_gl.integer > 0 ) { removeammo |= 4; }
+		if ( ui_removeammo_rl.integer > 0 ) { removeammo |= 8; }
+		if ( ui_removeammo_lg.integer > 0 ) { removeammo |= 16; }
+		if ( ui_removeammo_rg.integer > 0 ) { removeammo |= 32; }
+		if ( ui_removeammo_pg.integer > 0 ) { removeammo |= 64; }
+		if ( ui_removeammo_bfg.integer > 0 ) { removeammo |= 128; }
+		if ( ui_removeammo_ng.integer > 0 ) { removeammo |= 256; }
+		if ( ui_removeammo_pl.integer > 0 ) { removeammo |= 512; }
+		if ( ui_removeammo_cg.integer > 0 ) { removeammo |= 1024; }
+		if ( ui_removeammo_hmg.integer > 0 ) { removeammo |= 2048; }
+		trap_Cvar_SetValue( "removeammo", removeammo );
+	}
+
+	// Re-assemble removeitem from split UI cvars
+	{
+		int removeitem = 0;
+		if ( ui_removeitem_armorShard.integer > 0 ) { removeitem |= 1; }
+		if ( ui_removeitem_armorCombat.integer > 0 ) { removeitem |= 2; }
+		if ( ui_removeitem_armorBody.integer > 0 ) { removeitem |= 4; }
+		if ( ui_removeitem_healthSmall.integer > 0 ) { removeitem |= 8; }
+		if ( ui_removeitem_health.integer > 0 ) { removeitem |= 16; }
+		if ( ui_removeitem_healthLarge.integer > 0 ) { removeitem |= 32; }
+		if ( ui_removeitem_healthMega.integer > 0 ) { removeitem |= 64; }
+		if ( ui_removeitem_teleporter.integer > 0 ) { removeitem |= 128; }
+		if ( ui_removeitem_medkit.integer > 0 ) { removeitem |= 256; }
+		if ( ui_removeitem_kamikaze.integer > 0 ) { removeitem |= 512; }
+		if ( ui_removeitem_portal.integer > 0 ) { removeitem |= 1024; }
+		if ( ui_removeitem_invulnerability.integer > 0 ) { removeitem |= 2048; }
+		if ( ui_removeitem_armorJacket.integer > 0 ) { removeitem |= 4096; }
+		trap_Cvar_SetValue( "removeitem", removeitem );
+	}
+
+	// Re-assemble removepowerup from split UI cvars
+	{
+		int removepowerup = 0;
+		if ( ui_removepowerup_quad.integer > 0 ) { removepowerup |= 1; }
+		if ( ui_removepowerup_enviro.integer > 0 ) { removepowerup |= 2; }
+		if ( ui_removepowerup_haste.integer > 0 ) { removepowerup |= 4; }
+		if ( ui_removepowerup_invis.integer > 0 ) { removepowerup |= 8; }
+		if ( ui_removepowerup_regen.integer > 0 ) { removepowerup |= 16; }
+		if ( ui_removepowerup_flight.integer > 0 ) { removepowerup |= 32; }
+		if ( ui_removepowerup_scout.integer > 0 ) { removepowerup |= 64; }
+		if ( ui_removepowerup_guard.integer > 0 ) { removepowerup |= 128; }
+		if ( ui_removepowerup_doubler.integer > 0 ) { removepowerup |= 256; }
+		if ( ui_removepowerup_ammoregen.integer > 0 ) { removepowerup |= 512; }
+		trap_Cvar_SetValue( "removepowerup", removepowerup );
+	}
 	trap_Cvar_SetValue( "g_railJump", ui_railJump.integer );
 	trap_Cvar_SetValue( "g_railJumpDamage", ui_railJumpDamage.integer );
 	trap_Cvar_SetValue( "g_forcerespawn", ui_forcerespawn.integer );
