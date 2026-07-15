@@ -700,7 +700,7 @@ qboolean ClientUserinfoChanged( int clientNum ) {
 	if (client->ps.powerups[PW_GUARD]) {
 		client->pers.maxHealth = getHealthSoftLimit()*2;
 	} else {
-		client->pers.maxHealth = (int)((float)atoi( Info_ValueForKey( userinfo, "handicap" ) )/100.0f*(float)getHealthSoftLimit()); // TODO: Also combob this into a method with check of some g_allowHandicap cvar
+		client->pers.maxHealth = g_allowHandicap.integer>0 ? (int)(atof( Info_ValueForKey( userinfo, "handicap" ) )/100.0f*(float)getHealthSoftLimit()) : getHealthSoftLimit();
 		if ( client->pers.maxHealth < 1 || client->pers.maxHealth > getHealthSoftLimit() ) {
 			client->pers.maxHealth = getHealthSoftLimit();
 		}
@@ -1184,7 +1184,7 @@ void ClientSpawn(gentity_t *ent) {
 	}
 	*/
 // ~Dimmskii	
-	client->pers.maxHealth = (int)((float)atoi( Info_ValueForKey( userinfo, "handicap" ) )/100.0f*(float)getHealthSoftLimit()); // TODO: Also combob this into a method with check of some g_allowHandicap cvar
+	client->pers.maxHealth = g_allowHandicap.integer>0 ? (int)(atof( Info_ValueForKey( userinfo, "handicap" ) )/100.0f*(float)getHealthSoftLimit()) : getHealthSoftLimit();
 	if ( client->pers.maxHealth < 1 || client->pers.maxHealth > getHealthSoftLimit() ) {
 		client->pers.maxHealth = getHealthSoftLimit();
 	}

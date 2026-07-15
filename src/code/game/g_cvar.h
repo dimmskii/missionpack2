@@ -201,6 +201,8 @@ G_CVAR( g_itemTimers, "g_itemTimers", "1", CVAR_SERVERINFO, 0, qtrue, qfalse )
 
 G_CVAR( g_allSpec, "g_allSpec", "0", CVAR_SERVERINFO, 0, qtrue, qfalse )
 
+G_CVAR( g_allowHandicap, "g_allowHandicap", "0", 0, 0, qtrue, qfalse )
+
 // Starting health/armor
 G_CVAR( g_startingArmor, "g_startingArmor", "0", 0, 0, qtrue, qfalse )
 G_CVAR( g_startingHealth, "g_startingHealth", "0", 0, 0, qtrue, qfalse )

@@ -173,6 +173,7 @@ UI_CVAR( ui_instagib, "ui_instagib", "0", CVAR_ARCHIVE )
 UI_CVAR( ui_fastWeaponSwitch, "ui_fastWeaponSwitch", "0", CVAR_ARCHIVE )
 UI_CVAR( ui_noSelfDamage, "ui_noSelfDamage", "0", CVAR_ARCHIVE )
 UI_CVAR( ui_itemTimers, "ui_itemTimers", "0", CVAR_ARCHIVE )
+UI_CVAR( ui_allowHandicap, "ui_allowHandicap", "0", CVAR_ARCHIVE )
 
 UI_CVAR( ui_friendlyFire, "ui_friendlyFire", "0", CVAR_ARCHIVE )
 UI_CVAR( ui_teamVisibility, "ui_teamVisibility", "1", CVAR_ARCHIVE )
