@@ -182,9 +182,27 @@
 		name general
 		group grpsettings
 		type ITEM_TYPE_YESNO
+		text "Allow Handicap:"
+		cvar "ui_allowHandicap"
+		rect 70 120 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
 		text "Friendly Fire:"
 		cvar "ui_friendlyFire"
-		rect 70 135 128 12
+		rect 70 150 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
 		maxchars 4
@@ -202,7 +220,7 @@
 		type ITEM_TYPE_YESNO
 		text "Full Team Visibility:"
 		cvar "ui_teamVisibility"
-		rect 70 150 128 12
+		rect 70 165 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
 		maxchars 4
@@ -220,7 +238,7 @@
 		type ITEM_TYPE_YESNO
 		text "Spectate Enemies:"
 		cvar "ui_allSpec"
-		rect 70 165 128 12
+		rect 70 180 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
 		maxchars 4
@@ -238,7 +256,7 @@
 		type ITEM_TYPE_YESNO
 		text "1F Respawn:"
 		cvar "ui_1FRespawn"
-		rect 70 180 128 12
+		rect 70 195 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
 		maxchars 4
@@ -256,7 +274,7 @@
 		type ITEM_TYPE_YESNO
 		text "No Fall Damage:"
 		cvar "ui_dmflags_noFalling"
-		rect 70 210 128 12
+		rect 70 225 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
 		maxchars 4
@@ -274,7 +292,7 @@
 		type ITEM_TYPE_YESNO
 		text "Fixed FOV:"
 		cvar "ui_dmflags_fixedFov"
-		rect 70 225 128 12
+		rect 70 240 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
 		maxchars 4
@@ -292,7 +310,7 @@
 		type ITEM_TYPE_YESNO
 		text "No Footsteps:"
 		cvar "ui_dmflags_noFootsteps"
-		rect 70 240 128 12
+		rect 70 255 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
 		maxchars 4
