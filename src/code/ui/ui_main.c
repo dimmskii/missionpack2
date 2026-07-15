@@ -3657,7 +3657,28 @@ static void UI_SetFactoryCvarsFromCustom( void ) {
 	trap_Cvar_SetValue( "g_startingAmmo_hmg", ui_startingAmmo_hmg.integer );
 
 	// TODO: Implement into frontend
-	// Remaining GFACTORY_CVARS with no UI representation yet (see ui_cvar.h).
+	// Remaining GFACTORY_CVARS with no UI representation yet (see customrules.menu).
+	
+	trap_Cvar_SetValue( "g_railJump", ui_railJump.integer );
+	trap_Cvar_SetValue( "g_railJumpDamage", ui_railJumpDamage.integer );
+	trap_Cvar_SetValue( "g_forcerespawn", ui_forcerespawn.integer );
+	trap_Cvar_SetValue( "g_gravity", ui_gravity.integer );
+	trap_Cvar_SetValue( "g_speed", ui_speed.integer );
+	trap_Cvar_SetValue( "g_knockback", ui_knockback.integer );
+	trap_Cvar_SetValue( "g_quadDamageFactor", ui_quadDamageFactor.integer );
+
+	trap_Cvar_SetValue( "g_startingHealth", ui_startingHealth.integer );
+	trap_Cvar_SetValue( "g_startingHealthBonus", ui_startingHealthBonus.integer );
+	trap_Cvar_SetValue( "g_startingArmor", ui_startingArmor.integer );
+	trap_Cvar_Set( "g_startingWeapon", ui_startingWeapon.string );
+
+	trap_Cvar_SetValue( "g_weaponRespawn", ui_weaponRespawn.integer );
+	trap_Cvar_SetValue( "g_ammoRespawn", ui_ammoRespawn.integer );
+	trap_Cvar_SetValue( "g_armorRespawn", ui_armorRespawn.integer );
+	trap_Cvar_SetValue( "g_healthRespawn", ui_healthRespawn.integer );
+	trap_Cvar_SetValue( "g_megahealthRespawn", ui_megahealthRespawn.integer );
+	trap_Cvar_SetValue( "g_powerupRespawn", ui_powerupRespawn.integer );
+	trap_Cvar_SetValue( "g_holdableRespawn", ui_holdableRespawn.integer );
 
 	// Re-assemble removeweapon from split UI cvars
 	{
@@ -3729,26 +3750,6 @@ static void UI_SetFactoryCvarsFromCustom( void ) {
 		if ( ui_removepowerup_ammoregen.integer > 0 ) { removepowerup |= 512; }
 		trap_Cvar_SetValue( "removepowerup", removepowerup );
 	}
-	trap_Cvar_SetValue( "g_railJump", ui_railJump.integer );
-	trap_Cvar_SetValue( "g_railJumpDamage", ui_railJumpDamage.integer );
-	trap_Cvar_SetValue( "g_forcerespawn", ui_forcerespawn.integer );
-	trap_Cvar_SetValue( "g_gravity", ui_gravity.integer );
-	trap_Cvar_SetValue( "g_speed", ui_speed.integer );
-	trap_Cvar_SetValue( "g_knockback", ui_knockback.integer );
-	trap_Cvar_SetValue( "g_quadDamageFactor", ui_quadDamageFactor.integer );
-
-	trap_Cvar_SetValue( "g_startingHealth", ui_startingHealth.integer );
-	trap_Cvar_SetValue( "g_startingHealthBonus", ui_startingHealthBonus.integer );
-	trap_Cvar_SetValue( "g_startingArmor", ui_startingArmor.integer );
-	trap_Cvar_Set( "g_startingWeapon", ui_startingWeapon.string );
-
-	trap_Cvar_SetValue( "g_weaponRespawn", ui_weaponRespawn.integer );
-	trap_Cvar_SetValue( "g_ammoRespawn", ui_ammoRespawn.integer );
-	trap_Cvar_SetValue( "g_armorRespawn", ui_armorRespawn.integer );
-	trap_Cvar_SetValue( "g_healthRespawn", ui_healthRespawn.integer );
-	trap_Cvar_SetValue( "g_megahealthRespawn", ui_megahealthRespawn.integer );
-	trap_Cvar_SetValue( "g_powerupRespawn", ui_powerupRespawn.integer );
-	trap_Cvar_SetValue( "g_holdableRespawn", ui_holdableRespawn.integer );
 
 	trap_Cvar_SetValue( "g_damage_g", ui_damage_g.integer );
 	trap_Cvar_SetValue( "g_damage_mg", ui_damage_mg.integer );

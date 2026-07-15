@@ -220,6 +220,29 @@ UI_CVAR( ui_startingAmmo_hmg, "ui_startingAmmo_hmg", "50", CVAR_ARCHIVE )
 // mirror each cvar's registered default in g_cvar.h/bg_cvar.h.
 
 // General gameplay params
+UI_CVAR( ui_railJump, "ui_railJump", "0", CVAR_ARCHIVE )
+UI_CVAR( ui_railJumpDamage, "ui_railJumpDamage", "100", CVAR_ARCHIVE )
+UI_CVAR( ui_forcerespawn, "ui_forcerespawn", "20", CVAR_ARCHIVE )
+UI_CVAR( ui_gravity, "ui_gravity", "800", CVAR_ARCHIVE )
+UI_CVAR( ui_speed, "ui_speed", "320", CVAR_ARCHIVE )
+UI_CVAR( ui_knockback, "ui_knockback", "1000", CVAR_ARCHIVE )
+UI_CVAR( ui_quadDamageFactor, "ui_quadDamageFactor", "3", CVAR_ARCHIVE )
+
+// Starting things
+UI_CVAR( ui_startingHealth, "ui_startingHealth", "0", CVAR_ARCHIVE )
+UI_CVAR( ui_startingHealthBonus, "ui_startingHealthBonus", "0", CVAR_ARCHIVE )
+UI_CVAR( ui_startingArmor, "ui_startingArmor", "0", CVAR_ARCHIVE )
+UI_CVAR( ui_startingWeapon, "ui_startingWeapon", "", CVAR_ARCHIVE )
+
+// Pickup respawns
+UI_CVAR( ui_weaponRespawn, "ui_weaponRespawn", "5", CVAR_ARCHIVE )
+UI_CVAR( ui_ammoRespawn, "ui_ammoRespawn", "5", CVAR_ARCHIVE )
+UI_CVAR( ui_armorRespawn, "ui_armorRespawn", "25", CVAR_ARCHIVE )
+UI_CVAR( ui_healthRespawn, "ui_healthRespawn", "35", CVAR_ARCHIVE )
+UI_CVAR( ui_megahealthRespawn, "ui_megahealthRespawn", "35", CVAR_ARCHIVE )
+UI_CVAR( ui_powerupRespawn, "ui_powerupRespawn", "120", CVAR_ARCHIVE )
+UI_CVAR( ui_holdableRespawn, "ui_holdableRespawn", "60", CVAR_ARCHIVE )
+
 // removeweapon bits, exploded per weapon
 UI_CVAR( ui_removeweapon_mg, "ui_removeweapon_mg", "0", CVAR_ARCHIVE )
 UI_CVAR( ui_removeweapon_sg, "ui_removeweapon_sg", "0", CVAR_ARCHIVE )
@@ -274,28 +297,6 @@ UI_CVAR( ui_removepowerup_scout, "ui_removepowerup_scout", "0", CVAR_ARCHIVE )
 UI_CVAR( ui_removepowerup_guard, "ui_removepowerup_guard", "0", CVAR_ARCHIVE )
 UI_CVAR( ui_removepowerup_doubler, "ui_removepowerup_doubler", "0", CVAR_ARCHIVE )
 UI_CVAR( ui_removepowerup_ammoregen, "ui_removepowerup_ammoregen", "0", CVAR_ARCHIVE )
-UI_CVAR( ui_railJump, "ui_railJump", "0", CVAR_ARCHIVE )
-UI_CVAR( ui_railJumpDamage, "ui_railJumpDamage", "100", CVAR_ARCHIVE )
-UI_CVAR( ui_forcerespawn, "ui_forcerespawn", "20", CVAR_ARCHIVE )
-UI_CVAR( ui_gravity, "ui_gravity", "800", CVAR_ARCHIVE )
-UI_CVAR( ui_speed, "ui_speed", "320", CVAR_ARCHIVE )
-UI_CVAR( ui_knockback, "ui_knockback", "1000", CVAR_ARCHIVE )
-UI_CVAR( ui_quadDamageFactor, "ui_quadDamageFactor", "3", CVAR_ARCHIVE )
-
-// Starting things
-UI_CVAR( ui_startingHealth, "ui_startingHealth", "0", CVAR_ARCHIVE )
-UI_CVAR( ui_startingHealthBonus, "ui_startingHealthBonus", "0", CVAR_ARCHIVE )
-UI_CVAR( ui_startingArmor, "ui_startingArmor", "0", CVAR_ARCHIVE )
-UI_CVAR( ui_startingWeapon, "ui_startingWeapon", "", CVAR_ARCHIVE )
-
-// Pickup respawns
-UI_CVAR( ui_weaponRespawn, "ui_weaponRespawn", "5", CVAR_ARCHIVE )
-UI_CVAR( ui_ammoRespawn, "ui_ammoRespawn", "5", CVAR_ARCHIVE )
-UI_CVAR( ui_armorRespawn, "ui_armorRespawn", "25", CVAR_ARCHIVE )
-UI_CVAR( ui_healthRespawn, "ui_healthRespawn", "35", CVAR_ARCHIVE )
-UI_CVAR( ui_megahealthRespawn, "ui_megahealthRespawn", "35", CVAR_ARCHIVE )
-UI_CVAR( ui_powerupRespawn, "ui_powerupRespawn", "120", CVAR_ARCHIVE )
-UI_CVAR( ui_holdableRespawn, "ui_holdableRespawn", "60", CVAR_ARCHIVE )
 
 // Direct hit damage cvars
 UI_CVAR( ui_damage_g, "ui_damage_g", "50", CVAR_ARCHIVE )
