@@ -214,6 +214,107 @@ UI_CVAR( ui_startingAmmo_ng, "ui_startingAmmo_ng", "20", CVAR_ARCHIVE )
 UI_CVAR( ui_startingAmmo_pl, "ui_startingAmmo_pl", "10", CVAR_ARCHIVE )
 UI_CVAR( ui_startingAmmo_cg, "ui_startingAmmo_cg", "100", CVAR_ARCHIVE )
 UI_CVAR( ui_startingAmmo_hmg, "ui_startingAmmo_hmg", "50", CVAR_ARCHIVE )
+
+// TODO: Implement into frontend
+// Remaining GFACTORY_CVARS with no UI representation yet. Defaults below
+// mirror each cvar's registered default in g_cvar.h/bg_cvar.h.
+
+// General gameplay params
+UI_CVAR( ui_removeammo, "ui_removeammo", "0", CVAR_ARCHIVE )
+UI_CVAR( ui_removeitem, "ui_removeitem", "0", CVAR_ARCHIVE )
+UI_CVAR( ui_removepowerup, "ui_removepowerup", "0", CVAR_ARCHIVE )
+UI_CVAR( ui_removeweapon, "ui_removeweapon", "0", CVAR_ARCHIVE )
+UI_CVAR( ui_railJump, "ui_railJump", "0", CVAR_ARCHIVE )
+UI_CVAR( ui_railJumpDamage, "ui_railJumpDamage", "100", CVAR_ARCHIVE )
+UI_CVAR( ui_forcerespawn, "ui_forcerespawn", "20", CVAR_ARCHIVE )
+UI_CVAR( ui_gravity, "ui_gravity", "800", CVAR_ARCHIVE )
+UI_CVAR( ui_speed, "ui_speed", "320", CVAR_ARCHIVE )
+UI_CVAR( ui_knockback, "ui_knockback", "1000", CVAR_ARCHIVE )
+UI_CVAR( ui_quadDamageFactor, "ui_quadDamageFactor", "3", CVAR_ARCHIVE )
+
+// Starting things
+UI_CVAR( ui_startingHealth, "ui_startingHealth", "0", CVAR_ARCHIVE )
+UI_CVAR( ui_startingHealthBonus, "ui_startingHealthBonus", "0", CVAR_ARCHIVE )
+UI_CVAR( ui_startingArmor, "ui_startingArmor", "0", CVAR_ARCHIVE )
+UI_CVAR( ui_startingWeapon, "ui_startingWeapon", "", CVAR_ARCHIVE )
+
+// Pickup respawns
+UI_CVAR( ui_weaponRespawn, "ui_weaponRespawn", "5", CVAR_ARCHIVE )
+UI_CVAR( ui_ammoRespawn, "ui_ammoRespawn", "5", CVAR_ARCHIVE )
+UI_CVAR( ui_armorRespawn, "ui_armorRespawn", "25", CVAR_ARCHIVE )
+UI_CVAR( ui_healthRespawn, "ui_healthRespawn", "35", CVAR_ARCHIVE )
+UI_CVAR( ui_megahealthRespawn, "ui_megahealthRespawn", "35", CVAR_ARCHIVE )
+UI_CVAR( ui_powerupRespawn, "ui_powerupRespawn", "120", CVAR_ARCHIVE )
+UI_CVAR( ui_holdableRespawn, "ui_holdableRespawn", "60", CVAR_ARCHIVE )
+
+// Direct hit damage cvars
+UI_CVAR( ui_damage_g, "ui_damage_g", "50", CVAR_ARCHIVE )
+UI_CVAR( ui_damage_mg, "ui_damage_mg", "7", CVAR_ARCHIVE )
+UI_CVAR( ui_damage_sg, "ui_damage_sg", "10", CVAR_ARCHIVE )
+UI_CVAR( ui_damage_gl, "ui_damage_gl", "100", CVAR_ARCHIVE )
+UI_CVAR( ui_damage_rl, "ui_damage_rl", "100", CVAR_ARCHIVE )
+UI_CVAR( ui_damage_lg, "ui_damage_lg", "8", CVAR_ARCHIVE )
+UI_CVAR( ui_damage_rg, "ui_damage_rg", "100", CVAR_ARCHIVE )
+UI_CVAR( ui_damage_pg, "ui_damage_pg", "20", CVAR_ARCHIVE )
+UI_CVAR( ui_damage_bfg, "ui_damage_bfg", "100", CVAR_ARCHIVE )
+UI_CVAR( ui_damage_gh, "ui_damage_gh", "10", CVAR_ARCHIVE )
+UI_CVAR( ui_damage_ng, "ui_damage_ng", "20", CVAR_ARCHIVE )
+UI_CVAR( ui_damage_pl, "ui_damage_pl", "0", CVAR_ARCHIVE )
+UI_CVAR( ui_damage_cg, "ui_damage_cg", "7", CVAR_ARCHIVE )
+UI_CVAR( ui_damage_hmg, "ui_damage_hmg", "8", CVAR_ARCHIVE )
+
+// Splash damage and radius cvars
+UI_CVAR( ui_splashdamage_gl, "ui_splashdamage_gl", "100", CVAR_ARCHIVE )
+UI_CVAR( ui_splashdamage_rl, "ui_splashdamage_rl", "100", CVAR_ARCHIVE )
+UI_CVAR( ui_splashdamage_pg, "ui_splashdamage_pg", "15", CVAR_ARCHIVE )
+UI_CVAR( ui_splashdamage_bfg, "ui_splashdamage_bfg", "100", CVAR_ARCHIVE )
+UI_CVAR( ui_splashdamage_pl, "ui_splashdamage_pl", "100", CVAR_ARCHIVE )
+UI_CVAR( ui_splashradius_gl, "ui_splashradius_gl", "150", CVAR_ARCHIVE )
+UI_CVAR( ui_splashradius_rl, "ui_splashradius_rl", "120", CVAR_ARCHIVE )
+UI_CVAR( ui_splashradius_pg, "ui_splashradius_pg", "20", CVAR_ARCHIVE )
+UI_CVAR( ui_splashradius_bfg, "ui_splashradius_bfg", "120", CVAR_ARCHIVE )
+UI_CVAR( ui_splashradius_pl, "ui_splashradius_pl", "150", CVAR_ARCHIVE )
+
+// Weapon reload times
+UI_CVAR( ui_weapon_reload_gauntlet, "ui_weapon_reload_gauntlet", "400", CVAR_ARCHIVE )
+UI_CVAR( ui_weapon_reload_mg, "ui_weapon_reload_mg", "100", CVAR_ARCHIVE )
+UI_CVAR( ui_weapon_reload_sg, "ui_weapon_reload_sg", "1000", CVAR_ARCHIVE )
+UI_CVAR( ui_weapon_reload_gl, "ui_weapon_reload_gl", "800", CVAR_ARCHIVE )
+UI_CVAR( ui_weapon_reload_rl, "ui_weapon_reload_rl", "800", CVAR_ARCHIVE )
+UI_CVAR( ui_weapon_reload_lg, "ui_weapon_reload_lg", "50", CVAR_ARCHIVE )
+UI_CVAR( ui_weapon_reload_rg, "ui_weapon_reload_rg", "1500", CVAR_ARCHIVE )
+UI_CVAR( ui_weapon_reload_pg, "ui_weapon_reload_pg", "100", CVAR_ARCHIVE )
+UI_CVAR( ui_weapon_reload_bfg, "ui_weapon_reload_bfg", "200", CVAR_ARCHIVE )
+UI_CVAR( ui_weapon_reload_hook, "ui_weapon_reload_hook", "400", CVAR_ARCHIVE )
+UI_CVAR( ui_weapon_reload_ng, "ui_weapon_reload_ng", "1000", CVAR_ARCHIVE )
+UI_CVAR( ui_weapon_reload_prox, "ui_weapon_reload_prox", "800", CVAR_ARCHIVE )
+UI_CVAR( ui_weapon_reload_cg, "ui_weapon_reload_cg", "30", CVAR_ARCHIVE )
+UI_CVAR( ui_weapon_reload_hmg, "ui_weapon_reload_hmg", "75", CVAR_ARCHIVE )
+
+// SG Settings
+UI_CVAR( ui_sgPellets, "ui_sgPellets", "11", CVAR_ARCHIVE )
+UI_CVAR( ui_sgPelletSpread, "ui_sgPelletSpread", "700", CVAR_ARCHIVE )
+
+// RL Settings
+UI_CVAR( ui_velocity_rl, "ui_velocity_rl", "900", CVAR_ARCHIVE )
+
+// Grapple settings
+UI_CVAR( ui_grappleDelayTime, "ui_grappleDelayTime", "400", CVAR_ARCHIVE )
+UI_CVAR( ui_grappleHoldTime, "ui_grappleHoldTime", "0", CVAR_ARCHIVE )
+UI_CVAR( ui_grappleSpeed, "ui_grappleSpeed", "1600", CVAR_ARCHIVE )
+UI_CVAR( ui_grapplePull, "ui_grapplePull", "800", CVAR_ARCHIVE )
+
+// NG Settings
+UI_CVAR( ui_nailBounce, "ui_nailBounce", "1", CVAR_ARCHIVE )
+
+// PL Settings
+UI_CVAR( ui_proxMineTimeout, "ui_proxMineTimeout", "20000", CVAR_ARCHIVE )
+
+// Obelisk (Overload)
+UI_CVAR( ui_obeliskHealth, "ui_obeliskHealth", "2500", CVAR_ARCHIVE )
+UI_CVAR( ui_obeliskRegenPeriod, "ui_obeliskRegenPeriod", "1", CVAR_ARCHIVE )
+UI_CVAR( ui_obeliskRegenAmount, "ui_obeliskRegenAmount", "15", CVAR_ARCHIVE )
+UI_CVAR( ui_obeliskRespawnDelay, "ui_obeliskRespawnDelay", "10", CVAR_ARCHIVE )
 // END Dimmskii
 
 #undef UI_CVAR

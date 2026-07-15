@@ -3655,6 +3655,94 @@ static void UI_SetFactoryCvarsFromCustom( void ) {
 	trap_Cvar_SetValue( "g_startingAmmo_pl", ui_startingAmmo_pl.integer );
 	trap_Cvar_SetValue( "g_startingAmmo_cg", ui_startingAmmo_cg.integer );
 	trap_Cvar_SetValue( "g_startingAmmo_hmg", ui_startingAmmo_hmg.integer );
+
+	// TODO: Implement into frontend
+	// Remaining GFACTORY_CVARS with no UI representation yet (see ui_cvar.h).
+
+	trap_Cvar_SetValue( "removeammo", ui_removeammo.integer );
+	trap_Cvar_SetValue( "removeitem", ui_removeitem.integer );
+	trap_Cvar_SetValue( "removepowerup", ui_removepowerup.integer );
+	trap_Cvar_SetValue( "removeweapon", ui_removeweapon.integer );
+	trap_Cvar_SetValue( "g_railJump", ui_railJump.integer );
+	trap_Cvar_SetValue( "g_railJumpDamage", ui_railJumpDamage.integer );
+	trap_Cvar_SetValue( "g_forcerespawn", ui_forcerespawn.integer );
+	trap_Cvar_SetValue( "g_gravity", ui_gravity.integer );
+	trap_Cvar_SetValue( "g_speed", ui_speed.integer );
+	trap_Cvar_SetValue( "g_knockback", ui_knockback.integer );
+	trap_Cvar_SetValue( "g_quadDamageFactor", ui_quadDamageFactor.integer );
+
+	trap_Cvar_SetValue( "g_startingHealth", ui_startingHealth.integer );
+	trap_Cvar_SetValue( "g_startingHealthBonus", ui_startingHealthBonus.integer );
+	trap_Cvar_SetValue( "g_startingArmor", ui_startingArmor.integer );
+	trap_Cvar_Set( "g_startingWeapon", ui_startingWeapon.string );
+
+	trap_Cvar_SetValue( "g_weaponRespawn", ui_weaponRespawn.integer );
+	trap_Cvar_SetValue( "g_ammoRespawn", ui_ammoRespawn.integer );
+	trap_Cvar_SetValue( "g_armorRespawn", ui_armorRespawn.integer );
+	trap_Cvar_SetValue( "g_healthRespawn", ui_healthRespawn.integer );
+	trap_Cvar_SetValue( "g_megahealthRespawn", ui_megahealthRespawn.integer );
+	trap_Cvar_SetValue( "g_powerupRespawn", ui_powerupRespawn.integer );
+	trap_Cvar_SetValue( "g_holdableRespawn", ui_holdableRespawn.integer );
+
+	trap_Cvar_SetValue( "g_damage_g", ui_damage_g.integer );
+	trap_Cvar_SetValue( "g_damage_mg", ui_damage_mg.integer );
+	trap_Cvar_SetValue( "g_damage_sg", ui_damage_sg.integer );
+	trap_Cvar_SetValue( "g_damage_gl", ui_damage_gl.integer );
+	trap_Cvar_SetValue( "g_damage_rl", ui_damage_rl.integer );
+	trap_Cvar_SetValue( "g_damage_lg", ui_damage_lg.integer );
+	trap_Cvar_SetValue( "g_damage_rg", ui_damage_rg.integer );
+	trap_Cvar_SetValue( "g_damage_pg", ui_damage_pg.integer );
+	trap_Cvar_SetValue( "g_damage_bfg", ui_damage_bfg.integer );
+	trap_Cvar_SetValue( "g_damage_gh", ui_damage_gh.integer );
+	trap_Cvar_SetValue( "g_damage_ng", ui_damage_ng.integer );
+	trap_Cvar_SetValue( "g_damage_pl", ui_damage_pl.integer );
+	trap_Cvar_SetValue( "g_damage_cg", ui_damage_cg.integer );
+	trap_Cvar_SetValue( "g_damage_hmg", ui_damage_hmg.integer );
+
+	trap_Cvar_SetValue( "g_splashdamage_gl", ui_splashdamage_gl.integer );
+	trap_Cvar_SetValue( "g_splashdamage_rl", ui_splashdamage_rl.integer );
+	trap_Cvar_SetValue( "g_splashdamage_pg", ui_splashdamage_pg.integer );
+	trap_Cvar_SetValue( "g_splashdamage_bfg", ui_splashdamage_bfg.integer );
+	trap_Cvar_SetValue( "g_splashdamage_pl", ui_splashdamage_pl.integer );
+	trap_Cvar_SetValue( "g_splashradius_gl", ui_splashradius_gl.integer );
+	trap_Cvar_SetValue( "g_splashradius_rl", ui_splashradius_rl.integer );
+	trap_Cvar_SetValue( "g_splashradius_pg", ui_splashradius_pg.integer );
+	trap_Cvar_SetValue( "g_splashradius_bfg", ui_splashradius_bfg.integer );
+	trap_Cvar_SetValue( "g_splashradius_pl", ui_splashradius_pl.integer );
+
+	trap_Cvar_SetValue( "weapon_reload_gauntlet", ui_weapon_reload_gauntlet.integer );
+	trap_Cvar_SetValue( "weapon_reload_mg", ui_weapon_reload_mg.integer );
+	trap_Cvar_SetValue( "weapon_reload_sg", ui_weapon_reload_sg.integer );
+	trap_Cvar_SetValue( "weapon_reload_gl", ui_weapon_reload_gl.integer );
+	trap_Cvar_SetValue( "weapon_reload_rl", ui_weapon_reload_rl.integer );
+	trap_Cvar_SetValue( "weapon_reload_lg", ui_weapon_reload_lg.integer );
+	trap_Cvar_SetValue( "weapon_reload_rg", ui_weapon_reload_rg.integer );
+	trap_Cvar_SetValue( "weapon_reload_pg", ui_weapon_reload_pg.integer );
+	trap_Cvar_SetValue( "weapon_reload_bfg", ui_weapon_reload_bfg.integer );
+	trap_Cvar_SetValue( "weapon_reload_hook", ui_weapon_reload_hook.integer );
+	trap_Cvar_SetValue( "weapon_reload_ng", ui_weapon_reload_ng.integer );
+	trap_Cvar_SetValue( "weapon_reload_prox", ui_weapon_reload_prox.integer );
+	trap_Cvar_SetValue( "weapon_reload_cg", ui_weapon_reload_cg.integer );
+	trap_Cvar_SetValue( "weapon_reload_hmg", ui_weapon_reload_hmg.integer );
+
+	trap_Cvar_SetValue( "g_sgPellets", ui_sgPellets.integer );
+	trap_Cvar_SetValue( "g_sgPelletSpread", ui_sgPelletSpread.integer );
+
+	trap_Cvar_SetValue( "g_velocity_rl", ui_velocity_rl.integer );
+
+	trap_Cvar_SetValue( "g_grappleDelayTime", ui_grappleDelayTime.integer );
+	trap_Cvar_SetValue( "g_grappleHoldTime", ui_grappleHoldTime.integer );
+	trap_Cvar_SetValue( "g_grappleSpeed", ui_grappleSpeed.integer );
+	trap_Cvar_SetValue( "g_grapplePull", ui_grapplePull.integer );
+
+	trap_Cvar_SetValue( "g_nailBounce", ui_nailBounce.integer );
+
+	trap_Cvar_SetValue( "g_proxMineTimeout", ui_proxMineTimeout.integer );
+
+	trap_Cvar_SetValue( "g_obeliskHealth", ui_obeliskHealth.integer );
+	trap_Cvar_SetValue( "g_obeliskRegenPeriod", ui_obeliskRegenPeriod.integer );
+	trap_Cvar_SetValue( "g_obeliskRegenAmount", ui_obeliskRegenAmount.integer );
+	trap_Cvar_SetValue( "g_obeliskRespawnDelay", ui_obeliskRespawnDelay.integer );
 }
 // END Dimmskii
 
