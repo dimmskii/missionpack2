@@ -3655,9 +3655,6 @@ static void UI_SetFactoryCvarsFromCustom( void ) {
 	trap_Cvar_SetValue( "g_startingAmmo_pl", ui_startingAmmo_pl.integer );
 	trap_Cvar_SetValue( "g_startingAmmo_cg", ui_startingAmmo_cg.integer );
 	trap_Cvar_SetValue( "g_startingAmmo_hmg", ui_startingAmmo_hmg.integer );
-
-	// TODO: Implement into frontend
-	// Remaining GFACTORY_CVARS with no UI representation yet (see customrules.menu).
 	
 	trap_Cvar_SetValue( "g_railJump", ui_railJump.integer );
 	trap_Cvar_SetValue( "g_railJumpDamage", ui_railJumpDamage.integer );
@@ -3679,6 +3676,9 @@ static void UI_SetFactoryCvarsFromCustom( void ) {
 	trap_Cvar_SetValue( "g_megahealthRespawn", ui_megahealthRespawn.integer );
 	trap_Cvar_SetValue( "g_powerupRespawn", ui_powerupRespawn.integer );
 	trap_Cvar_SetValue( "g_holdableRespawn", ui_holdableRespawn.integer );
+
+	// TODO: Implement into frontend
+	// Remaining GFACTORY_CVARS with no UI representation yet (see customrules.menu):
 
 	// Re-assemble removeweapon from split UI cvars
 	{

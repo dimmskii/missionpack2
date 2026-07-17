@@ -215,10 +215,6 @@ UI_CVAR( ui_startingAmmo_pl, "ui_startingAmmo_pl", "10", CVAR_ARCHIVE )
 UI_CVAR( ui_startingAmmo_cg, "ui_startingAmmo_cg", "100", CVAR_ARCHIVE )
 UI_CVAR( ui_startingAmmo_hmg, "ui_startingAmmo_hmg", "50", CVAR_ARCHIVE )
 
-// TODO: Implement into frontend
-// Remaining GFACTORY_CVARS with no UI representation yet. Defaults below
-// mirror each cvar's registered default in g_cvar.h/bg_cvar.h.
-
 // General gameplay params
 UI_CVAR( ui_railJump, "ui_railJump", "0", CVAR_ARCHIVE )
 UI_CVAR( ui_railJumpDamage, "ui_railJumpDamage", "100", CVAR_ARCHIVE )
@@ -229,8 +225,8 @@ UI_CVAR( ui_knockback, "ui_knockback", "1000", CVAR_ARCHIVE )
 UI_CVAR( ui_quadDamageFactor, "ui_quadDamageFactor", "3", CVAR_ARCHIVE )
 
 // Starting things
-UI_CVAR( ui_startingHealth, "ui_startingHealth", "0", CVAR_ARCHIVE )
-UI_CVAR( ui_startingHealthBonus, "ui_startingHealthBonus", "0", CVAR_ARCHIVE )
+UI_CVAR( ui_startingHealth, "ui_startingHealth", "100", CVAR_ARCHIVE )
+UI_CVAR( ui_startingHealthBonus, "ui_startingHealthBonus", "25", CVAR_ARCHIVE )
 UI_CVAR( ui_startingArmor, "ui_startingArmor", "0", CVAR_ARCHIVE )
 UI_CVAR( ui_startingWeapon, "ui_startingWeapon", "", CVAR_ARCHIVE )
 
@@ -242,6 +238,10 @@ UI_CVAR( ui_healthRespawn, "ui_healthRespawn", "35", CVAR_ARCHIVE )
 UI_CVAR( ui_megahealthRespawn, "ui_megahealthRespawn", "35", CVAR_ARCHIVE )
 UI_CVAR( ui_powerupRespawn, "ui_powerupRespawn", "120", CVAR_ARCHIVE )
 UI_CVAR( ui_holdableRespawn, "ui_holdableRespawn", "60", CVAR_ARCHIVE )
+
+// TODO: Implement into frontend
+// Remaining GFACTORY_CVARS with no UI representation yet. Defaults below
+// mirror each cvar's registered default in g_cvar.h/bg_cvar.h.
 
 // removeweapon bits, exploded per weapon
 UI_CVAR( ui_removeweapon_mg, "ui_removeweapon_mg", "0", CVAR_ARCHIVE )
