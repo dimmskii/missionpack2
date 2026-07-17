@@ -201,6 +201,11 @@ typedef struct {
 #define MAX_GAMETYPE_NAME_ALIASES 3
 extern const char *const s_gametypeSpawnNames[GT_MAX_GAME_TYPE][MAX_GAMETYPE_NAME_ALIASES];
 
+qboolean GT_IsTeam( int gt );
+qboolean GT_IsDMGame( int gt );
+qboolean GT_IsArenaGame( int gt );
+qboolean GT_IsFlagGame( int gt );
+
 // Factories parsed from scripts/factories.txt plus any scripts/*.factories
 // add-ons. Shared storage/loading so any module can parse these files -
 // currently the canonical entrypoint is server-side (G_LoadFactories in
