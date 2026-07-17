@@ -913,6 +913,10 @@ static void CG_RegisterGraphics( void ) {
 	cgs.media.medalArena = trap_R_RegisterShaderNoMip( "medal_arena" );
 	
 	// POI pics are raw tga to avoid shaders breaking trap_R_SetColor
+	cgs.media.poiPics[ITEMPOS_REDFLAG] = trap_R_RegisterShader("pois/obj/redflag");
+	cgs.media.poiPics[ITEMPOS_BLUEFLAG] = trap_R_RegisterShader("pois/obj/blueflag");
+	cgs.media.poiPics[ITEMPOS_NEUTRALFLAG] = trap_R_RegisterShader("pois/obj/neutralflag");
+	
 	cgs.media.poiPics[ITEMPOS_ARMOR_BODY]      = trap_R_RegisterShader("pois/items/redarmor");
 	cgs.media.poiPics[ITEMPOS_HEALTH_MEGA]     = trap_R_RegisterShader("pois/items/mega");
 	cgs.media.poiPics[ITEMPOS_TELEPORTER]      = trap_R_RegisterShader("pois/items/teleporter");
