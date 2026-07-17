@@ -11,6 +11,7 @@
 	background "menuback_b"
 	outOfBoundsClick	
 	focusColor 1 .75 0 1
+	disableColor .5 .5 .5 1
 	onEsc {
 		play "sound/misc/menu3.wav" ; close customrules ; open createserver }
 		onOpen { setitemcolor fadebox backcolor 0 0 0 1 ; 
@@ -54,9 +55,21 @@
 		decoration
 	}
 
-	itemDef {
+	itemDef { // Starting weapons
 		name window
-		rect 212 50 209 370	
+		rect 212 50 209 238	
+		style WINDOW_STYLE_FILLED
+		border 1
+		bordercolor 1 1 1 .25
+		forecolor 1 1 1 1
+		backcolor 0 0 0 .25
+		visible 1
+		decoration
+	}
+
+	itemDef { // Starting stuff
+		name window
+		rect 212 290 209 130	
 		style WINDOW_STYLE_FILLED
 		border 1
 		bordercolor 1 1 1 .25
@@ -199,9 +212,9 @@
 	itemDef {
 		name general
 		group grpsettings
-		type ITEM_TYPE_YESNO
-		text "Friendly Fire:"
-		cvar "ui_friendlyFire"
+		type ITEM_TYPE_NUMERICFIELD
+		text "Force Respawn:"
+		cvar "ui_forcerespawn"
 		rect 70 150 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
@@ -218,8 +231,8 @@
 		name general
 		group grpsettings
 		type ITEM_TYPE_YESNO
-		text "Full Team Visibility:"
-		cvar "ui_teamVisibility"
+		text "Friendly Fire:"
+		cvar "ui_friendlyFire"
 		rect 70 165 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
@@ -228,6 +241,28 @@
 		textscale .25        
 		forecolor 1 1 1 1
 		visible 1  
+		cvarTest "ui_gametype"
+		disableCvar { "0" ; "1" ; "2" ; "14" }
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
+		text "Full Team Visibility:"
+		cvar "ui_teamVisibility"
+		rect 70 180 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		cvarTest "ui_gametype"
+		disableCvar { "0" ; "1" ; "2" ; "14" }
 		mouseEnter { fadein message_rule } 
 		mouseExit { fadeout message_rule } 
 	}
@@ -238,7 +273,7 @@
 		type ITEM_TYPE_YESNO
 		text "Spectate Enemies:"
 		cvar "ui_allSpec"
-		rect 70 180 128 12
+		rect 70 195 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
 		maxchars 4
@@ -246,6 +281,8 @@
 		textscale .25        
 		forecolor 1 1 1 1
 		visible 1  
+		cvarTest "ui_gametype"
+		enableCvar { "4" }
 		mouseEnter { fadein message_rule } 
 		mouseExit { fadeout message_rule } 
 	}
@@ -256,7 +293,7 @@
 		type ITEM_TYPE_YESNO
 		text "1F Respawn:"
 		cvar "ui_1FRespawn"
-		rect 70 195 128 12
+		rect 70 210 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
 		maxchars 4
@@ -264,6 +301,8 @@
 		textscale .25        
 		forecolor 1 1 1 1
 		visible 1  
+		cvarTest "ui_gametype"
+		enableCvar { "6" }
 		mouseEnter { fadein message_rule } 
 		mouseExit { fadeout message_rule } 
 	}
@@ -274,7 +313,7 @@
 		type ITEM_TYPE_YESNO
 		text "No Fall Damage:"
 		cvar "ui_dmflags_noFalling"
-		rect 70 225 128 12
+		rect 70 240 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
 		maxchars 4
@@ -292,7 +331,7 @@
 		type ITEM_TYPE_YESNO
 		text "Fixed FOV:"
 		cvar "ui_dmflags_fixedFov"
-		rect 70 240 128 12
+		rect 70 255 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
 		maxchars 4
@@ -310,7 +349,7 @@
 		type ITEM_TYPE_YESNO
 		text "No Footsteps:"
 		cvar "ui_dmflags_noFootsteps"
-		rect 70 255 128 12
+		rect 70 270 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
 		maxchars 4
@@ -321,6 +360,132 @@
 		mouseEnter { fadein message_rule } 
 		mouseExit { fadeout message_rule } 
 	}
+
+// UI_CVAR( ui_gravity, "ui_gravity", "800", CVAR_ARCHIVE ) //
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_NUMERICFIELD
+		text "Gravity:"
+		cvar "ui_gravity"
+		rect 70 300 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+// UI_CVAR( ui_speed, "ui_speed", "320", CVAR_ARCHIVE ) //
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_NUMERICFIELD
+		text "Speed:"
+		cvar "ui_speed"
+		rect 70 315 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+// UI_CVAR( ui_knockback, "ui_knockback", "1000", CVAR_ARCHIVE ) //
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_NUMERICFIELD
+		text "Knockback:"
+		cvar "ui_knockback"
+		rect 70 330 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+// UI_CVAR( ui_quadDamageFactor, "ui_quadDamageFactor", "3", CVAR_ARCHIVE ) //
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_NUMERICFIELD
+		text "Quad Damage Factor:"
+		cvar "ui_quadDamageFactor"
+		rect 70 345 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+
+// UI_CVAR( ui_railJump, "ui_railJump", "0", CVAR_ARCHIVE ) //
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
+		text "Rail Jump:"
+		cvar "ui_railJump"
+		rect 70 360 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+// UI_CVAR( ui_railJumpDamage, "ui_railJumpDamage", "100", CVAR_ARCHIVE ) //
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_YESNO
+		text "Rail Jump Damage"
+		cvar "ui_railJumpDamage:"
+		rect 70 375 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+
+
+
+
 
 
 // SECOND COL -- STARTING WEAPONS/AMMO	//
@@ -860,6 +1025,202 @@
 		mouseExit { fadeout message_rule } 
 	}
 
+
+// SECOND COL -- STARTING STUFF	//
+
+
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_NUMERICFIELD
+		text "Starting Health:"
+		cvar "ui_startingHealth"
+		rect 280 300 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_NUMERICFIELD
+		text "Bonus Health:"
+		cvar "ui_startingHealthBonus"
+		rect 280 315 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_NUMERICFIELD
+		text "Starting Armor:"
+		cvar "ui_startingArmor"
+		rect 280 330 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+
+
+
+// THIRD COL -- Pickup respawns //
+
+// UI_CVAR( ui_weaponRespawn, "ui_weaponRespawn", "5", CVAR_ARCHIVE ) //
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_NUMERICFIELD
+		text "Weapon Respawn:"
+		cvar "ui_weaponRespawn"
+		rect 491 60 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+// UI_CVAR( ui_ammoRespawn, "ui_ammoRespawn", "5", CVAR_ARCHIVE ) //
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_NUMERICFIELD
+		text "Ammo Respawn:"
+		cvar "ui_ammoRespawn"
+		rect 491 75 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+// UI_CVAR( ui_armorRespawn, "ui_armorRespawn", "25", CVAR_ARCHIVE ) //
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_NUMERICFIELD
+		text "Armor Respawn:"
+		cvar "ui_armorRespawn"
+		rect 491 90 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+// UI_CVAR( ui_healthRespawn, "ui_healthRespawn", "35", CVAR_ARCHIVE ) //
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_NUMERICFIELD
+		text "Health Respawn:"
+		cvar "ui_healthRespawn"
+		rect 491 105 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+// UI_CVAR( ui_megahealthRespawn, "ui_megahealthRespawn", "35", CVAR_ARCHIVE ) //
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_NUMERICFIELD
+		text "Megahealth Respawn:"
+		cvar "ui_megahealthRespawn"
+		rect 491 120 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+// UI_CVAR( ui_powerupRespawn, "ui_powerupRespawn", "120", CVAR_ARCHIVE ) //
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_NUMERICFIELD
+		text "Powerup Respawn:"
+		cvar "ui_powerupRespawn"
+		rect 491 135 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
+
+// UI_CVAR( ui_holdableRespawn, "ui_holdableRespawn", "60", CVAR_ARCHIVE ) //
+	itemDef {
+		name general
+		group grpsettings
+		type ITEM_TYPE_NUMERICFIELD
+		text "Holdable Respawn:"
+		cvar "ui_holdableRespawn"
+		rect 491 150 128 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 65
+		maxchars 4
+		textaligny 12
+		textscale .25        
+		forecolor 1 1 1 1
+		visible 1  
+		mouseEnter { fadein message_rule } 
+		mouseExit { fadeout message_rule } 
+	}
 
 
 // BACK BAR	//

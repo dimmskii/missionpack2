@@ -157,4 +157,8 @@ CG_CVAR( cg_itemPOIsIconMaxSize, "cg_itemPOIsIconMaxSize", "32", CVAR_ARCHIVE ) 
 
 // END DIMMSKII
 
+// ~Dimmskii
+CG_CVAR( cg_killBeep, "cg_killBeep", "0", CVAR_ARCHIVE ) // QL-style kill confirmation beep on frag (sound/world/bell_01.ogg)
+// END Dimmskii
+
 #undef CG_CVAR
