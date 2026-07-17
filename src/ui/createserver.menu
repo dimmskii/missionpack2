@@ -473,6 +473,7 @@ itemDef {
 		visible 1
 		cvarTest "ui_hostGameFactory"
 		showCvar { "-1" }
+		action { play "sound/misc/menu1.wav" }
 		mouseEnter { fadein message_customrules }
 		mouseExit { fadeout message_customrules }
 	}

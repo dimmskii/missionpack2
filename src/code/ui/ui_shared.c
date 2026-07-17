@@ -2068,10 +2068,12 @@ qboolean Item_Multi_HandleKey(itemDef_t *item, int key) {
 	if (multiPtr) {
 	  if (Rect_ContainsPoint(&item->window.rect, DC->cursorx, DC->cursory) && item->window.flags & WINDOW_HASFOCUS && item->cvar) {
 			if (key == K_MOUSE1 || key == K_ENTER || key == K_MOUSE2 || key == K_MOUSE3) {
-				int current = Item_Multi_FindCvarByValue(item) + 1;
+				//int current = Item_Multi_FindCvarByValue(item) + 1;
+				int current = Item_Multi_FindCvarByValue(item) + (key == K_MOUSE2 ? -1 : 1); // ~Dimmskii
 				int max = Item_Multi_CountSettings(item);
 				if ( current < 0 || current >= max ) {
-					current = 0;
+					//current = 0;
+					current = (key == K_MOUSE2 ? max-1 : 0); // ~Dimmskii
 				}
 				if (multiPtr->strDef) {
 					DC->setCVar(item->cvar, multiPtr->cvarStr[current]);

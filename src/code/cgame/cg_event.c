@@ -89,6 +89,14 @@ static void CG_Obituary( entityState_t *ent ) {
 		attackerInfo = CG_ConfigString( CS_PLAYERS + attacker );
 	}
 
+// ~Dimmskii
+	// QL-style kill confirmation beep: play locally when we're the one
+	// who scored the kill (not a suicide/world death).
+	if ( cg_killBeep.integer > 0 && attacker == cg.snap->ps.clientNum && attacker != target ) {
+		trap_S_StartLocalSound( cgs.media.killBeepSound, CHAN_LOCAL_SOUND );
+	}
+// END Dimmskii
+
 	targetInfo = CG_ConfigString( CS_PLAYERS + target );
 	if ( !targetInfo[0] )
 	{

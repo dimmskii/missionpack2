@@ -3655,6 +3655,161 @@ static void UI_SetFactoryCvarsFromCustom( void ) {
 	trap_Cvar_SetValue( "g_startingAmmo_pl", ui_startingAmmo_pl.integer );
 	trap_Cvar_SetValue( "g_startingAmmo_cg", ui_startingAmmo_cg.integer );
 	trap_Cvar_SetValue( "g_startingAmmo_hmg", ui_startingAmmo_hmg.integer );
+	
+	trap_Cvar_SetValue( "g_railJump", ui_railJump.integer );
+	trap_Cvar_SetValue( "g_railJumpDamage", ui_railJumpDamage.integer );
+	trap_Cvar_SetValue( "g_forcerespawn", ui_forcerespawn.integer );
+	trap_Cvar_SetValue( "g_gravity", ui_gravity.integer );
+	trap_Cvar_SetValue( "g_speed", ui_speed.integer );
+	trap_Cvar_SetValue( "g_knockback", ui_knockback.integer );
+	trap_Cvar_SetValue( "g_quadDamageFactor", ui_quadDamageFactor.integer );
+
+	trap_Cvar_SetValue( "g_startingHealth", ui_startingHealth.integer );
+	trap_Cvar_SetValue( "g_startingHealthBonus", ui_startingHealthBonus.integer );
+	trap_Cvar_SetValue( "g_startingArmor", ui_startingArmor.integer );
+	trap_Cvar_Set( "g_startingWeapon", ui_startingWeapon.string );
+
+	trap_Cvar_SetValue( "g_weaponRespawn", ui_weaponRespawn.integer );
+	trap_Cvar_SetValue( "g_ammoRespawn", ui_ammoRespawn.integer );
+	trap_Cvar_SetValue( "g_armorRespawn", ui_armorRespawn.integer );
+	trap_Cvar_SetValue( "g_healthRespawn", ui_healthRespawn.integer );
+	trap_Cvar_SetValue( "g_megahealthRespawn", ui_megahealthRespawn.integer );
+	trap_Cvar_SetValue( "g_powerupRespawn", ui_powerupRespawn.integer );
+	trap_Cvar_SetValue( "g_holdableRespawn", ui_holdableRespawn.integer );
+
+	// TODO: Implement into frontend
+	// Remaining GFACTORY_CVARS with no UI representation yet (see customrules.menu):
+
+	// Re-assemble removeweapon from split UI cvars
+	{
+		int removeweapon = 0;
+		if ( ui_removeweapon_mg.integer > 0 ) { removeweapon |= 1; }
+		if ( ui_removeweapon_sg.integer > 0 ) { removeweapon |= 2; }
+		if ( ui_removeweapon_gl.integer > 0 ) { removeweapon |= 4; }
+		if ( ui_removeweapon_rl.integer > 0 ) { removeweapon |= 8; }
+		if ( ui_removeweapon_lg.integer > 0 ) { removeweapon |= 16; }
+		if ( ui_removeweapon_rg.integer > 0 ) { removeweapon |= 32; }
+		if ( ui_removeweapon_pg.integer > 0 ) { removeweapon |= 64; }
+		if ( ui_removeweapon_bfg.integer > 0 ) { removeweapon |= 128; }
+		if ( ui_removeweapon_ng.integer > 0 ) { removeweapon |= 256; }
+		if ( ui_removeweapon_pl.integer > 0 ) { removeweapon |= 512; }
+		if ( ui_removeweapon_cg.integer > 0 ) { removeweapon |= 1024; }
+		if ( ui_removeweapon_hmg.integer > 0 ) { removeweapon |= 2048; }
+		trap_Cvar_SetValue( "removeweapon", removeweapon );
+	}
+
+	// Re-assemble removeammo from split UI cvars
+	{
+		int removeammo = 0;
+		if ( ui_removeammo_mg.integer > 0 ) { removeammo |= 1; }
+		if ( ui_removeammo_sg.integer > 0 ) { removeammo |= 2; }
+		if ( ui_removeammo_gl.integer > 0 ) { removeammo |= 4; }
+		if ( ui_removeammo_rl.integer > 0 ) { removeammo |= 8; }
+		if ( ui_removeammo_lg.integer > 0 ) { removeammo |= 16; }
+		if ( ui_removeammo_rg.integer > 0 ) { removeammo |= 32; }
+		if ( ui_removeammo_pg.integer > 0 ) { removeammo |= 64; }
+		if ( ui_removeammo_bfg.integer > 0 ) { removeammo |= 128; }
+		if ( ui_removeammo_ng.integer > 0 ) { removeammo |= 256; }
+		if ( ui_removeammo_pl.integer > 0 ) { removeammo |= 512; }
+		if ( ui_removeammo_cg.integer > 0 ) { removeammo |= 1024; }
+		if ( ui_removeammo_hmg.integer > 0 ) { removeammo |= 2048; }
+		trap_Cvar_SetValue( "removeammo", removeammo );
+	}
+
+	// Re-assemble removeitem from split UI cvars
+	{
+		int removeitem = 0;
+		if ( ui_removeitem_armorShard.integer > 0 ) { removeitem |= 1; }
+		if ( ui_removeitem_armorCombat.integer > 0 ) { removeitem |= 2; }
+		if ( ui_removeitem_armorBody.integer > 0 ) { removeitem |= 4; }
+		if ( ui_removeitem_healthSmall.integer > 0 ) { removeitem |= 8; }
+		if ( ui_removeitem_health.integer > 0 ) { removeitem |= 16; }
+		if ( ui_removeitem_healthLarge.integer > 0 ) { removeitem |= 32; }
+		if ( ui_removeitem_healthMega.integer > 0 ) { removeitem |= 64; }
+		if ( ui_removeitem_teleporter.integer > 0 ) { removeitem |= 128; }
+		if ( ui_removeitem_medkit.integer > 0 ) { removeitem |= 256; }
+		if ( ui_removeitem_kamikaze.integer > 0 ) { removeitem |= 512; }
+		if ( ui_removeitem_portal.integer > 0 ) { removeitem |= 1024; }
+		if ( ui_removeitem_invulnerability.integer > 0 ) { removeitem |= 2048; }
+		if ( ui_removeitem_armorJacket.integer > 0 ) { removeitem |= 4096; }
+		trap_Cvar_SetValue( "removeitem", removeitem );
+	}
+
+	// Re-assemble removepowerup from split UI cvars
+	{
+		int removepowerup = 0;
+		if ( ui_removepowerup_quad.integer > 0 ) { removepowerup |= 1; }
+		if ( ui_removepowerup_enviro.integer > 0 ) { removepowerup |= 2; }
+		if ( ui_removepowerup_haste.integer > 0 ) { removepowerup |= 4; }
+		if ( ui_removepowerup_invis.integer > 0 ) { removepowerup |= 8; }
+		if ( ui_removepowerup_regen.integer > 0 ) { removepowerup |= 16; }
+		if ( ui_removepowerup_flight.integer > 0 ) { removepowerup |= 32; }
+		if ( ui_removepowerup_scout.integer > 0 ) { removepowerup |= 64; }
+		if ( ui_removepowerup_guard.integer > 0 ) { removepowerup |= 128; }
+		if ( ui_removepowerup_doubler.integer > 0 ) { removepowerup |= 256; }
+		if ( ui_removepowerup_ammoregen.integer > 0 ) { removepowerup |= 512; }
+		trap_Cvar_SetValue( "removepowerup", removepowerup );
+	}
+
+	trap_Cvar_SetValue( "g_damage_g", ui_damage_g.integer );
+	trap_Cvar_SetValue( "g_damage_mg", ui_damage_mg.integer );
+	trap_Cvar_SetValue( "g_damage_sg", ui_damage_sg.integer );
+	trap_Cvar_SetValue( "g_damage_gl", ui_damage_gl.integer );
+	trap_Cvar_SetValue( "g_damage_rl", ui_damage_rl.integer );
+	trap_Cvar_SetValue( "g_damage_lg", ui_damage_lg.integer );
+	trap_Cvar_SetValue( "g_damage_rg", ui_damage_rg.integer );
+	trap_Cvar_SetValue( "g_damage_pg", ui_damage_pg.integer );
+	trap_Cvar_SetValue( "g_damage_bfg", ui_damage_bfg.integer );
+	trap_Cvar_SetValue( "g_damage_gh", ui_damage_gh.integer );
+	trap_Cvar_SetValue( "g_damage_ng", ui_damage_ng.integer );
+	trap_Cvar_SetValue( "g_damage_pl", ui_damage_pl.integer );
+	trap_Cvar_SetValue( "g_damage_cg", ui_damage_cg.integer );
+	trap_Cvar_SetValue( "g_damage_hmg", ui_damage_hmg.integer );
+
+	trap_Cvar_SetValue( "g_splashdamage_gl", ui_splashdamage_gl.integer );
+	trap_Cvar_SetValue( "g_splashdamage_rl", ui_splashdamage_rl.integer );
+	trap_Cvar_SetValue( "g_splashdamage_pg", ui_splashdamage_pg.integer );
+	trap_Cvar_SetValue( "g_splashdamage_bfg", ui_splashdamage_bfg.integer );
+	trap_Cvar_SetValue( "g_splashdamage_pl", ui_splashdamage_pl.integer );
+	trap_Cvar_SetValue( "g_splashradius_gl", ui_splashradius_gl.integer );
+	trap_Cvar_SetValue( "g_splashradius_rl", ui_splashradius_rl.integer );
+	trap_Cvar_SetValue( "g_splashradius_pg", ui_splashradius_pg.integer );
+	trap_Cvar_SetValue( "g_splashradius_bfg", ui_splashradius_bfg.integer );
+	trap_Cvar_SetValue( "g_splashradius_pl", ui_splashradius_pl.integer );
+
+	trap_Cvar_SetValue( "weapon_reload_gauntlet", ui_weapon_reload_gauntlet.integer );
+	trap_Cvar_SetValue( "weapon_reload_mg", ui_weapon_reload_mg.integer );
+	trap_Cvar_SetValue( "weapon_reload_sg", ui_weapon_reload_sg.integer );
+	trap_Cvar_SetValue( "weapon_reload_gl", ui_weapon_reload_gl.integer );
+	trap_Cvar_SetValue( "weapon_reload_rl", ui_weapon_reload_rl.integer );
+	trap_Cvar_SetValue( "weapon_reload_lg", ui_weapon_reload_lg.integer );
+	trap_Cvar_SetValue( "weapon_reload_rg", ui_weapon_reload_rg.integer );
+	trap_Cvar_SetValue( "weapon_reload_pg", ui_weapon_reload_pg.integer );
+	trap_Cvar_SetValue( "weapon_reload_bfg", ui_weapon_reload_bfg.integer );
+	trap_Cvar_SetValue( "weapon_reload_hook", ui_weapon_reload_hook.integer );
+	trap_Cvar_SetValue( "weapon_reload_ng", ui_weapon_reload_ng.integer );
+	trap_Cvar_SetValue( "weapon_reload_prox", ui_weapon_reload_prox.integer );
+	trap_Cvar_SetValue( "weapon_reload_cg", ui_weapon_reload_cg.integer );
+	trap_Cvar_SetValue( "weapon_reload_hmg", ui_weapon_reload_hmg.integer );
+
+	trap_Cvar_SetValue( "g_sgPellets", ui_sgPellets.integer );
+	trap_Cvar_SetValue( "g_sgPelletSpread", ui_sgPelletSpread.integer );
+
+	trap_Cvar_SetValue( "g_velocity_rl", ui_velocity_rl.integer );
+
+	trap_Cvar_SetValue( "g_grappleDelayTime", ui_grappleDelayTime.integer );
+	trap_Cvar_SetValue( "g_grappleHoldTime", ui_grappleHoldTime.integer );
+	trap_Cvar_SetValue( "g_grappleSpeed", ui_grappleSpeed.integer );
+	trap_Cvar_SetValue( "g_grapplePull", ui_grapplePull.integer );
+
+	trap_Cvar_SetValue( "g_nailBounce", ui_nailBounce.integer );
+
+	trap_Cvar_SetValue( "g_proxMineTimeout", ui_proxMineTimeout.integer );
+
+	trap_Cvar_SetValue( "g_obeliskHealth", ui_obeliskHealth.integer );
+	trap_Cvar_SetValue( "g_obeliskRegenPeriod", ui_obeliskRegenPeriod.integer );
+	trap_Cvar_SetValue( "g_obeliskRegenAmount", ui_obeliskRegenAmount.integer );
+	trap_Cvar_SetValue( "g_obeliskRespawnDelay", ui_obeliskRespawnDelay.integer );
 }
 // END Dimmskii
 

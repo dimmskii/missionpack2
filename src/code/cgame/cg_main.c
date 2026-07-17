@@ -541,6 +541,10 @@ static void CG_RegisterSounds( void ) {
 	cgs.media.hitSoundLowArmor = trap_S_RegisterSound( "sound/feedback/hitlo.wav", qfalse );
 //#endif
 
+// ~Dimmskii
+	cgs.media.killBeepSound = trap_S_RegisterSound( "sound/world/bell_01.ogg", qfalse );
+// END Dimmskii
+
 	cgs.media.impressiveSound = trap_S_RegisterSound( "sound/feedback/impressive.wav", qtrue );
 	cgs.media.excellentSound = trap_S_RegisterSound( "sound/feedback/excellent.wav", qtrue );
 	cgs.media.deniedSound = trap_S_RegisterSound( "sound/feedback/denied.wav", qtrue );
