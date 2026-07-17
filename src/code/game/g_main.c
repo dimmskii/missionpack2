@@ -2619,10 +2619,10 @@ static const itemPositionType_t itemPositionTypes[] = {
     { "item_flight",            ITEMPOS_FLIGHT },
 
 	// TA Persistent Powerups
-    // { "item_scout",             ITEMPOS_SCOUT },
-    // { "item_guard",             ITEMPOS_GUARD },
-    // { "item_doubler",           ITEMPOS_DOUBLER },
-    // { "item_ammoregen",         ITEMPOS_AMMOREGEN },
+    //{ "item_scout",             ITEMPOS_SCOUT },
+    //{ "item_guard",             ITEMPOS_GUARD },
+    //{ "item_doubler",           ITEMPOS_DOUBLER },
+    //{ "item_ammoregen",         ITEMPOS_AMMOREGEN },
     
     // Objective/team items
     { "team_CTF_redflag",       ITEMPOS_REDFLAG },   // red flag
