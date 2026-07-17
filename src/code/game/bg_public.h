@@ -611,14 +611,6 @@ typedef struct {
     int type;                   // itemPosType_t value
 } itemPositionType_t;
 
-
-
-// bg_newgame.c
-qboolean GT_IsTeam( int gt );
-qboolean GT_IsDMGame( int gt );
-qboolean GT_IsArenaGame( int gt );
-qboolean GT_IsFlagGame( int gt );
-
 // END DIMMSKII
 
 // How many players on the overlay
