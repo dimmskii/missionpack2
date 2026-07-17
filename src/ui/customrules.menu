@@ -11,6 +11,7 @@
 	background "menuback_b"
 	outOfBoundsClick	
 	focusColor 1 .75 0 1
+	disableColor .5 .5 .5 1
 	onEsc {
 		play "sound/misc/menu3.wav" ; close customrules ; open createserver }
 		onOpen { setitemcolor fadebox backcolor 0 0 0 1 ; 
@@ -240,6 +241,8 @@
 		textscale .25        
 		forecolor 1 1 1 1
 		visible 1  
+		cvarTest "ui_gametype"
+		disableCvar { "0" ; "1" ; "2" ; "14" }
 		mouseEnter { fadein message_rule } 
 		mouseExit { fadeout message_rule } 
 	}
@@ -258,6 +261,8 @@
 		textscale .25        
 		forecolor 1 1 1 1
 		visible 1  
+		cvarTest "ui_gametype"
+		disableCvar { "0" ; "1" ; "2" ; "14" }
 		mouseEnter { fadein message_rule } 
 		mouseExit { fadeout message_rule } 
 	}
@@ -276,6 +281,8 @@
 		textscale .25        
 		forecolor 1 1 1 1
 		visible 1  
+		cvarTest "ui_gametype"
+		enableCvar { "4" }
 		mouseEnter { fadein message_rule } 
 		mouseExit { fadeout message_rule } 
 	}
@@ -294,6 +301,8 @@
 		textscale .25        
 		forecolor 1 1 1 1
 		visible 1  
+		cvarTest "ui_gametype"
+		enableCvar { "6" }
 		mouseEnter { fadein message_rule } 
 		mouseExit { fadeout message_rule } 
 	}
