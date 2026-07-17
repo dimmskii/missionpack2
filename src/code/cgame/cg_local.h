@@ -1045,6 +1045,10 @@ typedef struct {
 	sfxHandle_t	wstbimpdSound;
 	sfxHandle_t	wstbactvSound;
 
+// ~Dimmskii
+	sfxHandle_t killBeepSound;			// QL-style kill confirmation beep (sound/world/bell_01.ogg)
+// END Dimmskii
+
 } cgMedia_t;
 
 
