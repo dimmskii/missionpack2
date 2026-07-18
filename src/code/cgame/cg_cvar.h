@@ -151,15 +151,15 @@ CG_CVAR( cg_teammatePOIsIconMinSize, "cg_teammatePOIsIconMinSize", "4", CVAR_ARC
 CG_CVAR( cg_teammatePOIsIconMaxSize, "cg_teammatePOIsIconMaxSize", "12", CVAR_ARCHIVE ) // No effect unless cg_drawFriend is 2 (cg_teammatePOIs is 1)
 
 // Item POIs
-CG_CVAR( cg_powerupPOIs, "cg_powerupPOIs", "1", CVAR_ARCHIVE )
-CG_CVAR( cg_powerupPOIsTimers, "cg_powerupPOIsTimers", "1", CVAR_ARCHIVE ) // No effect unless cg_powerupPOIs is 1
+CG_CVAR( cg_powerupPOIs, "cg_powerupPOIs", "0", CVAR_ARCHIVE )
+CG_CVAR( cg_powerupPOIsTimers, "cg_powerupPOIsTimers", "0", CVAR_ARCHIVE ) // No effect unless cg_powerupPOIs is 1
 CG_CVAR( cg_powerupPOIsIconSize, "cg_powerupPOIsIconSize", "24", CVAR_ARCHIVE ) // No effect unless cg_powerupPOIs is 1
 CG_CVAR( cg_powerupPOIsIconMinSize, "cg_powerupPOIsIconMinSize", "4", CVAR_ARCHIVE ) // No effect unless cg_powerupPOIs is 1
 CG_CVAR( cg_powerupPOIsIconMaxSize, "cg_powerupPOIsIconMaxSize", "12", CVAR_ARCHIVE ) // No effect unless cg_powerupPOIs is 1
 
-// Objective POIs
+// Flag POIs
 CG_CVAR( cg_flagPOIs, "cg_flagPOIs", "1", CVAR_ARCHIVE )
-CG_CVAR( cg_flagPOIsTexts, "cg_flagPOIsTexts", "1", CVAR_ARCHIVE ) // No effect unless cg_flagPOIs is 1
+CG_CVAR( cg_flagPOIsTexts, "cg_flagPOIsTexts", "0", CVAR_ARCHIVE ) // No effect unless cg_flagPOIs is 1
 CG_CVAR( cg_flagPOIsIconSize, "cg_flagPOIsIconSize", "24", CVAR_ARCHIVE ) // No effect unless cg_flagPOIs is 1
 CG_CVAR( cg_flagPOIsIconMinSize, "cg_flagPOIsIconMinSize", "10", CVAR_ARCHIVE ) // No effect unless cg_flagPOIs is 1
 CG_CVAR( cg_flagPOIsIconMaxSize, "cg_flagPOIsIconMaxSize", "32", CVAR_ARCHIVE ) // No effect unless cg_flagPOIs is 1
