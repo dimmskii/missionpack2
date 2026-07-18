@@ -978,7 +978,7 @@ pois/items/invuln
 // POIs - Objectives
 //
 
-pois/obj/redflag
+pois/flags/red1
 {
 	nopicmip
 	{
@@ -987,8 +987,17 @@ pois/obj/redflag
 		rgbGen vertex
 	}
 }
+pois/flags/red3
+{
+	nopicmip
+	{
+		map icons/iconf_red3.tga
+		blendFunc GL_SRC_ALPHA GL_ONE_MINUS_SRC_ALPHA
+		rgbGen vertex
+	}
+}
 
-pois/obj/blueflag
+pois/flags/blu1
 {
 	nopicmip
 	{
@@ -998,7 +1007,17 @@ pois/obj/blueflag
 	}
 }
 
-pois/obj/neutralflag
+pois/flags/blu3
+{
+	nopicmip
+	{
+		map icons/iconf_blu3.tga
+		blendFunc GL_SRC_ALPHA GL_ONE_MINUS_SRC_ALPHA
+		rgbGen vertex
+	}
+}
+
+pois/flags/neutral1
 {
 	nopicmip
 	{
@@ -1008,7 +1027,15 @@ pois/obj/neutralflag
 	}
 }
 
-
+pois/flags/neutral3
+{
+	nopicmip
+	{
+		map icons/iconf_neutral3.tga
+		blendFunc GL_SRC_ALPHA GL_ONE_MINUS_SRC_ALPHA
+		rgbGen vertex
+	}
+}
 
 
 

@@ -3377,7 +3377,7 @@ static void CG_DrawItemPOI( itemPos_t *ip ) {
 		//if ( !CG_ShouldDrawPowerupPOIs() ) { // TODO: Fix powerup stacks then re-enable. ~Dimmskii
 			return;
 		//}
-		switch (ip->type) {
+		/*switch (ip->type) {
 			case ITEMPOS_ARMOR_BODY:
 				pic = CG_GetPickupIconByClassname("item_armor_body");
 				break;
@@ -3408,7 +3408,7 @@ static void CG_DrawItemPOI( itemPos_t *ip ) {
 			case ITEMPOS_FLIGHT:
 				pic = CG_GetPickupIconByClassname("item_flight");
 				break;
-		}
+		}*/
 		pic = cgs.media.poiPics[ip->type];
 
 		if (ip->timer > 0) {
@@ -3466,43 +3466,47 @@ static void CG_DrawItemPOI( itemPos_t *ip ) {
 		if ( !CG_ShouldDrawFlagPOIs() ) {
 			return;
 		}
-		pic = cgs.media.poiPics[ip->type];
+		switch(ip->type) {
+			case ITEMPOS_REDFLAG:
+				// Set pic color to red
+				memcpy(&color[0], &colorRed[0], sizeof(vec4_t));
+				break;
+			case ITEMPOS_BLUEFLAG:
+				// Set pic color to blue
+				memcpy(&color[0], &colorBlue[0], sizeof(vec4_t));
+				break;
+			default:
+				// Set pic color to walter
+				memcpy(&color[0], &colorWhite[0], sizeof(vec4_t));
+				break;
+		}
+		color[3] = 0.8f;  // Slightly less alpha to start with
 		if (ip->timer > 0) {
-			color[0] = color[1] = color[2] = 0.0f;  // R,G,B to zero
-			color[3] = 0.8f;  // Slightly less alpha to start with
+			pic = cgs.media.poiFlagTaken;
 			if ( (ip->type == ITEMPOS_REDFLAG && cg.snap->ps.persistant[ PERS_TEAM ]==TEAM_RED) || (ip->type == ITEMPOS_BLUEFLAG && cg.snap->ps.persistant[ PERS_TEAM ]==TEAM_BLUE) ) {
-				text = ( (cg_flagPOIsTexts.integer > 1) || (CG_IsTargetedPOI(ip->origin)&&cg_flagPOIsTexts.integer>0) ) ? "RETRIEVE!" : "";
+				text = ( (cg_flagPOIsTexts.integer > 1) || (CG_IsTargetedPOI(ip->origin)&&cg_flagPOIsTexts.integer>0) ) ? "RETRIEVE" : "";
 			} else {
-				text = ( (cg_flagPOIsTexts.integer > 1) || (CG_IsTargetedPOI(ip->origin)&&cg_flagPOIsTexts.integer>0) ) ? "ATTACK!" : "";
+				//text = ( (cg_flagPOIsTexts.integer > 1) || (CG_IsTargetedPOI(ip->origin)&&cg_flagPOIsTexts.integer>0) ) ? "ATTACK" : "";
+				text = NULL; // No attack text when it's already taken
 			}
-			
 			// Set textColor to red
-			textColor[0] = 1.0f;
-			textColor[1] = textColor[2] = 0.0f;  // R,G,B to zero
-			textColor[3] = 0.8f;  // Slightly less alpha to start with
+			memcpy(&textColor[0], &colorRed[0], sizeof(vec4_t));
 			
-			// Set picColor to dark grey because it's taken
-			color[0] = color[1] = color[2] = 0.0f;  // R,G,B to zero
-			color[3] = 0.8f;  // Slightly less alpha to start with
-
+			// Darken the pic color a bit
+			color[0] /= 2.0f;
+			color[1] /= 2.0f;
+			color[2] /= 2.0f;
 		} else {
+			pic = cgs.media.poiFlagBase;
 			if ( (ip->type == ITEMPOS_REDFLAG && cg.snap->ps.persistant[ PERS_TEAM ]==TEAM_RED) || (ip->type == ITEMPOS_BLUEFLAG && cg.snap->ps.persistant[ PERS_TEAM ]==TEAM_BLUE) ) {
 				text = ( (cg_flagPOIsTexts.integer > 1) || (CG_IsTargetedPOI(ip->origin)&&cg_flagPOIsTexts.integer>0) ) ? "DEFEND" : "";
 				// Set textColor to green
-				memcpy(&textColor[0], &colorWhite[0], sizeof(vec4_t));
-				textColor[1] = 1.0f;
-				textColor[0] = textColor[2] = 0.0f;  // R,G,B to zero
-				textColor[3] = 0.8f;  // Slightly less alpha to start with
+				memcpy(&textColor[0], &colorGreen[0], sizeof(vec4_t));
 			} else {
-				text = ( (cg_flagPOIsTexts.integer > 1) || (CG_IsTargetedPOI(ip->origin)&&cg_flagPOIsTexts.integer>0) ) ? "ATTACK!" : "";
-				// Set textColor to red
-				textColor[0] = 1.0f;
-				textColor[1] = textColor[2] = 0.0f;  // R,G,B to zero
-				textColor[3] = 0.8f;  // Slightly less alpha to start with
+				text = ( (cg_flagPOIsTexts.integer > 1) || (CG_IsTargetedPOI(ip->origin)&&cg_flagPOIsTexts.integer>0) ) ? "ATTACK" : "";
+				// Set textColor to yellow
+				memcpy(&textColor[0], &colorYellow[0], sizeof(vec4_t));
 			}
-			
-			// Set color to white because the flag is available
-			memcpy(&color[0], &colorWhite[0], sizeof(vec4_t));
 		}
 		CG_DrawPOI( text, textColor, 1.0f, ip->origin, pic, cg_flagPOIsIconSize.value, cg_flagPOIsIconMinSize.value, cg_flagPOIsIconMaxSize.value, color );
 	}

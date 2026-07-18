@@ -880,6 +880,8 @@ typedef struct {
 // ~Dimmskii
 	qhandle_t	medalArena;
 	qhandle_t	poiPics[ITEMPOS_MAX];
+	qhandle_t	poiFlagBase;
+	qhandle_t	poiFlagTaken;
 // End Dimmskii
 
 	// sounds
