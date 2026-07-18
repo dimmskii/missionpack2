@@ -983,11 +983,11 @@ static void CG_RegisterGraphics( void ) {
 		cgs.gameModels[i] = trap_R_RegisterModel( modelName );
 	}
 	
-#ifdef MIISSIONPACK
+//#ifdef MISSIONPACK
 	cgs.media.cursor = trap_R_RegisterShaderNoMip( "ui/assets/3_cursor3" );
-#else	
-	cgs.media.cursor = trap_R_RegisterShaderNoMip( "menu/art/3_cursor2" );
-#endif
+//#else	
+//	cgs.media.cursor = trap_R_RegisterShaderNoMip( "menu/art/3_cursor2" );
+//#endif
 //#ifdef MISSIONPACK
 	// new stuff
 	cgs.media.patrolShader = trap_R_RegisterShaderNoMip("ui/assets/statusbar/patrol.tga");
@@ -1004,13 +1004,13 @@ static void CG_RegisterGraphics( void ) {
 	cgs.media.flagShaders[1] = trap_R_RegisterShaderNoMip("ui/assets/statusbar/flag_capture.tga");
 	cgs.media.flagShaders[2] = trap_R_RegisterShaderNoMip("ui/assets/statusbar/flag_missing.tga");
 
-	trap_R_RegisterModel( "models/players/james/lower.md3" );
-	trap_R_RegisterModel( "models/players/james/upper.md3" );
-	trap_R_RegisterModel( "models/players/heads/james/james.md3" );
+	//trap_R_RegisterModel( "models/players/james/lower.md3" );
+	//trap_R_RegisterModel( "models/players/james/upper.md3" );
+	//trap_R_RegisterModel( "models/players/heads/james/james.md3" );
 
-	trap_R_RegisterModel( "models/players/janet/lower.md3" );
-	trap_R_RegisterModel( "models/players/janet/upper.md3" );
-	trap_R_RegisterModel( "models/players/heads/janet/janet.md3" );
+	//trap_R_RegisterModel( "models/players/janet/lower.md3" );
+	//trap_R_RegisterModel( "models/players/janet/upper.md3" );
+	//trap_R_RegisterModel( "models/players/heads/janet/janet.md3" );
 
 //#endif
 	CG_ClearParticles ();
