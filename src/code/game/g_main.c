@@ -2686,7 +2686,19 @@ void CheckItemPositions( void ) {
 			timer = item->nextthink > level.time ? item->nextthink - level.time : 0;
 		} else if (itemType == ITEMPOS_REDFLAG || itemType == ITEMPOS_BLUEFLAG || itemType == ITEMPOS_NEUTRALFLAG) {
 			// item->s.frame == 1 indicates the flag is taken/carried by a player TODO: revise this
-            timer = (item->s.frame == 1) ? 1 : 0;
+            //timer = (item->s.frame == 1) ? 1 : 0;
+// ~Dimmskii
+			// Use the real flagStatus_t tracked in teamgame instead of
+			// guessing from the flag entity's animation frame - not at
+			// base (taken or dropped) counts as "not here" for the POI.
+			if ( itemType == ITEMPOS_REDFLAG ) {
+				timer = ( teamgame.redStatus != FLAG_ATBASE ) ? 1 : 0;
+			} else if ( itemType == ITEMPOS_BLUEFLAG ) {
+				timer = ( teamgame.blueStatus != FLAG_ATBASE ) ? 1 : 0;
+			} else {
+				timer = ( teamgame.flagStatus != FLAG_ATBASE ) ? 1 : 0;
+			}
+// END Dimmskii
 		} else {
 			timer = 0; // ??
 		}

@@ -4,17 +4,19 @@
 #include "g_local.h"
 
 
-typedef struct teamgame_s {
-	float			last_flag_capture;
-	int				last_capture_team;
-	flagStatus_t	redStatus;	// CTF
-	flagStatus_t	blueStatus;	// CTF
-	flagStatus_t	flagStatus;	// One Flag CTF
-	int				redTakenTime;
-	int				blueTakenTime;
-	int				redObeliskAttackedTime;
-	int				blueObeliskAttackedTime;
-} teamgame_t;
+// ~Dimmskii - teamgame_t moved to g_team.h so g_main.c can read flag state too
+//typedef struct teamgame_s {
+//	float			last_flag_capture;
+//	int				last_capture_team;
+//	flagStatus_t	redStatus;	// CTF
+//	flagStatus_t	blueStatus;	// CTF
+//	flagStatus_t	flagStatus;	// One Flag CTF
+//	int				redTakenTime;
+//	int				blueTakenTime;
+//	int				redObeliskAttackedTime;
+//	int				blueObeliskAttackedTime;
+//} teamgame_t;
+// END Dimmskii
 
 teamgame_t teamgame;
 
