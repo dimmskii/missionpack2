@@ -3374,9 +3374,9 @@ static void CG_DrawItemPOI( itemPos_t *ip ) {
 	memcpy(&textColor[0], &colorWhite[0], sizeof(vec4_t));
 
 	if (ip->type < ITEMPOS_POWERUP_MAX) { // POWERUPS POIS
-		if ( !CG_ShouldDrawPowerupPOIs() ) {
+		//if ( !CG_ShouldDrawPowerupPOIs() ) { // TODO: Fix powerup stacks then re-enable. ~Dimmskii
 			return;
-		}
+		//}
 		switch (ip->type) {
 			case ITEMPOS_ARMOR_BODY:
 				pic = CG_GetPickupIconByClassname("item_armor_body");
