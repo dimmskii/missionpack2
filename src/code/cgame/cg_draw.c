@@ -3201,9 +3201,9 @@ static void CG_DrawTeammatePOIs( void ) {
 	int			health, armor;
 	trace_t		tr;
 
-	//if ( !CG_ShouldDrawTeammatePOIs() ) {
-	//	return;
-	//}
+	if ( !CG_ShouldDrawTeammatePOIs() ) {
+		return;
+	}
 
 	localTeam = cg.snap->ps.persistant[PERS_TEAM];
 
