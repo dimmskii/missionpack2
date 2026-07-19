@@ -66,6 +66,9 @@
 #define CS_FLAGSTATUS			23		// string indicating flag status in CTF
 #define CS_SHADERSTATE			24
 #define CS_BOTINFO				25
+// ~Dimmskii
+#define CS_ROUND_NUMBER			26		// current round number for round-based gametypes (Arena_BeginRound), 0 if none played yet
+// END Dimmskii
 
 #define	CS_ITEMS				27		// string of 0's and 1's that tell which items are present
 

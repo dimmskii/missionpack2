@@ -1331,6 +1331,83 @@ static void CG_DrawOvertime(rectDef_t *rect, float scale, vec4_t color, int text
 
 	CG_Text_Paint(rect->x, rect->y + rect->h, scale, color, va( "+%i:%02i", mins, seconds ), 0, 0, textStyle);
 }
+
+// ql def CG_ROUND
+// cgs.roundNumber is synced generically via CS_ROUND_NUMBER, bumped once in
+// G_WarmupEnd (round 1) and once per Arena_BeginRound call (round 2+) - both
+// are the shared entry points for any round-based gametype, arena or
+// otherwise, so this keeps working for round-based gametypes added later
+// without needing any client-side changes.
+static void CG_DrawRound(rectDef_t *rect, float scale, vec4_t color, int textStyle) {
+	if ( cgs.roundNumber <= 0 ) {
+		return;
+	}
+	CG_Text_Paint(rect->x, rect->y + rect->h, scale, color, va( "%i", cgs.roundNumber ), 0, 0, textStyle);
+}
+
+// ql def CG_ROUNDTIMER
+// Round start time: cg.warmup (CS_WARMUP) holds the target start of the most
+// recently begun round for round 2+ (Arena_BeginRound sets it and it's never
+// cleared again mid-round), but round 1 begins in G_WarmupEnd, which clears
+// CS_WARMUP to "" instead - cgs.levelStartTime covers that case, since round
+// 1's start coincides with the level/match start. Hidden until the round is
+// actually live (past its warmup countdown), same as CG_DrawOvertime hiding
+// until overtime actually starts.
+static void CG_DrawRoundTimer(rectDef_t *rect, float scale, vec4_t color, int textStyle) {
+	int roundStart, msec, mins, seconds;
+
+	if ( cgs.roundNumber <= 0 ) {
+		return;
+	}
+
+	roundStart = ( cg.warmup > 0 ) ? cg.warmup : cgs.levelStartTime;
+	if ( cg.time < roundStart ) {
+		return;
+	}
+
+	msec = cg.time - roundStart;
+	if ( cgs.roundtimelimit > 0 ) {
+		msec = ( cgs.roundtimelimit * 1000 ) - msec;
+		if ( msec < 0 ) {
+			msec = 0;
+		}
+	}
+
+	seconds = msec / 1000;
+	mins = seconds / 60;
+	seconds -= mins * 60;
+
+	CG_Text_Paint(rect->x, rect->y + rect->h, scale, color, va( "%i:%02i", mins, seconds ), 0, 0, textStyle);
+}
+// END Dimmskii
+
+// ~Dimmskii
+// ql def CG_RACE_STATUS / CG_RACE_TIMES
+// Race (GT_RACE, aliased to GT_SINGLE_PLAYER in bg_newgame.h) has no
+// server-side checkpoint/timing implementation at all yet - not even a
+// configstring or player-state field to read. Wiring up real gametype
+// mechanics isn't in scope for a HUD ownerdraw pass, so these stay no-ops
+// (matches the pre-existing default: unhandled ownerdraw -> nothing drawn).
+// The switch cases exist so this is easy to find and fill in once Race
+// gains real server-side tracking, instead of the ownerdraw silently having
+// no case at all.
+static void CG_DrawRaceStatus(rectDef_t *rect, float scale, vec4_t color, int textStyle) {
+}
+
+static void CG_DrawRaceTimes(rectDef_t *rect, float scale, vec4_t color, int textStyle) {
+}
+
+// ql def CG_RED_OWNED_FLAGS / CG_BLUE_OWNED_FLAGS
+// Same situation as Race: Domination (GT_DOMINATION) has no server-side
+// capture-point ownership tracking yet. Real QL's hud.menu already gates
+// these items behind `ownerdrawflag CG_SHOW_DOMINATION`, so once Domination
+// gains real tracking, only these two draw functions need filling in - the
+// switch wiring and menu-side visibility gating are already correct.
+static void CG_DrawRedOwnedFlags(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader, int textStyle) {
+}
+
+static void CG_DrawBlueOwnedFlags(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader, int textStyle) {
+}
 // END Dimmskii
 
 static void CG_Draw1stPlace(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader, int textStyle) {
@@ -2018,6 +2095,27 @@ void CG_OwnerDraw(float x, float y, float w, float h, float text_x, float text_y
     break;
   case CG_BLUE_CLAN_PLYRS:
     CG_DrawBlueClanPlyrs(&rect, scale, color, textStyle);
+    break;
+
+  case CG_ROUND:
+    CG_DrawRound(&rect, scale, color, textStyle);
+    break;
+  case CG_ROUNDTIMER:
+    CG_DrawRoundTimer(&rect, scale, color, textStyle);
+    break;
+
+  case CG_RACE_STATUS:
+    CG_DrawRaceStatus(&rect, scale, color, textStyle);
+    break;
+  case CG_RACE_TIMES:
+    CG_DrawRaceTimes(&rect, scale, color, textStyle);
+    break;
+
+  case CG_RED_OWNED_FLAGS:
+    CG_DrawRedOwnedFlags(&rect, scale, color, shader, textStyle);
+    break;
+  case CG_BLUE_OWNED_FLAGS:
+    CG_DrawBlueOwnedFlags(&rect, scale, color, shader, textStyle);
     break;
 // End Dimmskii
 

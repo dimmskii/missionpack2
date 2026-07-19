@@ -1091,6 +1091,8 @@ typedef struct {
 	int				capturelimit;
 // ~Dimmskii
 	int				roundlimit;
+	int				roundtimelimit;		// serverinfo "roundtimelimit" (g_roundtimelimit), for CG_ROUNDTIMER
+	int				roundNumber;		// CS_ROUND_NUMBER, for CG_ROUND
 	int				g_teamVisibility;
 	int				g_itemTimers;
 // END ~Dimmskii

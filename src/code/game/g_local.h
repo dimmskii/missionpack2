@@ -433,6 +433,7 @@ typedef struct {
 	
 // ~DIMMSKII
 	int			arenaRoundQueued;		// Same as intermission time for ARENA_ROUND_DELAY_TIME (see g_team.c)
+	int			roundNumber;			// current round for round-based gametypes; set to 1 in G_WarmupEnd, incremented in Arena_BeginRound. Broadcast via CS_ROUND_NUMBER for CG_ROUND.
 // END ~DIMMSKII
 	
 	vec3_t		intermission_origin;	// also used for spectator spawns
