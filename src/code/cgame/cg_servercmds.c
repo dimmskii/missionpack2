@@ -181,6 +181,7 @@ void CG_ParseServerinfo( void ) {
 	info = CG_ConfigString( CS_SERVERINFO );
 	cgs.gametype = atoi( Info_ValueForKey( info, "g_gametype" ) );
 	trap_Cvar_Set( "ui_gametype", va( "%i", cgs.gametype ) );
+	trap_Cvar_Set( "cg_gametype", va( "%i", cgs.gametype ) ); // ~Dimmskii - QL HUD compat, see cg_cvar.h
 	cgs.dmflags = atoi( Info_ValueForKey( info, "dmflags" ) );
 	cgs.teamflags = atoi( Info_ValueForKey( info, "teamflags" ) );
 	cgs.fraglimit = atoi( Info_ValueForKey( info, "fraglimit" ) );
