@@ -2007,28 +2007,70 @@ CROSSHAIR
 CG_SetCrosshairColor
 =================
 */
-static void CG_SetCrosshairColor( void ) {
-	static int		colorNum;
+// ~Dimmskii
+// Pulled out of CG_SetCrosshairColor so CG_DrawCrosshair can also read the
+// chosen base color (as opposed to only being able to trap_R_SetColor it
+// directly), for blending with cg_crosshairHealth below.
+static float *CG_GetCrosshairColor( void ) {
 	static float	*colors[] = {
 		colorBlack,
 		colorRed,
 		colorGreen,
 		colorYellow,
-		colorBlue,	
+		colorBlue,
 		colorCyan,
 		colorMagenta,
 		colorWhite,
 		colorOrange,
 		colorPink
 	};
-
-	colorNum = cg_crosshairColor.integer;
+	int colorNum = cg_crosshairColor.integer;
 	if ( colorNum > 9 || colorNum < 0 || !colorNum ) { // if it's larger than 9 or less than 0, set it to white
 		colorNum = 7;
 	}
 	colorNum = ( colorNum ) % ARRAY_LEN( colors );
+	return colors[colorNum];
+}
 
-	trap_R_SetColor( colors[colorNum] );
+// ql-style blend: cg_crosshairColor at full effective health, fading to red
+// as effective health (health + armor-adjusted) drops toward 30, matching
+// CG_GetColorForHealth's low/high landmarks.
+static void CG_ColorForHealthBlend( const float *base, vec4_t hcolor ) {
+	int health, armor, count, max;
+	float t;
+
+	health = cg.snap->ps.stats[STAT_HEALTH];
+	armor = cg.snap->ps.stats[STAT_ARMOR];
+
+	if ( health <= 0 ) {
+		VectorClear( hcolor );	// black, matches CG_GetColorForHealth's dead case
+		hcolor[3] = 1;
+		return;
+	}
+
+	count = armor;
+	max = health * ARMOR_PROTECTION / ( 1.0 - ARMOR_PROTECTION );
+	if ( max < count ) {
+		count = max;
+	}
+	health += count;
+
+	t = ( health - 30.0f ) / 70.0f; // 0 at effective health 30 or below, 1 at 100+
+	if ( t > 1.0f ) {
+		t = 1.0f;
+	} else if ( t < 0.0f ) {
+		t = 0.0f;
+	}
+
+	hcolor[0] = 1.0f + ( base[0] - 1.0f ) * t;	// red[0] is always 1
+	hcolor[1] = base[1] * t;					// red[1] is always 0
+	hcolor[2] = base[2] * t;					// red[2] is always 0
+	hcolor[3] = 1.0f;
+}
+// END Dimmskii
+
+static void CG_SetCrosshairColor( void ) {
+	trap_R_SetColor( CG_GetCrosshairColor() );
 }
 
 
@@ -2060,7 +2102,7 @@ static void CG_DrawCrosshair( void ) {
 	if ( cg_crosshairHealth.integer ) {
 		vec4_t		hcolor;
 
-		CG_ColorForHealth( hcolor );
+		CG_ColorForHealthBlend( CG_GetCrosshairColor(), hcolor ); // ~Dimmskii - blend from cg_crosshairColor instead of always white
 		trap_R_SetColor( hcolor );
 	} else {
 		CG_SetCrosshairColor();
