@@ -1739,6 +1739,7 @@ void CG_LoadHudMenu( void ) {
 	cgDC.Error = &Com_Error; 
 	cgDC.Print = &Com_Printf; 
 	cgDC.ownerDrawWidth = &CG_OwnerDrawWidth;
+	cgDC.setAdjustFrom640Mode = &CG_SetAdjustFrom640Mode; // ~Dimmskii
 	//cgDC.Pause = &CG_Pause;
 	cgDC.registerSound = &trap_S_RegisterSound;
 	cgDC.startBackgroundTrack = &trap_S_StartBackgroundTrack;

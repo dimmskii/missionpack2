@@ -4308,6 +4308,22 @@ void Menu_HandleMouseMove(menuDef_t *menu, float x, float y) {
 
 }
 
+// ~Dimmskii
+// Ported from QL-SRP's UI_ResolveMenuWidescreenMode. Panels that never set the
+// "widescreen" menu keyword keep the always-centered behavior every existing
+// TA/vanilla menuDef relies on; only menus that opt in (like hud.menu's
+// ScoreFrame/msgsArea panels) get edge-anchored.
+static int UI_ResolveMenuWidescreenMode( const menuDef_t *menu ) {
+	if ( !menu ) {
+		return WIDESCREEN_STRETCH;
+	}
+	if ( !menu->widescreenSet && !menu->fullScreen ) {
+		return WIDESCREEN_CENTER;
+	}
+	return menu->widescreen;
+}
+// END Dimmskii
+
 void Menu_Paint(menuDef_t *menu, qboolean forcePaint) {
 	int i;
 
@@ -4326,6 +4342,12 @@ void Menu_Paint(menuDef_t *menu, qboolean forcePaint) {
 	if (forcePaint) {
 		menu->window.flags |= WINDOW_FORCED;
 	}
+
+	// ~Dimmskii
+	if (DC->setAdjustFrom640Mode) {
+		DC->setAdjustFrom640Mode(UI_ResolveMenuWidescreenMode(menu));
+	}
+	// END Dimmskii
 
 	// draw the background if necessary
 	if (menu->fullScreen) {
@@ -5339,11 +5361,13 @@ qboolean MenuParse_fullscreen( itemDef_t *item, int handle ) {
 
 // ~DIMMSKII
 qboolean MenuParse_widescreen( itemDef_t *item, int handle ) {
+	menuDef_t *menu = (menuDef_t*)item;
 	int i;
 	if (!PC_Int_Parse(handle, &i)) {
 		return qfalse;
 	}
-	// TODO: QL Stub. Implement this.
+	menu->widescreen = i;
+	menu->widescreenSet = qtrue;
 	return qtrue;
 }
 //END DIMM
