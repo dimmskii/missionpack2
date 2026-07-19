@@ -363,8 +363,8 @@ itemDef {
       		name display
 		group grpOptions
       		type ITEM_TYPE_YESNO
-		text "Item POIs:"
-		cvar "cg_itemPOIs"
+		text "Powerup POIs:"
+		cvar "cg_powerupPOIs"
 		rect 99 215 256 20
       		textalign ITEM_ALIGN_RIGHT
       		textalignx 128
@@ -378,8 +378,8 @@ itemDef {
       		name display
 		group grpOptions
       		type ITEM_TYPE_MULTI
-		text "Item Timers Above POIs:"
-		cvar "cg_itemTimers"
+		text "Powerup Timers Above POIs:"
+		cvar "cg_powerupPOIsTimers"
 		cvarStrList { "None", "0", "Targeted", "1", "Always", "2"  }
 		rect 99 235 256 20
       		textalign ITEM_ALIGN_RIGHT
@@ -388,7 +388,40 @@ itemDef {
 		textscale .3       
       		forecolor 1 1 1 1
       		visible 0
-		cvarTest "cg_itemPOIs"
+		cvarTest "cg_powerupPOIs"
+		disableCvar { "0" }
+		}
+
+itemDef {
+      		name display
+		group grpOptions
+      		type ITEM_TYPE_YESNO
+		text "Flag POIs:"
+		cvar "cg_flagPOIs"
+		rect 99 255 256 20
+      		textalign ITEM_ALIGN_RIGHT
+      		textalignx 128
+      		textaligny 20
+		textscale .3       
+      		forecolor 1 1 1 1
+      		visible 0
+		}
+
+itemDef {
+      		name display
+		group grpOptions
+      		type ITEM_TYPE_MULTI
+		text "Texts Above Flag POIs:"
+		cvar "cg_flagPOIsTexts"
+		cvarStrList { "None", "0", "Targeted", "1", "Always", "2"  }
+		rect 99 275 256 20
+      		textalign ITEM_ALIGN_RIGHT
+      		textalignx 128
+      		textaligny 20
+		textscale .3       
+      		forecolor 1 1 1 1
+      		visible 0
+		cvarTest "cg_flagPOIs"
 		disableCvar { "0" }
 		}
 

@@ -141,19 +141,31 @@ CG_CVAR( cg_followKiller, "cg_followKiller", "0", CVAR_ARCHIVE )
 //  ~DIMMSKII
 // All POIs
 CG_CVAR( cg_poiTextBgAlpha, "cg_poiTextBgAlpha", "0.3", CVAR_ARCHIVE )
-CG_CVAR( cg_poiMaxDist, "cg_poiMaxDist", "4000", CVAR_ARCHIVE )
+CG_CVAR( cg_poiMaxDist, "cg_poiMaxDist", "32768", CVAR_ARCHIVE )
 
 // Teammate POIs
 CG_CVAR( cg_teammatePOIs, "cg_teammatePOIs", "1", CVAR_ROM ) // Read-only QL compat CG cvar cg_teammatePOIs = (cg_drawFriend.int>1)
 CG_CVAR( cg_teammateNames, "cg_teammateNames", "1", CVAR_ARCHIVE ) // 0=Off 1=Targeted 2=Always. No effect unless cg_drawFriend is 2 (cg_teammatePOIs is 1)
 CG_CVAR( cg_teammatePOIsIconSize, "cg_teammatePOIsIconSize", "8", CVAR_ARCHIVE ) // No effect unless cg_drawFriend is 2 (cg_teammatePOIs is 1)
+CG_CVAR( cg_teammatePOIsIconMinSize, "cg_teammatePOIsIconMinSize", "4", CVAR_ARCHIVE ) // No effect unless cg_drawFriend is 2 (cg_teammatePOIs is 1)
 CG_CVAR( cg_teammatePOIsIconMaxSize, "cg_teammatePOIsIconMaxSize", "12", CVAR_ARCHIVE ) // No effect unless cg_drawFriend is 2 (cg_teammatePOIs is 1)
 
-// Item POIs
-CG_CVAR( cg_itemPOIs, "cg_itemPOIs", "1", CVAR_ARCHIVE )
-CG_CVAR( cg_itemTimers, "cg_itemTimers", "1", CVAR_ARCHIVE ) // No effect unless cg_itemPOIs is 1
-CG_CVAR( cg_itemPOIsIconSize, "cg_itemPOIsIconSize", "24", CVAR_ARCHIVE ) // No effect unless cg_itemPOIs is 1
-CG_CVAR( cg_itemPOIsIconMaxSize, "cg_itemPOIsIconMaxSize", "32", CVAR_ARCHIVE ) // No effect unless cg_itemPOIs is 1
+// Powerup POIs
+CG_CVAR( cg_powerupPOIs, "cg_powerupPOIs", "0", CVAR_ARCHIVE )
+CG_CVAR( cg_powerupPOIsTimers, "cg_powerupPOIsTimers", "1", CVAR_ARCHIVE ) // No effect unless cg_powerupPOIs is 1
+CG_CVAR( cg_powerupPOIsIconSize, "cg_powerupPOIsIconSize", "24", CVAR_ARCHIVE ) // No effect unless cg_powerupPOIs is 1
+CG_CVAR( cg_powerupPOIsIconMinSize, "cg_powerupPOIsIconMinSize", "4", CVAR_ARCHIVE ) // No effect unless cg_powerupPOIs is 1
+CG_CVAR( cg_powerupPOIsIconMaxSize, "cg_powerupPOIsIconMaxSize", "12", CVAR_ARCHIVE ) // No effect unless cg_powerupPOIs is 1
+
+// Flag POIs
+CG_CVAR( cg_flagPOIs, "cg_flagPOIs", "0", CVAR_ARCHIVE )
+CG_CVAR( cg_flagPOIsTexts, "cg_flagPOIsTexts", "0", CVAR_ARCHIVE ) // No effect unless cg_flagPOIs is 1
+CG_CVAR( cg_flagPOIsIconSize, "cg_flagPOIsIconSize", "24", CVAR_ARCHIVE ) // No effect unless cg_flagPOIs is 1
+CG_CVAR( cg_flagPOIsIconMinSize, "cg_flagPOIsIconMinSize", "10", CVAR_ARCHIVE ) // No effect unless cg_flagPOIs is 1
+CG_CVAR( cg_flagPOIsIconMaxSize, "cg_flagPOIsIconMaxSize", "24", CVAR_ARCHIVE ) // No effect unless cg_flagPOIs is 1
+
+// Item timers
+CG_CVAR( cg_itemTimers, "cg_itemTimers", "1", CVAR_ARCHIVE ) //  No longer handled with POI code TODO: Has no effect. Implement this.
 
 // END DIMMSKII
 
