@@ -913,6 +913,10 @@ static void CG_RegisterGraphics( void ) {
 	cgs.media.medalArena = trap_R_RegisterShaderNoMip( "medal_arena" );
 	
 	// POI pics are raw tga to avoid shaders breaking trap_R_SetColor
+	cgs.media.poiPics[ITEMPOS_REDFLAG] = trap_R_RegisterShader("pois/flags/red1");
+	cgs.media.poiPics[ITEMPOS_BLUEFLAG] = trap_R_RegisterShader("pois/flags/blu1");
+	cgs.media.poiPics[ITEMPOS_NEUTRALFLAG] = trap_R_RegisterShader("pois/flags/neutral1");
+	
 	cgs.media.poiPics[ITEMPOS_ARMOR_BODY]      = trap_R_RegisterShader("pois/items/redarmor");
 	cgs.media.poiPics[ITEMPOS_HEALTH_MEGA]     = trap_R_RegisterShader("pois/items/mega");
 	cgs.media.poiPics[ITEMPOS_TELEPORTER]      = trap_R_RegisterShader("pois/items/teleporter");
@@ -926,6 +930,9 @@ static void CG_RegisterGraphics( void ) {
 	cgs.media.poiPics[ITEMPOS_KAMIKAZE]        = trap_R_RegisterShader("pois/items/kamikaze");
 	cgs.media.poiPics[ITEMPOS_PORTAL]          = trap_R_RegisterShader("pois/items/portal");
 	cgs.media.poiPics[ITEMPOS_INVULNERABILITY] = trap_R_RegisterShader("pois/items/invuln");
+	
+	cgs.media.poiFlagBase = cgs.media.poiPics[ITEMPOS_NEUTRALFLAG];
+	cgs.media.poiFlagTaken = trap_R_RegisterShader("pois/flags/neutral3");
 // End Dimmskii
 
 
@@ -979,11 +986,11 @@ static void CG_RegisterGraphics( void ) {
 		cgs.gameModels[i] = trap_R_RegisterModel( modelName );
 	}
 	
-#ifdef MIISSIONPACK
+//#ifdef MISSIONPACK
 	cgs.media.cursor = trap_R_RegisterShaderNoMip( "ui/assets/3_cursor3" );
-#else	
-	cgs.media.cursor = trap_R_RegisterShaderNoMip( "menu/art/3_cursor2" );
-#endif
+//#else	
+//	cgs.media.cursor = trap_R_RegisterShaderNoMip( "menu/art/3_cursor2" );
+//#endif
 //#ifdef MISSIONPACK
 	// new stuff
 	cgs.media.patrolShader = trap_R_RegisterShaderNoMip("ui/assets/statusbar/patrol.tga");
@@ -1000,13 +1007,13 @@ static void CG_RegisterGraphics( void ) {
 	cgs.media.flagShaders[1] = trap_R_RegisterShaderNoMip("ui/assets/statusbar/flag_capture.tga");
 	cgs.media.flagShaders[2] = trap_R_RegisterShaderNoMip("ui/assets/statusbar/flag_missing.tga");
 
-	trap_R_RegisterModel( "models/players/james/lower.md3" );
-	trap_R_RegisterModel( "models/players/james/upper.md3" );
-	trap_R_RegisterModel( "models/players/heads/james/james.md3" );
+	//trap_R_RegisterModel( "models/players/james/lower.md3" );
+	//trap_R_RegisterModel( "models/players/james/upper.md3" );
+	//trap_R_RegisterModel( "models/players/heads/james/james.md3" );
 
-	trap_R_RegisterModel( "models/players/janet/lower.md3" );
-	trap_R_RegisterModel( "models/players/janet/upper.md3" );
-	trap_R_RegisterModel( "models/players/heads/janet/janet.md3" );
+	//trap_R_RegisterModel( "models/players/janet/lower.md3" );
+	//trap_R_RegisterModel( "models/players/janet/upper.md3" );
+	//trap_R_RegisterModel( "models/players/heads/janet/janet.md3" );
 
 //#endif
 	CG_ClearParticles ();

@@ -3108,7 +3108,7 @@ General combined function for usage by CG_DrawTeammatePOI and CG_DrawItemPOI.
 Does the actual POI drawing.
 =============
 */
-static void CG_DrawPOI( const char *text, vec4_t textColor, float barVal, vec3_t worldPos, qhandle_t pic, float picSize, float picSizeMax, vec4_t picColor) {
+static void CG_DrawPOI( const char *text, vec4_t textColor, float barVal, vec3_t worldPos, qhandle_t pic, float picSize, float picSizeMin, float picSizeMax, vec4_t picColor) {
 	float sx, sy, dist, maxdist, w, hw, maxDist, wlabel, hlabel;
 	vec3_t delta;
 	vec4_t	drawColor;
@@ -3129,6 +3129,8 @@ static void CG_DrawPOI( const char *text, vec4_t textColor, float barVal, vec3_t
 	w = picSize * 640.0f / dist;
 	if (w > picSizeMax) {
 		w = picSizeMax;
+	} else if (w < picSizeMin) {
+		w = picSizeMin;
 	}
 	hw = w/2.0f;
 
@@ -3172,7 +3174,7 @@ CG_DrawTeammatePOI
 Draws a single teammate POI marker at world position.
 =============
 */
-CG_DrawTeammatePOI( const char *name, int health, int armor, vec3_t worldPos ) {
+static void CG_DrawTeammatePOI( const char *name, int health, int armor, vec3_t worldPos ) {
 	vec4_t	nameColor;
 	
 	// nameColor based on HP. FIXME: do it better
@@ -3180,7 +3182,7 @@ CG_DrawTeammatePOI( const char *name, int health, int armor, vec3_t worldPos ) {
 	nameColor[1] = nameColor[2] = (float)health/100.0f;
 	nameColor[3] = 1.0f;
 
-	CG_DrawPOI( ( (cg_teammateNames.integer > 1) || (CG_IsTargetedPOI(worldPos)&&cg_teammateNames.integer>0) ) ? name : "", nameColor, (float)health/100.0f, worldPos, cgs.media.friendShader, cg_teammatePOIsIconSize.value, cg_teammatePOIsIconMaxSize.value, colorWhite );
+	CG_DrawPOI( ( (cg_teammateNames.integer > 1) || (CG_IsTargetedPOI(worldPos)&&cg_teammateNames.integer>0) ) ? name : "", nameColor, (float)health/100.0f, worldPos, cgs.media.friendShader, cg_teammatePOIsIconSize.value, cg_teammatePOIsIconMinSize.value, cg_teammatePOIsIconMaxSize.value, colorWhite );
 }
 
 /*
@@ -3199,9 +3201,9 @@ static void CG_DrawTeammatePOIs( void ) {
 	int			health, armor;
 	trace_t		tr;
 
-	//if ( !CG_ShouldDrawTeammatePOIs() ) {
-	//	return;
-	//}
+	if ( !CG_ShouldDrawTeammatePOIs() ) {
+		return;
+	}
 
 	localTeam = cg.snap->ps.persistant[PERS_TEAM];
 
@@ -3326,14 +3328,30 @@ static void CG_DrawTeammatePOIs( void ) {
 
 /*
 =============
-CG_ShouldDrawItemPOIs
+CG_ShouldDrawPowerupPOIs
+
+Returns whether or not to draw powerup POIs.
+=============
+*/
+static qboolean CG_ShouldDrawPowerupPOIs( void ) {
+
+	if ( cg_powerupPOIs.integer < 1 ) {
+		return qfalse;
+	}
+
+	return qtrue;
+}
+
+/*
+=============
+CG_ShouldDrawFlagPOIs
 
 Returns whether or not to draw item POIs.
 =============
 */
-static qboolean CG_ShouldDrawItemPOIs( void ) {
+static qboolean CG_ShouldDrawFlagPOIs( void ) {
 
-	if ( cg_itemPOIs.integer < 1 ) {
+	if ( cg_flagPOIs.integer < 1 ) {
 		return qfalse;
 	}
 
@@ -3347,7 +3365,7 @@ CG_DrawItemPOI
 Draws a single item or objective POI
 =============
 */
-CG_DrawItemPOI( itemPos_t *ip ) {
+static void CG_DrawItemPOI( itemPos_t *ip ) {
 	qhandle_t 	pic;
 	vec4_t 		color, textColor;
 	char		*text;
@@ -3356,7 +3374,10 @@ CG_DrawItemPOI( itemPos_t *ip ) {
 	memcpy(&textColor[0], &colorWhite[0], sizeof(vec4_t));
 
 	if (ip->type < ITEMPOS_POWERUP_MAX) { // POWERUPS POIS
-/*		switch (ip->type) {
+		//if ( !CG_ShouldDrawPowerupPOIs() ) { // TODO: Fix powerup stacks then re-enable. ~Dimmskii
+			return;
+		//}
+		/*switch (ip->type) {
 			case ITEMPOS_ARMOR_BODY:
 				pic = CG_GetPickupIconByClassname("item_armor_body");
 				break;
@@ -3398,8 +3419,8 @@ CG_DrawItemPOI( itemPos_t *ip ) {
 			int minutes = totalSeconds / 60;
 			int seconds = totalSeconds % 60;
 
-			// Set the text to timer depending on client's cg_itemTimers config
-			text = ( (cg_itemTimers.integer > 1) || (CG_IsTargetedPOI(ip->origin)&&cg_itemTimers.integer>0) ) ? va("%02i:%02i", minutes, seconds) : "";
+			// Set the text to timer depending on client's cg_itemPOIsTimers config
+			text = ( (cg_powerupPOIsTimers.integer > 1) || (CG_IsTargetedPOI(ip->origin)&&cg_powerupPOIsTimers.integer>0) ) ? va("%02i:%02i", minutes, seconds) : "";
 
 			// Set picColor to dark grey because it's taken
 			color[0] = color[1] = color[2] = 0.0f;  // R,G,B to zero
@@ -3422,15 +3443,15 @@ CG_DrawItemPOI( itemPos_t *ip ) {
 				return;
 			}
 
-/*
-			*cent = &cg_entities[ ip->entNum ];
 
-			if ( cent->currentValid && !(cent->currentState.eFlags & EF_NODRAW) ) {
-				// The item is physically spawned on the map and visible. 
-				// We don't need a POI icon right now.
-				return;
-			}
-*/
+//			*cent = &cg_entities[ ip->entNum ];
+
+//			if ( cent->currentValid && !(cent->currentState.eFlags & EF_NODRAW) ) {
+//				// The item is physically spawned on the map and visible. 
+//				// We don't need a POI icon right now.
+//				return;
+//			}
+
 
 			// No timer text because powerup is available
 			text = "";
@@ -3439,25 +3460,56 @@ CG_DrawItemPOI( itemPos_t *ip ) {
 			memcpy(&color[0], &colorWhite[0], sizeof(vec4_t));
 		}
 
-		CG_DrawPOI( text, textColor, 1.0f, ip->origin, pic, cg_itemPOIsIconSize.value, cg_itemPOIsIconMaxSize.value, color );
+		CG_DrawPOI( text, textColor, 1.0f, ip->origin, pic, cg_powerupPOIsIconSize.value, cg_powerupPOIsIconMinSize.value, cg_powerupPOIsIconMaxSize.value, color );
 	
-	} /*else if (ip->type == ITEMPOS_REDFLAG || ip->type == ITEMPOS_BLUEFLAG || ip->type == ITEMPOS_NEUTRALFLAG) { // FLAG POIS
-		pic = cgs.media.waterBubbleShader;
-		if (ip->timer > 0) {
-			text = "Flagus McTaken";
-			
-			// Set picColor to dark grey because it's taken
-			color[0] = color[1] = color[2] = 0.0f;  // R,G,B to zero
-			color[3] = 0.8f;  // Slightly less alpha to start with
-
-		} else {
-			text = "Flagus Returnus";
-			
-			// Set color to white because the powerup is available
-			memcpy(&color[0], &colorWhite[0], sizeof(vec4_t));
+	} else if (ip->type == ITEMPOS_REDFLAG || ip->type == ITEMPOS_BLUEFLAG || ip->type == ITEMPOS_NEUTRALFLAG) { // FLAG POIS
+		if ( !CG_ShouldDrawFlagPOIs() ) {
+			return;
 		}
-		CG_DrawPOI( text, textColor, 1.0f, ip->origin, pic, cg_itemPOIsIconSize.value, cg_itemPOIsIconMaxSize.value, color );
-	}*/ // TODO: Expand the system to draw team objectives: flags, harvey, obelisk, etc
+		switch(ip->type) {
+			case ITEMPOS_REDFLAG:
+				// Set pic color to red
+				memcpy(&color[0], &colorRed[0], sizeof(vec4_t));
+				break;
+			case ITEMPOS_BLUEFLAG:
+				// Set pic color to blue
+				memcpy(&color[0], &colorBlue[0], sizeof(vec4_t));
+				break;
+			default:
+				// Set pic color to walter
+				memcpy(&color[0], &colorWhite[0], sizeof(vec4_t));
+				break;
+		}
+		color[3] = 0.8f;  // Slightly less alpha to start with
+		if (ip->timer > 0) {
+			pic = cgs.media.poiFlagTaken;
+			if ( (ip->type == ITEMPOS_REDFLAG && cg.snap->ps.persistant[ PERS_TEAM ]==TEAM_RED) || (ip->type == ITEMPOS_BLUEFLAG && cg.snap->ps.persistant[ PERS_TEAM ]==TEAM_BLUE) ) {
+				text = ( (cg_flagPOIsTexts.integer > 1) || (CG_IsTargetedPOI(ip->origin)&&cg_flagPOIsTexts.integer>0) ) ? "RETRIEVE" : "";
+			} else {
+				//text = ( (cg_flagPOIsTexts.integer > 1) || (CG_IsTargetedPOI(ip->origin)&&cg_flagPOIsTexts.integer>0) ) ? "ATTACK" : "";
+				text = NULL; // No attack text when it's already taken
+			}
+			// Set textColor to red
+			memcpy(&textColor[0], &colorRed[0], sizeof(vec4_t));
+			
+			// Darken the pic color a bit
+			color[0] /= 2.0f;
+			color[1] /= 2.0f;
+			color[2] /= 2.0f;
+		} else {
+			pic = cgs.media.poiFlagBase;
+			if ( (ip->type == ITEMPOS_REDFLAG && cg.snap->ps.persistant[ PERS_TEAM ]==TEAM_RED) || (ip->type == ITEMPOS_BLUEFLAG && cg.snap->ps.persistant[ PERS_TEAM ]==TEAM_BLUE) ) {
+				text = ( (cg_flagPOIsTexts.integer > 1) || (CG_IsTargetedPOI(ip->origin)&&cg_flagPOIsTexts.integer>0) ) ? "DEFEND" : "";
+				// Set textColor to green
+				memcpy(&textColor[0], &colorGreen[0], sizeof(vec4_t));
+			} else {
+				text = ( (cg_flagPOIsTexts.integer > 1) || (CG_IsTargetedPOI(ip->origin)&&cg_flagPOIsTexts.integer>0) ) ? "ATTACK" : "";
+				// Set textColor to yellow
+				memcpy(&textColor[0], &colorYellow[0], sizeof(vec4_t));
+			}
+		}
+		CG_DrawPOI( text, textColor, 1.0f, ip->origin, pic, cg_flagPOIsIconSize.value, cg_flagPOIsIconMinSize.value, cg_flagPOIsIconMaxSize.value, color );
+	}
 }
 
 /*
@@ -3472,10 +3524,6 @@ static void CG_DrawItemPOIs( void ) {
 	itemPos_t	*ip;
 	centity_t	*cent;
 	vec3_t		pos;
-
-	if ( !CG_ShouldDrawItemPOIs() ) {
-		return;
-	}
 
 	if ( cgs.g_itemTimers ) {
 		// Iterate through all entities (up to MAX_GENTITIES)

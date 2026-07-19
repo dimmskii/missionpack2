@@ -72,4 +72,21 @@ int Team_PlayerCount( team_t team );
 int Team_PlayerCountAlive( team_t team );
 int Team_CountTotalHealth( team_t team, qboolean includeDead );
 int Team_CountTotalArmor( team_t team, qboolean includeDead );
+
+// Moved out of g_team.c so other files (e.g. g_main.c's CheckItemPositions)
+// can read real flag state instead of guessing from the flag entity's
+// animation frame.
+typedef struct teamgame_s {
+	float			last_flag_capture;
+	int				last_capture_team;
+	flagStatus_t	redStatus;	// CTF
+	flagStatus_t	blueStatus;	// CTF
+	flagStatus_t	flagStatus;	// One Flag CTF
+	int				redTakenTime;
+	int				blueTakenTime;
+	int				redObeliskAttackedTime;
+	int				blueObeliskAttackedTime;
+} teamgame_t;
+
+extern teamgame_t teamgame;
 // END ~DIMMSKII
