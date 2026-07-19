@@ -568,6 +568,9 @@ typedef struct {
 	int			scoreFadeTime;
 	char		killerName[MAX_NAME_LENGTH+32];
 	int			killerTime;
+// ~Dimmskii
+	char		lastObituary[128];	// most recent obituary line, for CG_PLAYER_OBIT
+// END Dimmskii
 	char			spectatorList[MAX_STRING_CHARS];		// list of names
 	int				spectatorLen;												// length of list
 	float			spectatorWidth;											// width in device units
