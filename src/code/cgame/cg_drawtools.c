@@ -2,6 +2,48 @@
 //
 // cg_drawtools.c -- helper functions called by cg_draw, cg_scoreboard, cg_info, etc
 #include "cg_local.h"
+#include "../../ui/menudef.h" // ~Dimmskii -- for WIDESCREEN_* below
+
+// ~Dimmskii
+// QL retail's per-element widescreen anchor mode, ported from QL-SRP's
+// cg_drawtools.c. Default is WIDESCREEN_CENTER rather than retail's
+// WIDESCREEN_LEFT: this codebase's CG_AdjustFrom640 has always centered
+// everything unconditionally, so any draw call that never opts into a mode
+// (i.e. every existing TA/vanilla itemDef and hardcoded draw) must keep
+// doing exactly that. Only callers that explicitly ask for LEFT/RIGHT/STRETCH
+// get the QL-style edge-anchored behavior. The retail KEYCATCH_CGAME-based
+// auto-centering override is dropped as unneeded complexity for this port.
+static int cgAdjustFrom640Mode = WIDESCREEN_CENTER;
+
+void CG_SetAdjustFrom640Mode( int widescreen ) {
+	cgAdjustFrom640Mode = widescreen;
+}
+
+static void CG_GetAdjustedXScale( float *xScale, float *xBias ) {
+	*xScale = cgs.screenXScale;
+	*xBias = 0.0f;
+
+	if ( cgs.screenXBias <= 0.0f ) {
+		return;
+	}
+
+	if ( cgAdjustFrom640Mode == WIDESCREEN_STRETCH ) {
+		return;
+	}
+
+	*xScale = cgs.screenYScale;
+
+	if ( cgAdjustFrom640Mode == WIDESCREEN_RIGHT ) {
+		*xBias = cgs.screenXBias * 2.0f;
+		return;
+	}
+
+	if ( cgAdjustFrom640Mode != WIDESCREEN_LEFT ) {
+		// WIDESCREEN_CENTER, and our default fallback, both center.
+		*xBias = cgs.screenXBias;
+	}
+}
+// END Dimmskii
 
 /*
 ================
@@ -10,12 +52,18 @@ CG_AdjustFrom640
 Adjusted for resolution and screen aspect ratio
 ================
 */
-void CG_AdjustFrom640( float *x, float *y, float *w, float *h ) 
+void CG_AdjustFrom640( float *x, float *y, float *w, float *h )
 {
 	// scale for screen sizes
-	*x = *x * cgs.screenXScale + cgs.screenXBias;
+// ~Dimmskii
+	float xScale, xBias;
+	CG_GetAdjustedXScale( &xScale, &xBias );
+	//*x = *x * cgs.screenXScale + cgs.screenXBias;
+	*x = *x * xScale + xBias;
 	*y = *y * cgs.screenYScale + cgs.screenYBias;
-	*w *= cgs.screenXScale;
+	//*w *= cgs.screenXScale;
+	*w *= xScale;
+// END Dimmskii
 	*h *= cgs.screenYScale;
 }
 

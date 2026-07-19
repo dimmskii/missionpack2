@@ -1273,6 +1273,9 @@ void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView, qboolean demo
 // cg_drawtools.c
 //
 void CG_AdjustFrom640( float *x, float *y, float *w, float *h );
+// ~Dimmskii
+void CG_SetAdjustFrom640Mode( int widescreen );	// WIDESCREEN_* from menudef.h; default behaves as WIDESCREEN_CENTER (unlike QL retail's WIDESCREEN_LEFT default) so untouched TA draw calls keep their existing always-centered behavior
+// END Dimmskii
 void CG_FillRect( float x, float y, float width, float height, const float *color );
 void CG_FillScreen( const float *color );
 void CG_DrawPic( float x, float y, float width, float height, qhandle_t hShader );
