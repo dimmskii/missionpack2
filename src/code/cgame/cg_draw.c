@@ -2007,10 +2007,44 @@ CROSSHAIR
 CG_SetCrosshairColor
 =================
 */
-// ~Dimmskii
-// Pulled out of CG_SetCrosshairColor so CG_DrawCrosshair can also read the
-// chosen base color (as opposed to only being able to trap_R_SetColor it
-// directly), for blending with cg_crosshairHealth below.
+/*
+static void CG_SetCrosshairColor( void ) {
+	static int		colorNum;
+	static float	*colors[] = {
+		colorBlack,
+		colorRed,
+		colorGreen,
+		colorYellow,
+		colorBlue,	
+		colorCyan,
+		colorMagenta,
+		colorWhite,
+		colorOrange,
+		colorPink
+	};
+
+	colorNum = cg_crosshairColor.integer;
+	if ( colorNum > 9 || colorNum < 0 || !colorNum ) { // if it's larger than 9 or less than 0, set it to white
+		colorNum = 7;
+	}
+	colorNum = ( colorNum ) % ARRAY_LEN( colors );
+
+	trap_R_SetColor( colors[colorNum] );
+}
+*/
+
+
+// ~DIMMSKII
+
+/*
+=================
+CG_SetCrosshairColor
+
+Pulled out of CG_SetCrosshairColor so CG_DrawCrosshair can also read the
+chosen base color (as opposed to only being able to trap_R_SetColor it
+directly), for blending with cg_crosshairHealth below.
+=================
+*/
 static float *CG_GetCrosshairColor( void ) {
 	static float	*colors[] = {
 		colorBlack,
@@ -2067,11 +2101,17 @@ static void CG_ColorForHealthBlend( const float *base, vec4_t hcolor ) {
 	hcolor[2] = base[2] * t;					// red[2] is always 0
 	hcolor[3] = 1.0f;
 }
-// END Dimmskii
 
+/*
+=================
+CG_SetCrosshairColor
+=================
+*/
 static void CG_SetCrosshairColor( void ) {
 	trap_R_SetColor( CG_GetCrosshairColor() );
 }
+
+// END DIMMSKII
 
 
 /*
@@ -2102,6 +2142,7 @@ static void CG_DrawCrosshair( void ) {
 	if ( cg_crosshairHealth.integer ) {
 		vec4_t		hcolor;
 
+		//CG_ColorForHealth( hcolor );
 		CG_ColorForHealthBlend( CG_GetCrosshairColor(), hcolor ); // ~Dimmskii - blend from cg_crosshairColor instead of always white
 		trap_R_SetColor( hcolor );
 	} else {
