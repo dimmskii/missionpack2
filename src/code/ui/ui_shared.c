@@ -4372,6 +4372,18 @@ void Menu_Paint(menuDef_t *menu, qboolean forcePaint) {
 		color[1] = 0;
 		DC->drawRect(menu->window.rect.x, menu->window.rect.y, menu->window.rect.w, menu->window.rect.h, 1, color);
 	}
+
+	// ~Dimmskii
+	// Without this, whatever mode this panel resolved to above stays the
+	// active global mode for every CG_AdjustFrom640 call made after this
+	// function returns - including hardcoded, non-menuDef draws like the
+	// crosshair and CG_DrawPOI's icon/background (CG_DrawItemPOIs/
+	// CG_DrawTeammatePOIs run right after Menu_PaintAll() in CG_Draw2D).
+	// Reset to the universal safe default so that leak can't happen.
+	if (DC->setAdjustFrom640Mode) {
+		DC->setAdjustFrom640Mode(WIDESCREEN_CENTER);
+	}
+	// END Dimmskii
 }
 
 /*
