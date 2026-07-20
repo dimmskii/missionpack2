@@ -2834,10 +2834,24 @@ static void CG_Draw2D( stereoFrame_t stereoFrame )
 	}
 
 	// don't draw center string if scoreboard is up
-	cg.scoreBoardShowing = CG_DrawScoreboard();
+	//cg.scoreBoardShowing = CG_DrawScoreboard();
+	// ~Dimmskii - old-hud mode (cgs.oldHud) uses cg_scoreboard.c's
+	// CG_DrawOldScoreboard instead of the itemDef/menuDef-based
+	// CG_DrawScoreboard above (which looks up "score_menu"/"teamscore_menu"
+	// via Menus_FindByName - both NULL in old-hud mode, since hud.menu never
+	// loads there). CG_DrawOldScoreboard already exists in this codebase,
+	// fully ported (GT_IsTeam/GT_IsArenaGame fixes already applied, tagged
+	// ~Dimmskii/~DIMMSKII in that file) - it was just never called from
+	// anywhere until now.
+	if ( cgs.oldHud ) {
+		cg.scoreBoardShowing = CG_DrawOldScoreboard();
+	} else {
+		cg.scoreBoardShowing = CG_DrawScoreboard();
+	}
 	if ( !cg.scoreBoardShowing ) {
 		CG_DrawCenterString();
 	}
+	// END Dimmskii
 
 	if ( cgs.score_catched ) {
 		float x, y, w, h;
