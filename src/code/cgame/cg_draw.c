@@ -922,6 +922,7 @@ static float CG_DrawTimer( float y ) {
 CG_DrawTeamOverlay
 =================
 */
+//static float CG_DrawTeamOverlay( float y, qboolean right, qboolean upper ) {
 float CG_DrawTeamOverlay( float y, qboolean right, qboolean upper ) { // ~Dimmskii - exported, see cg_local.h; used by cg_olddraw.c's CG_DrawLowerRight_Old
 	int x, w, h, xx;
 	int i, j, len;
