@@ -75,7 +75,10 @@ CG_DrawStatusBar_Old
 ================
 */
 #define STATUSBAR_HEIGHT_OLD 60
-static void CG_DrawStatusBar_Old( void ) {
+// ~Dimmskii - exported (see cg_local.h) so CG_Draw2D (cg_draw.c) can call
+// into it for the debug old-hud overlay. Everything else in this file stays
+// static/internal to cg_olddraw.c.
+void CG_DrawStatusBar_Old( void ) {
 	int			color;
 	centity_t	*cent;
 	playerState_t	*ps;

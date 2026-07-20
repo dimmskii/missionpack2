@@ -1271,6 +1271,13 @@ void CG_AddBufferedSound( sfxHandle_t sfx);
 
 void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView, qboolean demoPlayback );
 
+// ~Dimmskii
+// cg_olddraw.c - vanilla ioquake3's pre-MISSIONPACK status bar HUD, kept
+// alive as a debug overlay for comparing against the itemDef/menuDef .menu
+// HUD system. See the gated call in CG_Draw2D (cg_draw.c).
+void CG_DrawStatusBar_Old( void );
+// END Dimmskii
+
 
 //
 // cg_drawtools.c

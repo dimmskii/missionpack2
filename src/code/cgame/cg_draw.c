@@ -2756,6 +2756,24 @@ static void CG_Draw2D( stereoFrame_t stereoFrame )
 //#else
 //			CG_DrawStatusBar();
 //#endif
+
+			// ~Dimmskii - DEBUG: old-HUD overlay, drawn on top of the .menu
+			// HUD above rather than replacing it, for side-by-side
+			// comparison while cg_olddraw.c gets built out. Gate is a raw
+			// cg_hudFiles.string[0]=='\0' check (not a registered vmCvar_t,
+			// just a direct query - matches CG_LoadHudMenu's own read of
+			// this cvar) rather than a real cvar of its own; that's still
+			// TODO, along with actually disabling the .menu HUD when this
+			// is active instead of just overlaying. Find/replace this block
+			// to change how it's gated later.
+			{
+				char hudFilesBuf[64];
+				trap_Cvar_VariableStringBuffer( "cg_hudFiles", hudFilesBuf, sizeof( hudFilesBuf ) );
+				if ( hudFilesBuf[0] == '\0' ) {
+					CG_DrawStatusBar_Old();
+				}
+			}
+			// END Dimmskii
       
 			CG_DrawAmmoWarning();
 
