@@ -1272,10 +1272,16 @@ void CG_AddBufferedSound( sfxHandle_t sfx);
 void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView, qboolean demoPlayback );
 
 // ~Dimmskii
-// cg_olddraw.c - vanilla ioquake3's pre-MISSIONPACK status bar HUD, kept
-// alive as a debug overlay for comparing against the itemDef/menuDef .menu
-// HUD system. See the gated call in CG_Draw2D (cg_draw.c).
+// cg_olddraw.c - vanilla ioquake3's pre-MISSIONPACK HUD (opt-in via
+// cg_hudFiles ""), for players who want the original Q3 status bar/score
+// box instead of the itemDef/menuDef .menu HUD system. See CG_Draw2D
+// (cg_draw.c) for where these get called.
 void CG_DrawStatusBar_Old( void );
+void CG_DrawLowerRight_Old( void );
+// CG_DrawTeamOverlay itself lives in cg_draw.c (still used by the active
+// MISSIONPACK HUD too) - exported here so cg_olddraw.c's
+// CG_DrawLowerRight_Old can call it.
+float CG_DrawTeamOverlay( float y, qboolean right, qboolean upper );
 // END Dimmskii
 
 

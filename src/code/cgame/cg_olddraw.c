@@ -332,4 +332,311 @@ static void CG_DrawStatusBarFlag_Old( float x, int team ) {
 }
 
 
+// ~Dimmskii - moved from cg_draw.c's commented-out #ifndef MISSIONPACK
+// CG_DrawScores/CG_DrawPowerups/CG_DrawLowerRight block (lower-right corner:
+// small two-score display + active powerup icons/timers). Two real fixes
+// applied while porting, not just an uncomment: the original raw
+// cgs.gametype >= GT_TEAM / >= GT_CTF comparisons assumed the old linear
+// gametype_t ordering (team games all >= GT_TEAM, flag games all >= GT_CTF)
+// and are wrong against our current reshuffled enum (e.g. solo GT_ARENA=14
+// is >= GT_TEAM=3 but isn't a team game) - swapped for the GT_IsTeam/
+// GT_IsFlagGame helpers already used elsewhere in this codebase for exactly
+// this reason. GT_IsFlagGame's own doc comment (bg_newgame.c) confirms it's
+// "the equivalent of pre-QL (i.e. MPP) gt >= GT_CTF", so this is a faithful
+// port, not a behavior change.
+
+#define POWERUP_BLINKS_OLD			5
+#define POWERUP_BLINK_TIME_OLD		1000
+#define PULSE_TIME_OLD				200
+#define PULSE_SCALE_OLD				1.5			// amount to scale up the icons when activating
+
+/*
+=================
+CG_DrawScores_Old
+
+Draw the small two score display
+=================
+*/
+static float CG_DrawScores_Old( float y ) {
+	const char	*s;
+	int			s1, s2, score;
+	int			x, x0, w;
+	int			v;
+	vec4_t		color;
+	float		y1;
+	gitem_t		*item;
+
+	s1 = cgs.scores1;
+	s2 = cgs.scores2;
+
+	y -=  BIGCHAR_HEIGHT + 8 - 4;
+
+	y1 = y;
+
+	// draw from the right side to left
+	if ( GT_IsTeam( cgs.gametype ) ) { // ~Dimmskii - was: cgs.gametype >= GT_TEAM
+		x0 = cgs.screenXmax + 1;
+		color[0] = 0.0f;
+		color[1] = 0.1f;
+		color[2] = 1.0f;
+		color[3] = 0.33f;
+		// second score
+		s = va( "%2i", s2 );
+		w = CG_DrawStrlen( s ) * BIGCHAR_WIDTH + 8;
+		x = x0 - w;
+		CG_FillRect( x, y-4,  w, BIGCHAR_HEIGHT+8, color );
+		if ( cg.snap->ps.persistant[PERS_TEAM] == TEAM_BLUE ) {
+			CG_DrawPic( x, y-4, w, BIGCHAR_HEIGHT+8, cgs.media.selectShader );
+		}
+		CG_DrawString( x0-4, y, s, colorWhite, BIGCHAR_WIDTH, BIGCHAR_HEIGHT, 0, DS_SHADOW | DS_RIGHT );
+
+		if ( cgs.gametype == GT_CTF ) {
+			// Display flag status
+			item = BG_FindItemForPowerup( PW_BLUEFLAG );
+
+			if (item) {
+				y1 = y - BIGCHAR_HEIGHT - 8;
+				if( cgs.blueflag >= 0 && cgs.blueflag <= 2 ) {
+					CG_DrawPic( x, y1-4, w, BIGCHAR_HEIGHT+8, cgs.media.blueFlagShader[cgs.blueflag] );
+				}
+			}
+		}
+		color[0] = 1.0f;
+		color[1] = 0.0f;
+		color[2] = 0.0f;
+		color[3] = 0.33f;
+		// first score
+		x0 = x;
+		s = va( "%2i", s1 );
+		w = CG_DrawStrlen( s ) * BIGCHAR_WIDTH + 8;
+		x -= w;
+		CG_FillRect( x, y-4,  w, BIGCHAR_HEIGHT+8, color );
+		if ( cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED ) {
+			CG_DrawPic( x, y-4, w, BIGCHAR_HEIGHT+8, cgs.media.selectShader );
+		}
+
+		CG_DrawString( x0-4, y, s, colorWhite, BIGCHAR_WIDTH, BIGCHAR_HEIGHT, 0, DS_SHADOW | DS_RIGHT );
+
+		if ( cgs.gametype == GT_CTF ) {
+			// Display flag status
+			item = BG_FindItemForPowerup( PW_REDFLAG );
+
+			if (item) {
+				y1 = y - BIGCHAR_HEIGHT - 8;
+				if( cgs.redflag >= 0 && cgs.redflag <= 2 ) {
+					CG_DrawPic( x, y1-4, w, BIGCHAR_HEIGHT+8, cgs.media.redFlagShader[cgs.redflag] );
+				}
+			}
+		}
+
+		if ( cgs.gametype == GT_1FCTF ) {
+			// Display flag status
+			item = BG_FindItemForPowerup( PW_NEUTRALFLAG );
+
+			if (item) {
+				y1 = y - BIGCHAR_HEIGHT - 8;
+				if( cgs.flagStatus >= 0 && cgs.flagStatus <= 3 ) {
+					CG_DrawPic( x, y1-4, w, BIGCHAR_HEIGHT+8, cgs.media.flagShader[cgs.flagStatus] );
+				}
+			}
+		}
+
+		if ( GT_IsFlagGame( cgs.gametype ) ) { // ~Dimmskii - was: cgs.gametype >= GT_CTF
+			v = cgs.capturelimit;
+		} else {
+			v = cgs.fraglimit;
+		}
+		if ( v ) {
+			s = va( "%2i", v );
+			CG_DrawString( x-4, y, s, colorWhite, BIGCHAR_WIDTH, BIGCHAR_HEIGHT, 0, DS_SHADOW | DS_RIGHT );
+		}
+
+	} else {
+		qboolean	spectator;
+
+		x = cgs.screenXmax + 1;
+
+		score = cg.snap->ps.persistant[PERS_SCORE];
+		spectator = ( cg.snap->ps.persistant[PERS_TEAM] == TEAM_SPECTATOR );
+
+		// always show your score in the second box if not in first place
+		if ( s1 != score ) {
+			s2 = score;
+		}
+		if ( s2 != SCORE_NOT_PRESENT ) {
+			x0 = x;
+			s = va( "%2i", s2 );
+			w = CG_DrawStrlen( s ) * BIGCHAR_WIDTH + 8;
+			x -= w;
+			if ( !spectator && score == s2 && score != s1 ) {
+				color[0] = 1.0f;
+				color[1] = 0.0f;
+				color[2] = 0.0f;
+				color[3] = 0.33f;
+				CG_FillRect( x, y-4,  w, BIGCHAR_HEIGHT+8, color );
+				CG_DrawPic( x, y-4, w, BIGCHAR_HEIGHT+8, cgs.media.selectShader );
+			} else {
+				color[0] = 0.5f;
+				color[1] = 0.5f;
+				color[2] = 0.5f;
+				color[3] = 0.33f;
+				CG_FillRect( x, y-4,  w, BIGCHAR_HEIGHT+8, color );
+			}
+			CG_DrawString( x0-4, y, s, colorWhite, BIGCHAR_WIDTH, BIGCHAR_HEIGHT, 0, DS_SHADOW | DS_RIGHT );
+		}
+
+		// first place
+		if ( s1 != SCORE_NOT_PRESENT ) {
+			x0 = x;
+			s = va( "%2i", s1 );
+			w = CG_DrawStrlen( s ) * BIGCHAR_WIDTH + 8;
+			x -= w;
+			if ( !spectator && score == s1 ) {
+				color[0] = 0.0f;
+				color[1] = 0.1f;
+				color[2] = 1.0f;
+				color[3] = 0.33f;
+				CG_FillRect( x, y-4,  w, BIGCHAR_HEIGHT+8, color );
+				CG_DrawPic( x, y-4, w, BIGCHAR_HEIGHT+8, cgs.media.selectShader );
+			} else {
+				color[0] = 0.5f;
+				color[1] = 0.5f;
+				color[2] = 0.5f;
+				color[3] = 0.33f;
+				CG_FillRect( x, y-4,  w, BIGCHAR_HEIGHT+8, color );
+			}
+			CG_DrawString( x0-4, y, s, colorWhite, BIGCHAR_WIDTH, BIGCHAR_HEIGHT, 0, DS_SHADOW | DS_RIGHT );
+		}
+
+		if ( cgs.fraglimit ) {
+			s = va( "%2i", cgs.fraglimit );
+			CG_DrawString( x-4, y, s, colorWhite, BIGCHAR_WIDTH, BIGCHAR_HEIGHT, 0, DS_SHADOW | DS_RIGHT );
+		}
+	}
+
+	return y1 - 8;
+}
+
+/*
+================
+CG_DrawPowerups_Old
+================
+*/
+static float CG_DrawPowerups_Old( float y ) {
+	int		sorted[MAX_POWERUPS];
+	int		sortedTime[MAX_POWERUPS];
+	int		i, j, k;
+	int		active;
+	playerState_t	*ps;
+	int		t;
+	gitem_t	*item;
+	int		x;
+	int		color;
+	float	size;
+	float	f;
+	static const float colors[2][4] = {
+		{ 0.2f, 1.0f, 0.2f, 1.0f },
+		{ 1.0f, 0.2f, 0.2f, 1.0f }
+	};
+
+	ps = &cg.snap->ps;
+
+	if ( ps->stats[STAT_HEALTH] <= 0 ) {
+		return y;
+	}
+
+	// sort the list by time remaining
+	active = 0;
+	for ( i = 0 ; i < MAX_POWERUPS ; i++ ) {
+		if ( !ps->powerups[ i ] ) {
+			continue;
+		}
+		t = ps->powerups[ i ] - cg.time;
+		// ZOID--don't draw if the power up has unlimited time (999 seconds)
+		// This is true of the CTF flags
+		if ( t < 0 || t > 999000) {
+			continue;
+		}
+
+		// insert into the list
+		for ( j = 0 ; j < active ; j++ ) {
+			if ( sortedTime[j] >= t ) {
+				for ( k = active - 1 ; k >= j ; k-- ) {
+					sorted[k+1] = sorted[k];
+					sortedTime[k+1] = sortedTime[k];
+				}
+				break;
+			}
+		}
+		sorted[j] = i;
+		sortedTime[j] = t;
+		active++;
+	}
+
+	// draw the icons and timers
+	x = cgs.screenXmax + 1 - ICON_SIZE - CHAR_WIDTH * 2;
+	for ( i = 0 ; i < active ; i++ ) {
+		item = BG_FindItemForPowerup( sorted[i] );
+
+		if ( item ) {
+
+			color = 1;
+
+			y -= ICON_SIZE;
+
+			trap_R_SetColor( colors[color] );
+			CG_DrawField_Old( x, y, 2, sortedTime[ i ] / 1000 );
+
+			t = ps->powerups[ sorted[i] ];
+			if ( t - cg.time >= POWERUP_BLINKS_OLD * POWERUP_BLINK_TIME_OLD ) {
+				trap_R_SetColor( NULL );
+			} else {
+				vec4_t	modulate;
+
+				f = (float)( t - cg.time ) / POWERUP_BLINK_TIME_OLD;
+				f -= (int)f;
+				modulate[0] = modulate[1] = modulate[2] = modulate[3] = f;
+				trap_R_SetColor( modulate );
+			}
+
+			if ( cg.powerupActive == sorted[i] &&
+				cg.time - cg.powerupTime < PULSE_TIME_OLD ) {
+				f = 1.0 - ( (float)( cg.time - cg.powerupTime ) / PULSE_TIME_OLD );
+				size = ICON_SIZE * ( 1.0 + ( PULSE_SCALE_OLD - 1.0 ) * f );
+			} else {
+				size = ICON_SIZE;
+			}
+
+			CG_DrawPic( cgs.screenXmax + 1 - size, y + ICON_SIZE / 2 - size / 2,
+				size, size, trap_R_RegisterShader( item->icon ) );
+		} // if ( item )
+	}
+	trap_R_SetColor( NULL );
+
+	return y;
+}
+
+/*
+=====================
+CG_DrawLowerRight_Old
+
+Entry point: small two-score display (top of this section) + active
+powerup icons/timers, optionally preceded by the team overlay if
+cg_drawTeamOverlay is 2. Exported (see cg_local.h).
+=====================
+*/
+void CG_DrawLowerRight_Old( void ) {
+	float	y;
+
+	y = cgs.screenYmax + 1 - STATUSBAR_HEIGHT_OLD;
+
+	if ( GT_IsTeam( cgs.gametype ) && cg_drawTeamOverlay.integer == 2 ) { // ~Dimmskii - was: cgs.gametype >= GT_TEAM
+		y = CG_DrawTeamOverlay( y, qtrue, qfalse );
+	}
+
+	y = CG_DrawScores_Old( y );
+	y = CG_DrawPowerups_Old( y );
+}
+
+
 // End Dimmskii

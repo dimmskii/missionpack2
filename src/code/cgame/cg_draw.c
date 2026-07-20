@@ -922,7 +922,7 @@ static float CG_DrawTimer( float y ) {
 CG_DrawTeamOverlay
 =================
 */
-static float CG_DrawTeamOverlay( float y, qboolean right, qboolean upper ) {
+float CG_DrawTeamOverlay( float y, qboolean right, qboolean upper ) { // ~Dimmskii - exported, see cg_local.h; used by cg_olddraw.c's CG_DrawLowerRight_Old
 	int x, w, h, xx;
 	int i, j, len;
 	const char *p;
@@ -2757,20 +2757,18 @@ static void CG_Draw2D( stereoFrame_t stereoFrame )
 //			CG_DrawStatusBar();
 //#endif
 
-			// ~Dimmskii - DEBUG: old-HUD overlay, drawn on top of the .menu
-			// HUD above rather than replacing it, for side-by-side
-			// comparison while cg_olddraw.c gets built out. Gate is a raw
-			// cg_hudFiles.string[0]=='\0' check (not a registered vmCvar_t,
-			// just a direct query - matches CG_LoadHudMenu's own read of
-			// this cvar) rather than a real cvar of its own; that's still
-			// TODO, along with actually disabling the .menu HUD when this
-			// is active instead of just overlaying. Find/replace this block
-			// to change how it's gated later.
+			// ~Dimmskii - opt-in vanilla Q3 HUD (cg_olddraw.c), for players
+			// who'd rather have the original status bar/score box than the
+			// itemDef/menuDef .menu HUD system. Set cg_hudFiles "" to enable
+			// it. Currently draws on top of the .menu HUD above rather than
+			// replacing it - actually suppressing the .menu HUD while this
+			// is active is still TODO.
 			{
 				char hudFilesBuf[64];
 				trap_Cvar_VariableStringBuffer( "cg_hudFiles", hudFilesBuf, sizeof( hudFilesBuf ) );
 				if ( hudFilesBuf[0] == '\0' ) {
 					CG_DrawStatusBar_Old();
+					CG_DrawLowerRight_Old();
 				}
 			}
 			// END Dimmskii
