@@ -2750,10 +2750,10 @@ static void CG_Draw2D( stereoFrame_t stereoFrame )
 		if ( !cg.showScores && cg.snap->ps.stats[STAT_HEALTH] > 0 ) {
 
 //#ifdef MISSIONPACK
-			if ( cg_drawStatus.integer ) {
-				Menu_PaintAll();
-				CG_DrawTimedMenus();
-			}
+			//if ( cg_drawStatus.integer ) {
+			//	Menu_PaintAll();
+			//	CG_DrawTimedMenus();
+			//}
 //#else
 //			CG_DrawStatusBar();
 //#endif
@@ -2761,16 +2761,21 @@ static void CG_Draw2D( stereoFrame_t stereoFrame )
 			// ~Dimmskii - opt-in vanilla Q3 HUD (cg_olddraw.c), for players
 			// who'd rather have the original status bar/score box than the
 			// itemDef/menuDef .menu HUD system. Set cg_hudFiles "" to enable
-			// it. Currently draws on top of the .menu HUD above rather than
-			// replacing it - actually suppressing the .menu HUD while this
-			// is active is still TODO.
-			{
-				char hudFilesBuf[64];
-				trap_Cvar_VariableStringBuffer( "cg_hudFiles", hudFilesBuf, sizeof( hudFilesBuf ) );
-				if ( hudFilesBuf[0] == '\0' ) {
-					CG_DrawStatusBar_Old();
-					CG_DrawLowerRight_Old();
-				}
+			// it. cgs.oldHud is set once in CG_LoadHudMenu (cg_main.c), which
+			// also skips loading hud.menu/score.menu/teamscore.menu entirely
+			// in that case, so Menu_PaintAll() has nothing of ours left to
+			// paint anyway - this still explicitly skips the call rather than
+			// relying on that, for clarity. Known gap: hud.menu bundles its
+			// own "voiceMenu" sub-definition, so voice chat's menu is also
+			// unavailable in old-hud mode right now (CG_DrawTimedMenus only
+			// auto-closes voiceMenu, calling it here would be harmless either
+			// way, but it's meaningless without the menu present).
+			if ( cgs.oldHud ) {
+				CG_DrawStatusBar_Old();
+				CG_DrawLowerRight_Old();
+			} else if ( cg_drawStatus.integer ) {
+				Menu_PaintAll();
+				CG_DrawTimedMenus();
 			}
 			// END Dimmskii
       

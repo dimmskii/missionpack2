@@ -1752,13 +1752,30 @@ void CG_LoadHudMenu( void ) {
 	Init_Display(&cgDC);
 
 	Menu_Reset();
-	
+
 	trap_Cvar_VariableStringBuffer("cg_hudFiles", buff, sizeof(buff));
 	hudSet = buff;
-	if (hudSet[0] == '\0') {
-		//hudSet = "ui/mpp.txt";
-		hudSet = "ui/hud.txt"; // ~Dimmskii
+
+// ~Dimmskii
+	// cg_hudFiles "" used to just silently fall back to the default set:
+	//if (hudSet[0] == '\0') {
+	//	//hudSet = "ui/mpp.txt";
+	//	hudSet = "ui/hud.txt";
+	//}
+	// Repurposed: empty now means "opt into cg_olddraw.c's vanilla status
+	// bar/score box instead of the itemDef/menuDef .menu HUD" - skip loading
+	// hud.menu/score.menu/teamscore.menu (and whatever they bundle, e.g.
+	// hud.menu's own "voiceMenu" sub-definition) entirely, rather than
+	// falling back to the default set. cgs.oldHud is the single source of
+	// truth other code (CG_Draw2D) checks, set once here rather than
+	// re-querying the cvar every frame. Menu_Reset() above already ran, so
+	// Menus[] stays clean/empty in this case - nothing left to explicitly
+	// "not draw".
+	cgs.oldHud = (qboolean)(hudSet[0] == '\0');
+	if ( cgs.oldHud ) {
+		return;
 	}
+// END Dimmskii
 
 	CG_LoadMenus(hudSet);
 }

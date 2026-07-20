@@ -1187,6 +1187,10 @@ typedef struct {
 
 	float			cursorX;
 	float			cursorY;
+
+// ~Dimmskii
+	qboolean		oldHud;		// set once in CG_LoadHudMenu: qtrue if cg_hudFiles was empty at load time, meaning the itemDef/menuDef .menu HUD was skipped entirely in favor of cg_olddraw.c's vanilla status bar/score box
+// END Dimmskii
 } cgs_t;
 
 // ~DIMMSKII
