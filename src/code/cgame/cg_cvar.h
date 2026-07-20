@@ -143,6 +143,13 @@ CG_CVAR( cg_followKiller, "cg_followKiller", "0", CVAR_ARCHIVE )
 CG_CVAR( cg_poiTextBgAlpha, "cg_poiTextBgAlpha", "0.3", CVAR_ARCHIVE )
 CG_CVAR( cg_poiMaxDist, "cg_poiMaxDist", "32768", CVAR_ARCHIVE )
 
+// QL HUD compat: read-only shadow of cgs.gametype, mirrored in
+// CG_ParseServerinfo (ported from QL-SRP's cg_gametype). Our gametype_t
+// already matches QL's numbering directly through GT_TEAMTOURNAMENT(13), so
+// showCvar literals from a real QL .menu file (e.g. hud.menu's Round panel:
+// cvarTest "cg_gametype" showCvar { "12" }) work unmodified.
+CG_CVAR( cg_gametype, "cg_gametype", "0", CVAR_ROM )
+
 // Teammate POIs
 CG_CVAR( cg_teammatePOIs, "cg_teammatePOIs", "1", CVAR_ROM ) // Read-only QL compat CG cvar cg_teammatePOIs = (cg_drawFriend.int>1)
 CG_CVAR( cg_teammateNames, "cg_teammateNames", "1", CVAR_ARCHIVE ) // 0=Off 1=Targeted 2=Always. No effect unless cg_drawFriend is 2 (cg_teammatePOIs is 1)

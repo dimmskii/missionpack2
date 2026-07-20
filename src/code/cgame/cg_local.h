@@ -568,6 +568,9 @@ typedef struct {
 	int			scoreFadeTime;
 	char		killerName[MAX_NAME_LENGTH+32];
 	int			killerTime;
+// ~Dimmskii
+	char		lastObituary[128];	// most recent obituary line, for CG_PLAYER_OBIT
+// END Dimmskii
 	char			spectatorList[MAX_STRING_CHARS];		// list of names
 	int				spectatorLen;												// length of list
 	float			spectatorWidth;											// width in device units
@@ -1088,6 +1091,8 @@ typedef struct {
 	int				capturelimit;
 // ~Dimmskii
 	int				roundlimit;
+	int				roundtimelimit;		// serverinfo "roundtimelimit" (g_roundtimelimit), for CG_ROUNDTIMER
+	int				roundNumber;		// CS_ROUND_NUMBER, for CG_ROUND
 	int				g_teamVisibility;
 	int				g_itemTimers;
 // END ~Dimmskii
@@ -1270,6 +1275,9 @@ void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView, qboolean demo
 // cg_drawtools.c
 //
 void CG_AdjustFrom640( float *x, float *y, float *w, float *h );
+// ~Dimmskii
+void CG_SetAdjustFrom640Mode( int widescreen );	// WIDESCREEN_* from menudef.h; default behaves as WIDESCREEN_CENTER (unlike QL retail's WIDESCREEN_LEFT default) so untouched TA draw calls keep their existing always-centered behavior
+// END Dimmskii
 void CG_FillRect( float x, float y, float width, float height, const float *color );
 void CG_FillScreen( const float *color );
 void CG_DrawPic( float x, float y, float width, float height, qhandle_t hShader );

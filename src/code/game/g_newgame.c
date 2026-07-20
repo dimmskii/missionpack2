@@ -147,6 +147,10 @@ void Arena_BeginRound( void ) {
 	// Begin new round code
 	level.warmupTime = level.time + g_warmup.integer * 1000;
 	trap_SetConfigstring( CS_WARMUP, va("%i", level.warmupTime) );
+// ~Dimmskii
+	level.roundNumber++;
+	trap_SetConfigstring( CS_ROUND_NUMBER, va("%i", level.roundNumber) );
+// END Dimmskii
 
 	respawnAll();
 	CalculateRanks(); // Make sure scoreboard is sorted immediately? -- AKA Fix my scores please fresh out of spec mod

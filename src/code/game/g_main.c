@@ -1968,6 +1968,13 @@ static void G_WarmupEnd( void )
 	}
 	trap_SetConfigstring( CS_WARMUP, "" );
 	trap_SetConfigstring( CS_LEVEL_START_TIME, va( "%i", level.startTime ) );
+// ~Dimmskii
+	// Round 1 begins here for arena/round-based gametypes (Arena_BeginRound
+	// only fires for round 2+). Left at 0 for non-arena gametypes so
+	// CG_ROUND/CG_ROUNDTIMER's cgs.roundNumber <= 0 guard keeps them hidden.
+	level.roundNumber = isArena ? 1 : 0;
+	trap_SetConfigstring( CS_ROUND_NUMBER, isArena ? "1" : "0" );
+// END Dimmskii
 	
 	client = level.clients;
 	for ( i = 0; i < level.maxclients; i++, client++ ) {

@@ -232,7 +232,11 @@ typedef struct itemDef_s {
 typedef struct {
   Window window;
   const char  *font;								// font
-  qboolean fullScreen;							// covers entire screen 
+  qboolean fullScreen;							// covers entire screen
+	// ~Dimmskii
+	int widescreen;										// WIDESCREEN_* from menudef.h, resolved via UI_ResolveMenuWidescreenMode
+	qboolean widescreenSet;					// qtrue if the "widescreen" menu keyword was parsed
+	// END Dimmskii
   int itemCount;										// number of items;
   int fontIndex;										// 
   int cursorItem;										// which item as the cursor
@@ -337,6 +341,9 @@ typedef struct {
 	void (*Print)(const char *msg, ...);
 	void (*Pause)(qboolean b);
 	int (*ownerDrawWidth)(int ownerDraw, float scale);
+	// ~Dimmskii
+	void (*setAdjustFrom640Mode)(int widescreen);	// WIDESCREEN_* from menudef.h; NULL in contexts (e.g. the ui VM) that don't wire it up
+	// END Dimmskii
 	sfxHandle_t (*registerSound)(const char *name, qboolean compressed);
 	void (*startBackgroundTrack)( const char *intro, const char *loop);
 	void (*stopBackgroundTrack)(void);
