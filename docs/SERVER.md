@@ -34,19 +34,19 @@ The GT_ enums in this mod are as follows:
 | --- | --- |
 | `0` | Free For All (FFA) |
 | `1` | Tournament (Duel) |
-| `2` | `GT_SINGLE_PLAYER` *(Inactive / Unused - QL repurposes this slot for Race, but no server-side race logic exists here yet)* |
+| `2` | ~~`GT_SINGLE_PLAYER`~~ *(Inactive / Unused - QL uses this slot for Race)* |
 | `3` | Team Deathmatch (TDM) |
-| `4` | Clan Arena (`GT_CLAN_ARENA`, aliased as `GT_TEAMARENA`) |
-| `5` | Capture the Flag (CTF) |
+| `4` | Clan Arena (Last Team Standing) |
+| `5` | Capture the Flag |
 | `6` | One Flag CTF |
-| `7` | Overload (`GT_OBELISK`) |
+| `7` | Overload |
 | `8` | Harvester |
-| `9` | Freeze Tag (`GT_FREEZE`) - shares Clan Arena's round-limit infrastructure, but the freeze/thaw player mechanic itself isn't implemented |
-| `10` | Domination *(Inactive / Unused - name only, no server-side capture-point tracking)* |
-| `11` | Attack & Defend *(Inactive / Unused - name only, no server-side implementation)* |
-| `12` | Red Rover *(Inactive / Unused - name only, no server-side implementation)* |
-| `13` | `GT_TEAMTOURNAMENT` *(Inactive / Unused)* |
-| `14` | Arena (solo, `GT_ARENA`) |
+| `9` | ~~Freeze Tag~~ *(Inactive / Unused)* |
+| `10` | ~~Domination~~ *(Inactive / Unused)* |
+| `11` | ~~Attack & Defend~~ *(Inactive / Unused)* |
+| `12` | ~~Red Rover~~ *(Inactive / Unused)* |
+| `13` | ~~`GT_TEAMTOURNAMENT`~~ *(Inactive / Unused)* |
+| `14` | Arena (Last Man Standing) |
 
 *Note: These will change shortly to closer reflect that of Quake Live; this will happen when (hopefully) QL-compatible factories are implemented, whilst expanding upon them. I.e. g_freeze for all gametypes*
 
