@@ -1138,6 +1138,40 @@ qboolean CG_OwnerDrawVisible(int flags) {
 	if (flags & CG_SHOW_IF_PLAYER_HAS_FLAG) {
 		return ( cg.snap->ps.powerups[PW_REDFLAG] || cg.snap->ps.powerups[PW_BLUEFLAG] || cg.snap->ps.powerups[PW_NEUTRALFLAG] ); // ~Dimmskii - was missing an else
 	}
+
+// ~Dimmskii
+	// QL's "clan arena count" panels (redClanPlayers/blueClanPlayers in real
+	// hud.menu) - the real file already hides these for Red Rover via its
+	// own cvarTest/hideCvar, so this only needs to cover the gametype
+	// they're actually meant for.
+	if (flags & CG_SHOW_PLAYERS_REMAINING) {
+		return ( cgs.gametype == GT_CLAN_ARENA );
+	}
+
+	// Team score comparison; tied counts as first place for both sides,
+	// same as CG_GetGameStatusText's existing tie handling above.
+	if (flags & CG_SHOW_IF_RED_IS_FIRST_PLACE) {
+		return ( cg.teamScores[0] >= cg.teamScores[1] );
+	}
+
+	if (flags & CG_SHOW_IF_BLUE_IS_FIRST_PLACE) {
+		return ( cg.teamScores[1] >= cg.teamScores[0] );
+	}
+
+	// Individual rank, not team rank - PERS_RANK means something different
+	// in team games (0/1/2 = red leads/blue leads/tied, the same for every
+	// player regardless of which team they're on, see CalculateRanks in
+	// g_main.c), so these only make sense for non-team gametypes; the real
+	// hud.menu only places them in that context.
+	if (flags & CG_SHOW_IF_PLYR_IS_FIRST_PLACE) {
+		return ( (cg.snap->ps.persistant[PERS_RANK] & ~RANK_TIED_FLAG) == 0 );
+	}
+
+	if (flags & CG_SHOW_IF_PLYR_IS_NOT_FIRST_PLACE) {
+		return ( (cg.snap->ps.persistant[PERS_RANK] & ~RANK_TIED_FLAG) != 0 );
+	}
+// END Dimmskii
+
 	return qfalse;
 }
 
