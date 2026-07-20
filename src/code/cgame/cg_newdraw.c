@@ -1069,94 +1069,74 @@ qboolean CG_OwnerDrawVisible(int flags) {
 	}
 
 // ~Dimmskii
+	// Every check below now returns explicitly both ways for its own bit
+	// instead of only handling one side and falling through - items only
+	// ever set one CG_SHOW_* bit in practice, so a false condition here
+	// must not fall through into unrelated later checks (it used to: e.g.
+	// an item gated only by CG_SHOW_ANYARENAGAME never showed even during
+	// an arena game, since there was no qtrue return on the success path,
+	// and several other checks below could accidentally match on a later,
+	// unrelated flag after silently failing their own condition).
 	if (flags & CG_SHOW_ANYARENAGAME) {
-		if( !GT_IsArenaGame(cgs.gametype) ) {
-			return qfalse;
-		}
+		return GT_IsArenaGame(cgs.gametype);
 	}
 
 	if (flags & CG_SHOW_ANYNONARENAGAME) {
-		if( GT_IsArenaGame(cgs.gametype)  ) {
-			return qfalse;
-		}
+		return !GT_IsArenaGame(cgs.gametype);
 	}
 // END ~Dimmskii
 
 	if (flags & CG_SHOW_ANYTEAMGAME) {
 //		if( cgs.gametype >= GT_TEAM) {
-		if( GT_IsTeam(cgs.gametype) ) { // ~Dimmskii
-			return qtrue;
-		}
+		return GT_IsTeam(cgs.gametype); // ~Dimmskii
 	}
 
 	if (flags & CG_SHOW_ANYNONTEAMGAME) {
 //		if( cgs.gametype < GT_TEAM) {
-		if( !GT_IsTeam(cgs.gametype) ) { // ~Dimmskii
-			return qtrue;
-		}
+		return !GT_IsTeam(cgs.gametype); // ~Dimmskii
 	}
 
 	if (flags & CG_SHOW_HARVESTER) {
-		if( cgs.gametype == GT_HARVESTER ) {
-			return qtrue;
-    } else {
-      return qfalse;
-    }
+		return ( cgs.gametype == GT_HARVESTER );
 	}
 
 	if (flags & CG_SHOW_ONEFLAG) {
-		if( cgs.gametype == GT_1FCTF ) {
-			return qtrue;
-    } else {
-      return qfalse;
-    }
+		return ( cgs.gametype == GT_1FCTF );
 	}
 
 	if (flags & CG_SHOW_CTF) {
-		if( cgs.gametype == GT_CTF ) {
-			return qtrue;
-		}
+		return ( cgs.gametype == GT_CTF ); // ~Dimmskii - was missing an else, could fall through to unrelated checks below
 	}
 
 	if (flags & CG_SHOW_OBELISK) {
-		if( cgs.gametype == GT_OBELISK ) {
-			return qtrue;
-    } else {
-      return qfalse;
-    }
+		return ( cgs.gametype == GT_OBELISK );
 	}
 
 	if (flags & CG_SHOW_HEALTHCRITICAL) {
-		if (cg.snap->ps.stats[STAT_HEALTH] < 25) {
-			return qtrue;
-		}
+		return ( cg.snap->ps.stats[STAT_HEALTH] < 25 ); // ~Dimmskii - was missing an else
 	}
 
 	if (flags & CG_SHOW_HEALTHOK) {
-		if (cg.snap->ps.stats[STAT_HEALTH] >= 25) {
-			return qtrue;
-		}
+		return ( cg.snap->ps.stats[STAT_HEALTH] >= 25 ); // ~Dimmskii - was missing an else
 	}
 
 	if (flags & CG_SHOW_SINGLEPLAYER) {
-		if( cgs.gametype == GT_SINGLE_PLAYER ) {
-			return qtrue;
-		}
+		return ( cgs.gametype == GT_SINGLE_PLAYER ); // ~Dimmskii - was missing an else
 	}
 
 	if (flags & CG_SHOW_TOURNAMENT) {
-		if( cgs.gametype == GT_TOURNAMENT ) {
-			return qtrue;
-		}
+		return ( cgs.gametype == GT_TOURNAMENT ); // ~Dimmskii - was missing an else
 	}
 
 	if (flags & CG_SHOW_DURINGINCOMINGVOICE) {
+		// ~Dimmskii - no voice chat system exists in this codebase to detect
+		// "incoming voice" with; was a silent no-op (empty block, fell
+		// through to unrelated checks below), now an explicit documented one.
+		return qfalse;
 	}
 
 	if (flags & CG_SHOW_IF_PLAYER_HAS_FLAG) {
-		if (cg.snap->ps.powerups[PW_REDFLAG] || cg.snap->ps.powerups[PW_BLUEFLAG] || cg.snap->ps.powerups[PW_NEUTRALFLAG]) {
-			return qtrue;
-		}
+		return ( cg.snap->ps.powerups[PW_REDFLAG] || cg.snap->ps.powerups[PW_BLUEFLAG] || cg.snap->ps.powerups[PW_NEUTRALFLAG] ); // ~Dimmskii - was missing an else
 	}
 	return qfalse;
 }
