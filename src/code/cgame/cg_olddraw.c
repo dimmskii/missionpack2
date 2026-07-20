@@ -6,6 +6,22 @@
 #include "cg_local.h"
 #include "../ui/ui_shared.h"
 
+// ~Dimmskii
+// Forward declarations. These file-local helpers are DEFINED further down,
+// after CG_DrawStatusBar_Old which calls them. Without these prototypes the
+// q3lcc VM compiler gives each unprototyped call an implicit int() decl and
+// pushes the (int) x argument, while the real definition reads that stack
+// slot as a float. The bit pattern of e.g. int 285 reinterpreted as float32
+// is a denormal (~4e-43 == 0.0), so the head/flag drew at x=0 (screen left)
+// while every other status-bar element - which calls functions already
+// prototyped in cg_local.h - passed its float coordinates correctly. Vanilla
+// ioq3 avoids this by defining these before CG_DrawStatusBar; the port
+// reordered them below their caller. Any future helper added below its caller
+// in this file needs the same treatment.
+static void CG_DrawStatusBarHead_Old( float x );
+static void CG_DrawStatusBarFlag_Old( float x, int team );
+// END Dimmskii
+
 
 /*
 ==============
