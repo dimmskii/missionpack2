@@ -2,27 +2,21 @@
 
 ## 1. QL-Compatible Factories
 
-A "factory" is a named preset ruleset bundle, selected server-side via the
-`g_factory` cvar (default `"ffa"`). Selecting a factory applies any of ~103
-permitted cvars (`GFACTORY_CVARS` in `bg_newgame.h` - most of the cvars
-documented in this file) that the factory's definition overrides, without
-needing to set each one individually.
+A "factory" is a ready-made ruleset preset - pick one by name and it
+auto-sets a whole bundle of cvars for you (most of what's documented in this
+file), instead of configuring each one by hand. Set it with the `g_factory`
+cvar (default `"ffa"`).
 
-Factories are parsed from `scripts/factories.txt` (the base set) plus any
-`scripts/*.factories` add-on files, each a JSON array of factory objects.
-Each factory can declare a `basegt` to inherit from another factory's
-settings before applying its own overrides (cyclic `basegt` chains are
-detected and broken rather than recursing forever). Loading/parsing is
-shared code (`bg_newgame.c`) reusable by any module; the server
-(`G_LoadFactories` in `g_newgame.c`) is the canonical loader today, with a
-UI-side loader (`UI_LoadFactories`) able to reuse the same machinery.
+Factories live in `scripts/factories.txt` (the base set shipped with the
+mod) plus any extra `scripts/*.factories` files a server admin drops in -
+each is a JSON file listing factories by name. A factory can also inherit
+from another factory and only override what's different, so add-on files
+can tweak an existing preset without redefining it from scratch.
 
-Look up a factory's exact settings with `BG_FindFactoryById` (matches the
-factory's `"id"` field, case-insensitive) or just read `scripts/factories.txt`
-directly - this doc doesn't attempt to enumerate individual factories, since
-they're data-driven and expected to grow independently of engine/game code
-changes. See the `features/ql-factory` branch for the factory system's own
-development history.
+This doc doesn't try to list out every individual factory and what it sets,
+since they're just config files and expected to keep growing over time -
+open `scripts/factories.txt` (or your own `.factories` add-on) directly to
+see exactly what a given factory changes.
 
 ---
 
