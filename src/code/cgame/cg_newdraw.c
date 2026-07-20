@@ -1170,6 +1170,20 @@ qboolean CG_OwnerDrawVisible(int flags) {
 	if (flags & CG_SHOW_IF_PLYR_IS_NOT_FIRST_PLACE) {
 		return ( (cg.snap->ps.persistant[PERS_RANK] & ~RANK_TIED_FLAG) != 0 );
 	}
+
+	// QL's "new tell"/"challenge pending" notification icons. No real signal
+	// exists for either - systemChat/teamChat1/teamChat2 (the buffers the
+	// old-system chat ownerdraws read) are declared but never written
+	// anywhere in this codebase, so there's nothing to check presence of
+	// yet. See docs/devmemos/QL_HUD_BUILDUP.md. Explicit no-op instead of
+	// falling through to the end of the function.
+	if (flags & CG_SHOW_IF_MSG_PRESENT) {
+		return qfalse;
+	}
+
+	if (flags & CG_SHOW_IF_NOTICE_PRESENT) {
+		return qfalse;
+	}
 // END Dimmskii
 
 	return qfalse;

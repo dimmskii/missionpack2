@@ -31,28 +31,34 @@ as items get fixed or new gaps are found.
   textFont/smallFont/bigFont by each item's `textscale` value regardless of
   this keyword - so it wasn't blocking anything observed yet. Would need
   real work if a future QL file actually uses `FONT_SANS`/`FONT_MONO`.
-- **`CG_OwnerDrawVisible` (`cg_newdraw.c`) has real bugs, not just gaps:**
-  - `CG_SHOW_ANYARENAGAME`/`CG_SHOW_ANYNONARENAGAME` only ever `return
-    qfalse` on the negative case - no `return qtrue` when the condition
-    holds, so an item gated *only* by one of these never shows.
-  - `CG_SHOW_CTF`, `CG_SHOW_HEALTHCRITICAL`, `CG_SHOW_HEALTHOK`,
-    `CG_SHOW_SINGLEPLAYER`, `CG_SHOW_TOURNAMENT`,
-    `CG_SHOW_IF_PLAYER_HAS_FLAG` have no `else` - a false condition falls
-    through to check unrelated later flags instead of returning false,
-    unlike their correctly-written siblings (`CG_SHOW_HARVESTER`/
-    `CG_SHOW_ONEFLAG`/`CG_SHOW_OBELISK`).
-  - `CG_SHOW_DURINGINCOMINGVOICE` is a literal empty `{}` block.
-  - **7 flags the real `hud.menu`/`hud3.menu` use aren't handled at all**
-    (fall through to the final `return qfalse`): `CG_SHOW_IF_BLUE_IS_FIRST_PLACE`,
-    `CG_SHOW_IF_RED_IS_FIRST_PLACE`, `CG_SHOW_IF_PLYR_IS_FIRST_PLACE`,
-    `CG_SHOW_IF_PLYR_IS_NOT_FIRST_PLACE`, `CG_SHOW_PLAYERS_REMAINING`,
-    `CG_SHOW_IF_MSG_PRESENT`, `CG_SHOW_IF_NOTICE_PRESENT`. The first four
-    plus `PLAYERS_REMAINING` are cleanly inferable from data already
-    available (`cgs.scores1`/`scores2`, alive-player counts, same pattern
-    as `CG_CountTeamPlayers`). The `MSG_PRESENT`/`NOTICE_PRESENT` pair (QL's
-    "new tell"/"challenge pending" icons) block on the dead chat-buffer
-    issue above - no real "message present" signal exists client-side at
-    all right now.
+- **`CG_OwnerDrawVisible` (`cg_newdraw.c`) - fixed.** Was riddled with
+  fall-through bugs (several checks only ever returned `qfalse` on the
+  negative case with no `qtrue` on success, e.g. `CG_SHOW_ANYARENAGAME`;
+  several others had no `else` at all, e.g. `CG_SHOW_CTF`/
+  `CG_SHOW_HEALTHCRITICAL`/`CG_SHOW_HEALTHOK`/`CG_SHOW_SINGLEPLAYER`/
+  `CG_SHOW_TOURNAMENT`/`CG_SHOW_IF_PLAYER_HAS_FLAG`; `CG_SHOW_DURINGINCOMINGVOICE`
+  was a literal empty block) - every check now returns explicitly both
+  ways. All 5 cleanly-inferable missing flags real `hud.menu` uses are now
+  implemented: `CG_SHOW_PLAYERS_REMAINING` (scoped to `GT_CLAN_ARENA`),
+  `CG_SHOW_IF_RED_IS_FIRST_PLACE`/`CG_SHOW_IF_BLUE_IS_FIRST_PLACE` (team
+  score comparison), `CG_SHOW_IF_PLYR_IS_FIRST_PLACE`/
+  `CG_SHOW_IF_PLYR_IS_NOT_FIRST_PLACE` (individual `PERS_RANK`, non-team
+  gametypes only - team games reuse `PERS_RANK` for team standing instead,
+  see `CalculateRanks` in `g_main.c`). `CG_SHOW_IF_MSG_PRESENT`/
+  `CG_SHOW_IF_NOTICE_PRESENT` are now explicit documented no-ops (still
+  blocked on the dead chat-buffer issue above, not silent fall-through
+  anymore).
+- **`cg_gametype` cvar added** (`cg_cvar.h`, `CVAR_ROM`) - read-only
+  client-side mirror of `cgs.gametype`, for `hud.menu` itemDef
+  `cvarTest`/`showCvar` gating (e.g. the Round panel:
+  `cvarTest "cg_gametype" showCvar { "12" }`). Our `gametype_t` enum
+  matches QL's real wire numbering directly through `GT_TEAMTOURNAMENT`(13)
+  (confirmed against QL-SRP's own `gametype_t`), so showCvar literals
+  copied verbatim from a real QL `.menu` file work unmodified - no per-item
+  remap needed. Found and removed dead/wrong remap machinery
+  (`Item_EnableShowViaCvar_QL`/`toQLGametypeMap[]` in `ui_shared.c`) that
+  predated this and read the wrong cvar (`g_gametype`, the real
+  authoritative *server* cvar, never mirrored client-side).
 - **`CG_RACE_STATUS`/`CG_RACE_TIMES`** (`cg_newdraw.c`) - wired into the
   ownerdraw switch but deliberately no-op. Race (`GT_RACE`, aliased to
   `GT_SINGLE_PLAYER`) has zero server-side checkpoint/timing tracking -
