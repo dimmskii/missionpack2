@@ -177,6 +177,7 @@ UI_CVAR( ui_allowHandicap, "ui_allowHandicap", "0", CVAR_ARCHIVE )
 
 UI_CVAR( ui_friendlyFire, "ui_friendlyFire", "0", CVAR_ARCHIVE )
 UI_CVAR( ui_teamVisibility, "ui_teamVisibility", "1", CVAR_ARCHIVE )
+UI_CVAR( ui_itemVisibility, "ui_itemVisibility", "1", CVAR_ARCHIVE )
 UI_CVAR( ui_allSpec, "ui_allSpec", "0", CVAR_ARCHIVE )
 UI_CVAR( ui_1FRespawn, "ui_1FRespawn", "0", CVAR_ARCHIVE )
 

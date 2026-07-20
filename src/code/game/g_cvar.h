@@ -197,6 +197,7 @@ G_CVAR( g_roundlimit, "roundlimit", "10", CVAR_SERVERINFO | CVAR_NORESTART, 0, q
 G_CVAR( g_roundtimelimit, "roundtimelimit", "180", CVAR_SERVERINFO | CVAR_NORESTART, 0, qtrue, qfalse )
 
 G_CVAR( g_teamVisibility, "g_teamVisibility", "1", CVAR_SERVERINFO, 0, qtrue, qfalse )
+G_CVAR( g_itemVisibility, "g_itemVisibility", "1", CVAR_SERVERINFO, 0, qtrue, qfalse )	// TODO: break up into perhaps g_flagVisibility, g_powerupVisibility, etc.
 G_CVAR( g_itemTimers, "g_itemTimers", "1", CVAR_SERVERINFO, 0, qtrue, qfalse )
 
 G_CVAR( g_allSpec, "g_allSpec", "0", CVAR_SERVERINFO, 0, qtrue, qfalse )

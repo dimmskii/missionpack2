@@ -1094,6 +1094,7 @@ typedef struct {
 	int				roundtimelimit;		// serverinfo "roundtimelimit" (g_roundtimelimit), for CG_ROUNDTIMER
 	int				roundNumber;		// CS_ROUND_NUMBER, for CG_ROUND
 	int				g_teamVisibility;
+	int				g_itemVisibility;	// TODO: break up into perhaps g_flagVisibility, g_powerupVisibility, etc.
 	int				g_itemTimers;
 // END ~Dimmskii
 	int				timelimit;

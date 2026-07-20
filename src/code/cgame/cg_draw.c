@@ -3608,7 +3608,7 @@ static void CG_DrawItemPOIs( void ) {
 	centity_t	*cent;
 	vec3_t		pos;
 
-	if ( cgs.g_itemTimers ) {
+	if ( cgs.g_itemVisibility ) {
 		// Iterate through all entities (up to MAX_GENTITIES)
 		for ( i = 0; i < MAX_GENTITIES; i++ ) {
 			ip = &cg_itemPositions[i]; 

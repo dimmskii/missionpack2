@@ -2655,7 +2655,7 @@ void CheckItemPositions( void ) {
     int stringlength = 0;
     gentity_t *item;
     
-    if ( !g_itemTimers.integer )
+    if ( !g_itemVisibility.integer )
         return;
     
     if ( level.time - level.lastItemPositionTime <= ITEM_POSITION_UPDATE_TIME )
