@@ -31,28 +31,53 @@ as items get fixed or new gaps are found.
   textFont/smallFont/bigFont by each item's `textscale` value regardless of
   this keyword - so it wasn't blocking anything observed yet. Would need
   real work if a future QL file actually uses `FONT_SANS`/`FONT_MONO`.
-- **`CG_OwnerDrawVisible` (`cg_newdraw.c`) has real bugs, not just gaps:**
-  - `CG_SHOW_ANYARENAGAME`/`CG_SHOW_ANYNONARENAGAME` only ever `return
-    qfalse` on the negative case - no `return qtrue` when the condition
-    holds, so an item gated *only* by one of these never shows.
-  - `CG_SHOW_CTF`, `CG_SHOW_HEALTHCRITICAL`, `CG_SHOW_HEALTHOK`,
-    `CG_SHOW_SINGLEPLAYER`, `CG_SHOW_TOURNAMENT`,
-    `CG_SHOW_IF_PLAYER_HAS_FLAG` have no `else` - a false condition falls
-    through to check unrelated later flags instead of returning false,
-    unlike their correctly-written siblings (`CG_SHOW_HARVESTER`/
-    `CG_SHOW_ONEFLAG`/`CG_SHOW_OBELISK`).
-  - `CG_SHOW_DURINGINCOMINGVOICE` is a literal empty `{}` block.
-  - **7 flags the real `hud.menu`/`hud3.menu` use aren't handled at all**
+- **`CG_OwnerDrawVisible` (`cg_newdraw.c`) - do not "fix" the missing
+  `else`/fallthrough without re-checking against real QL first.** A pass
+  attempting exactly that (commits `dc760bc`/`3bbac80`/`3ed4c72` on
+  `features/more-ql-hudmenus`) broke stock MPP HUD behavior and was
+  reverted (`d9c328e`). Checked QL-SRP's actual retail-accurate
+  reimplementation afterward (`cg_newdraw.c`:
+  `CG_OwnerDrawPrimaryFlagVisible`/`CG_OwnerDrawSecondaryFlagVisible`,
+  called from `CG_OwnerDrawVisible(flags, flags2)`) and the real design is
+  an **OR-across-set-bits system, not a mutually-exclusive first-match
+  switch**: `ownerdrawflag` on an item is a bitmask, and an item can
+  legitimately combine multiple show-conditions (e.g. stacking
+  `CG_SHOW_ANYNONTEAMGAME | CG_SHOW_ANYARENAGAME` to mean "show if either
+  holds"). Each check in retail's version is `if ((flags & BIT) &&
+  condition) return qtrue;` - deliberately **no `else`, ever** - because a
+  false condition on one bit must NOT prevent a later, different bit set
+  on the same item from independently matching. The whole function only
+  falls through to `return qfalse` at the very end, once none of the set
+  bits matched. This is why the pre-existing code's missing elses looked
+  like bugs but weren't - they're load-bearing for the stacking behavior.
+  The one thing that *was* a genuine deviation from this pattern: some
+  checks (`CG_SHOW_ANYARENAGAME`/`CG_SHOW_ANYNONARENAGAME` in our version)
+  `return qfalse` immediately on a failed condition instead of falling
+  through - that prematurely kills evaluation of any other bits also set
+  on the same item, unlike every other check in the function. Also worth
+  knowing: QL-SRP's ownerdraw flags are split across **two independent
+  32-bit words** (`flags`/primary - gametype and team-state conditions -
+  and `flags2`/secondary - per-weapon "has fired" conditions for a
+  loadout-display use case we don't have), each evaluated by its own
+  function; and the **UI VM has an entirely separate implementation**
+  (`ui_main.c`: `UI_OwnerDrawVisibleFlags`/`UI_OwnerDrawVisible`) for
+  main-menu-context ownerdraws, distinct from cgame's. "Multiple separate
+  gating methods" - not one shared function doing everything.
+  - **7 flags the real `hud.menu`/`hud3.menu` use still aren't handled**
     (fall through to the final `return qfalse`): `CG_SHOW_IF_BLUE_IS_FIRST_PLACE`,
     `CG_SHOW_IF_RED_IS_FIRST_PLACE`, `CG_SHOW_IF_PLYR_IS_FIRST_PLACE`,
     `CG_SHOW_IF_PLYR_IS_NOT_FIRST_PLACE`, `CG_SHOW_PLAYERS_REMAINING`,
     `CG_SHOW_IF_MSG_PRESENT`, `CG_SHOW_IF_NOTICE_PRESENT`. The first four
     plus `PLAYERS_REMAINING` are cleanly inferable from data already
     available (`cgs.scores1`/`scores2`, alive-player counts, same pattern
-    as `CG_CountTeamPlayers`). The `MSG_PRESENT`/`NOTICE_PRESENT` pair (QL's
-    "new tell"/"challenge pending" icons) block on the dead chat-buffer
-    issue above - no real "message present" signal exists client-side at
-    all right now.
+    as `CG_CountTeamPlayers`) - QL-SRP's versions are a good reference for
+    exact semantics (`CG_ShowPlayersRemaining`, `CG_GetLeadingHudTeam`,
+    `CG_ShowPlayerIsFirstPlace`). The `MSG_PRESENT`/`NOTICE_PRESENT` pair
+    (QL's "new tell"/"challenge pending" icons) block on the dead
+    chat-buffer issue above - no real "message present" signal exists
+    client-side at all right now. Any future pass at these must preserve
+    the OR-stacking/no-early-false pattern above, not just add a case that
+    returns early.
 - **`CG_RACE_STATUS`/`CG_RACE_TIMES`** (`cg_newdraw.c`) - wired into the
   ownerdraw switch but deliberately no-op. Race (`GT_RACE`, aliased to
   `GT_SINGLE_PLAYER`) has zero server-side checkpoint/timing tracking -
