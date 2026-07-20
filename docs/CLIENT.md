@@ -1,6 +1,6 @@
 # Quake III Ultimate Arena Client Configuration
 
-## 1. From Missionpackplus
+## 1. General Cvars
 
 General config improvements upon vanilla Q3/TA:
 
@@ -23,7 +23,7 @@ General config improvements upon vanilla Q3/TA:
 
 ---
 
-## 2. Team/Item Markers and Timers
+## 2. Team/Item/Flag Markers and Timer Cvars
 
 These variables control the global behavior and rendering constraints for all overhead Point of Interest indicators:
 
