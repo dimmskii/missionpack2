@@ -70,6 +70,8 @@ set cc=q3lcc -DQ3_VM -DCGAME -S -Wf-target=bytecode -Wf-g -I..\..\cgame -I..\..\
 @if errorlevel 1 goto errorquit
 %cc% ../../ui/ui_shared.c
 @if errorlevel 1 goto errorquit
+%cc% ../cg_olddraw.c
+@if errorlevel 1 goto errorquit
 %cc% ../cg_newdraw.c
 @if errorlevel 1 goto errorquit
 
