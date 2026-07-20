@@ -52,6 +52,11 @@ ioq3ded.exe +set fs_game missionpack2 +set g_factory "" +set g_gametype 4 +exec 
 
 ## 2. Gametype Definitions
 
+Which gametype the server actually runs is set with the `g_gametype` cvar
+(default `0`), to one of the `GT_` enum values below. (A factory's
+`g_gametype` cvar, if it sets one, takes precedence the same as any other
+factory cvar - see Section 1.)
+
 The GT_ enums in this mod are as follows:
 
 | Value | Gametype Description |
@@ -86,9 +91,24 @@ These variables adjust general server settings.
 | `g_teamVisibility` | `1` | Whether or not server allows teammates to see eachothers' positions globally. `0` = Vanilla behavior; don't send any new messages; players with cg_drawFriend < 2 will raycast to hide known within PVS. `1` = Send 'tpos' message in team games, allowing allies to see eachother. |
 | `g_itemVisibility` | `1` | Whether or not server allows players in match to receive item positions, respawn timers, etc. `0` = Vanilla behavior; don't send any new messages; nobody is allowed to see item positions and timers. `1` = Send 'ipos' message with item locations and stats, such as respawn times. |
 | `g_allSpec` | `0` | Whether or not dead players in round-based gamemodes can spectate everybody. `0` = Default team-only dead spectators. `1` = Dead players can spectate everybody, including enemies. |
+| `g_allowHandicap` | `0` | Master toggle for whether a connecting client's userinfo `handicap` value (health scaling) is honored at all. `0` = Ignored, everyone uses the normal health limit. `1` = Client-set handicap percentage is applied. |
+| `dmflags` | `0` | Vanilla deathmatch flags bitmask (no-armor, no-health, no-falling-damage, etc - see original Q3 documentation for the bit meanings). C global is `g_dmflags`. |
+| --- | --- | --- |
+| `fraglimit` | `20` | Frag/score limit for non-round-based gametypes. C global is `g_fraglimit`. |
+| `timelimit` | `0` | Match time limit in minutes, `0` = unlimited. C global is `g_timelimit`. |
+| `capturelimit` | `8` | Flag capture limit (CTF/1-Flag CTF). C global is `g_capturelimit`. |
 | `roundlimit` | `10` | Number of round wins needed to win the match, for round-based gametypes (e.g. Clan Arena). C global is `g_roundlimit` - like vanilla `fraglimit`/`timelimit`/`capturelimit`, the `g_` is prefixed on the C variable for symbol cleanliness only, not the actual cvar. |
 | `roundtimelimit` | `180` | Maximum duration of a single round in seconds, for round-based gametypes. Same `g_`-prefix-on-C-global-only note as `roundlimit` above. |
-| `g_allowHandicap` | `0` | Master toggle for whether a connecting client's userinfo `handicap` value (health scaling) is honored at all. `0` = Ignored, everyone uses the normal health limit. `1` = Client-set handicap percentage is applied. |
+| --- | --- | --- |
+| `g_warmup` | `20` | Warmup countdown length in seconds before a match goes live. |
+| `g_fastWeaponSwitch` | `0` | Instant weapon switching with no raise/lower delay. `1` = On, `0` = Off. |
+| `g_friendlyFire` | `0` | Whether teammates can damage each other. `1` = On, `0` = Off. |
+| `g_forcerespawn` | `20` | Seconds a dead player can wait before being force-respawned. |
+| `g_1FRespawn` | `0` | One Flag CTF's neutral flag respawn behavior. |
+| `g_gravity` | `800` | World gravity. |
+| `g_speed` | `320` | Player movement speed. |
+| `g_knockback` | `1000` | Damage knockback force multiplier. |
+| `g_quadDamageFactor` | `3` | Quad Damage powerup's damage multiplier. |
 
 ---
 
