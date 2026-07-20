@@ -31,11 +31,22 @@ ioq3ded.exe +set fs_game missionpack2 +set g_factory "ca" +exec server_ca.cfg +m
 ioq3ded.exe +set fs_game missionpack2 +set g_factory "" +set g_gametype 4 +exec server_ca.cfg +map q3dm6
 ```
 
-**Here is the list of default available values of g_factory:**
+**Here is the list of default available values of g_factory**, from `scripts/factories.txt`:
 | Title | Value | Description |
-| --- | --- | -- |
+| --- | --- | --- |
 | None/'Custom' |  | Doesn't touch any of the factory cvars ever. |
+| Free For All | `ffa` | Default gametype settings. |
+| Instagib FFA | `iffa` | Railgun and Gauntlet only. One shot, one kill. |
+| Duel | `duel` | Default gametype settings. |
+| CA Duel | `caduel` | Duel with Arena starting weapons and rules. |
+| Team Deathmatch | `tdm` | Default gametype settings. |
 | Clan Arena | `ca` | Default gametype settings. |
+| Capture the Flag | `ctf` | Default gametype settings. |
+| Instagib CTF | `ictf` | Railgun and Gauntlet only. One shot, one kill. |
+| 1-Flag CTF | `oneflag` | Default gametype settings. |
+| Overload | `obelisk` | Default gametype settings. |
+| Harvester | `har` | Default gametype settings. |
+| Arena | `arena` | Default gametype settings. |
 
 ---
 
