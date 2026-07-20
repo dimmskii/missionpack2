@@ -18,6 +18,25 @@ since they're just config files and expected to keep growing over time -
 open `scripts/factories.txt` (or your own `.factories` add-on) directly to
 see exactly what a given factory changes.
 
+**What this means, is that instead of starting your server something with like this:**
+```
+ioq3ded.exe +set fs_game missionpack2 +set g_gametype 4 +exec server_ca.cfg +map q3dm6
+```
+**Consider something like this instead:**
+```
+ioq3ded.exe +set fs_game missionpack2 +set g_factory "ca" +exec server_ca.cfg +map q3dm6
+```
+**Or, if you want to completely disable this behavior and set cvars manually, set g_factory to empty string:**
+```
+ioq3ded.exe +set fs_game missionpack2 +set g_factory "" +set g_gametype 4 +exec server_ca.cfg +map q3dm6
+```
+
+**Here is the list of default available values of g_factory:**
+| Title | Value | Description |
+| --- | --- | -- |
+| None/'Custom' |  | Doesn't touch any of the factory cvars ever. |
+| Clan Arena | `ca` | Default gametype settings. |
+
 ---
 
 ## 2. Gametype Definitions
