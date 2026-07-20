@@ -157,8 +157,6 @@ For variables containing a wildcard symbol (*X*), swap the token out for one of 
 
 *   **g_startingWeapons:** Set starting weapon inventories (replaces the old `wpflags` cvar, which no longer exists). *(Note: Players always retain the Gauntlet and Machinegun regardless of mask modification settings).* Uses its own bitweight layout, **different** from `removeweapon`/`removeammo` below - see its own table first.
     *   **`g_grapple`** *(not a real factory cvar itself - do not set directly)*: purely derived from bit `512` of `g_startingWeapons` above, read-only (`CVAR_ROM`). Toggling the Grappling Hook bit in `g_startingWeapons` is what actually controls this.
-*   **removeweapon:** Drops matching weapon pick-ups directly out of the active map context.
-*   **removeammo:** Drops corresponding weapon-specific ammunition cases directly out of the active map context.
 
 `g_startingWeapons` bitweight layout (default `3` = bits 1+2, i.e. Gauntlet+Machinegun, both already always given regardless):
 
@@ -178,6 +176,10 @@ For variables containing a wildcard symbol (*X*), swap the token out for one of 
 | `2048` | Prox Launcher |
 | `4096` | Chaingun |
 | `8192` | Heavy Machine Gun |
+
+
+*   **removeweapon:** Drops matching weapon pick-ups directly out of the active map context.
+*   **removeammo:** Drops corresponding weapon-specific ammunition cases directly out of the active map context.
 
 `removeweapon`/`removeammo` bitweight layout (unchanged from before `060`):
 
