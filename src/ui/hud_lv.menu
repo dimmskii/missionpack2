@@ -389,19 +389,20 @@ menuDef {
 
 
 
-// RASDOR
+
+// TEAM SCORES BOX
 
 menuDef {
     	name "Teambox"
     	fullScreen MENU_FALSE
 		widescreen WIDESCREEN_RIGHT
     	visible MENU_TRUE
-    	rect 530 373 110 54
+    	rect 475 373 165 54
 		ownerdrawflag CG_SHOW_ANYTEAMGAME
 	
 	itemDef {
 	name "TeamboxRoundsRed"
-	rect 0 0 55 27
+	rect 55 0 55 27
 	visible 1
 	bordercolor 1 1 1 .75
 	decoration	
@@ -412,7 +413,7 @@ menuDef {
 	
 	itemDef {
 	name "TeamboxRoundsBlue"
-	rect 55 0 55 27
+	rect 110 0 55 27
 	visible 1
 	bordercolor 1 1 1 .75
 	decoration	
@@ -423,7 +424,7 @@ menuDef {
 	
 	itemDef {
 	name "TeamboxFlagRed"
-	rect 0 0 55 27
+	rect 55 0 55 27
 	visible 1
 	bordercolor 1 1 1 .75
 	decoration	
@@ -434,7 +435,7 @@ menuDef {
 	
 	itemDef {
 	name "TeamboxFlagBlue"
-	rect 55 0 55 27
+	rect 110 0 55 27
 	visible 1
 	bordercolor 1 1 1 .75
 	decoration	
@@ -445,7 +446,7 @@ menuDef {
 	
 	itemDef {
 	name "TeamboxSkullRed"
-	rect 0 0 55 27
+	rect 55 0 55 27
 	visible 1
 	bordercolor 1 1 1 .75
 	decoration	
@@ -456,7 +457,7 @@ menuDef {
 	
 	itemDef {
 	name "TeamboxSkullBlue"
-	rect 55 0 55 27
+	rect 110 0 55 27
 	visible 1
 	bordercolor 1 1 1 .75
 	decoration	
@@ -467,7 +468,7 @@ menuDef {
 	
 	itemDef {
 	name "TeamboxObeliskRed"
-	rect 0 0 55 27
+	rect 55 0 55 27
 	visible 1
 	bordercolor 1 1 1 .75
 	decoration	
@@ -478,7 +479,7 @@ menuDef {
 	
 	itemDef {
 	name "TeamboxObeliskBlue"
-	rect 55 0 55 27
+	rect 110 0 55 27
 	visible 1
 	bordercolor 1 1 1 .75
 	decoration	
@@ -495,7 +496,7 @@ menuDef {
 	border 0
 	bordersize 0
 	bordercolor .5 .5 .5 1
-	rect 0 27 55 27
+	rect 55 27 55 27
 	}
 	
 	itemDef {
@@ -506,7 +507,47 @@ menuDef {
 	border 0
 	bordersize 0
 	bordercolor .5 .5 .5 1
-	rect 55 27 55 27
+	rect 110 27 55 27
+	}
+	
+	
+	itemDef {
+      	name "TeamBoxCapLimit"
+        rect 0 27 55 27
+	visible 1
+	textstyle 3
+    	decoration
+	forecolor 1 1 1 1
+	textscale .5
+	text ""
+	ownerdrawflag CG_SHOW_CTF  
+	ownerdraw CG_CAPFRAGLIMIT 
+	}
+	
+	itemDef {
+      	name "TeamBoxCapRed"
+        rect 55 27 55 27
+	visible 1
+	textstyle 3
+    	decoration
+	forecolor 1 1 1 1
+	textscale .5
+	text ""
+	ownerdrawflag CG_SHOW_CTF  
+	ownerdraw CG_RED_SCORE 
+	}
+	
+	itemDef {
+      	name "TeamBoxCapBlue"
+        rect 110 27 55 27
+	visible 1
+	textstyle 3
+    	decoration
+	forecolor 1 1 1 1
+	textscale .5
+	text ""
+	ownerdrawflag CG_SHOW_CTF  
+	ownerdraw CG_BLUE_SCORE 
 	}
 
 }
