@@ -52,14 +52,12 @@ These variables adjust general server settings.
 
 | Variable | Default | Description |
 | --- | --- | --- |
-| `g_unlagged` | `1` | Enables unlagged code. `0` = Off `1` = On 
 | `g_instagib` | `0` | Enables instagib in any gamemode. `0` = Off `1` = On 
 | `g_teamVisibility` | `1` | Whether or not server allows teammates to see eachothers' positions globally. `0` = Vanilla behavior; don't send any new messages; players with cg_drawFriend < 2 will raycast to hide known within PVS. `1` = Send 'tpos' message in team games, allowing allies to see eachother. |
 | `g_itemVisibility` | `1` | Whether or not server allows players in match to receive item positions, respawn timers, etc. `0` = Vanilla behavior; don't send any new messages; nobody is allowed to see item positions and timers. `1` = Send 'ipos' message with item locations and stats, such as respawn times. |
 | `g_allSpec` | `0` | Whether or not dead players in round-based gamemodes can spectate everybody. `0` = Default team-only dead spectators. `1` = Dead players can spectate everybody, including enemies. |
-| `g_loadCustomEnts` | `0` | Whether or not to load .ent override file corresponding to the map's file name. `0` = Off. `1` = Load custom .ent files. |
-| `g_roundlimit` | `10` | Number of round wins needed to win the match, for round-based gametypes (e.g. Clan Arena). |
-| `g_roundtimelimit` | `180` | Maximum duration of a single round in seconds, for round-based gametypes. |
+| `roundlimit` | `10` | Number of round wins needed to win the match, for round-based gametypes (e.g. Clan Arena). C global is `g_roundlimit` - like vanilla `fraglimit`/`timelimit`/`capturelimit`, the `g_` is prefixed on the C variable for symbol cleanliness only, not the actual cvar. |
+| `roundtimelimit` | `180` | Maximum duration of a single round in seconds, for round-based gametypes. Same `g_`-prefix-on-C-global-only note as `roundlimit` above. |
 | `g_allowHandicap` | `0` | Master toggle for whether a connecting client's userinfo `handicap` value (health scaling) is honored at all. `0` = Ignored, everyone uses the normal health limit. `1` = Client-set handicap percentage is applied. |
 
 ---
@@ -95,7 +93,6 @@ For variables containing a wildcard symbol (*X*), swap the token out for one of 
 | `g_powerupRespawn` | `120` | Major Powerup item respawn pacing configuration, in seconds. |
 | `g_holdableRespawn` | `60` | Inventory Holdable item respawn pacing configuration, in seconds. |
 | --- | --- | --- |
-| `g_grapple` | `0` | *(Read-only)* Whether the grappling hook is available - now automatically derived from bit `512` of `g_startingWeapons` instead of being directly settable. |
 | `g_grappleDelayTime` | `400` | Grapple delay time. |
 | `g_grappleHoldTime` | `0` | Maximum duration a line can actively latch onto a surface in seconds (`0` allows infinite attachment). |
 | `g_grappleSpeed` | `1600` | Grapple deploy speed in U/s |
@@ -109,6 +106,7 @@ For variables containing a wildcard symbol (*X*), swap the token out for one of 
 ### Item/weapon flagged cvars
 
 *   **g_startingWeapons:** Set starting weapon inventories (replaces the old `wpflags` cvar, which no longer exists). *(Note: Players always retain the Gauntlet and Machinegun regardless of mask modification settings).* Uses its own bitweight layout, **different** from `removeweapon`/`removeammo` below - see its own table first.
+    *   **`g_grapple`** *(not a real factory cvar itself - do not set directly)*: purely derived from bit `512` of `g_startingWeapons` above, read-only (`CVAR_ROM`). Toggling the Grappling Hook bit in `g_startingWeapons` is what actually controls this.
 *   **removeweapon:** Drops matching weapon pick-ups directly out of the active map context.
 *   **removeammo:** Drops corresponding weapon-specific ammunition cases directly out of the active map context.
 
@@ -184,3 +182,17 @@ Powerup spawn filters.
 | `128` | Guard |
 | `256` | Doubler |
 | `512` | Ammo Regen |
+
+---
+
+## 5. Non-Factory Cvars
+
+Everything documented above is settable via a [factory preset](#1-ql-compatible-factories)
+(see `GFACTORY_CVARS` in `bg_newgame.h` if you want the exact permitted
+list). These two are not - a factory can't set them, so they always need
+to be configured directly (server.cfg, command line, or console):
+
+| Variable | Default | Description |
+| --- | --- | --- |
+| `g_unlagged` | `1` | Enables unlagged code. `0` = Off `1` = On |
+| `g_loadCustomEnts` | `0` | Whether or not to load .ent override file corresponding to the map's file name. `0` = Off. `1` = Load custom .ent files. |
