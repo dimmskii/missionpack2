@@ -1755,13 +1755,12 @@ void CG_LoadHudMenu( void ) {
 
 	trap_Cvar_VariableStringBuffer("cg_hudFiles", buff, sizeof(buff));
 	hudSet = buff;
+	//if (hudSet[0] == '\0') {
+	//	hudSet = "ui/mpp.txt";
+	//}
 
 // ~Dimmskii
 	// cg_hudFiles "" used to just silently fall back to the default set:
-	//if (hudSet[0] == '\0') {
-	//	//hudSet = "ui/mpp.txt";
-	//	hudSet = "ui/hud.txt";
-	//}
 	// Repurposed: empty now means "opt into cg_olddraw.c's vanilla status
 	// bar/score box instead of the itemDef/menuDef .menu HUD" - skip loading
 	// hud.menu/score.menu/teamscore.menu (and whatever they bundle, e.g.
