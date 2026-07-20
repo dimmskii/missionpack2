@@ -1069,123 +1069,95 @@ qboolean CG_OwnerDrawVisible(int flags) {
 	}
 
 // ~Dimmskii
-	// Every check below now returns explicitly both ways for its own bit
-	// instead of only handling one side and falling through - items only
-	// ever set one CG_SHOW_* bit in practice, so a false condition here
-	// must not fall through into unrelated later checks (it used to: e.g.
-	// an item gated only by CG_SHOW_ANYARENAGAME never showed even during
-	// an arena game, since there was no qtrue return on the success path,
-	// and several other checks below could accidentally match on a later,
-	// unrelated flag after silently failing their own condition).
 	if (flags & CG_SHOW_ANYARENAGAME) {
-		return GT_IsArenaGame(cgs.gametype);
+		if( !GT_IsArenaGame(cgs.gametype) ) {
+			return qfalse;
+		}
 	}
 
 	if (flags & CG_SHOW_ANYNONARENAGAME) {
-		return !GT_IsArenaGame(cgs.gametype);
+		if( GT_IsArenaGame(cgs.gametype)  ) {
+			return qfalse;
+		}
 	}
 // END ~Dimmskii
 
 	if (flags & CG_SHOW_ANYTEAMGAME) {
 //		if( cgs.gametype >= GT_TEAM) {
-		return GT_IsTeam(cgs.gametype); // ~Dimmskii
+		if( GT_IsTeam(cgs.gametype) ) { // ~Dimmskii
+			return qtrue;
+		}
 	}
 
 	if (flags & CG_SHOW_ANYNONTEAMGAME) {
 //		if( cgs.gametype < GT_TEAM) {
-		return !GT_IsTeam(cgs.gametype); // ~Dimmskii
+		if( !GT_IsTeam(cgs.gametype) ) { // ~Dimmskii
+			return qtrue;
+		}
 	}
 
 	if (flags & CG_SHOW_HARVESTER) {
-		return ( cgs.gametype == GT_HARVESTER );
+		if( cgs.gametype == GT_HARVESTER ) {
+			return qtrue;
+    } else {
+      return qfalse;
+    }
 	}
 
 	if (flags & CG_SHOW_ONEFLAG) {
-		return ( cgs.gametype == GT_1FCTF );
+		if( cgs.gametype == GT_1FCTF ) {
+			return qtrue;
+    } else {
+      return qfalse;
+    }
 	}
 
 	if (flags & CG_SHOW_CTF) {
-		return ( cgs.gametype == GT_CTF ); // ~Dimmskii - was missing an else, could fall through to unrelated checks below
+		if( cgs.gametype == GT_CTF ) {
+			return qtrue;
+		}
 	}
 
 	if (flags & CG_SHOW_OBELISK) {
-		return ( cgs.gametype == GT_OBELISK );
+		if( cgs.gametype == GT_OBELISK ) {
+			return qtrue;
+    } else {
+      return qfalse;
+    }
 	}
 
 	if (flags & CG_SHOW_HEALTHCRITICAL) {
-		return ( cg.snap->ps.stats[STAT_HEALTH] < 25 ); // ~Dimmskii - was missing an else
+		if (cg.snap->ps.stats[STAT_HEALTH] < 25) {
+			return qtrue;
+		}
 	}
 
 	if (flags & CG_SHOW_HEALTHOK) {
-		return ( cg.snap->ps.stats[STAT_HEALTH] >= 25 ); // ~Dimmskii - was missing an else
+		if (cg.snap->ps.stats[STAT_HEALTH] >= 25) {
+			return qtrue;
+		}
 	}
 
 	if (flags & CG_SHOW_SINGLEPLAYER) {
-		return ( cgs.gametype == GT_SINGLE_PLAYER ); // ~Dimmskii - was missing an else
+		if( cgs.gametype == GT_SINGLE_PLAYER ) {
+			return qtrue;
+		}
 	}
 
 	if (flags & CG_SHOW_TOURNAMENT) {
-		return ( cgs.gametype == GT_TOURNAMENT ); // ~Dimmskii - was missing an else
+		if( cgs.gametype == GT_TOURNAMENT ) {
+			return qtrue;
+		}
 	}
 
 	if (flags & CG_SHOW_DURINGINCOMINGVOICE) {
-		// ~Dimmskii - no voice chat system exists in this codebase to detect
-		// "incoming voice" with; was a silent no-op (empty block, fell
-		// through to unrelated checks below), now an explicit documented one.
-		return qfalse;
 	}
 
 	if (flags & CG_SHOW_IF_PLAYER_HAS_FLAG) {
-		return ( cg.snap->ps.powerups[PW_REDFLAG] || cg.snap->ps.powerups[PW_BLUEFLAG] || cg.snap->ps.powerups[PW_NEUTRALFLAG] ); // ~Dimmskii - was missing an else
+		if (cg.snap->ps.powerups[PW_REDFLAG] || cg.snap->ps.powerups[PW_BLUEFLAG] || cg.snap->ps.powerups[PW_NEUTRALFLAG]) {
+			return qtrue;
+		}
 	}
-
-// ~Dimmskii
-	// QL's "clan arena count" panels (redClanPlayers/blueClanPlayers in real
-	// hud.menu) - the real file already hides these for Red Rover via its
-	// own cvarTest/hideCvar, so this only needs to cover the gametype
-	// they're actually meant for.
-	if (flags & CG_SHOW_PLAYERS_REMAINING) {
-		return ( cgs.gametype == GT_CLAN_ARENA );
-	}
-
-	// Team score comparison; tied counts as first place for both sides,
-	// same as CG_GetGameStatusText's existing tie handling above.
-	if (flags & CG_SHOW_IF_RED_IS_FIRST_PLACE) {
-		return ( cg.teamScores[0] >= cg.teamScores[1] );
-	}
-
-	if (flags & CG_SHOW_IF_BLUE_IS_FIRST_PLACE) {
-		return ( cg.teamScores[1] >= cg.teamScores[0] );
-	}
-
-	// Individual rank, not team rank - PERS_RANK means something different
-	// in team games (0/1/2 = red leads/blue leads/tied, the same for every
-	// player regardless of which team they're on, see CalculateRanks in
-	// g_main.c), so these only make sense for non-team gametypes; the real
-	// hud.menu only places them in that context.
-	if (flags & CG_SHOW_IF_PLYR_IS_FIRST_PLACE) {
-		return ( (cg.snap->ps.persistant[PERS_RANK] & ~RANK_TIED_FLAG) == 0 );
-	}
-
-	if (flags & CG_SHOW_IF_PLYR_IS_NOT_FIRST_PLACE) {
-		return ( (cg.snap->ps.persistant[PERS_RANK] & ~RANK_TIED_FLAG) != 0 );
-	}
-
-	// QL's "new tell"/"challenge pending" notification icons. No real signal
-	// exists for either - systemChat/teamChat1/teamChat2 (the buffers the
-	// old-system chat ownerdraws read) are declared but never written
-	// anywhere in this codebase, so there's nothing to check presence of
-	// yet. See docs/devmemos/QL_HUD_BUILDUP.md. Explicit no-op instead of
-	// falling through to the end of the function.
-	if (flags & CG_SHOW_IF_MSG_PRESENT) {
-		return qfalse;
-	}
-
-	if (flags & CG_SHOW_IF_NOTICE_PRESENT) {
-		return qfalse;
-	}
-// END Dimmskii
-
 	return qfalse;
 }
 
