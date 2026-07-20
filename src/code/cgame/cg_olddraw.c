@@ -457,7 +457,10 @@ static float CG_DrawScores_Old( float y ) {
 			}
 		}
 
-		if ( GT_IsFlagGame( cgs.gametype ) ) { // ~Dimmskii - was: cgs.gametype >= GT_CTF
+		// Determine which team score limits to draw in light of having 999999 gametypes
+		if ( GT_IsArenaGame( cgs.gametype ) ) {
+			v = cgs.roundlimit;
+		} else if ( GT_IsFlagGame( cgs.gametype ) ) {
 			v = cgs.capturelimit;
 		} else {
 			v = cgs.fraglimit;
