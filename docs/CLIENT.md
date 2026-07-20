@@ -19,6 +19,7 @@ General config improvements upon vanilla Q3/TA:
 | `cg_oldPlasma` | `1` | Enables vanilla plasma effect. Default `1`. |
 | `cg_oldRail` | `1` | Enables vanilla rail effect. Default `1`. |
 | `cg_oldRocket` | `1` | Enables vanilla rocket effect. Default `1`. |
+| `cg_killBeep` | `0` | Plays a confirmation beep locally when you score a kill (not suicides/world deaths). `0` = Off, `1` = On (plays a single fixed sound currently). *Planned: QL-style preset selection via other integer values (different beep sounds), not implemented yet.* |
 
 ---
 
@@ -31,16 +32,26 @@ These variables control the global behavior and rendering constraints for all ov
 | `cg_drawFriend` | `1` | `0`=Vanilla off behavior `1`=Vanilla indicators `2`=QL-styled always visibile 'POIs' |
 | --- | --- | --- |
 | `cg_poiTextBgAlpha` | `0.3` | Adjusts the background transparency of text elements attached to POI indicators. This includes the timer text above item POIs. |
-| `cg_poiMaxDist` | `4000` | Sets the maximum distance in game units at which POIs remain visible on the screen. A linear alpha fade is applied between zero distance and max. |
+| `cg_poiMaxDist` | `32768` | Sets the maximum distance in game units at which POIs remain visible on the screen. A linear alpha fade is applied between zero distance and max. |
 | --- | --- | --- |
 | `cg_teammatePOIs` | `1` | Quake Live compatibility R/O cvar. Automatically enables/disables itself depending on whether or not `cg_drawFriend` is `2`. |
 | `cg_teammateNames` | `1` | Controls visibility behavior for player names above teammate POIs:<br>• `0`: Off<br>• `1`: Targeted (only when looking toward them)<br>• `2`: Always on.<br>*Requires `cg_drawFriend 2`.* |
 | `cg_teammatePOIsIconSize` | `8` | Sets the initial size for teammate POI pics. *Requires `cg_drawFriend 2`.* |
+| `cg_teammatePOIsIconMinSize` | `4` | Sets the minimum (furthest-distance) size for teammate POI pics. *Requires `cg_drawFriend 2`.* |
 | `cg_teammatePOIsIconMaxSize` | `12` | Sets the maximum size for teammate POI pics icons up close. *Requires `cg_drawFriend 2`.* |
 | --- | --- | --- |
-| `cg_itemPOIs` | `1` | Master toggle for rendering POIs over item spawners. |
-| `cg_itemTimers` | `1` | Controls visibility of timer texts above item POIs:<br>• `0`: Off<br>• `1`: Targeted (only when looking toward them)<br>• `2`: Always on.<br>*Requires `cg_itemPOIs 1`.* |
-| `cg_itemPOIsIconSize` | `24` | Sets the initial size of item POI pics. *Has no effect if `cg_itemPOIs` is set to `0`.* |
-| `cg_itemPOIsIconMaxSize` | `32` | Limit the scaling limit for item POI pics. *Has no effect if `cg_itemPOIs` is set to `0`.* |
+| `cg_itemTimers` | `1` | *(Currently has no effect)* Reserved for a planned separate item-timer system, not yet built - not part of the POI code despite the name suggesting otherwise. |
+| --- | --- | --- |
+| `cg_powerupPOIs` | `0` | *(Currently has no effect)* Master toggle for rendering POIs over powerup spawners (Quad, Battlesuit, Haste, etc) - the code path that checks this cvar is currently disabled pending a powerup-stacking fix, so powerup POIs never draw regardless of this setting. |
+| `cg_powerupPOIsTimers` | `1` | Controls visibility of timer texts above powerup POIs:<br>• `0`: Off<br>• `1`: Targeted (only when looking toward them)<br>• `2`: Always on.<br>*Requires `cg_powerupPOIs 1`.* |
+| `cg_powerupPOIsIconSize` | `24` | Sets the initial size of powerup POI pics. |
+| `cg_powerupPOIsIconMinSize` | `4` | Sets the minimum (furthest-distance) size of powerup POI pics. |
+| `cg_powerupPOIsIconMaxSize` | `12` | Limit the scaling limit for powerup POI pics up close. |
+| --- | --- | --- |
+| `cg_flagPOIs` | `0` | Master toggle for rendering POIs over flag carriers/spawns (team games). `0` = Off, `1` = On. |
+| `cg_flagPOIsTexts` | `0` | Controls visibility of contextual text (RETRIEVE/ATTACK/DEFEND) above flag POIs. `0` = Off, `1`/`2` = targeted/always, same convention as other POI text cvars. *Requires `cg_flagPOIs 1`.* |
+| `cg_flagPOIsIconSize` | `24` | Sets the initial size of flag POI pics. |
+| `cg_flagPOIsIconMinSize` | `10` | Sets the minimum (furthest-distance) size of flag POI pics. |
+| `cg_flagPOIsIconMaxSize` | `24` | Limit the scaling limit for flag POI pics up close. |
 
 ---
