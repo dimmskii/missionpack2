@@ -18,7 +18,7 @@ since they're just config files and expected to keep growing over time -
 open `scripts/factories.txt` (or your own `.factories` add-on) directly to
 see exactly what a given factory changes.
 
-**What this means, is that instead of starting your server something with like this:**
+**What this means, is that instead of starting your server with something like this:**
 ```
 ioq3ded.exe +set fs_game missionpack2 +set g_gametype 4 +exec server_ca.cfg +map q3dm6
 ```
@@ -164,8 +164,8 @@ For variables containing a wildcard symbol (*X*), swap the token out for one of 
 
 | Bitweight Integer | Targeted Asset Name |
 | --- | --- |
-| `1` | Gauntlet *(inferred: always given regardless, matches default)* |
-| `2` | Machinegun *(inferred: always given regardless, matches default)* |
+| `1` | Gauntlet |
+| `2` | Machinegun |
 | `4` | Shotgun |
 | `8` | Grenade Launcher |
 | `16` | Rocket Launcher |
