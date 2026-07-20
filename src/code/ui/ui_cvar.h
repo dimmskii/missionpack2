@@ -146,7 +146,7 @@ UI_CVAR( ui_bigFont, "ui_bigFont", "0.4", CVAR_ARCHIVE )
 UI_CVAR( ui_findPlayer, "ui_findPlayer", "Sarge", CVAR_ARCHIVE )
 //UI_CVAR( ui_Q3Model, "ui_q3model", "0", CVAR_ARCHIVE ) // ~Dimmskii - Missionpack 2 only has normal models + pm/bright skins
 //UI_CVAR( ui_hudFiles, "cg_hudFiles", "ui/mpp.txt", CVAR_ARCHIVE )
-UI_CVAR( ui_hudFiles, "cg_hudFiles", "ui/hud.txt", CVAR_ARCHIVE ) // ~Dimmskii
+UI_CVAR( ui_hudFiles, "cg_hudFiles", "", CVAR_ARCHIVE ) // ~Dimmskii -- Default empty (""), which means show our improved vhud (vanilla hud) instead of TA .menu stuff. Grumpy old people love this one.
 UI_CVAR( ui_recordSPDemo, "ui_recordSPDemo", "0", CVAR_ARCHIVE )
 //UI_CVAR( ui_teamArenaFirstRun, "ui_teamArenaFirstRun", "0", CVAR_ARCHIVE )
 //UI_CVAR( ui_realWarmUp, "g_warmup", "20", CVAR_ARCHIVE )

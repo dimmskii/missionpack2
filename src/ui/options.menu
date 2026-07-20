@@ -86,10 +86,26 @@ itemDef {
 	itemDef {
       		name hud
 		group grpOptions
+      		type ITEM_TYPE_MULTI
+		text "Hud Style:"
+		cvar "cg_hudFiles"
+		cvarStrList { VQ3 "" UA "ui/hud.txt" }
+		rect 99 35 256 20
+      		textalign ITEM_ALIGN_RIGHT
+      		textalignx 128
+      		textaligny 20
+		textscale .3
+      		forecolor 1 1 1 1
+      		visible 1 
+    		}
+			
+	itemDef {
+      		name hud
+		group grpOptions
       		type ITEM_TYPE_YESNO
 		text "Identify Target:"
 		cvar "cg_drawCrosshairNames"
-		rect 99 35 256 20
+		rect 99 55 256 20
       		textalign ITEM_ALIGN_RIGHT
       		textalignx 128
       		textaligny 20
@@ -104,7 +120,7 @@ itemDef {
       		type ITEM_TYPE_YESNO
 		text "Draw Team Overlay:"
 		cvar "cg_drawTeamOverlay"
-		rect 99 55 256 20
+		rect 99 75 256 20
       		textalign ITEM_ALIGN_RIGHT
       		textalignx 128
       		textaligny 20
@@ -118,7 +134,7 @@ itemDef {
       		type ITEM_TYPE_SLIDER
 		text "Screen Size:"
 		cvarfloat "cg_viewsize" 100 30 100
-		rect 99 75 256 20
+		rect 99 95 256 20
       		textalign ITEM_ALIGN_RIGHT
       		textalignx 128
       		textaligny 20
@@ -132,7 +148,35 @@ itemDef {
       		type ITEM_TYPE_YESNO
 		text "Show Time:"
 		cvar "cg_drawTimer"
-		rect 99 95 256 20
+		rect 99 115 256 20
+      		textalign ITEM_ALIGN_RIGHT
+      		textalignx 128
+      		textaligny 20
+		textscale .3
+      		forecolor 1 1 1 1
+      		visible 1 
+    		}
+	itemDef {
+      		name hud
+		group grpOptions
+      		type ITEM_TYPE_YESNO
+		text "Show FPS:"
+		cvar "cg_drawFPS"
+		rect 99 135 256 20
+      		textalign ITEM_ALIGN_RIGHT
+      		textalignx 128
+      		textaligny 20
+		textscale .3
+      		forecolor 1 1 1 1
+      		visible 1 
+    		}
+	itemDef {
+      		name hud
+		group grpOptions
+      		type ITEM_TYPE_YESNO
+		text "Show Speed (Units/s):"
+		cvar "cg_drawSpeed"
+		rect 99 155 256 20
       		textalign ITEM_ALIGN_RIGHT
       		textalignx 128
       		textaligny 20
@@ -142,32 +186,31 @@ itemDef {
     		}
 
 itemDef {
-      		name hud
-		group grpOptions
-      		type ITEM_TYPE_MULTI	
-		text "Statusbar:"
-		cvar "cg_hudfiles"
-	//	cvarStrList { Normal "ui/hud.txt" Small "ui/hud2.txt" }
-		cvarStrList { Normal "ui/hud.txt" }
-		rect 99 115 256 20
-      		textalign ITEM_ALIGN_RIGHT
-      		textalignx 128
-      		textaligny 20
-		textscale .3        
-      		forecolor 1 1 1 1
-      		visible 1  
-	}
-
-itemDef {
       		name hud				
 		group grpOptions
 		text "Crosshair:"
-		rect 227 135 20 20
+		rect 227 175 20 20
 		ownerdraw UI_CROSSHAIR
       		textalign ITEM_ALIGN_RIGHT
       		textalignx 0 
       		textaligny 20
 		textscale .3        
+      		forecolor 1 1 1 1
+      		visible 1 
+    		}
+
+
+	itemDef {
+      		name hud
+		group grpOptions
+      		type ITEM_TYPE_YESNO
+		text "Crosshair Health:"
+		cvar "cg_crosshairHealth"
+		rect 99 195 256 20
+      		textalign ITEM_ALIGN_RIGHT
+      		textalignx 128
+      		textaligny 20
+		textscale .3
       		forecolor 1 1 1 1
       		visible 1 
     		}
