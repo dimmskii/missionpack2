@@ -20,10 +20,10 @@
 #define ITEM_ALIGN_CENTER 1               // center alignment
 #define ITEM_ALIGN_RIGHT 2                // right alignment
 
-#define	WIDESCREEN_STRETCH 0              // TODO: QL Stub - Implement this
-#define	WIDESCREEN_LEFT 1                 // TODO: QL Stub - Implement this
-#define	WIDESCREEN_CENTER 2               // TODO: QL Stub - Implement this
-#define	WIDESCREEN_RIGHT 3                // TODO: QL Stub - Implement this
+#define	WIDESCREEN_STRETCH 0			// TODO: test this
+#define	WIDESCREEN_LEFT 1				// Shifts adjusted 640 to the left screen remainder
+#define	WIDESCREEN_CENTER 2				// Centers the adjusted 640 to the middle of screen
+#define	WIDESCREEN_RIGHT 3				// Shifts adjusted 640 to the right screen remainder
 
 #define	FONT_DEFAULT 0                    // TODO: QL Stub - Implement this
 #define	FONT_SANS 1                       // TODO: QL Stub - Implement this
@@ -284,15 +284,15 @@
 #define CG_SERVER_SETTINGS 72                     // TODO: QL Stub - Implement this
 #define CG_STARTING_WEAPONS 73                    // TODO: QL Stub - Implement this
 #define CG_GAME_LIMIT 74                          // TODO: QL Stub - Implement this
-#define CG_GAME_TYPE_ICON 75                      // TODO: QL Stub - Implement this
+#define CG_GAME_TYPE_ICON 75                      // ~Dimmskii - QL Implemented!
 #define CG_GAME_TYPE_MAP 76                       // TODO: QL Stub - Implement this
 #define CG_MATCH_DETAILS 77                       // TODO: QL Stub - Implement this
 #define CG_MATCH_END_CONDITION 78                 // TODO: QL Stub - Implement this
 #define CG_MATCH_STATUS 79                        // TODO: QL Stub - Implement this
-#define CG_LEVELTIMER 80                          // TODO: QL Stub - Implement this
-#define CG_ROUND 81                               // TODO: QL Stub - Implement this
-#define CG_ROUNDTIMER 82                          // TODO: QL Stub - Implement this
-#define CG_OVERTIME 83                            // TODO: QL Stub - Implement this
+#define CG_LEVELTIMER 80                          // ~Dimmskii - QL Implemented!
+#define CG_ROUND 81                               // ~Dimmskii - QL Implemented!
+#define CG_ROUNDTIMER 82                          // ~Dimmskii - QL Implemented!
+#define CG_OVERTIME 83                            // ~Dimmskii - QL Implemented!
 #define CG_LOCALTIME 84                           // TODO: QL Stub - Implement this
 #define CG_PLAYER_COUNTS 85                       // TODO: QL Stub - Implement this
 #define CG_VOTEGAMETYPE1 86                       // TODO: QL Stub - Implement this
@@ -320,7 +320,7 @@
 #define CG_PLAYER_HEALTH_BAR_200 108              // ~Dimmskii - QL Implemented!
 #define CG_RACE_STATUS 109                        // TODO: QL Stub - Implement this
 #define CG_RACE_TIMES 110                         // TODO: QL Stub - Implement this
-#define CG_PLAYER_HASKEY 111                      // TODO: QL Stub - Implement this
+#define CG_PLAYER_HASKEY 111                      // ~Dimmskii - QL Implemented!
 #define CG_COMBOKILLS 112                         // TODO: QL Stub - Implement this
 #define CG_RAMPAGES 113                           // TODO: QL Stub - Implement this
 #define CG_MIDAIRS 114                            // TODO: QL Stub - Implement this
@@ -331,11 +331,11 @@
 #define CG_MOST_ACCURATE_PLYR 119                 // TODO: QL Stub - Implement this
 #define CG_MOST_DAMAGEDEALT_PLYR 120              // TODO: QL Stub - Implement this
 #define CG_MATCH_WINNER 121                       // TODO: QL Stub - Implement this
-#define CG_1ST_PLACE_SCORE 122                    // TODO: QL Stub - Implement this
+#define CG_1ST_PLACE_SCORE 122                    // ~Dimmskii - QL Implemented!
 #define CG_1STPLACE_PLYR_MODEL 123                // TODO: QL Stub - Implement this
-#define CG_2ND_PLACE_SCORE 124                    // TODO: QL Stub - Implement this
-#define CG_PLAYER_OBIT 125                        // TODO: QL Stub - Implement this
-#define CG_AREA_NEW_CHAT 126                      // TODO: QL Stub - Implement this
+#define CG_2ND_PLACE_SCORE 124                    // ~Dimmskii - QL Implemented!
+#define CG_PLAYER_OBIT 125                        // ~Dimmskii - QL Implemented!
+#define CG_AREA_NEW_CHAT 126                      // ~Dimmskii - QL Implemented! (backing chat buffers still dead, see docs/devmemos/QL_HUD_BUILDUP.md)
 #define CG_PLYR_END_GAME_SCORE 127                // TODO: QL Stub - Implement this
 #define CG_PLYR_BEST_WEAPON_NAME 128              // TODO: QL Stub - Implement this
 #define CG_SELECTED_PLYR_TEAM_COLOR 129           // TODO: QL Stub - Implement this
@@ -346,8 +346,8 @@
 #define CG_WP_VERTICAL 134                        // TODO: QL Stub - Implement this
 #define CG_ACC_VERTICAL 135                       // TODO: QL Stub - Implement this
 #define CG_TEAM_COLORIZED 136                     // ~Dimmskii - QL Implemented!
-#define CG_TEAM_PLYR_COUNT 137                    // TODO: QL Stub - Implement this
-#define CG_ENEMY_PLYR_COUNT 138                   // TODO: QL Stub - Implement this
+#define CG_TEAM_PLYR_COUNT 137                    // ~Dimmskii - QL Implemented!
+#define CG_ENEMY_PLYR_COUNT 138                   // ~Dimmskii - QL Implemented!
 #define CG_1STPLACE_PLYR_MODEL_ACTIVE 139         // TODO: QL Stub - Implement this
 #define CG_1ST_PLYR 140                           // TODO: QL Stub - Implement this
 #define CG_1ST_PLYR_READY 141                     // TODO: QL Stub - Implement this
@@ -533,7 +533,7 @@
 #define CG_RED_AVG_PING 321                       // TODO: QL Stub - Implement this
 #define CG_RED_BASESTATUS 322                     // TODO: QL Stub - Implement this
 #define CG_RED_PLAYER_COUNT 323                   // TODO: QL Stub - Implement this
-#define CG_RED_CLAN_PLYRS 324                     // TODO: QL Stub - Implement this
+#define CG_RED_CLAN_PLYRS 324                     // ~Dimmskii - QL Implemented!
 #define CG_RED_TIMEOUT_COUNT 325                  // TODO: QL Stub - Implement this
 #define CG_RED_TEAM_MAP_PICKUPS 326               // TODO: QL Stub - Implement this
 #define CG_RED_TEAM_PICKUPS_RA 327                // TODO: QL Stub - Implement this
@@ -557,7 +557,7 @@
 #define CG_BLUE_AVG_PING 345                      // TODO: QL Stub - Implement this
 #define CG_BLUE_BASESTATUS 346                    // TODO: QL Stub - Implement this
 #define CG_BLUE_PLAYER_COUNT 347                  // TODO: QL Stub - Implement this
-#define CG_BLUE_CLAN_PLYRS 348                    // TODO: QL Stub - Implement this
+#define CG_BLUE_CLAN_PLYRS 348                    // ~Dimmskii - QL Implemented!
 #define CG_BLUE_TIMEOUT_COUNT 349                 // TODO: QL Stub - Implement this
 #define CG_BLUE_TEAM_MAP_PICKUPS 350              // TODO: QL Stub - Implement this
 #define CG_BLUE_TEAM_PICKUPS_RA 351               // TODO: QL Stub - Implement this

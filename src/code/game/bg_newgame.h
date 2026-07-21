@@ -71,6 +71,7 @@ static const char *GFACTORY_CVARS[] = {
 	"g_quadDamageFactor",
 	
 	"g_teamVisibility",
+	"g_itemVisibility",
 	"g_itemTimers",
 	"g_allSpec",
 	
@@ -180,7 +181,7 @@ static const char *GFACTORY_CVARS[] = {
 };
 
 #define GFACTORY_MAX_CVAR_VALUE_LEN 64
-#define GFACTORY_CVARS_COUNT       103 	/* Total elements in GFACTORY_CVARS excluding NULL */
+#define GFACTORY_CVARS_COUNT       104 	/* Total elements in GFACTORY_CVARS excluding NULL */
 
 // QL-Compatible game factories
 typedef struct {

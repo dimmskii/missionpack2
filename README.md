@@ -7,11 +7,11 @@ Mod based off of Kr3m's [missionpackplus](https://github.com/Kr3m/missionpackplu
 ## Features
 * FFA Arena and Clan Arena gametypes.
 * Heavy Machinegun from Quake Live
-* `factories.txt` and `*.factories` scripts support (partially QL-compatible, except for unimplemented gcvars and dmflags)
+* Mostly QL-compatible `factories.txt` and `*.factories` scripts support
 * QL-Style nail bounce
 * QL-Style Teammate POIs (`cg_drawFriend 2`)
 * Green armor
-* Item POIs and timers
+* Flag POIs
 * HUD files from QL parse without error. This project strives for near-total CG and UI scripts compatibility with both MPP and QL.
 * Unlagged, Instagib, PM/FB skins and much more from missionpackplus
 

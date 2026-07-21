@@ -200,6 +200,7 @@ static void CG_Obituary( entityState_t *ent ) {
 
 	if ( message ) {
 		CG_Printf( "%s %s.\n", targetName, message);
+		Com_sprintf( cg.lastObituary, sizeof( cg.lastObituary ), "%s %s.", targetName, message ); // ~Dimmskii
 		// switch to first killer if not following anyone
 		if ( cg.snap->ps.persistant[PERS_TEAM] == TEAM_SPECTATOR && cg_followKiller.integer ) {
 			if ( !cg.followTime && attacker != cg.snap->ps.clientNum && attacker < MAX_CLIENTS ) {
@@ -336,6 +337,7 @@ static void CG_Obituary( entityState_t *ent ) {
 
 		if ( message ) {
 			CG_Printf( "%s %s %s%s\n", targetName, message, attackerName, message2 );
+			Com_sprintf( cg.lastObituary, sizeof( cg.lastObituary ), "%s %s %s%s", targetName, message, attackerName, message2 ); // ~Dimmskii
 			// switch to first killer if not following anyone
 			if ( cg.snap->ps.persistant[PERS_TEAM] == TEAM_SPECTATOR && cg_followKiller.integer ) {
 				if ( !cg.followTime && attacker != cg.snap->ps.clientNum && attacker < MAX_CLIENTS ) {

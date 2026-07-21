@@ -37,6 +37,7 @@ set(CGAME_SOURCES
   cg_view.c
   cg_weapons.c
   "${UI_DIR}/ui_shared.c"
+  cg_olddraw.c
   cg_newdraw.c
 )
 

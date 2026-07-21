@@ -568,6 +568,9 @@ typedef struct {
 	int			scoreFadeTime;
 	char		killerName[MAX_NAME_LENGTH+32];
 	int			killerTime;
+// ~Dimmskii
+	char		lastObituary[128];	// most recent obituary line, for CG_PLAYER_OBIT
+// END Dimmskii
 	char			spectatorList[MAX_STRING_CHARS];		// list of names
 	int				spectatorLen;												// length of list
 	float			spectatorWidth;											// width in device units
@@ -1088,7 +1091,10 @@ typedef struct {
 	int				capturelimit;
 // ~Dimmskii
 	int				roundlimit;
+	int				roundtimelimit;		// serverinfo "roundtimelimit" (g_roundtimelimit), for CG_ROUNDTIMER
+	int				roundNumber;		// CS_ROUND_NUMBER, for CG_ROUND
 	int				g_teamVisibility;
+	int				g_itemVisibility;	// TODO: break up into perhaps g_flagVisibility, g_powerupVisibility, etc.
 	int				g_itemTimers;
 // END ~Dimmskii
 	int				timelimit;
@@ -1181,6 +1187,10 @@ typedef struct {
 
 	float			cursorX;
 	float			cursorY;
+
+// ~Dimmskii
+	qboolean		oldHud;		// set once in CG_LoadHudMenu: qtrue if cg_hudFiles was empty at load time, meaning the itemDef/menuDef .menu HUD was skipped entirely in favor of cg_olddraw.c's vanilla status bar/score box
+// END Dimmskii
 } cgs_t;
 
 // ~DIMMSKII
@@ -1237,6 +1247,7 @@ void CG_UpdateCvars( void );
 
 int CG_CrosshairPlayer( void );
 int CG_LastAttacker( void );
+void CG_LoadMenusFromConfig( void ); // ~Dimmskii - Outer call around CG_LoadMenus for reuse within cg_consolecmds.c
 void CG_LoadMenus(const char *menuFile);
 void CG_KeyEvent( int key, qboolean down );
 void CG_MouseEvent( int x, int y );
@@ -1265,11 +1276,27 @@ void CG_AddBufferedSound( sfxHandle_t sfx);
 
 void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView, qboolean demoPlayback );
 
+// ~Dimmskii
+// cg_olddraw.c - vanilla ioquake3's pre-MISSIONPACK HUD (opt-in via
+// cg_hudFiles ""), for players who want the original Q3 status bar/score
+// box instead of the itemDef/menuDef .menu HUD system. See CG_Draw2D
+// (cg_draw.c) for where these get called.
+void CG_DrawStatusBar_Old( void );
+void CG_DrawLowerRight_Old( void );
+// CG_DrawTeamOverlay itself lives in cg_draw.c (still used by the active
+// MISSIONPACK HUD too) - exported here so cg_olddraw.c's
+// CG_DrawLowerRight_Old can call it.
+float CG_DrawTeamOverlay( float y, qboolean right, qboolean upper );
+// END Dimmskii
+
 
 //
 // cg_drawtools.c
 //
 void CG_AdjustFrom640( float *x, float *y, float *w, float *h );
+// ~Dimmskii
+void CG_SetAdjustFrom640Mode( int widescreen );	// WIDESCREEN_* from menudef.h; default behaves as WIDESCREEN_CENTER (unlike QL retail's WIDESCREEN_LEFT default) so untouched TA draw calls keep their existing always-centered behavior
+// END Dimmskii
 void CG_FillRect( float x, float y, float width, float height, const float *color );
 void CG_FillScreen( const float *color );
 void CG_DrawPic( float x, float y, float width, float height, qhandle_t hShader );

@@ -922,7 +922,8 @@ static float CG_DrawTimer( float y ) {
 CG_DrawTeamOverlay
 =================
 */
-static float CG_DrawTeamOverlay( float y, qboolean right, qboolean upper ) {
+//static float CG_DrawTeamOverlay( float y, qboolean right, qboolean upper ) {
+float CG_DrawTeamOverlay( float y, qboolean right, qboolean upper ) { // ~Dimmskii - exported, see cg_local.h; used by cg_olddraw.c's CG_DrawLowerRight_Old
 	int x, w, h, xx;
 	int i, j, len;
 	const char *p;
@@ -2007,6 +2008,7 @@ CROSSHAIR
 CG_SetCrosshairColor
 =================
 */
+/*
 static void CG_SetCrosshairColor( void ) {
 	static int		colorNum;
 	static float	*colors[] = {
@@ -2030,6 +2032,87 @@ static void CG_SetCrosshairColor( void ) {
 
 	trap_R_SetColor( colors[colorNum] );
 }
+*/
+
+
+// ~DIMMSKII
+
+/*
+=================
+CG_SetCrosshairColor
+
+Pulled out of CG_SetCrosshairColor so CG_DrawCrosshair can also read the
+chosen base color (as opposed to only being able to trap_R_SetColor it
+directly), for blending with cg_crosshairHealth below.
+=================
+*/
+static float *CG_GetCrosshairColor( void ) {
+	static float	*colors[] = {
+		colorBlack,
+		colorRed,
+		colorGreen,
+		colorYellow,
+		colorBlue,
+		colorCyan,
+		colorMagenta,
+		colorWhite,
+		colorOrange,
+		colorPink
+	};
+	int colorNum = cg_crosshairColor.integer;
+	if ( colorNum > 9 || colorNum < 0 || !colorNum ) { // if it's larger than 9 or less than 0, set it to white
+		colorNum = 7;
+	}
+	colorNum = ( colorNum ) % ARRAY_LEN( colors );
+	return colors[colorNum];
+}
+
+// ql-style blend: cg_crosshairColor at full effective health, fading to red
+// as effective health (health + armor-adjusted) drops toward 30, matching
+// CG_GetColorForHealth's low/high landmarks.
+static void CG_ColorForHealthBlend( const float *base, vec4_t hcolor ) {
+	int health, armor, count, max;
+	float t;
+
+	health = cg.snap->ps.stats[STAT_HEALTH];
+	armor = cg.snap->ps.stats[STAT_ARMOR];
+
+	if ( health <= 0 ) {
+		VectorClear( hcolor );	// black, matches CG_GetColorForHealth's dead case
+		hcolor[3] = 1;
+		return;
+	}
+
+	count = armor;
+	max = health * ARMOR_PROTECTION / ( 1.0 - ARMOR_PROTECTION );
+	if ( max < count ) {
+		count = max;
+	}
+	health += count;
+
+	t = ( health - 30.0f ) / 70.0f; // 0 at effective health 30 or below, 1 at 100+
+	if ( t > 1.0f ) {
+		t = 1.0f;
+	} else if ( t < 0.0f ) {
+		t = 0.0f;
+	}
+
+	hcolor[0] = 1.0f + ( base[0] - 1.0f ) * t;	// red[0] is always 1
+	hcolor[1] = base[1] * t;					// red[1] is always 0
+	hcolor[2] = base[2] * t;					// red[2] is always 0
+	hcolor[3] = 1.0f;
+}
+
+/*
+=================
+CG_SetCrosshairColor
+=================
+*/
+static void CG_SetCrosshairColor( void ) {
+	trap_R_SetColor( CG_GetCrosshairColor() );
+}
+
+// END DIMMSKII
 
 
 /*
@@ -2060,7 +2143,8 @@ static void CG_DrawCrosshair( void ) {
 	if ( cg_crosshairHealth.integer ) {
 		vec4_t		hcolor;
 
-		CG_ColorForHealth( hcolor );
+		//CG_ColorForHealth( hcolor );
+		CG_ColorForHealthBlend( CG_GetCrosshairColor(), hcolor ); // ~Dimmskii - blend from cg_crosshairColor instead of always white
 		trap_R_SetColor( hcolor );
 	} else {
 		CG_SetCrosshairColor();
@@ -2363,7 +2447,21 @@ static void CG_DrawIntermission( void ) {
 //	}
 //#endif
 	cg.scoreFadeTime = cg.time;
-	cg.scoreBoardShowing = CG_DrawScoreboard();
+	//cg.scoreBoardShowing = CG_DrawScoreboard();
+	// ~Dimmskii - old-hud mode uses the NORMAL scoreboard (full player list)
+	// at intermission, not the oversize two-line tourney board (which looked
+	// bad for CA/team gametypes). The .menu-based CG_DrawScoreboard would find
+	// no loaded score_menu/teamscore_menu in old-hud mode and draw nothing.
+	// pm_type == PM_INTERMISSION forces CG_DrawOldScoreboard to full opacity,
+	// drawn over the frozen intermission view CG_DrawActive already rendered.
+	if ( cgs.oldHud ) {
+		//CG_DrawOldTourneyScoreboard();	// Uncomment for old tourney board
+		//cg.scoreBoardShowing = qtrue;		// Uncomment for old tourney board
+		cg.scoreBoardShowing = CG_DrawOldScoreboard();
+	} else {
+		cg.scoreBoardShowing = CG_DrawScoreboard();
+	}
+	// END Dimmskii
 }
 
 
@@ -2666,13 +2764,34 @@ static void CG_Draw2D( stereoFrame_t stereoFrame )
 		if ( !cg.showScores && cg.snap->ps.stats[STAT_HEALTH] > 0 ) {
 
 //#ifdef MISSIONPACK
-			if ( cg_drawStatus.integer ) {
-				Menu_PaintAll();
-				CG_DrawTimedMenus();
-			}
+			//if ( cg_drawStatus.integer ) {
+			//	Menu_PaintAll();
+			//	CG_DrawTimedMenus();
+			//}
 //#else
 //			CG_DrawStatusBar();
 //#endif
+
+			// ~Dimmskii - opt-in vanilla Q3 HUD (cg_olddraw.c), for players
+			// who'd rather have the original status bar/score box than the
+			// itemDef/menuDef .menu HUD system. Set cg_hudFiles "" to enable
+			// it. cgs.oldHud is set once in CG_LoadHudMenu (cg_main.c), which
+			// also skips loading hud.menu/score.menu/teamscore.menu entirely
+			// in that case, so Menu_PaintAll() has nothing of ours left to
+			// paint anyway - this still explicitly skips the call rather than
+			// relying on that, for clarity. Known gap: hud.menu bundles its
+			// own "voiceMenu" sub-definition, so voice chat's menu is also
+			// unavailable in old-hud mode right now (CG_DrawTimedMenus only
+			// auto-closes voiceMenu, calling it here would be harmless either
+			// way, but it's meaningless without the menu present).
+			if ( cgs.oldHud ) {
+				CG_DrawStatusBar_Old();
+				CG_DrawLowerRight_Old();
+			} else if ( cg_drawStatus.integer ) {
+				Menu_PaintAll();
+				CG_DrawTimedMenus();
+			}
+			// END Dimmskii
       
 			CG_DrawAmmoWarning();
 
@@ -2729,10 +2848,24 @@ static void CG_Draw2D( stereoFrame_t stereoFrame )
 	}
 
 	// don't draw center string if scoreboard is up
-	cg.scoreBoardShowing = CG_DrawScoreboard();
+	//cg.scoreBoardShowing = CG_DrawScoreboard();
+	// ~Dimmskii - old-hud mode (cgs.oldHud) uses cg_scoreboard.c's
+	// CG_DrawOldScoreboard instead of the itemDef/menuDef-based
+	// CG_DrawScoreboard above (which looks up "score_menu"/"teamscore_menu"
+	// via Menus_FindByName - both NULL in old-hud mode, since hud.menu never
+	// loads there). CG_DrawOldScoreboard already exists in this codebase,
+	// fully ported (GT_IsTeam/GT_IsArenaGame fixes already applied, tagged
+	// ~Dimmskii/~DIMMSKII in that file) - it was just never called from
+	// anywhere until now.
+	if ( cgs.oldHud ) {
+		cg.scoreBoardShowing = CG_DrawOldScoreboard();
+	} else {
+		cg.scoreBoardShowing = CG_DrawScoreboard();
+	}
 	if ( !cg.scoreBoardShowing ) {
 		CG_DrawCenterString();
 	}
+	// END Dimmskii
 
 	if ( cgs.score_catched ) {
 		float x, y, w, h;
@@ -2752,6 +2885,21 @@ static void CG_DrawTourneyScoreboard( void ) {
 //#else
 //	CG_DrawOldTourneyScoreboard();
 //#endif
+	// ~Dimmskii - old-hud mode shows the NORMAL scoreboard (full player list)
+	// here instead of vanilla's oversize two-line tourney board, which looked
+	// bad for team gametypes (CA etc). This is the dedicated spectator-
+	// scoreboard view (SPECTATOR_SCOREBOARD / PMF_SCOREBOARD): CG_DrawActive
+	// returns before rendering the world, so unlike the intermission and
+	// in-game cases the normal scoreboard has nothing behind it and no active
+	// fade. Fill a dark background and keep scoreFadeTime fresh so
+	// CG_DrawOldScoreboard (a fade-gated overlay) actually draws full opacity.
+	if ( cgs.oldHud ) {
+		vec4_t bg = { 0.0f, 0.0f, 0.0f, 1.0f };
+		CG_FillScreen( bg );
+		cg.scoreFadeTime = cg.time;
+		CG_DrawOldScoreboard();
+	}
+	// END Dimmskii
 }
 
 
@@ -3525,7 +3673,7 @@ static void CG_DrawItemPOIs( void ) {
 	centity_t	*cent;
 	vec3_t		pos;
 
-	if ( cgs.g_itemTimers ) {
+	if ( cgs.g_itemVisibility ) {
 		// Iterate through all entities (up to MAX_GENTITIES)
 		for ( i = 0; i < MAX_GENTITIES; i++ ) {
 			ip = &cg_itemPositions[i]; 

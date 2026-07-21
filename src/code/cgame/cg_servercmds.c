@@ -181,13 +181,16 @@ void CG_ParseServerinfo( void ) {
 	info = CG_ConfigString( CS_SERVERINFO );
 	cgs.gametype = atoi( Info_ValueForKey( info, "g_gametype" ) );
 	trap_Cvar_Set( "ui_gametype", va( "%i", cgs.gametype ) );
+	trap_Cvar_Set( "cg_gametype", va( "%i", cgs.gametype ) ); // ~Dimmskii - QL HUD compat, see cg_cvar.h
 	cgs.dmflags = atoi( Info_ValueForKey( info, "dmflags" ) );
 	cgs.teamflags = atoi( Info_ValueForKey( info, "teamflags" ) );
 	cgs.fraglimit = atoi( Info_ValueForKey( info, "fraglimit" ) );
 	cgs.capturelimit = atoi( Info_ValueForKey( info, "capturelimit" ) );
 // ~Dimmskii
 	cgs.roundlimit = atoi( Info_ValueForKey( info, "roundlimit" ) );
+	cgs.roundtimelimit = atoi( Info_ValueForKey( info, "roundtimelimit" ) );
 	cgs.g_teamVisibility = atoi( Info_ValueForKey( info, "g_teamVisibility" ) );
+	cgs.g_itemVisibility = atoi( Info_ValueForKey( info, "g_itemVisibility" ) );
 	cgs.g_itemTimers = atoi( Info_ValueForKey( info, "g_itemTimers" ) );
 // END ~Dimmskii
 	cgs.timelimit = atoi( Info_ValueForKey( info, "timelimit" ) );
@@ -384,6 +387,8 @@ static void CG_ConfigStringModified( void ) {
 		cgs.scores2 = atoi( str );
 	} else if ( num == CS_LEVEL_START_TIME ) {
 		cgs.levelStartTime = atoi( str );
+	} else if ( num == CS_ROUND_NUMBER ) { // ~Dimmskii
+		cgs.roundNumber = atoi( str );
 	} else if ( num == CS_VOTE_TIME ) {
 		cgs.voteTime = atoi( str );
 		cgs.voteModified = qtrue;
@@ -1173,7 +1178,7 @@ static void CG_ServerCommand( void ) {
         CG_ParseTeamPositions();
         return;
     }
-	if ( !strcmp( cmd, "ipos" ) ) { // Server sends if g_itemTimers is 1
+	if ( !strcmp( cmd, "ipos" ) ) { // Server sends if g_itemVisibility is 1
         CG_ParseItemPositions();
         return;
     }

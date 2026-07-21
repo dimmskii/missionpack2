@@ -1290,82 +1290,22 @@ void Item_RunScript(itemDef_t *item, const char *s) {
 }
 
 
-// ~DIMMSKII
-// QL:
-// Our gametype -> QL gametype mapping
-// Our: 0=FFA, 1=TOURN, 2=SP, 3=ARENA, 4=TEAM, 5=TEAMARENA,
-//      6=FREEZETAG, 7=CTF, 8=1FCTF, 9=OBELISK, 10=HARVESTER
-static const int toQLGametypeMap[] = {
-	0,    // GT_FFA (0)          -> QL 0
-	1,    // GT_TOURNAMENT (1)   -> QL 1
-	-1,   // GT_SINGLE_PLAYER (2)-> no QL equivalent
-	14,   // GT_ARENA (3)        -> QL 14
-	3,    // GT_TEAM (4)         -> QL 3
-	4,    // GT_TEAMARENA (5)    -> QL 4
-	9,    // GT_FREEZETAG (6)    -> QL 9
-	5,    // GT_CTF (7)          -> QL 5
-	6,    // GT_1FCTF (8)        -> QL 6
-	7,    // GT_OBELISK (9)      -> QL 7
-	8,    // GT_HARVESTER (10)   -> QL 8
-};
-static const int toQLGametypeMapSize = ARRAY_LEN(toQLGametypeMap);
-
-static qboolean Item_EnableShowViaCvar_QL(itemDef_t *item, int flag) {
-	char script[1024], *p;
-	char buff[1024];
-	int ourType, qlType;
-
-	memset(script, 0, sizeof(script));
-
-	ourType = DC->getCVarValue("g_gametype");
-
-	if (ourType >= 0 && ourType < toQLGametypeMapSize) {
-		qlType = toQLGametypeMap[ourType];
-	} else {
-		qlType = -1;
-	}
-
-	Com_sprintf(buff, sizeof(buff), "%d", qlType);
-
-	Q_strcat(script, 1024, item->enableCvar);
-	p = script;
-	while (1) {
-		const char *val;
-		if (!String_Parse(&p, &val)) {
-			return (item->cvarFlags & flag) ? qfalse : qtrue;
-		}
-
-		if (val[0] == ';' && val[1] == '\0') {
-			continue;
-		}
-
-		if (item->cvarFlags & flag) {
-			if (Q_stricmp(buff, val) == 0) {
-				return qtrue;
-			}
-		} else {
-			if (Q_stricmp(buff, val) == 0) {
-				return qfalse;
-			}
-		}
-	}
-	return (item->cvarFlags & flag) ? qfalse : qtrue;
-}
-
-// END DIMMSKII
-
-
 qboolean Item_EnableShowViaCvar(itemDef_t *item, int flag) {
   char script[1024], *p;
   memset(script, 0, sizeof(script));
   if (item && item->enableCvar && *item->enableCvar && item->cvarTest && *item->cvarTest) {
 		char buff[1024];
 
-// ~DIMMSKII QL Compat - divert cg_gametype
-		if (Q_stricmp(item->cvarTest, "cg_gametype") == 0) {
-			return Item_EnableShowViaCvar_QL(item, flag);
-		}
-// END DIMMSKII
+		// ~Dimmskii - no QL gametype remap needed here: cg_gametype (see
+		// cg_cvar.h) already mirrors cgs.gametype directly, and our
+		// gametype_t enum matches QL's numbering directly through
+		// GT_TEAMTOURNAMENT(13) (confirmed against QL-SRP's own gametype_t:
+		// identical ordering FFA=0..RED_ROVER=12). So showCvar literals
+		// copied verbatim from a real QL .menu file (e.g. "12" for Red
+		// Rover) already compare correctly against cg_gametype's raw string
+		// through the generic path below - a per-item remap table would
+		// only reintroduce a second numbering that needs to be kept in sync
+		// by hand.
 
 	  DC->getCVarString(item->cvarTest, buff, sizeof(buff));
 
@@ -4308,6 +4248,22 @@ void Menu_HandleMouseMove(menuDef_t *menu, float x, float y) {
 
 }
 
+// ~Dimmskii
+// Ported from QL-SRP's UI_ResolveMenuWidescreenMode. Panels that never set the
+// "widescreen" menu keyword keep the always-centered behavior every existing
+// TA/vanilla menuDef relies on; only menus that opt in (like hud.menu's
+// ScoreFrame/msgsArea panels) get edge-anchored.
+static int UI_ResolveMenuWidescreenMode( const menuDef_t *menu ) {
+	if ( !menu ) {
+		return WIDESCREEN_STRETCH;
+	}
+	if ( !menu->widescreenSet && !menu->fullScreen ) {
+		return WIDESCREEN_CENTER;
+	}
+	return menu->widescreen;
+}
+// END Dimmskii
+
 void Menu_Paint(menuDef_t *menu, qboolean forcePaint) {
 	int i;
 
@@ -4326,6 +4282,12 @@ void Menu_Paint(menuDef_t *menu, qboolean forcePaint) {
 	if (forcePaint) {
 		menu->window.flags |= WINDOW_FORCED;
 	}
+
+	// ~Dimmskii
+	if (DC->setAdjustFrom640Mode) {
+		DC->setAdjustFrom640Mode(UI_ResolveMenuWidescreenMode(menu));
+	}
+	// END Dimmskii
 
 	// draw the background if necessary
 	if (menu->fullScreen) {
@@ -4350,6 +4312,18 @@ void Menu_Paint(menuDef_t *menu, qboolean forcePaint) {
 		color[1] = 0;
 		DC->drawRect(menu->window.rect.x, menu->window.rect.y, menu->window.rect.w, menu->window.rect.h, 1, color);
 	}
+
+	// ~Dimmskii
+	// Without this, whatever mode this panel resolved to above stays the
+	// active global mode for every CG_AdjustFrom640 call made after this
+	// function returns - including hardcoded, non-menuDef draws like the
+	// crosshair and CG_DrawPOI's icon/background (CG_DrawItemPOIs/
+	// CG_DrawTeammatePOIs run right after Menu_PaintAll() in CG_Draw2D).
+	// Reset to the universal safe default so that leak can't happen.
+	if (DC->setAdjustFrom640Mode) {
+		DC->setAdjustFrom640Mode(WIDESCREEN_CENTER);
+	}
+	// END Dimmskii
 }
 
 /*
@@ -5339,11 +5313,13 @@ qboolean MenuParse_fullscreen( itemDef_t *item, int handle ) {
 
 // ~DIMMSKII
 qboolean MenuParse_widescreen( itemDef_t *item, int handle ) {
+	menuDef_t *menu = (menuDef_t*)item;
 	int i;
 	if (!PC_Int_Parse(handle, &i)) {
 		return qfalse;
 	}
-	// TODO: QL Stub. Implement this.
+	menu->widescreen = i;
+	menu->widescreenSet = qtrue;
 	return qtrue;
 }
 //END DIMM

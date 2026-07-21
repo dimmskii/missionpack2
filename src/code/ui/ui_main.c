@@ -3607,6 +3607,7 @@ static void UI_SetFactoryCvarsFromCustom( void ) {
 
 	trap_Cvar_SetValue( "g_friendlyFire", ui_friendlyFire.integer );
 	trap_Cvar_SetValue( "g_teamVisibility", ui_teamVisibility.integer );
+	trap_Cvar_SetValue( "g_itemVisibility", ui_itemVisibility.integer );
 	trap_Cvar_SetValue( "g_allSpec", ui_allSpec.integer );
 	trap_Cvar_SetValue( "g_1FRespawn", ui_1FRespawn.integer );
 	

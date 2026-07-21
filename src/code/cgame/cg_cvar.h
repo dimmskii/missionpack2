@@ -106,7 +106,7 @@ CG_CVAR( cg_recordSPDemo, "ui_recordSPDemo", "0", CVAR_ARCHIVE )
 CG_CVAR( cg_recordSPDemoName, "ui_recordSPDemoName", "", CVAR_ARCHIVE )
 CG_CVAR( cg_obeliskRespawnDelay, "g_obeliskRespawnDelay", "10", CVAR_SERVERINFO )
 //CG_CVAR( cg_hudFiles, "cg_hudFiles", "ui/mpp.txt", CVAR_ARCHIVE )
-CG_CVAR( cg_hudFiles, "cg_hudFiles", "ui/hud.txt", CVAR_ARCHIVE ) // ~Dimmskii
+CG_CVAR( cg_hudFiles, "cg_hudFiles", "", CVAR_ARCHIVE ) // ~Dimmskii -- Default empty (""), which means show our improved vhud (vanilla hud) instead of TA .menu stuff. Grumpy old people love this one.
 //#endif
 CG_CVAR( cg_cameraOrbit, "cg_cameraOrbit", "0", CVAR_CHEAT )
 CG_CVAR( cg_cameraOrbitDelay, "cg_cameraOrbitDelay", "50", CVAR_ARCHIVE )
@@ -142,6 +142,13 @@ CG_CVAR( cg_followKiller, "cg_followKiller", "0", CVAR_ARCHIVE )
 // All POIs
 CG_CVAR( cg_poiTextBgAlpha, "cg_poiTextBgAlpha", "0.3", CVAR_ARCHIVE )
 CG_CVAR( cg_poiMaxDist, "cg_poiMaxDist", "32768", CVAR_ARCHIVE )
+
+// QL HUD compat: read-only shadow of cgs.gametype, mirrored in
+// CG_ParseServerinfo (ported from QL-SRP's cg_gametype). Our gametype_t
+// already matches QL's numbering directly through GT_TEAMTOURNAMENT(13), so
+// showCvar literals from a real QL .menu file (e.g. hud.menu's Round panel:
+// cvarTest "cg_gametype" showCvar { "12" }) work unmodified.
+CG_CVAR( cg_gametype, "cg_gametype", "0", CVAR_ROM )
 
 // Teammate POIs
 CG_CVAR( cg_teammatePOIs, "cg_teammatePOIs", "1", CVAR_ROM ) // Read-only QL compat CG cvar cg_teammatePOIs = (cg_drawFriend.int>1)

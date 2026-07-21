@@ -1186,6 +1186,29 @@ static void CG_DrawAreaChat(rectDef_t *rect, float scale, vec4_t color, qhandle_
   CG_Text_Paint(rect->x, rect->y + rect->h, scale, color, teamChat2, 0, 0, 0);
 }
 
+// ~Dimmskii
+// ql def CG_AREA_NEW_CHAT
+// Same backing buffer as the old-system CG_AREA_CHAT - just rendered through
+// the QL ownerdraw path instead.
+static void CG_DrawAreaNewChat(rectDef_t *rect, float scale, vec4_t color, int textStyle) {
+	CG_Text_Paint(rect->x, rect->y + rect->h, scale, color, teamChat2, 0, 0, textStyle);
+}
+
+// ql def CG_PLAYER_HASKEY
+static void CG_DrawPlayerHasKey(rectDef_t *rect, qhandle_t shader) {
+	if ( shader && cg.snap->ps.stats[STAT_HOLDABLE_ITEM] ) {
+		CG_DrawPic(rect->x, rect->y, rect->w, rect->h, shader);
+	}
+}
+
+// ql def CG_PLAYER_OBIT
+static void CG_DrawPlayerObit(rectDef_t *rect, float scale, vec4_t color, int textStyle) {
+	if ( cg.lastObituary[0] ) {
+		CG_Text_Paint(rect->x, rect->y + rect->h, scale, color, cg.lastObituary, 0, 0, textStyle);
+	}
+}
+// END Dimmskii
+
 const char *CG_GetKillerText() {
 	const char *s = "";
 	if ( cg.killerName[0] ) {
@@ -1219,6 +1242,173 @@ static void CG_DrawCapFragLimit(rectDef_t *rect, float scale, vec4_t color, qhan
 // END ~Dimmskii
 	CG_Text_Paint(rect->x, rect->y, scale, color, va("%2i", limit),0, 0, textStyle); 
 }
+
+// ~Dimmskii
+// Client-side mirror of g_team.c's Team_PlayerCount(), for the QL team/enemy/
+// clan player-count ownerdraws below.
+static int CG_CountTeamPlayers( team_t team ) {
+	int i, count = 0;
+	for ( i = 0; i < cgs.maxclients; i++ ) {
+		if ( cgs.clientinfo[i].infoValid && cgs.clientinfo[i].team == team ) {
+			count++;
+		}
+	}
+	return count;
+}
+
+// ql def CG_TEAM_PLYR_COUNT
+static void CG_DrawTeamPlyrCount(rectDef_t *rect, float scale, vec4_t color, int textStyle) {
+	int count = CG_CountTeamPlayers( cg.snap->ps.persistant[PERS_TEAM] );
+	char num[16];
+	Com_sprintf( num, sizeof( num ), "%i", count );
+	CG_Text_Paint(rect->x, rect->y + rect->h, scale, color, num, 0, 0, textStyle);
+}
+
+// ql def CG_ENEMY_PLYR_COUNT
+static void CG_DrawEnemyPlyrCount(rectDef_t *rect, float scale, vec4_t color, int textStyle) {
+	team_t myTeam = cg.snap->ps.persistant[PERS_TEAM];
+	team_t enemyTeam = ( myTeam == TEAM_RED ) ? TEAM_BLUE : TEAM_RED;
+	int count = CG_CountTeamPlayers( enemyTeam );
+	char num[16];
+	Com_sprintf( num, sizeof( num ), "%i", count );
+	CG_Text_Paint(rect->x, rect->y + rect->h, scale, color, num, 0, 0, textStyle);
+}
+
+// ql def CG_RED_CLAN_PLYRS
+static void CG_DrawRedClanPlyrs(rectDef_t *rect, float scale, vec4_t color, int textStyle) {
+	int count = CG_CountTeamPlayers( TEAM_RED );
+	char num[16];
+	Com_sprintf( num, sizeof( num ), "%i", count );
+	CG_Text_Paint(rect->x, rect->y + rect->h, scale, color, num, 0, 0, textStyle);
+}
+
+// ql def CG_BLUE_CLAN_PLYRS
+static void CG_DrawBlueClanPlyrs(rectDef_t *rect, float scale, vec4_t color, int textStyle) {
+	int count = CG_CountTeamPlayers( TEAM_BLUE );
+	char num[16];
+	Com_sprintf( num, sizeof( num ), "%i", count );
+	CG_Text_Paint(rect->x, rect->y + rect->h, scale, color, num, 0, 0, textStyle);
+}
+// END Dimmskii
+
+// ~Dimmskii
+// ql def CG_LEVELTIMER
+static void CG_DrawLevelTimer(rectDef_t *rect, float scale, vec4_t color, int textStyle) {
+	int msec, mins, seconds;
+
+	if ( cgs.timelimit > 0 ) {
+		msec = (cgs.timelimit * 60000) - (cg.time - cgs.levelStartTime);
+		if ( msec < 0 ) {
+			msec = 0;
+		}
+	} else {
+		msec = cg.time - cgs.levelStartTime;
+	}
+
+	seconds = msec / 1000;
+	mins = seconds / 60;
+	seconds -= mins * 60;
+
+	CG_Text_Paint(rect->x, rect->y + rect->h, scale, color, va( "%i:%02i", mins, seconds ), 0, 0, textStyle);
+}
+
+// ql def CG_OVERTIME
+static void CG_DrawOvertime(rectDef_t *rect, float scale, vec4_t color, int textStyle) {
+	int msec, mins, seconds;
+
+	if ( cgs.timelimit <= 0 ) {
+		return;
+	}
+
+	msec = (cg.time - cgs.levelStartTime) - (cgs.timelimit * 60000);
+	if ( msec <= 0 ) {
+		return;
+	}
+
+	seconds = msec / 1000;
+	mins = seconds / 60;
+	seconds -= mins * 60;
+
+	CG_Text_Paint(rect->x, rect->y + rect->h, scale, color, va( "+%i:%02i", mins, seconds ), 0, 0, textStyle);
+}
+
+// ql def CG_ROUND
+// cgs.roundNumber is synced generically via CS_ROUND_NUMBER, bumped once in
+// G_WarmupEnd (round 1) and once per Arena_BeginRound call (round 2+) - both
+// are the shared entry points for any round-based gametype, arena or
+// otherwise, so this keeps working for round-based gametypes added later
+// without needing any client-side changes.
+static void CG_DrawRound(rectDef_t *rect, float scale, vec4_t color, int textStyle) {
+	if ( cgs.roundNumber <= 0 ) {
+		return;
+	}
+	CG_Text_Paint(rect->x, rect->y + rect->h, scale, color, va( "%i", cgs.roundNumber ), 0, 0, textStyle);
+}
+
+// ql def CG_ROUNDTIMER
+// Round start time: cg.warmup (CS_WARMUP) holds the target start of the most
+// recently begun round for round 2+ (Arena_BeginRound sets it and it's never
+// cleared again mid-round), but round 1 begins in G_WarmupEnd, which clears
+// CS_WARMUP to "" instead - cgs.levelStartTime covers that case, since round
+// 1's start coincides with the level/match start. Hidden until the round is
+// actually live (past its warmup countdown), same as CG_DrawOvertime hiding
+// until overtime actually starts.
+static void CG_DrawRoundTimer(rectDef_t *rect, float scale, vec4_t color, int textStyle) {
+	int roundStart, msec, mins, seconds;
+
+	if ( cgs.roundNumber <= 0 ) {
+		return;
+	}
+
+	roundStart = ( cg.warmup > 0 ) ? cg.warmup : cgs.levelStartTime;
+	if ( cg.time < roundStart ) {
+		return;
+	}
+
+	msec = cg.time - roundStart;
+	if ( cgs.roundtimelimit > 0 ) {
+		msec = ( cgs.roundtimelimit * 1000 ) - msec;
+		if ( msec < 0 ) {
+			msec = 0;
+		}
+	}
+
+	seconds = msec / 1000;
+	mins = seconds / 60;
+	seconds -= mins * 60;
+
+	CG_Text_Paint(rect->x, rect->y + rect->h, scale, color, va( "%i:%02i", mins, seconds ), 0, 0, textStyle);
+}
+// END Dimmskii
+
+// ~Dimmskii
+// ql def CG_RACE_STATUS / CG_RACE_TIMES
+// Race (GT_RACE, aliased to GT_SINGLE_PLAYER in bg_newgame.h) has no
+// server-side checkpoint/timing implementation at all yet - not even a
+// configstring or player-state field to read. Wiring up real gametype
+// mechanics isn't in scope for a HUD ownerdraw pass, so these stay no-ops
+// (matches the pre-existing default: unhandled ownerdraw -> nothing drawn).
+// The switch cases exist so this is easy to find and fill in once Race
+// gains real server-side tracking, instead of the ownerdraw silently having
+// no case at all.
+static void CG_DrawRaceStatus(rectDef_t *rect, float scale, vec4_t color, int textStyle) {
+}
+
+static void CG_DrawRaceTimes(rectDef_t *rect, float scale, vec4_t color, int textStyle) {
+}
+
+// ql def CG_RED_OWNED_FLAGS / CG_BLUE_OWNED_FLAGS
+// Same situation as Race: Domination (GT_DOMINATION) has no server-side
+// capture-point ownership tracking yet. Real QL's hud.menu already gates
+// these items behind `ownerdrawflag CG_SHOW_DOMINATION`, so once Domination
+// gains real tracking, only these two draw functions need filling in - the
+// switch wiring and menu-side visibility gating are already correct.
+static void CG_DrawRedOwnedFlags(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader, int textStyle) {
+}
+
+static void CG_DrawBlueOwnedFlags(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader, int textStyle) {
+}
+// END Dimmskii
 
 static void CG_Draw1stPlace(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader, int textStyle) {
 	if (cgs.scores1 != SCORE_NOT_PRESENT) {
@@ -1304,6 +1494,48 @@ const char *CG_GameTypeString() {
 static void CG_DrawGameType(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader, int textStyle ) {
 	CG_Text_Paint(rect->x, rect->y + rect->h, scale, color, CG_GameTypeString(), 0, 0, textStyle);
 }
+
+// ~Dimmskii
+// ql def CG_GAME_TYPE_ICON
+// Menu supplies no shader for this one (unlike e.g. CG_TEAM_COLORIZED), so
+// the icon itself is picked here based on gametype and lazily registered.
+static qhandle_t CG_GameTypeIconShader( void ) {
+	static qhandle_t icons[GT_MAX_GAME_TYPE];
+	const char *path;
+
+	if ( icons[cgs.gametype] ) {
+		return icons[cgs.gametype];
+	}
+
+	switch ( cgs.gametype ) {
+		case GT_FFA:            path = "ui/assets/hud/ffa.png"; break;
+		case GT_TOURNAMENT:     path = "ui/assets/hud/duel.png"; break;
+		case GT_TEAM:           path = "ui/assets/hud/tdm.png"; break;
+		case GT_CLAN_ARENA:     path = "ui/assets/hud/ca.png"; break;
+		case GT_CTF:            path = "ui/assets/hud/ctf.png"; break;
+		case GT_1FCTF:          path = "ui/assets/hud/1f.png"; break;
+		case GT_HARVESTER:      path = "ui/assets/hud/har.png"; break;
+		case GT_FREEZE:         path = "ui/assets/hud/ft.png"; break;
+		case GT_DOMINATION:     path = "ui/assets/hud/dom.png"; break;
+		case GT_ATTACK_DEFEND:  path = "ui/assets/hud/ad.png"; break;
+		case GT_RED_ROVER:      path = "ui/assets/hud/rr.png"; break;
+		case GT_SINGLE_PLAYER:  path = "ui/assets/hud/race.png"; break;
+		default:                path = NULL; break;
+	}
+
+	if ( path ) {
+		icons[cgs.gametype] = trap_R_RegisterShader( path );
+	}
+	return icons[cgs.gametype];
+}
+
+static void CG_DrawGameTypeIcon(rectDef_t *rect) {
+	qhandle_t icon = CG_GameTypeIconShader();
+	if ( icon ) {
+		CG_DrawPic(rect->x, rect->y, rect->w, rect->h, icon);
+	}
+}
+// END Dimmskii
 
 static void CG_Text_Paint_Limit(float *maxX, float x, float y, float scale, vec4_t color, const char* text, float adjust, int limit) {
   int len, count;
@@ -1806,7 +2038,7 @@ void CG_OwnerDraw(float x, float y, float w, float h, float text_x, float text_y
     CG_DrawTeamColorized(&rect, shader);
     break;
   case CG_ARMORTIERED_COLORIZED:
- 	CG_DrawArmorTieredColorized();
+ 	CG_DrawArmorTieredColorized(&rect);
     break;
 
   case CG_PLAYER_ARMOR_BAR_100:
@@ -1823,6 +2055,67 @@ void CG_OwnerDraw(float x, float y, float w, float h, float text_x, float text_y
 
   case CG_PLAYER_HEALTH_BAR_200:
  	CG_DrawPlayerHealthBar(&rect, shader, qfalse, qtrue);
+    break;
+
+  case CG_1ST_PLACE_SCORE:
+    CG_Draw1stPlace(&rect, scale, color, shader, textStyle);
+    break;
+  case CG_2ND_PLACE_SCORE:
+    CG_Draw2ndPlace(&rect, scale, color, shader, textStyle);
+    break;
+
+  case CG_LEVELTIMER:
+    CG_DrawLevelTimer(&rect, scale, color, textStyle);
+    break;
+  case CG_OVERTIME:
+    CG_DrawOvertime(&rect, scale, color, textStyle);
+    break;
+
+  case CG_PLAYER_HASKEY:
+    CG_DrawPlayerHasKey(&rect, shader);
+    break;
+  case CG_GAME_TYPE_ICON:
+    CG_DrawGameTypeIcon(&rect);
+    break;
+  case CG_PLAYER_OBIT:
+    CG_DrawPlayerObit(&rect, scale, color, textStyle);
+    break;
+  case CG_AREA_NEW_CHAT:
+    CG_DrawAreaNewChat(&rect, scale, color, textStyle);
+    break;
+
+  case CG_TEAM_PLYR_COUNT:
+    CG_DrawTeamPlyrCount(&rect, scale, color, textStyle);
+    break;
+  case CG_ENEMY_PLYR_COUNT:
+    CG_DrawEnemyPlyrCount(&rect, scale, color, textStyle);
+    break;
+  case CG_RED_CLAN_PLYRS:
+    CG_DrawRedClanPlyrs(&rect, scale, color, textStyle);
+    break;
+  case CG_BLUE_CLAN_PLYRS:
+    CG_DrawBlueClanPlyrs(&rect, scale, color, textStyle);
+    break;
+
+  case CG_ROUND:
+    CG_DrawRound(&rect, scale, color, textStyle);
+    break;
+  case CG_ROUNDTIMER:
+    CG_DrawRoundTimer(&rect, scale, color, textStyle);
+    break;
+
+  case CG_RACE_STATUS:
+    CG_DrawRaceStatus(&rect, scale, color, textStyle);
+    break;
+  case CG_RACE_TIMES:
+    CG_DrawRaceTimes(&rect, scale, color, textStyle);
+    break;
+
+  case CG_RED_OWNED_FLAGS:
+    CG_DrawRedOwnedFlags(&rect, scale, color, shader, textStyle);
+    break;
+  case CG_BLUE_OWNED_FLAGS:
+    CG_DrawBlueOwnedFlags(&rect, scale, color, shader, textStyle);
     break;
 // End Dimmskii
 
@@ -2024,9 +2317,50 @@ void CG_DrawTeamColorized(rectDef_t *rect, qhandle_t shader) {
 	}
 }
 
-// ql def CG_ARMORTIERED_COLORIZED
-void CG_DrawArmorTieredColorized(void) {
+// ql port: CG_ArmorTierForArmor/CG_GetArmorTierColorForTier (QL-SRP cg_newdraw.c),
+// derived client-side from ps->stats[STAT_ARMOR] instead of a replicated
+// STAT_ARMOR_TIER stat, since we don't track tier server-side.
+static int CG_ArmorTierForArmor( int armor ) {
+	if ( armor >= 150 ) {
+		return 2;
+	}
+	if ( armor >= 100 ) {
+		return 1;
+	}
+	if ( armor > 0 ) {
+		return 0;
+	}
+	return -1;
+}
 
+static void CG_GetArmorTierColorForTier( int tier, vec4_t color ) {
+	switch ( tier ) {
+	case 2:
+		color[0] = 1.0f; color[1] = 0.0f; color[2] = 0.0f; color[3] = 1.0f;
+		break;
+	case 1:
+		color[0] = 1.0f; color[1] = 1.0f; color[2] = 0.0f; color[3] = 1.0f;
+		break;
+	case 0:
+		color[0] = 0.0f; color[1] = 1.0f; color[2] = 0.0f; color[3] = 1.0f;
+		break;
+	default:
+		color[0] = 0.4f; color[1] = 0.4f; color[2] = 0.4f; color[3] = 0.6f;
+		break;
+	}
+}
+
+// ql def CG_ARMORTIERED_COLORIZED
+void CG_DrawArmorTieredColorized(rectDef_t *rect) {
+	vec4_t color;
+
+	if ( !rect || !cg.snap ) {
+		return;
+	}
+
+	CG_GetArmorTierColorForTier( CG_ArmorTierForArmor( cg.snap->ps.stats[STAT_ARMOR] ), color );
+	color[3] = 0.5f;
+	CG_FillRect( rect->x, rect->y, rect->w, rect->h, color );
 }
 
 // ql def CG_PLAYER_ARMOR_BAR_100
