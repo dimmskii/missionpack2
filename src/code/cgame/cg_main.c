@@ -1367,6 +1367,8 @@ qboolean CG_Load_Menu(char **p) {
 
 
 // ~DIMMSKII
+static void CG_LoadVanillaHUD( void );
+
 void CG_LoadMenusFromConfig( void ) {
 	char buff[1024];
 	const char *hudSet;
@@ -1798,6 +1800,7 @@ void CG_LoadHudMenu( void ) {
 	cgDC.Error = &Com_Error; 
 	cgDC.Print = &Com_Printf; 
 	cgDC.ownerDrawWidth = &CG_OwnerDrawWidth;
+	cgDC.setAdjustFrom640Mode = &CG_SetAdjustFrom640Mode; // ~Dimmskii - widescreen anchor hook; do not drop, Menu_Paint needs it for the widescreen keyword
 	//cgDC.Pause = &CG_Pause;
 	cgDC.registerSound = &trap_S_RegisterSound;
 	cgDC.startBackgroundTrack = &trap_S_StartBackgroundTrack;
