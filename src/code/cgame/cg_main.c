@@ -1366,6 +1366,35 @@ qboolean CG_Load_Menu(char **p) {
 }
 
 
+// ~DIMMSKII
+void CG_LoadMenusFromConfig( void ) {
+	char buff[1024];
+	const char *hudSet;
+	
+	trap_Cvar_VariableStringBuffer("cg_hudFiles", buff, sizeof(buff));
+	hudSet = buff;
+
+	// cg_hudFiles "" used to just silently fall back to the default set:
+	// Repurposed: empty now means "opt into cg_olddraw.c's vanilla status
+	// bar/score box instead of the itemDef/menuDef .menu HUD" - skip loading
+	// hud.menu/score.menu/teamscore.menu (and whatever they bundle, e.g.
+	// hud.menu's own "voiceMenu" sub-definition) entirely, rather than
+	// falling back to the default set. cgs.oldHud is the single source of
+	// truth other code (CG_Draw2D) checks, set once here rather than
+	// re-querying the cvar every frame. Menu_Reset() above already ran, so
+	// Menus[] stays clean/empty in this case - nothing left to explicitly
+	// "not draw".
+	cgs.oldHud = (qboolean)(hudSet[0] == '\0');
+	if ( cgs.oldHud ) {
+		CG_LoadVanillaHUD();
+		return;
+	}
+
+	CG_LoadMenus(hudSet);
+}
+// END DIMMSKII
+
+
 
 void CG_LoadMenus(const char *menuFile) {
 	char	*token;
@@ -1378,12 +1407,25 @@ void CG_LoadMenus(const char *menuFile) {
 
 	len = trap_FS_FOpenFile( menuFile, &f, FS_READ );
 	if ( !f ) {
+//		trap_Error( va( S_COLOR_YELLOW "menu file not found: %s, using default\n", menuFile ) );
+//		len = trap_FS_FOpenFile( "ui/mpp.txt", &f, FS_READ );
+//		if (!f) {
+//			trap_Error( va( S_COLOR_RED "default menu file not found: ui/mpp.txt, unable to continue!\n", menuFile ) );
+//		}
+
+// ~Dimmskii - Set fallback to vq3 hud
+		cgs.oldHud = qtrue;
+		CG_LoadVanillaHUD();
+		return;
+// END Dimmskii
+	}
+	
+	if ( !f ) {
 		trap_Error( va( S_COLOR_YELLOW "menu file not found: %s, using default\n", menuFile ) );
 		//len = trap_FS_FOpenFile( "ui/mpp.txt", &f, FS_READ );
-		len = trap_FS_FOpenFile( "ui/hud.txt", &f, FS_READ ); // ~Dimmskii
+		len = trap_FS_FOpenFile( "ui/hud_mpp.txt", &f, FS_READ ); // ~Dimmskii
 		if (!f) {
 			//trap_Error( va( S_COLOR_RED "default menu file not found: ui/mpp.txt, unable to continue!\n", menuFile ) );
-			trap_Error( va( S_COLOR_RED "default menu file not found: ui/hud.txt, unable to continue!\n", menuFile ) ); // ~Dimmskii
 		}
 	}
 
@@ -1688,6 +1730,23 @@ static void CG_RunCinematicFrame(int handle) {
   trap_CIN_RunCinematic(handle);
 }
 
+// ~Dimmskii
+
+static void CG_LoadVanillaHUD( void ) {
+	// Center/status texts (center print, warmup, crosshair names, the
+	// FIGHT countdown, ...) draw via CG_Text_Paint, which needs the TA
+	// fonts. Those are normally registered while parsing a .menu file's
+	// assetGlobalDef - which old-hud skips - so without this they'd draw
+	// with an unloaded font (invisible/garbage). Register the same
+	// defaults our hud.menu assetGlobalDef uses (fonts/impact.ttf at
+	// 16/12/20, already baked as fontImage_16/12/20.dat).
+	cgDC.registerFont( "fonts/impact.ttf", 16, &cgDC.Assets.textFont );
+	cgDC.registerFont( "fonts/impact.ttf", 12, &cgDC.Assets.smallFont );
+	cgDC.registerFont( "fonts/impact.ttf", 20, &cgDC.Assets.bigFont );
+}
+
+// END Dimmskii
+
 /*
 =================
 CG_LoadHudMenu();
@@ -1739,7 +1798,6 @@ void CG_LoadHudMenu( void ) {
 	cgDC.Error = &Com_Error; 
 	cgDC.Print = &Com_Printf; 
 	cgDC.ownerDrawWidth = &CG_OwnerDrawWidth;
-	cgDC.setAdjustFrom640Mode = &CG_SetAdjustFrom640Mode; // ~Dimmskii
 	//cgDC.Pause = &CG_Pause;
 	cgDC.registerSound = &trap_S_RegisterSound;
 	cgDC.startBackgroundTrack = &trap_S_StartBackgroundTrack;
@@ -1752,41 +1810,16 @@ void CG_LoadHudMenu( void ) {
 	Init_Display(&cgDC);
 
 	Menu_Reset();
-
-	trap_Cvar_VariableStringBuffer("cg_hudFiles", buff, sizeof(buff));
-	hudSet = buff;
+	
+	//trap_Cvar_VariableStringBuffer("cg_hudFiles", buff, sizeof(buff));
+	//hudSet = buff;
 	//if (hudSet[0] == '\0') {
 	//	hudSet = "ui/mpp.txt";
 	//}
 
-// ~Dimmskii
-	// cg_hudFiles "" used to just silently fall back to the default set:
-	// Repurposed: empty now means "opt into cg_olddraw.c's vanilla status
-	// bar/score box instead of the itemDef/menuDef .menu HUD" - skip loading
-	// hud.menu/score.menu/teamscore.menu (and whatever they bundle, e.g.
-	// hud.menu's own "voiceMenu" sub-definition) entirely, rather than
-	// falling back to the default set. cgs.oldHud is the single source of
-	// truth other code (CG_Draw2D) checks, set once here rather than
-	// re-querying the cvar every frame. Menu_Reset() above already ran, so
-	// Menus[] stays clean/empty in this case - nothing left to explicitly
-	// "not draw".
-	cgs.oldHud = (qboolean)(hudSet[0] == '\0');
-	if ( cgs.oldHud ) {
-		// Center/status texts (center print, warmup, crosshair names, the
-		// FIGHT countdown, ...) draw via CG_Text_Paint, which needs the TA
-		// fonts. Those are normally registered while parsing a .menu file's
-		// assetGlobalDef - which old-hud skips - so without this they'd draw
-		// with an unloaded font (invisible/garbage). Register the same
-		// defaults our hud.menu assetGlobalDef uses (fonts/impact.ttf at
-		// 16/12/20, already baked as fontImage_16/12/20.dat).
-		cgDC.registerFont( "fonts/impact.ttf", 16, &cgDC.Assets.textFont );
-		cgDC.registerFont( "fonts/impact.ttf", 12, &cgDC.Assets.smallFont );
-		cgDC.registerFont( "fonts/impact.ttf", 20, &cgDC.Assets.bigFont );
-		return;
-	}
-// END Dimmskii
-
-	CG_LoadMenus(hudSet);
+	//CG_LoadMenus(hudSet);
+	
+	CG_LoadMenusFromConfig(); // ~Dimmskii
 }
 
 void CG_AssetCache( void ) {

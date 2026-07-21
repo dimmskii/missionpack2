@@ -1247,6 +1247,7 @@ void CG_UpdateCvars( void );
 
 int CG_CrosshairPlayer( void );
 int CG_LastAttacker( void );
+void CG_LoadMenusFromConfig( void ); // ~Dimmskii - Outer call around CG_LoadMenus for reuse within cg_consolecmds.c
 void CG_LoadMenus(const char *menuFile);
 void CG_KeyEvent( int key, qboolean down );
 void CG_MouseEvent( int x, int y );

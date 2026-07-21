@@ -120,21 +120,22 @@ extern menuDef_t *menuScoreboard;
 void Menu_Reset( void );			// FIXME: add to right include file
 
 static void CG_LoadHud_f( void) {
-  char buff[1024];
-	const char *hudSet;
-  memset(buff, 0, sizeof(buff));
+//  char buff[1024];
+//	const char *hudSet;
+//  memset(buff, 0, sizeof(buff));
 
 	String_Init();
 	Menu_Reset();
 	
-	trap_Cvar_VariableStringBuffer("cg_hudFiles", buff, sizeof(buff));
-	hudSet = buff;
-	if (hudSet[0] == '\0') {
-		//hudSet = "ui/mpp.txt";
-		hudSet = "ui/hud.txt"; // ~Dimmskii
-	}
+//	trap_Cvar_VariableStringBuffer("cg_hudFiles", buff, sizeof(buff));
+//	hudSet = buff;
+//	if (hudSet[0] == '\0') {
+//		//hudSet = "ui/mpp.txt";
+//		hudSet = "ui/hud_mpp.txt"; // ~Dimmskii
+//	}
 
-	CG_LoadMenus(hudSet);
+//	CG_LoadMenus(hudSet);
+	CG_LoadMenusFromConfig();	// ~Dimmskii
   menuScoreboard = NULL;
 }
 
