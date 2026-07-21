@@ -2455,6 +2455,8 @@ static void CG_DrawIntermission( void ) {
 	// pm_type == PM_INTERMISSION forces CG_DrawOldScoreboard to full opacity,
 	// drawn over the frozen intermission view CG_DrawActive already rendered.
 	if ( cgs.oldHud ) {
+		//CG_DrawOldTourneyScoreboard();	// Uncomment for old tourney board
+		//cg.scoreBoardShowing = qtrue;		// Uncomment for old tourney board
 		cg.scoreBoardShowing = CG_DrawOldScoreboard();
 	} else {
 		cg.scoreBoardShowing = CG_DrawScoreboard();
