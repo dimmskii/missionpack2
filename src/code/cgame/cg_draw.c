@@ -2448,12 +2448,14 @@ static void CG_DrawIntermission( void ) {
 //#endif
 	cg.scoreFadeTime = cg.time;
 	//cg.scoreBoardShowing = CG_DrawScoreboard();
-	// ~Dimmskii - old-hud mode uses vanilla Q3's oversize tourney scoreboard
-	// at intermission (the .menu-based CG_DrawScoreboard would find no loaded
-	// score_menu/teamscore_menu in old-hud mode and draw nothing).
+	// ~Dimmskii - old-hud mode uses the NORMAL scoreboard (full player list)
+	// at intermission, not the oversize two-line tourney board (which looked
+	// bad for CA/team gametypes). The .menu-based CG_DrawScoreboard would find
+	// no loaded score_menu/teamscore_menu in old-hud mode and draw nothing.
+	// pm_type == PM_INTERMISSION forces CG_DrawOldScoreboard to full opacity,
+	// drawn over the frozen intermission view CG_DrawActive already rendered.
 	if ( cgs.oldHud ) {
-		CG_DrawOldTourneyScoreboard();
-		cg.scoreBoardShowing = qtrue;
+		cg.scoreBoardShowing = CG_DrawOldScoreboard();
 	} else {
 		cg.scoreBoardShowing = CG_DrawScoreboard();
 	}
@@ -2881,11 +2883,19 @@ static void CG_DrawTourneyScoreboard( void ) {
 //#else
 //	CG_DrawOldTourneyScoreboard();
 //#endif
-	// ~Dimmskii - old-hud mode (cgs.oldHud) draws vanilla Q3's oversize
-	// spectator/tourney scoreboard (cg_scoreboard.c). The .menu HUD has no
-	// equivalent oversize board, so it stays a no-op there (unchanged).
+	// ~Dimmskii - old-hud mode shows the NORMAL scoreboard (full player list)
+	// here instead of vanilla's oversize two-line tourney board, which looked
+	// bad for team gametypes (CA etc). This is the dedicated spectator-
+	// scoreboard view (SPECTATOR_SCOREBOARD / PMF_SCOREBOARD): CG_DrawActive
+	// returns before rendering the world, so unlike the intermission and
+	// in-game cases the normal scoreboard has nothing behind it and no active
+	// fade. Fill a dark background and keep scoreFadeTime fresh so
+	// CG_DrawOldScoreboard (a fade-gated overlay) actually draws full opacity.
 	if ( cgs.oldHud ) {
-		CG_DrawOldTourneyScoreboard();
+		vec4_t bg = { 0.0f, 0.0f, 0.0f, 1.0f };
+		CG_FillScreen( bg );
+		cg.scoreFadeTime = cg.time;
+		CG_DrawOldScoreboard();
 	}
 	// END Dimmskii
 }
