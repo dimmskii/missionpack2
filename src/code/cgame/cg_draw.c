@@ -2447,7 +2447,17 @@ static void CG_DrawIntermission( void ) {
 //	}
 //#endif
 	cg.scoreFadeTime = cg.time;
-	cg.scoreBoardShowing = CG_DrawScoreboard();
+	//cg.scoreBoardShowing = CG_DrawScoreboard();
+	// ~Dimmskii - old-hud mode uses vanilla Q3's oversize tourney scoreboard
+	// at intermission (the .menu-based CG_DrawScoreboard would find no loaded
+	// score_menu/teamscore_menu in old-hud mode and draw nothing).
+	if ( cgs.oldHud ) {
+		CG_DrawOldTourneyScoreboard();
+		cg.scoreBoardShowing = qtrue;
+	} else {
+		cg.scoreBoardShowing = CG_DrawScoreboard();
+	}
+	// END Dimmskii
 }
 
 
@@ -2871,6 +2881,13 @@ static void CG_DrawTourneyScoreboard( void ) {
 //#else
 //	CG_DrawOldTourneyScoreboard();
 //#endif
+	// ~Dimmskii - old-hud mode (cgs.oldHud) draws vanilla Q3's oversize
+	// spectator/tourney scoreboard (cg_scoreboard.c). The .menu HUD has no
+	// equivalent oversize board, so it stays a no-op there (unchanged).
+	if ( cgs.oldHud ) {
+		CG_DrawOldTourneyScoreboard();
+	}
+	// END Dimmskii
 }
 
 
