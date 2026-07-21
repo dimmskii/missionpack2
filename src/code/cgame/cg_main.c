@@ -1772,6 +1772,16 @@ void CG_LoadHudMenu( void ) {
 	// "not draw".
 	cgs.oldHud = (qboolean)(hudSet[0] == '\0');
 	if ( cgs.oldHud ) {
+		// Center/status texts (center print, warmup, crosshair names, the
+		// FIGHT countdown, ...) draw via CG_Text_Paint, which needs the TA
+		// fonts. Those are normally registered while parsing a .menu file's
+		// assetGlobalDef - which old-hud skips - so without this they'd draw
+		// with an unloaded font (invisible/garbage). Register the same
+		// defaults our hud.menu assetGlobalDef uses (fonts/impact.ttf at
+		// 16/12/20, already baked as fontImage_16/12/20.dat).
+		cgDC.registerFont( "fonts/impact.ttf", 16, &cgDC.Assets.textFont );
+		cgDC.registerFont( "fonts/impact.ttf", 12, &cgDC.Assets.smallFont );
+		cgDC.registerFont( "fonts/impact.ttf", 20, &cgDC.Assets.bigFont );
 		return;
 	}
 // END Dimmskii
