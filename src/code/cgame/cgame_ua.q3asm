@@ -27,4 +27,5 @@ bg_misc
 q_math
 q_shared
 ui_shared
+cg_olddraw
 cg_newdraw

@@ -20,10 +20,10 @@
 #define ITEM_ALIGN_CENTER 1               // center alignment
 #define ITEM_ALIGN_RIGHT 2                // right alignment
 
-#define	WIDESCREEN_STRETCH 0              // TODO: QL Stub - Implement this
-#define	WIDESCREEN_LEFT 1                 // TODO: QL Stub - Implement this
-#define	WIDESCREEN_CENTER 2               // TODO: QL Stub - Implement this
-#define	WIDESCREEN_RIGHT 3                // TODO: QL Stub - Implement this
+#define	WIDESCREEN_STRETCH 0			// TODO: test this
+#define	WIDESCREEN_LEFT 1				// Shifts adjusted 640 to the left screen remainder
+#define	WIDESCREEN_CENTER 2				// Centers the adjusted 640 to the middle of screen
+#define	WIDESCREEN_RIGHT 3				// Shifts adjusted 640 to the right screen remainder
 
 #define	FONT_DEFAULT 0                    // TODO: QL Stub - Implement this
 #define	FONT_SANS 1                       // TODO: QL Stub - Implement this

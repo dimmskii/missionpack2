@@ -1187,6 +1187,10 @@ typedef struct {
 
 	float			cursorX;
 	float			cursorY;
+
+// ~Dimmskii
+	qboolean		oldHud;		// set once in CG_LoadHudMenu: qtrue if cg_hudFiles was empty at load time, meaning the itemDef/menuDef .menu HUD was skipped entirely in favor of cg_olddraw.c's vanilla status bar/score box
+// END Dimmskii
 } cgs_t;
 
 // ~DIMMSKII
@@ -1243,6 +1247,7 @@ void CG_UpdateCvars( void );
 
 int CG_CrosshairPlayer( void );
 int CG_LastAttacker( void );
+void CG_LoadMenusFromConfig( void ); // ~Dimmskii - Outer call around CG_LoadMenus for reuse within cg_consolecmds.c
 void CG_LoadMenus(const char *menuFile);
 void CG_KeyEvent( int key, qboolean down );
 void CG_MouseEvent( int x, int y );
@@ -1270,6 +1275,19 @@ void CG_ZoomUp_f( void );
 void CG_AddBufferedSound( sfxHandle_t sfx);
 
 void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView, qboolean demoPlayback );
+
+// ~Dimmskii
+// cg_olddraw.c - vanilla ioquake3's pre-MISSIONPACK HUD (opt-in via
+// cg_hudFiles ""), for players who want the original Q3 status bar/score
+// box instead of the itemDef/menuDef .menu HUD system. See CG_Draw2D
+// (cg_draw.c) for where these get called.
+void CG_DrawStatusBar_Old( void );
+void CG_DrawLowerRight_Old( void );
+// CG_DrawTeamOverlay itself lives in cg_draw.c (still used by the active
+// MISSIONPACK HUD too) - exported here so cg_olddraw.c's
+// CG_DrawLowerRight_Old can call it.
+float CG_DrawTeamOverlay( float y, qboolean right, qboolean upper );
+// END Dimmskii
 
 
 //

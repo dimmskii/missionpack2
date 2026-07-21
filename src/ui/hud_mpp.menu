@@ -1,11 +1,8 @@
-// hud_lv.menu
-// "Like" Vanilla HUD
-// By Dimmskii
-
-
-// include defines from ui_shared.h
 #include "ui/menudef.h"
 
+// team menu
+// 
+// defines from ui_shared.h
 
 {
   assetGlobalDef {
@@ -247,9 +244,8 @@ itemDef {
 menuDef {
     	name "Ammo"
     	fullScreen MENU_FALSE
-		widescreen WIDESCREEN_LEFT
     	visible MENU_TRUE
-    	rect 0 430 200 50
+    	rect 223 455 64 24
 	
 
 	itemDef {
@@ -259,17 +255,17 @@ menuDef {
 	border 1
 	bordersize 1
 	bordercolor .5 .5 .5 1
-	rect 0 0 200 50
+	rect 0 0 64 24
 	}
 	
 
 	itemDef {
  	name "a"
-	rect 20 0 100 50
+	rect 30 1 24 19
 	visible 1
 	textstyle 3
 	decoration
-	textscale 1
+	textscale .333
 	forecolor 1 1 1 1
 	ownerdraw CG_PLAYER_AMMO_VALUE
 	addColorRange -999 5 1 0 0 1
@@ -278,13 +274,15 @@ menuDef {
 
 	itemDef {
      	name "a"
-	rect 130 0 60 50 
+	rect 5 2 20 20 
 	visible 1
 	decoration
-	ownerdraw CG_PLAYER_AMMO_ICON
+	ownerdraw CG_PLAYER_AMMO_ICON2D
 	}
 
 	}
+
+
 
 
 
@@ -294,30 +292,37 @@ menuDef {
 menuDef {
     	name "Player"
     	fullScreen MENU_FALSE
-		widescreen WIDESCREEN_LEFT
     	visible MENU_TRUE
-    	rect 210 430 200 50
-	
+   	rect 288 455 64 24
 
 	itemDef {
 	name "playerRect"
+	rect 1 1 62 23
+	style 3
+	background hudalert
 	visible 1
+	ownerdrawflag CG_SHOW_HEALTHCRITICAL            
+	}
+
+	itemDef {
+	name "playerRect"
+	rect 0 0 64 24
 	style 4
+	visible 1
 	border 1
 	bordersize 1
 	bordercolor .5 .5 .5 1
-	rect 0 0 200 50
 	}
-	
+
 
 	itemDef {
- 	name "healthok"
-	rect 20 0 100 50
+      	name "healthok"
+        rect 30 1 24 19
 	visible 1
 	textstyle 3
 	decoration
-	textscale 1
 	forecolor 1 1 1 1
+	textscale .333
 	ownerdraw CG_PLAYER_HEALTH
 	addColorRange -999 25 1 0 0 1
 	addColorRange 26 100 1 .75 0 1
@@ -325,16 +330,13 @@ menuDef {
 	}
 
 	itemDef {
-     	name "b"
-	rect 130 0 60 50 
+      	name "b"
+	rect 2 1 22 22
 	visible 1
-	decoration
-	ownerdraw CG_PLAYER_HEAD
+    	decoration
+	ownerdraw CG_PLAYER_HEAD 
 	}
-
-	}
-
-
+  	}
 
 
 
@@ -347,210 +349,41 @@ menuDef {
 menuDef {
     	name "Armor"
     	fullScreen MENU_FALSE
-		widescreen WIDESCREEN_LEFT
-    	visible MENU_TRUE
-    	rect 420 430 200 50
-	
+    	visible MENU_TRUE	
+    	rect 353 455 64 24
+
 
 	itemDef {
 	name "armorRect"
+	rect 0 0 64 24
 	visible 1
 	style 4
 	border 1
 	bordersize 1
 	bordercolor .5 .5 .5 1
-	rect 0 0 200 50
-	}
-	
-
-	itemDef {
- 	name "armor2"
-	rect 20 0 100 50
-	visible 1
-	textstyle 3
-	decoration
-	textscale 1
-	forecolor 1 1 1 1
-	ownerdraw CG_PLAYER_ARMOR_VALUE
-	addColorRange -999 25 .67 0 0 1
-	addColorRange 26 100  1 .75 0 1
-	addColorRange 101 999 .75 .75 .75 1
 	}
 
 	itemDef {
      	name "armor"
-	rect 130 0 60 50 
+	rect 5 -8 20 20
+	visible 1
+   	decoration
+	ownerdraw CG_PLAYER_ARMOR_ICON2D
+	}
+
+	itemDef {
+      	name "armor2"
+	textstyle 3
+        rect 30 1 24 19
 	visible 1
 	decoration
-	ownerdraw CG_PLAYER_ARMOR_ICON
+	textscale .333
+	ownerdraw CG_PLAYER_ARMOR_VALUE 
+	addColorRange -999 25 .67 0 0 1
+	addColorRange 26 100  1 .75 0 1
+	addColorRange 101 999 .75 .75 .75 1
 	}
-
-	}
-
-
-
-
-// TEAM SCORES BOX
-
-menuDef {
-    	name "Teambox"
-    	fullScreen MENU_FALSE
-		widescreen WIDESCREEN_RIGHT
-    	visible MENU_TRUE
-    	rect 475 373 165 54
-		ownerdrawflag CG_SHOW_ANYTEAMGAME
-	
-	itemDef {
-	name "TeamboxRoundsRed"
-	rect 55 0 55 27
-	visible 1
-	bordercolor 1 1 1 .75
-	decoration	
-	style 3
-	ownerdrawflag CG_SHOW_TEAM_ARENA                 
-	background "ui/assets/redchip.tga"
-	}
-	
-	itemDef {
-	name "TeamboxRoundsBlue"
-	rect 110 0 55 27
-	visible 1
-	bordercolor 1 1 1 .75
-	decoration	
-	style 3
-	ownerdrawflag CG_SHOW_TEAM_ARENA                 
-	background "ui/assets/bluechip.tga"
-	}
-	
-	itemDef {
-	name "TeamboxFlagRed"
-	rect 55 0 55 27
-	visible 1
-	bordercolor 1 1 1 .75
-	decoration	
-	style 3
-	ownerdrawflag CG_SHOW_CTF                 
-	background "icons/iconf_red1.tga"
-	}
-	
-	itemDef {
-	name "TeamboxFlagBlue"
-	rect 110 0 55 27
-	visible 1
-	bordercolor 1 1 1 .75
-	decoration	
-	style 3
-	ownerdrawflag CG_SHOW_CTF                 
-	background "icons/iconf_blu1.tga"
-	}
-	
-	itemDef {
-	name "TeamboxSkullRed"
-	rect 55 0 55 27
-	visible 1
-	bordercolor 1 1 1 .75
-	decoration	
-	style 3
-	ownerdrawflag CG_SHOW_HARVESTER                 
-	background "icons/skull_red.tga"
-	}
-	
-	itemDef {
-	name "TeamboxSkullBlue"
-	rect 110 0 55 27
-	visible 1
-	bordercolor 1 1 1 .75
-	decoration	
-	style 3
-	ownerdrawflag CG_SHOW_HARVESTER                 
-	background "icons/skull_blue.tga"
-	}
-	
-	itemDef {
-	name "TeamboxObeliskRed"
-	rect 55 0 55 27
-	visible 1
-	bordercolor 1 1 1 .75
-	decoration	
-	style 3
-	ownerdrawflag CG_SHOW_OBELISK                 
-	background "ui/assets/redchip.tga"
-	}
-	
-	itemDef {
-	name "TeamboxObeliskBlue"
-	rect 110 0 55 27
-	visible 1
-	bordercolor 1 1 1 .75
-	decoration	
-	style 3
-	ownerdrawflag CG_SHOW_OBELISK                
-	background "ui/assets/bluechip.tga"
-	}
-
-	itemDef {
-	name "TeamboxRectRed"
-	visible 1
-	style 1
-	backcolor .75 0 0 .5
-	border 0
-	bordersize 0
-	bordercolor .5 .5 .5 1
-	rect 55 27 55 27
-	}
-	
-	itemDef {
-	name "TeamboxRectBlue"
-	visible 1
-	style 1
-	backcolor 0 0 .75 .5
-	border 0
-	bordersize 0
-	bordercolor .5 .5 .5 1
-	rect 110 27 55 27
-	}
-	
-	
-	itemDef {
-      	name "TeamBoxCapLimit"
-        rect 0 27 55 27
-	visible 1
-	textstyle 3
-    	decoration
-	forecolor 1 1 1 1
-	textscale .5
-	text ""
-	ownerdrawflag CG_SHOW_CTF  
-	ownerdraw CG_CAPFRAGLIMIT 
-	}
-	
-	itemDef {
-      	name "TeamBoxCapRed"
-        rect 55 27 55 27
-	visible 1
-	textstyle 3
-    	decoration
-	forecolor 1 1 1 1
-	textscale .5
-	text ""
-	ownerdrawflag CG_SHOW_CTF  
-	ownerdraw CG_RED_SCORE 
-	}
-	
-	itemDef {
-      	name "TeamBoxCapBlue"
-        rect 110 27 55 27
-	visible 1
-	textstyle 3
-    	decoration
-	forecolor 1 1 1 1
-	textscale .5
-	text ""
-	ownerdrawflag CG_SHOW_CTF  
-	ownerdraw CG_BLUE_SCORE 
-	}
-
-}
+ 	}
 
 
 
