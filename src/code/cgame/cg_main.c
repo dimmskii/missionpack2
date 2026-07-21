@@ -1416,19 +1416,11 @@ void CG_LoadMenus(const char *menuFile) {
 //		}
 
 // ~Dimmskii - Set fallback to vq3 hud
+		CG_Printf( S_COLOR_YELLOW "WARNING: cg_hudFiles \"%s\" not found - falling back to vanilla Q3 HUD.\n" S_COLOR_WHITE, menuFile );
 		cgs.oldHud = qtrue;
 		CG_LoadVanillaHUD();
 		return;
 // END Dimmskii
-	}
-	
-	if ( !f ) {
-		trap_Error( va( S_COLOR_YELLOW "menu file not found: %s, using default\n", menuFile ) );
-		//len = trap_FS_FOpenFile( "ui/mpp.txt", &f, FS_READ );
-		len = trap_FS_FOpenFile( "ui/hud_mpp.txt", &f, FS_READ ); // ~Dimmskii
-		if (!f) {
-			//trap_Error( va( S_COLOR_RED "default menu file not found: ui/mpp.txt, unable to continue!\n", menuFile ) );
-		}
 	}
 
 	if ( len >= MAX_MENUDEFFILE ) {
