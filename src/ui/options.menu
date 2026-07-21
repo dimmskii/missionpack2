@@ -97,6 +97,7 @@ itemDef {
 		textscale .3
       		forecolor 1 1 1 1
       		visible 1 
+			action { play "sound/misc/menu1.wav" ; exec "loadhud" }
     		}
 			
 	itemDef {
