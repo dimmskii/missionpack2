@@ -5512,18 +5512,19 @@ BotArenaPickEnemyToKill
 void BotArenaPickEnemyToKill(bot_state_t *bs) {
 	int			i, areanum;
 	gentity_t	*clientEnt;
+	gentity_t	*found = NULL;	// ~Dimmskii - the picked enemy, NULL if none
 	int count = 0;
 	aas_entityinfo_t entinfo;
 	#ifdef DEBUG
 	char botname[MAX_NETNAME], othername[MAX_NETNAME];
 	#endif //DEBUG
-	
+
 	// Loop through all clients
 	for ( i = 0 ; i < level.maxclients ; i++ ) {
 		clientEnt = g_entities + i;
 		if ( !clientEnt->inuse )
 			continue;
-		
+
 		// If on specified team and alive (health > 0), add to alive count
 //		if ( gametype < GT_TEAM || clientEnt->client->sess.sessionTeam != BotTeam(bs) ) {
 		if ( !GT_IsTeam(gametype) || clientEnt->client->sess.sessionTeam != BotTeam(bs) ) { // ~Dimmskii
@@ -5533,12 +5534,24 @@ void BotArenaPickEnemyToKill(bot_state_t *bs) {
 				ClientName( clientEnt->client->ps.clientNum, othername, sizeof( othername ) );
 				BotAI_Print(PRT_MESSAGE, va("%s arenapicks %s\n", botname, othername));
 	#endif //DEBUG
-				
+
+				found = clientEnt; // ~Dimmskii
 				break;
 			}
 		}
 	}
-	BotEntityInfo(clientEnt->client->ps.clientNum, &entinfo);
+	// ~Dimmskii - guard: if no alive enemy was found, clientEnt is left at the
+	// last-iterated slot, which on a padded server (spare sv_maxclients) is an
+	// empty, unconnected slot whose ->client is NULL. Bail instead of
+	// dereferencing it. (Common transient state in instagib - everyone
+	// respawning at once - which the g_instagib gate now also reaches.)
+	if ( !found ) {
+		bs->ltg_time = 0;
+		bs->ltgtype = 0;
+		return;
+	}
+	//BotEntityInfo(clientEnt->client->ps.clientNum, &entinfo);
+	BotEntityInfo(found->client->ps.clientNum, &entinfo); // ~Dimmskii - use guarded 'found' instead of stale clientEnt
 	//if info is valid (in PVS)
 	if (entinfo.valid) {
 	#ifdef DEBUG
@@ -5547,7 +5560,8 @@ void BotArenaPickEnemyToKill(bot_state_t *bs) {
 		areanum = BotPointAreaNum(entinfo.origin);
 		if (areanum) {// && trap_AAS_AreaReachability(areanum)) {
 			BotRoamGoal(bs,entinfo.origin);
-			bs->teamgoal.entitynum = clientEnt->client->ps.clientNum;
+			//bs->teamgoal.entitynum = clientEnt->client->ps.clientNum;
+			bs->teamgoal.entitynum = found->client->ps.clientNum; // ~Dimmskii
 			bs->teamgoal.areanum = areanum;
 			bs->teamgoal_time = FloatTime() + 0.5f;
 			bs->ltg_time = FloatTime() + 0.5f;
