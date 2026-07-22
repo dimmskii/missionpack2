@@ -5506,42 +5506,6 @@ void BotShutdownDeathmatchAI(void) {
 // ~DIMMSKII
 /*
 ==================
-BotNearestReachableArea
-
-Returns a routable (reachability-graph) AAS area at or near 'origin' - the
-closest adjacent reachable place. Unlike BotPointAreaNum, which can return an
-area that merely CONTAINS the point but has no reachabilities, this only
-returns areas a bot can actually path from. If the point isn't itself in a
-routable area (e.g. an enemy mid-bounce on a jump pad, or up on a thin ledge),
-it probes straight down to the floor the point is above/landing on and takes
-the first routable area the ray crosses. Returns 0 if nothing routable is near.
-==================
-*/
-int BotNearestReachableArea(vec3_t origin) {
-	int areanum, numareas, areas[16], i;
-	vec3_t start, end;
-
-	// the point's own routing area, if it has a usable one
-	areanum = trap_AAS_PointReachabilityAreaIndex(origin);
-	if (areanum && trap_AAS_AreaReachability(areanum)) {
-		return areanum;
-	}
-	// off-mesh / airborne: trace down and take the nearest routable area below
-	VectorCopy(origin, start);
-	start[2] += 24;
-	VectorCopy(origin, end);
-	end[2] -= 4096;
-	numareas = trap_AAS_TraceAreas(start, end, areas, NULL, 16);
-	for (i = 0; i < numareas; i++) {
-		if (areas[i] && trap_AAS_AreaReachability(areas[i])) {
-			return areas[i];
-		}
-	}
-	return 0;
-}
-
-/*
-==================
 BotArenaPickEnemyToKill
 ==================
 */
@@ -5593,16 +5557,9 @@ void BotArenaPickEnemyToKill(bot_state_t *bs) {
 	#ifdef DEBUG
 		BotAI_Print(PRT_MESSAGE, va("%s gets valid entinfo for arenapick\n", botname));
 	#endif //DEBUG
-		//areanum = BotPointAreaNum(entinfo.origin);
-		areanum = BotNearestReachableArea(entinfo.origin); // ~Dimmskii - closest adjacent reachable area, so goal still updates for airborne/jump-pad enemies
+		areanum = BotPointAreaNum(entinfo.origin);
 		if (areanum) {// && trap_AAS_AreaReachability(areanum)) {
-			//BotRoamGoal(bs,entinfo.origin);
-			// ~Dimmskii - BotRoamGoal above is commented out: it clobbers
-			// entinfo.origin with a random wander point near the bot, so the
-			// VectorCopy(entinfo.origin, bs->teamgoal.origin) below ended up a
-			// random spot instead of the enemy (bot roamed). Left out, so
-			// teamgoal.origin stays the enemy's actual position (matching
-			// areanum) and the bot approaches the enemy instead.
+			BotRoamGoal(bs,entinfo.origin);
 			//bs->teamgoal.entitynum = clientEnt->client->ps.clientNum;
 			bs->teamgoal.entitynum = found->client->ps.clientNum; // ~Dimmskii
 			bs->teamgoal.areanum = areanum;
