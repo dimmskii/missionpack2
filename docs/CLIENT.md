@@ -1,6 +1,55 @@
 # Quake III Ultimate Arena Client Configuration
 
-## 1. General Cvars
+## 1. HUD
+
+Ultimate Arena ships two HUD styles and lets you switch between them live - no map reload needed.
+
+### Choosing your HUD in the menu
+
+**Setup → Game Options → HUD tab → "Hud Style"**. Cycling this option applies the change immediately (behind the scenes it runs the `loadhud` command for you).
+
+![HUD Style option in the Game Options menu](CLIENT_files/h00_hud_selection.jpg)
+
+*The "Hud Style" option at the top of the Setup → Game Options → HUD tab. It cycles between `Vanilla` and `MPP`.*
+
+### The two styles
+
+**Vanilla (VQ3)** - the classic Quake III status bar and score box. This is the **default**.
+
+![Vanilla Q3 HUD](CLIENT_files/h05_hud_vq3_ca.jpg)
+
+![Vanilla Q3 scoreboard](CLIENT_files/h06_scores_vq3_ca.jpg)
+
+**MPP** - the custom itemDef/menuDef `.menu`-driven HUD inherited from *missionpackplus* (Kr3m). Widescreen-aware.
+
+![MPP custom HUD](CLIENT_files/h01_hud_mpp.jpg)
+
+![MPP scoreboard](CLIENT_files/h02_scores_mpp.jpg)
+
+### The `cg_hudFiles` cvar (and switching from the console)
+
+The HUD style is really just the `cg_hudFiles` cvar (`CVAR_ARCHIVE`, so it persists):
+
+| Value | HUD |
+| --- | --- |
+| `""` (empty string) | Vanilla Q3 HUD *(default)* |
+| `"ui/hud_mpp.txt"` | MPP custom `.menu` HUD |
+
+Setting `cg_hudFiles ""` disables loading the Team Arena / Quake Live `.menu` HUD files altogether and draws the built-in vanilla status bar instead. If `cg_hudFiles` points at a `.menu` config that can't be found, the game doesn't error out to the main menu - it prints a yellow console warning and falls back to the vanilla HUD (same as `""`).
+
+Changing the cvar alone does **not** reapply the HUD immediately. After setting it from the console, run **`loadhud`** to apply it live (this is the exact command the menu uses):
+
+```
+cg_hudFiles ""                  // vanilla Q3 HUD
+loadhud
+
+cg_hudFiles "ui/hud_mpp.txt"    // custom MPP HUD
+loadhud
+```
+
+---
+
+## 2. General Cvars
 
 General config improvements upon vanilla Q3/TA:
 
@@ -23,7 +72,7 @@ General config improvements upon vanilla Q3/TA:
 
 ---
 
-## 2. Team/Item/Flag Markers and Timer Cvars
+## 3. Team/Item/Flag Markers and Timer Cvars
 
 These variables control the global behavior and rendering constraints for all overhead Point of Interest indicators:
 
