@@ -16,9 +16,9 @@ Ultimate Arena ships two HUD styles and lets you switch between them live - no m
 
 **Vanilla (VQ3)** - the classic Quake III status bar and score box. This is the **default**.
 
-![Vanilla Q3 HUD](CLIENT_files/h03_hud_vq3.jpg)
+![Vanilla Q3 HUD](CLIENT_files/h05_hud_vq3_ca.jpg)
 
-![Vanilla Q3 scoreboard](CLIENT_files/h04_scores_vq3.jpg)
+![Vanilla Q3 scoreboard](CLIENT_files/h06_scores_vq3_ca.jpg)
 
 **MPP** - the custom itemDef/menuDef `.menu`-driven HUD inherited from *missionpackplus* (Kr3m). Widescreen-aware.
 
