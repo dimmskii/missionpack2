@@ -1726,7 +1726,8 @@ void LogExit( const char *string ) {
 
 //#ifdef MISSIONPACK
 	if (g_singlePlayer.integer) {
-		if (g_gametype.integer >= GT_CTF) {
+//		if (g_gametype.integer >= GT_CTF) {
+		if ( GT_IsFlagGame(g_gametype.integer) ) { // ~Dimmskii
 			won = level.teamScores[TEAM_RED] > level.teamScores[TEAM_BLUE];
 		}
 		trap_SendConsoleCommand( EXEC_APPEND, (won) ? "spWin\n" : "spLose\n" );
@@ -2011,7 +2012,7 @@ static void CheckExitRules_old( void ) { // ~Dimmskii
 		}
 	}
 
-	if ( g_gametype.integer >= GT_CTF && g_capturelimit.integer ) {
+	if ( GT_IsFlagGame( g_gametype.integer ) && g_capturelimit.integer ) { // ~Dimmskii - was: g_gametype.integer >= GT_CTF (wrongly caught Freeze/Domination/Attack-Defend/Red Rover/Team-Tournament/Arena after the enum reorder)
 
 		if ( level.teamScores[TEAM_RED] >= g_capturelimit.integer ) {
 			G_BroadcastServerCommand( -1, "print \"Red hit the capturelimit.\n\"" );

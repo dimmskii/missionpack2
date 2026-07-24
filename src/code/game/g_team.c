@@ -1735,7 +1735,8 @@ qboolean CheckObeliskAttack( gentity_t *obelisk, gentity_t *attacker ) {
 //#endif
 
 static void Cmd_Flaginfo_f( gentity_t *ent ) {
-	if ( g_gametype.integer < GT_CTF ) {
+//	if ( g_gametype.integer < GT_CTF ) {
+	if ( !GT_IsFlagGame(g_gametype.integer) ) { // ~Dimmskii
 		return;
 	}
 
