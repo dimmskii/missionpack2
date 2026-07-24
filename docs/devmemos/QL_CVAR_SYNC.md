@@ -14,26 +14,8 @@ more gameplay cvars are added.
 
 ## GOVERNING EDIT RULE (~Dimmskii) - applies to EVERY step below
 
-Every file that pre-exists our project (i.e. inherited from the Kr3m
-`missionpackplus` sources) must be edited non-destructively:
-
-- **Never delete** an upstream line. Comment the original out in place -
-  slash comment (`//`) for one/few lines, or a block comment for larger
-  spans - so the original stays visible.
-- Put the replacement/addition **directly below** the commented-out
-  original, opened with `// ~Dimmskii`. For a multi-line addition, close it
-  with `// END Dimmskii`. A single added line can just carry a trailing or
-  leading `// ~Dimmskii`.
-- **Lump into existing `~Dimmskii` blocks** where possible: if a new method,
-  declaration, prototype, or field belongs next to an existing Dimmskii
-  region (or an existing Dimmskii block already brackets that area), extend
-  that block rather than opening a new island of tags.
-- Brand-new files we author are ours outright and don't need per-line tags
-  (a single authorship header is enough), but any hunk that touches an
-  upstream file follows the rule above.
-
-This rule is the reference for each numbered step - assume it without it
-being repeated per step.
+See `CONVENTIONS_CODING_C_H.md` for the full ~Dimmskii tagging convention.
+Assume it applies to every step below without being repeated per step.
 
 ## Groupings (mirror QL-SRP's messages)
 
