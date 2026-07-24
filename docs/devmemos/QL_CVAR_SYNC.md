@@ -150,3 +150,26 @@ forced.
 - `CS_SERVER_SETTINGS_INFO_A` and `CS_PMOVE_SETTINGS` are defined and driven
   now but carry nothing until flag-type settings / gameplay `pmove_*` cvars
   are added - then they slot in with no new plumbing.
+
+## Verified / cross-engine notes
+
+- Confirmed fixing shotgun hitmarks on VQ3, ioq3, and q3e engine forks.
+- The pellet count - and every value on these dedicated configstrings - rides
+  the reliable gamestate baseline (delivered at connect, and via reliable `cs`
+  updates on change), NOT snapshots. That's core Q3 netcode implemented
+  identically across forks, which is why the fix lit up uniformly on all three
+  engines. It is *not* an "ioq3 tolerates serverinfo" effect: `sg_pellets`
+  isn't in serverinfo at all anymore (it shrank 977 -> 667 bytes and the keys
+  are gone), and pre-fix the `flags=0` value was `atoi("")` = 0, i.e. broken.
+- What *is* `sv_fps`/snapshot-bound is the per-shot impact CADENCE, not the
+  count: `EV_SHOTGUN` events ride snapshots at `sv_fps`, so raising `sv_fps`
+  makes the shell hits return snappier. q3e exposes this more than ioq3
+  (stricter server-authoritative timing vs ioq3's more generous event
+  smoothing). Orthogonal to this cvar work - the count is reliable/one-time,
+  the cadence is the engine tick. The diff-guarded per-frame republish means
+  cranking `sv_fps` costs nothing on the configstring side.
+- This reliable-configstring transport is exactly what the eventual
+  prediction-heavy `pmove_*` settings (`CS_PMOVE_SETTINGS`) want: client-side
+  movement prediction needs to hold the authoritative values deterministically,
+  and the reliable gamestate guarantees that regardless of fork or tick rate -
+  which serverinfo (length-capped, and here already brimming) could not.
