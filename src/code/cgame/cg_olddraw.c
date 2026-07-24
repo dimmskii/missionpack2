@@ -559,7 +559,8 @@ static float CG_DrawScores_Old( float y ) {
 		}
 
 		if ( cgs.fraglimit ) {
-			s = va( "%2i", cgs.fraglimit );
+			//s = va( "%2i", cgs.fraglimit );
+			s = va( "%2i", (GT_IsArenaGame(cgs.gametype) ? cgs.roundlimit : cgs.fraglimit) );	// ~Dimmskii
 			CG_DrawString( x-4, y, s, colorWhite, BIGCHAR_WIDTH, BIGCHAR_HEIGHT, 0, DS_SHADOW | DS_RIGHT );
 		}
 	}
