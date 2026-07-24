@@ -78,7 +78,16 @@
 #define CS_LOCATIONS			(CS_PLAYERS+MAX_CLIENTS)
 #define CS_PARTICLES			(CS_LOCATIONS+MAX_LOCATIONS) 
 
-#define CS_MAX					(CS_PARTICLES+MAX_LOCATIONS)
+//#define CS_MAX					(CS_PARTICLES+MAX_LOCATIONS)
+// ~Dimmskii - QL-shaped dedicated gameplay-cvar configstrings, carved out of
+// our free CS range (QL's retail 0x2A9+ indices would collide with
+// CS_PLAYERS/CS_PARTICLES). See docs/devmemos/QL_CVAR_SYNC.md.
+#define CS_WEAPON_RELOAD_TIMES		(CS_PARTICLES+MAX_LOCATIONS)	// compact weapon-refire slab (14 ints, WP_ order)
+#define CS_SERVER_SETTINGS_INFO_A	(CS_WEAPON_RELOAD_TIMES+1)	// reserved: future boolean server-settings flags
+#define CS_SERVER_SETTINGS_INFO_B	(CS_SERVER_SETTINGS_INFO_A+1)	// scalars info string (sgPellets, sgSpread)
+#define CS_PMOVE_SETTINGS			(CS_SERVER_SETTINGS_INFO_B+1)	// reserved: future gameplay pmove_* slab
+#define CS_MAX						(CS_PMOVE_SETTINGS+1)
+// END Dimmskii
 
 #if (CS_MAX) > MAX_CONFIGSTRINGS
 #error overflow: (CS_MAX) > MAX_CONFIGSTRINGS
