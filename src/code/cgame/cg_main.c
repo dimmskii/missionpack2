@@ -845,8 +845,7 @@ static void CG_RegisterGraphics( void ) {
 //#endif
 
 //	if ( cgs.gametype >= GT_TEAM || cg_buildScript.integer ) {
-//	if ( GT_IsTeam(cgs.gametype) || cg_buildScript.integer ) { // ~Dimmskii
-	{ // ~Dimmskii
+	if ( GT_IsTeam(cgs.gametype) || cg_buildScript.integer ) { // ~Dimmskii
 		cgs.media.friendShader = trap_R_RegisterShader( "sprites/foe" );
 		cgs.media.redQuadShader = trap_R_RegisterShader("powerups/blueflag" );
 		cgs.media.teamStatusBar = trap_R_RegisterShader( "gfx/2d/colorbar.tga" );
