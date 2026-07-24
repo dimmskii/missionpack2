@@ -8,6 +8,12 @@
 
 extern displayContextDef_t cgDC;
 
+// ~Dimmskii - prototypes for helpers called before their definition below;
+void CG_DrawTeamColorized(rectDef_t *rect, qhandle_t shader);
+void CG_DrawArmorTieredColorized(rectDef_t *rect);
+void CG_DrawPlayerHealthBar(rectDef_t *rect, qhandle_t shader, qboolean bArmor, qboolean b200);
+// END Dimmskii
+
 
 // set in CG_ParseTeamInfo
 

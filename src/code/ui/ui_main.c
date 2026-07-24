@@ -13,6 +13,12 @@ USER INTERFACE MAIN
 
 #include "ui_local.h"
 
+// ~Dimmskii - prototypes for helpers called before their definition below;
+static int UI_MapCountTotal( void );
+static void UI_DrawGameFactoryInfo(rectDef_t *rect, float scale, vec4_t color, int textStyle);
+void UI_LoadFactories( void );
+// END Dimmskii
+
 uiInfo_t uiInfo;
 
 static const char *MonthAbbrev[] = {
@@ -3955,7 +3961,7 @@ static void UI_RunMenuScript(char **args) {
 			Menu_SetFeederSelection(NULL, FEEDER_ALLMAPS, 0, "createserver");
 		} else if (Q_stricmp(name, "loadArenas_new") == 0) { // ~Dimmskii
 			UI_LoadArenas();
-			UI_MapCountTotal(qfalse);
+			UI_MapCountTotal();
 			Menu_SetFeederSelection(NULL, FEEDER_MAPS_NEW, ui_currentMap.integer, "maps");
 		} else if (Q_stricmp(name, "saveControls") == 0) {
 			Controls_SetConfig(qtrue);

@@ -27,6 +27,8 @@ qboolean G_RemovePowerup( gitem_t *item );
 qboolean G_RemoveWeapon( gitem_t *item );
 void G_SetInfiniteAmmo ( gclient_t *client );
 void Hook_Fire( gentity_t *ent );
+static void CheckExitRules_old( void ); // ~Dimmskii
+void CheckItemPositions( void ); // ~Dimmskii
 
 #define DECLARE_G_CVAR
 	#include "g_cvar.h"

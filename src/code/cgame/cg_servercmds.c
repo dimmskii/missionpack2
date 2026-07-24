@@ -9,6 +9,11 @@
 //#ifdef MISSIONPACK // bk001204
 #include "../../ui/menudef.h" // bk001205 - for Q3_ui as well
 
+// ~Dimmskii - prototypes for helpers called before their definition below;
+static void CG_ParseTeamPositions( void );
+static void CG_ParseItemPositions( void );
+// END Dimmskii
+
 typedef struct {
 	const char *order;
 	int taskNum;

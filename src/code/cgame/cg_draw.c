@@ -11,6 +11,13 @@
 // used for scoreboard
 extern displayContextDef_t cgDC;
 menuDef_t *menuScoreboard = NULL;
+
+// ~Dimmskii - prototypes for helpers called before their definition below;
+static void CG_DrawTeammatePOIs( void );
+static void CG_DrawItemPOIs( void );
+static void LerpPosition( const vec3_t from, const vec3_t to, float f, vec3_t out );
+static void CG_DrawPicColor( float x, float y, float width, float height, qhandle_t hShader, vec4_t color );
+// END Dimmskii
 //#else
 //int drawTeamOverlayModificationCount = -1;
 //#endif
