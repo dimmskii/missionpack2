@@ -95,6 +95,14 @@ static void CG_Obituary( entityState_t *ent ) {
 	if ( cg_killBeep.integer > 0 && attacker == cg.snap->ps.clientNum && attacker != target ) {
 		trap_S_StartLocalSound( cgs.media.killBeepSound, CHAN_LOCAL_SOUND );
 	}
+	// A frag or our own death both change scores/round-wins the VQ3 HUD's
+	// bottom-right score cards read from cg.scores[] - that array only
+	// ever refreshes on a "score" request, normally only sent when the
+	// scoreboard is opened. Request fresh scores right on the event
+	// instead of waiting for that.
+	if ( attacker == cg.snap->ps.clientNum || target == cg.snap->ps.clientNum ) {
+		CG_RequestScores();
+	}
 // END Dimmskii
 
 	targetInfo = CG_ConfigString( CS_PLAYERS + target );

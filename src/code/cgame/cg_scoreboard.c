@@ -458,6 +458,25 @@ qboolean CG_DrawOldScoreboard( void ) {
 //================================================================================
 
 
+// ~Dimmskii - shared by CG_ScoresDown_f (cg_consolecmds.c), CG_Obituary
+// (cg_event.c), and CG_DrawOldTourneyScoreboard below, so each doesn't keep
+// its own copy of the same throttle-and-request pattern. Returns qtrue if a
+// request was actually sent (not throttled), so callers that care whether
+// the request is "fresh" (e.g. deciding whether to clear stale scoreboard
+// contents) can use the return value.
+qboolean CG_RequestScores( void ) {
+	if ( cg.demoPlayback ) {
+		return qfalse;
+	}
+	if ( cg.scoresRequestTime + 2000 >= cg.time ) {
+		return qfalse;
+	}
+	cg.scoresRequestTime = cg.time;
+	trap_SendClientCommand( "score" );
+	return qtrue;
+}
+// END Dimmskii
+
 /*
 =================
 CG_DrawTourneyScoreboard
@@ -473,11 +492,14 @@ void CG_DrawOldTourneyScoreboard( void ) {
 	int				y;
 	int				i;
 
-	// request more scores regularly
-	if ( cg.scoresRequestTime + 2000 < cg.time ) {
-		cg.scoresRequestTime = cg.time;
-		trap_SendClientCommand( "score" );
-	}
+//	// request more scores regularly
+//	if ( cg.scoresRequestTime + 2000 < cg.time ) {
+//		cg.scoresRequestTime = cg.time;
+//		trap_SendClientCommand( "score" );
+//	}
+// ~Dimmskii - use the shared CG_RequestScores helper above
+	CG_RequestScores();
+// END Dimmskii
 
 	// draw the dialog background
 	color[0] = color[1] = color[2] = 0.2f;

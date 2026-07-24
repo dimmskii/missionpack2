@@ -1520,6 +1520,7 @@ void CG_DrawInformation( void );
 qboolean CG_DrawOldScoreboard( void );
 void CG_DrawOldTourneyScoreboard( void );
 void CG_ScoreboardClick( void );
+qboolean CG_RequestScores( void ); // ~Dimmskii
 
 //
 // cg_consolecmds.c

@@ -73,12 +73,25 @@ static void CG_ScoresDown_f( void ) {
 //#ifdef MISSIONPACK
 	CG_BuildSpectatorString();
 //#endif
-	if ( cg.scoresRequestTime + 2000 < cg.time && !cg.demoPlayback ) {
-		// the scores are more than two seconds out of data,
-		// so request new ones
-		cg.scoresRequestTime = cg.time;
-		trap_SendClientCommand( "score" );
-
+//	if ( cg.scoresRequestTime + 2000 < cg.time && !cg.demoPlayback ) {
+//		// the scores are more than two seconds out of data,
+//		// so request new ones
+//		cg.scoresRequestTime = cg.time;
+//		trap_SendClientCommand( "score" );
+//
+//		// leave the current scores up if they were already
+//		// displayed, but if this is the first hit, clear them out
+//		if ( !cg.showScores ) {
+//			cg.showScores = qtrue;
+//			cg.numScores = 0;
+//		}
+//	} else {
+//		// show the cached contents even if they just pressed if it
+//		// is within two seconds
+//		cg.showScores = qtrue;
+//	}
+// ~Dimmskii - use the shared CG_RequestScores helper (cg_scoreboard.c)
+	if ( CG_RequestScores() ) {
 		// leave the current scores up if they were already
 		// displayed, but if this is the first hit, clear them out
 		if ( !cg.showScores ) {
@@ -90,6 +103,7 @@ static void CG_ScoresDown_f( void ) {
 		// is within two seconds
 		cg.showScores = qtrue;
 	}
+// END Dimmskii
 
 //#ifndef MISSIONPACK
 //	CG_SetScoreCatcher( cg.showScores );
