@@ -475,7 +475,19 @@ static float CG_DrawScores_Old( float y ) {
 
 		x = cgs.screenXmax + 1;
 
-		score = cg.snap->ps.persistant[PERS_SCORE];
+		//score = cg.snap->ps.persistant[PERS_SCORE];
+		
+// ~Dimmskii -- Determine scores the way we have them set up until we properly add all ql-based game pers stats in like gents
+		if ( GT_IsArenaGame( cgs.gametype ) ) {
+			// TODO: Below this line, manipulate s1 and s2 with some dirty work of pulling out scores sorted by PERS_ROUNDWINS (and set them to the wins instead of score/dmg)
+			// s1 = ...
+			// s2 = ...
+			score = cg.snap->ps.persistant[PERS_ROUNDWINS];
+		} else {
+			score = cg.snap->ps.persistant[PERS_SCORE];
+		}
+// END Dimmskii
+		
 		spectator = ( cg.snap->ps.persistant[PERS_TEAM] == TEAM_SPECTATOR );
 
 		// always show your score in the second box if not in first place
