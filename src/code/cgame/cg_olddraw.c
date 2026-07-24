@@ -479,9 +479,28 @@ static float CG_DrawScores_Old( float y ) {
 		
 // ~Dimmskii -- Determine scores the way we have them set up until we properly add all ql-based game pers stats in like gents
 		if ( GT_IsArenaGame( cgs.gametype ) ) {
-			// TODO: Below this line, manipulate s1 and s2 with some dirty work of pulling out scores sorted by PERS_ROUNDWINS (and set them to the wins instead of score/dmg)
-			// s1 = ...
-			// s2 = ...
+			// cgs.scores1/2 arrive as PERS_SCORE, which in arena is damage+frags,
+			// not the meaningful stat. Recompute the top-two round wins on the spot
+			// from the (best-effort, possibly stale between scoreboard refreshes)
+			// client scores table so the VQ3 score cards show wins, not damage.
+			// Proper fix is server-side CS_SCORES gating in the later QL pers-stat
+			// restructuring.
+			int i;
+			s1 = SCORE_NOT_PRESENT;
+			s2 = SCORE_NOT_PRESENT;
+			for ( i = 0; i < cg.numScores; i++ ) {
+				int rw;
+				if ( cg.scores[i].team == TEAM_SPECTATOR ) {
+					continue;
+				}
+				rw = cg.scores[i].roundWins;
+				if ( s1 == SCORE_NOT_PRESENT || rw > s1 ) {
+					s2 = s1;
+					s1 = rw;
+				} else if ( s2 == SCORE_NOT_PRESENT || rw > s2 ) {
+					s2 = rw;
+				}
+			}
 			score = cg.snap->ps.persistant[PERS_ROUNDWINS];
 		} else {
 			score = cg.snap->ps.persistant[PERS_SCORE];
