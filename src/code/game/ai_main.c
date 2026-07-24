@@ -1587,6 +1587,7 @@ int BotAIStartFrame(int time) {
 BotInitLibrary
 ==============
 */
+/*
 int BotInitLibrary( void ) {
 	char buf[MAX_CVAR_VALUE_STRING];
 
@@ -1630,32 +1631,32 @@ int BotInitLibrary( void ) {
 	trap_Cvar_VariableStringBuffer("bot_visualizejumppads", buf, sizeof(buf));
 	if ( buf[0] )
 		trap_BotLibVarSet( "bot_visualizejumppads", buf );
-	
+
 	//forced clustering calculations
 	trap_Cvar_VariableStringBuffer("bot_forceclustering", buf, sizeof(buf));
 	if ( buf[0] )
 		trap_BotLibVarSet( "forceclustering", buf );
-	
+
 	//forced reachability calculations
 	trap_Cvar_VariableStringBuffer("bot_forcereachability", buf, sizeof(buf));
 	if ( buf[0] )
 		trap_BotLibVarSet( "forcereachability", buf );
-	
+
 	//force writing of AAS to file
 	trap_Cvar_VariableStringBuffer("bot_forcewrite", buf, sizeof(buf));
 	if ( buf[0] )
 		trap_BotLibVarSet( "forcewrite", buf );
-	
+
 	//no AAS optimization
 	trap_Cvar_VariableStringBuffer("bot_aasoptimize", buf, sizeof(buf));
 	if ( buf[0] )
 		trap_BotLibVarSet( "aasoptimize", buf );
-	
+
 	//
 	trap_Cvar_VariableStringBuffer("bot_saveroutingcache", buf, sizeof(buf));
 	if ( buf[0] )
 		trap_BotLibVarSet( "saveroutingcache", buf );
-	
+
 	//reload instead of cache bot character files
 	trap_Cvar_VariableStringBuffer("bot_reloadcharacters", buf, sizeof(buf));
 	if ( !buf[0] )
@@ -1673,7 +1674,7 @@ int BotInitLibrary( void ) {
 
 	//game directory
 	trap_Cvar_VariableStringBuffer( "fs_game", buf, sizeof( buf ) );
-	if ( buf[0] ) 
+	if ( buf[0] )
 		trap_BotLibVarSet( "gamedir", buf );
 
 //#ifdef MISSIONPACK
@@ -1682,6 +1683,115 @@ int BotInitLibrary( void ) {
 	//setup the bot library
 	return trap_BotLibSetup();
 }
+*/
+// ~Dimmskii - split the LibVar pushes out of BotInitLibrary into
+// BotRefreshLibVars, so BotAISetup can refresh botlib's cached g_gametype
+// (and friends) on every InitGame pass, including in-place restarts, without
+// also re-running trap_BotLibSetup() - which wipes/reinits AAS/goal/chat/
+// move state and so must stay gated behind !restart. Before this split, a
+// factory switch that changed g_gametype on the same map (an in-place
+// restart) left botlib thinking it was still the OLD gametype until the
+// next full map reload.
+void BotRefreshLibVars( void ) {
+	char buf[MAX_CVAR_VALUE_STRING];
+
+	//set the maxclients and maxentities library variables before calling BotSetupLibrary
+	trap_Cvar_VariableStringBuffer( "sv_maxclients", buf, sizeof( buf ) );
+	if ( !buf[0] )
+		strcpy( buf, "8" );
+	trap_BotLibVarSet( "maxclients", buf );
+
+	Com_sprintf(buf, sizeof(buf), "%d", MAX_GENTITIES);
+	trap_BotLibVarSet("maxentities", buf);
+	//bsp checksum
+	trap_Cvar_VariableStringBuffer("sv_mapChecksum", buf, sizeof(buf));
+	if ( buf[0] )
+		trap_BotLibVarSet( "sv_mapChecksum", buf );
+
+	//maximum number of aas links
+	trap_Cvar_VariableStringBuffer("max_aaslinks", buf, sizeof(buf));
+	if ( buf[0] )
+		trap_BotLibVarSet( "max_aaslinks", buf );
+
+	//maximum number of items in a level
+	trap_Cvar_VariableStringBuffer("max_levelitems", buf, sizeof(buf));
+	if ( buf[0] )
+		trap_BotLibVarSet( "max_levelitems", buf );
+
+	//game type
+	trap_Cvar_VariableStringBuffer("g_gametype", buf, sizeof(buf));
+	if ( !buf[0] )
+		strcpy( buf, "0" );
+	trap_BotLibVarSet("g_gametype", buf);
+	//bot developer mode and log file
+	trap_BotLibVarSet("bot_developer", bot_developer.string);
+	trap_BotLibVarSet("log", buf);
+	//no chatting
+	trap_Cvar_VariableStringBuffer("bot_nochat", buf, sizeof(buf));
+	if ( buf[0] )
+		trap_BotLibVarSet( "nochat", "0" );
+
+	//visualize jump pads
+	trap_Cvar_VariableStringBuffer("bot_visualizejumppads", buf, sizeof(buf));
+	if ( buf[0] )
+		trap_BotLibVarSet( "bot_visualizejumppads", buf );
+
+	//forced clustering calculations
+	trap_Cvar_VariableStringBuffer("bot_forceclustering", buf, sizeof(buf));
+	if ( buf[0] )
+		trap_BotLibVarSet( "forceclustering", buf );
+
+	//forced reachability calculations
+	trap_Cvar_VariableStringBuffer("bot_forcereachability", buf, sizeof(buf));
+	if ( buf[0] )
+		trap_BotLibVarSet( "forcereachability", buf );
+
+	//force writing of AAS to file
+	trap_Cvar_VariableStringBuffer("bot_forcewrite", buf, sizeof(buf));
+	if ( buf[0] )
+		trap_BotLibVarSet( "forcewrite", buf );
+
+	//no AAS optimization
+	trap_Cvar_VariableStringBuffer("bot_aasoptimize", buf, sizeof(buf));
+	if ( buf[0] )
+		trap_BotLibVarSet( "aasoptimize", buf );
+
+	//
+	trap_Cvar_VariableStringBuffer("bot_saveroutingcache", buf, sizeof(buf));
+	if ( buf[0] )
+		trap_BotLibVarSet( "saveroutingcache", buf );
+
+	//reload instead of cache bot character files
+	trap_Cvar_VariableStringBuffer("bot_reloadcharacters", buf, sizeof(buf));
+	if ( !buf[0] )
+		strcpy( buf, "0" );
+	trap_BotLibVarSet("bot_reloadcharacters", buf);
+	//base directory
+	trap_Cvar_VariableStringBuffer("fs_basepath", buf, sizeof(buf));
+	if ( buf[0] )
+		trap_BotLibVarSet( "basedir", buf );
+
+	//home directory
+	trap_Cvar_VariableStringBuffer("fs_homepath", buf, sizeof(buf));
+	if ( buf[0] )
+		trap_BotLibVarSet( "homedir", buf );
+
+	//game directory
+	trap_Cvar_VariableStringBuffer( "fs_game", buf, sizeof( buf ) );
+	if ( buf[0] )
+		trap_BotLibVarSet( "gamedir", buf );
+
+//#ifdef MISSIONPACK
+	trap_BotLibDefine("MISSIONPACK");
+//#endif
+}
+
+int BotInitLibrary( void ) {
+	BotRefreshLibVars();
+	//setup the bot library
+	return trap_BotLibSetup();
+}
+// END Dimmskii
 
 /*
 ==============
@@ -1704,10 +1814,20 @@ int BotAISetup( int restart ) {
 	trap_Cvar_Register(&bot_interbreedcycle, "bot_interbreedcycle", "20", 0);
 	trap_Cvar_Register(&bot_interbreedwrite, "bot_interbreedwrite", "", 0);
 
-	//if the game is restarted for a tournament
+//	//if the game is restarted for a tournament
+//	if (restart) {
+//		return qtrue;
+//	}
+// ~Dimmskii - restart still needs botlib's cached g_gametype (and friends)
+// refreshed, or it stays pinned to whatever gametype was active the last
+// time this ran, even after g_gametype itself has already changed. The
+// heavy trap_BotLibSetup() call below stays gated behind !restart - it
+// wipes/reinits AAS/goal/chat/move state, unsafe to repeat mid-session.
+	BotRefreshLibVars();
 	if (restart) {
 		return qtrue;
 	}
+// END Dimmskii
 
 	//initialize the bot states
 	memset( botstates, 0, sizeof(botstates) );

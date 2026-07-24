@@ -550,6 +550,26 @@ qboolean G_BotConnect( int clientNum, qboolean restart ) {
 	settings.skill = atof( Info_ValueForKey( userinfo, "skill" ) );
 	Q_strncpyz( settings.team, Info_ValueForKey( userinfo, "team" ), sizeof(settings.team) );
 
+// ~Dimmskii - on a restart reconnect, ClientConnect's G_ReadClientSessionData
+// (called just before G_BotConnect) restores whatever team this bot had
+// BEFORE the restart - it's only re-picked fresh via G_InitSessionData on a
+// genuine firstTime/newSession connect. If g_gametype changed in between
+// (e.g. an FFA->team-based factory switch applied via a same-map
+// map_restart), that stale team survives indefinitely - bots stuck on
+// TEAM_FREE in a team gametype (or the reverse) - until dropped and
+// reconnected fresh. Re-pick here if the restored team no longer matches
+// the CURRENT gametype's team-ness, leaving deliberate spectators alone.
+	if ( restart ) {
+		gclient_t *client = &level.clients[ clientNum ];
+		qboolean isTeamGame = GT_IsTeam( g_gametype.integer );
+		qboolean onTeam = ( client->sess.sessionTeam == TEAM_RED || client->sess.sessionTeam == TEAM_BLUE );
+		if ( isTeamGame != onTeam && client->sess.sessionTeam != TEAM_SPECTATOR ) {
+			G_InitSessionData( client, settings.team, qtrue );
+			G_WriteClientSessionData( client );
+		}
+	}
+// END Dimmskii
+
 	if (!BotAISetupClient( clientNum, &settings, restart )) {
 		trap_DropClient( clientNum, "BotAISetupClient failed" );
 		return qfalse;
