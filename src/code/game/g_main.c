@@ -2012,6 +2012,7 @@ static void CheckExitRules_old( void ) { // ~Dimmskii
 		}
 	}
 
+	//if ( g_gametype.integer >= GT_CTF && g_capturelimit.integer ) {
 	if ( GT_IsFlagGame( g_gametype.integer ) && g_capturelimit.integer ) { // ~Dimmskii - was: g_gametype.integer >= GT_CTF (wrongly caught Freeze/Domination/Attack-Defend/Red Rover/Team-Tournament/Arena after the enum reorder)
 
 		if ( level.teamScores[TEAM_RED] >= g_capturelimit.integer ) {
