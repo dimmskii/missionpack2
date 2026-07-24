@@ -1856,6 +1856,8 @@ void CG_Init( int serverMessageNum, int serverCommandSequence, int clientNum ) {
 	memset( cg_weapons, 0, sizeof(cg_weapons) );
 	memset( cg_items, 0, sizeof(cg_items) );
 
+	cg.scoresRequestTime = -999999; // ~Dimmskii - so the throttle in CG_RequestScores doesn't mistake a fresh 0 for "just requested at level time 0"
+
 	cg_playback_follow = -1;
 
 	cg.clientNum = clientNum;
