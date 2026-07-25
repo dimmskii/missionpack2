@@ -15,17 +15,21 @@ for /f "usebackq delims=" %%A in ("version.txt") do (
 	if "!VLINE!"=="2" set TAG=%%A
 )
 
-:: dist path stays tag-free - see release_dev.bat for the tagged variant
+:: pre-release variant of release.bat - folds TAG into the pak name and
+:: description.txt instead of leaving them tag-free
 set PK3_NAME=pak%VERSION%
+if not "%TAG%"=="" set PK3_NAME=pak%VERSION%_%TAG%
 
 :: Extract the first digit
 set MAJOR=%VERSION:~0,1%
 :: Extract the remaining digits
 set MINOR=%VERSION:~1%
 
+set DESC=Quake III Ultimate Arena %MAJOR%.%MINOR%
+if not "%TAG%"=="" set DESC=%DESC% %TAG%
+
 :DESCRIPTION_TXT
-::echo Quake III Ultimate Arena %MAJOR%.%MINOR%>..\description.txt
-<nul set /p ="Quake III Ultimate Arena %MAJOR%.%MINOR%" > ..\description.txt
+<nul set /p ="%DESC%" > ..\description.txt
 GOTO MAKE_QVM
 
 :MAKE_QVM
@@ -60,24 +64,7 @@ move %PK3_NAME%.pk3 ..\..\
 cd ..
 rd /S /Q _temp
 echo ...Done!
-::GOTO PK3_AUX
 GOTO QUIT
-
-:PK3_AUX
-echo CREATE CONTENT PK3 FILES
-md _temp
-cd _temp
-for /f "delims=" %%i in ('dir /ad/b ..\pk3\*') do (
-echo %%i.pk3
-powershell Compress-Archive ..\pk3\%%i\* %%i.zip
-ren %%i.zip %%i.pk3
-move %%i.pk3 ..\..\
-echo ...Done!
-)
-cd ..
-rd /S /Q _temp
-goto QUIT
-
 
 :QUIT
 cd %oldcd%
