@@ -31,16 +31,10 @@ else()
   set(Q3_DEBUG_FLAG "")
 endif()
 
-# Single source of truth for the mod version + optional pre-release tag,
-# shared with release.bat (see VERSION/TAG parsing there) so the two build
-# entry points can't drift out of sync the way a hardcoded literal in each
-# would. Line 1 = version digits (e.g. 061), line 2 = optional tag (e.g.
-# indev02, rc3) - either or both may be blank/absent.
-#
-# Parsed with file(READ) + string(FIND)/SUBSTRING rather than file(STRINGS),
-# because file(STRINGS) turns into a list and CMake list commands silently
-# drop empty elements under policy CMP0007 - that would make a deliberately
-# blank tag line indistinguishable from a missing one in some call patterns.
+# version.txt (shared with release.bat): line 1 = version digits (e.g.
+# 061), line 2 = optional tag (e.g. indev02, rc3). Parsed manually rather
+# than via file(STRINGS), which drops empty list elements (CMP0007) and
+# would make a blank tag line indistinguishable from a missing one.
 set(VERSION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/version.txt")
 set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${VERSION_FILE}")
 file(READ "${VERSION_FILE}" Q3_VERSION_FILE_RAW)
@@ -63,11 +57,7 @@ else()
 endif()
 string(STRIP "${Q3_VERSION}" Q3_VERSION)
 string(STRIP "${Q3_VERSION_TAG}" Q3_VERSION_TAG)
-# Q3_VERSION_TAG is intentionally unused below - the `release` target
-# mirrors release.bat's dist output (pak061.pk3 etc, no suffix), and
-# release.bat itself doesn't wire its own TAG into PK3_NAME either. A
-# future dev-pak target can consume Q3_VERSION_TAG for pak061_indev02.pk3
-# -style names without touching either dist path.
+# Q3_VERSION_TAG is unused below - `release` mirrors release.bat's tag-free dist output
 
 add_subdirectory(code/game)
 add_subdirectory(code/cgame)

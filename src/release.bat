@@ -5,11 +5,7 @@ set oldcd=%cd%
 
 cd %~dp0
 
-:: Single source of truth for VERSION + the optional pre-release TAG,
-:: shared with CMakeLists.txt's Q3_VERSION/Q3_VERSION_TAG parsing (see the
-:: comment there) so the two build entry points can't drift out of sync.
-:: Line 1 of version.txt = version digits (e.g. 061), line 2 = optional
-:: tag (e.g. indev02, rc3) - either may be blank/absent.
+:: version.txt: line 1 = VERSION digits, line 2 = optional TAG (indev02/rc3)
 set VERSION=
 set TAG=
 set VLINE=0
@@ -19,11 +15,7 @@ for /f "usebackq delims=" %%A in ("version.txt") do (
 	if "!VLINE!"=="2" set TAG=%%A
 )
 
-:: TAG is read but intentionally NOT folded into PK3_NAME below - this
-:: script is the dist/release path (mirrored by CMake's `release` target),
-:: which always produces a tag-free pak%VERSION%.pk3. A future dev-build
-:: script can consume %TAG% for a pak%VERSION%_indev02.pk3-style name
-:: without touching this one.
+:: TAG is read but not folded into PK3_NAME - dist path stays tag-free
 set PK3_NAME=pak%VERSION%
 
 :: Extract the first digit
