@@ -31,10 +31,16 @@ else()
   set(Q3_DEBUG_FLAG "")
 endif()
 
-# version.txt (shared with release.bat): line 1 = version digits (e.g.
-# 061), line 2 = optional tag (e.g. indev02, rc3). Parsed manually rather
-# than via file(STRINGS), which drops empty list elements (CMP0007) and
-# would make a blank tag line indistinguishable from a missing one.
+# Single source of truth for the mod version + optional pre-release tag,
+# shared with release.bat (see VERSION/TAG parsing there) so the two build
+# entry points can't drift out of sync the way a hardcoded literal in each
+# would. Line 1 = version digits (e.g. 061), line 2 = optional tag (e.g.
+# indev02, rc3) - either or both may be blank/absent.
+#
+# Parsed with file(READ) + string(FIND)/SUBSTRING rather than file(STRINGS),
+# because file(STRINGS) turns into a list and CMake list commands silently
+# drop empty elements under policy CMP0007 - that would make a deliberately
+# blank tag line indistinguishable from a missing one in some call patterns.
 set(VERSION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/version.txt")
 set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${VERSION_FILE}")
 file(READ "${VERSION_FILE}" Q3_VERSION_FILE_RAW)
@@ -57,6 +63,11 @@ else()
 endif()
 string(STRIP "${Q3_VERSION}" Q3_VERSION)
 string(STRIP "${Q3_VERSION_TAG}" Q3_VERSION_TAG)
+# Q3_VERSION_TAG is intentionally unused below - the `release` target
+# mirrors release.bat's dist output (pak061.pk3 etc, no suffix), and
+# release.bat itself doesn't wire its own TAG into PK3_NAME either. A
+# future dev-pak target can consume Q3_VERSION_TAG for pak061_indev02.pk3
+# -style names without touching either dist path.
 
 add_subdirectory(code/game)
 add_subdirectory(code/cgame)
@@ -100,41 +111,6 @@ add_custom_target(release
   COMMAND ${CMAKE_COMMAND} -E chdir "${RELEASE_STAGE}" ${CMAKE_COMMAND} -E tar cf "${MOD_ROOT}/pak${Q3_VERSION}.pk3" --format=zip -- .
   DEPENDS vm write_description
   COMMENT "Packaging pak${Q3_VERSION}.pk3 at gamedir root (release.bat equivalent)"
-  VERBATIM
-)
-
-# --- release_dev: same as `release`, but folds Q3_VERSION_TAG into the
-# pak name (pak061_indev02.pk3) and description.txt (" indev02") when set. ---
-if(Q3_VERSION_TAG)
-  set(Q3_PAK_DEV_NAME "pak${Q3_VERSION}_${Q3_VERSION_TAG}")
-  set(Q3_DESC_DEV_TEXT "Quake III Ultimate Arena ${Q3_VERSION_MAJOR}.${Q3_VERSION_MINOR} ${Q3_VERSION_TAG}")
-else()
-  set(Q3_PAK_DEV_NAME "pak${Q3_VERSION}")
-  set(Q3_DESC_DEV_TEXT "Quake III Ultimate Arena ${Q3_VERSION_MAJOR}.${Q3_VERSION_MINOR}")
-endif()
-
-add_custom_target(write_description_dev
-  COMMAND ${CMAKE_COMMAND}
-          "-DDESC_FILE=${MOD_ROOT}/description.txt"
-          "-DDESC_TEXT=${Q3_DESC_DEV_TEXT}"
-          -P "${CMAKE_CURRENT_SOURCE_DIR}/cmake/WriteDescription.cmake"
-  COMMENT "Writing description.txt (dev)"
-  VERBATIM
-)
-
-add_custom_target(release_dev
-  COMMAND ${CMAKE_COMMAND} -E remove_directory "${RELEASE_STAGE}"
-  COMMAND ${CMAKE_COMMAND} -E make_directory "${RELEASE_STAGE}/vm"
-  COMMAND ${CMAKE_COMMAND} -E copy
-          "${CMAKE_CURRENT_SOURCE_DIR}/code/game/vm/qagame.qvm"
-          "${CMAKE_CURRENT_SOURCE_DIR}/code/cgame/vm/cgame.qvm"
-          "${CMAKE_CURRENT_SOURCE_DIR}/code/ui/vm/ui.qvm"
-          "${RELEASE_STAGE}/vm/"
-  COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/ui" "${RELEASE_STAGE}/ui"
-  COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/assets" "${RELEASE_STAGE}"
-  COMMAND ${CMAKE_COMMAND} -E chdir "${RELEASE_STAGE}" ${CMAKE_COMMAND} -E tar cf "${MOD_ROOT}/${Q3_PAK_DEV_NAME}.pk3" --format=zip -- .
-  DEPENDS vm write_description_dev
-  COMMENT "Packaging ${Q3_PAK_DEV_NAME}.pk3 at gamedir root (dev/pre-release variant)"
   VERBATIM
 )
 
