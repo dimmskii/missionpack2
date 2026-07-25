@@ -31,7 +31,43 @@ else()
   set(Q3_DEBUG_FLAG "")
 endif()
 
-set(Q3_VERSION "061" CACHE STRING "Mod version digits, matches release.bat's VERSION")
+# Single source of truth for the mod version + optional pre-release tag,
+# shared with release.bat (see VERSION/TAG parsing there) so the two build
+# entry points can't drift out of sync the way a hardcoded literal in each
+# would. Line 1 = version digits (e.g. 061), line 2 = optional tag (e.g.
+# indev02, rc3) - either or both may be blank/absent.
+#
+# Parsed with file(READ) + string(FIND)/SUBSTRING rather than file(STRINGS),
+# because file(STRINGS) turns into a list and CMake list commands silently
+# drop empty elements under policy CMP0007 - that would make a deliberately
+# blank tag line indistinguishable from a missing one in some call patterns.
+set(VERSION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/version.txt")
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${VERSION_FILE}")
+file(READ "${VERSION_FILE}" Q3_VERSION_FILE_RAW)
+string(REPLACE "\r\n" "\n" Q3_VERSION_FILE_RAW "${Q3_VERSION_FILE_RAW}")
+string(REPLACE "\r" "\n" Q3_VERSION_FILE_RAW "${Q3_VERSION_FILE_RAW}")
+string(FIND "${Q3_VERSION_FILE_RAW}" "\n" Q3_VERSION_FILE_NL)
+if(Q3_VERSION_FILE_NL EQUAL -1)
+  set(Q3_VERSION "${Q3_VERSION_FILE_RAW}")
+  set(Q3_VERSION_TAG "")
+else()
+  string(SUBSTRING "${Q3_VERSION_FILE_RAW}" 0 ${Q3_VERSION_FILE_NL} Q3_VERSION)
+  math(EXPR Q3_VERSION_FILE_REST_START "${Q3_VERSION_FILE_NL} + 1")
+  string(SUBSTRING "${Q3_VERSION_FILE_RAW}" ${Q3_VERSION_FILE_REST_START} -1 Q3_VERSION_FILE_REST)
+  string(FIND "${Q3_VERSION_FILE_REST}" "\n" Q3_VERSION_FILE_NL2)
+  if(Q3_VERSION_FILE_NL2 EQUAL -1)
+    set(Q3_VERSION_TAG "${Q3_VERSION_FILE_REST}")
+  else()
+    string(SUBSTRING "${Q3_VERSION_FILE_REST}" 0 ${Q3_VERSION_FILE_NL2} Q3_VERSION_TAG)
+  endif()
+endif()
+string(STRIP "${Q3_VERSION}" Q3_VERSION)
+string(STRIP "${Q3_VERSION_TAG}" Q3_VERSION_TAG)
+# Q3_VERSION_TAG is intentionally unused below - the `release` target
+# mirrors release.bat's dist output (pak061.pk3 etc, no suffix), and
+# release.bat itself doesn't wire its own TAG into PK3_NAME either. A
+# future dev-pak target can consume Q3_VERSION_TAG for pak061_indev02.pk3
+# -style names without touching either dist path.
 
 add_subdirectory(code/game)
 add_subdirectory(code/cgame)
