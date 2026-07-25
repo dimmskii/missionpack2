@@ -27,6 +27,8 @@ qboolean G_RemovePowerup( gitem_t *item );
 qboolean G_RemoveWeapon( gitem_t *item );
 void G_SetInfiniteAmmo ( gclient_t *client );
 void Hook_Fire( gentity_t *ent );
+static void CheckExitRules_old( void ); // ~Dimmskii
+void CheckItemPositions( void ); // ~Dimmskii
 
 #define DECLARE_G_CVAR
 	#include "g_cvar.h"
@@ -660,6 +662,109 @@ void G_SetInfiniteAmmo ( gclient_t *client ) {
 	}
 }
 
+// ~Dimmskii - QL-shaped dedicated gameplay-cvar configstring publishers.
+// Each builds a payload, diffs it against a cached copy, and only
+// re-broadcasts on change (or when forced). Driven from InitGame (force) and
+// G_UpdateCvars (per-frame diff). See docs/devmemos/QL_CVAR_SYNC.md.
+
+/*
+=================
+G_UpdateWeaponReloadConfigstring
+
+Publishes the 14 weapon_reload_* refire times as one compact int slab
+(WP_ order, matching bg_cvar.h declaration order) into CS_WEAPON_RELOAD_TIMES.
+=================
+*/
+static void G_UpdateWeaponReloadConfigstring( qboolean forceBroadcast ) {
+	static char	s_weaponReloadPayload[MAX_INFO_STRING];
+	char		payload[MAX_INFO_STRING];
+
+	Com_sprintf( payload, sizeof( payload ),
+		"%i %i %i %i %i %i %i %i %i %i %i %i %i %i",
+		weapon_reload_gauntlet.integer,
+		weapon_reload_mg.integer,
+		weapon_reload_sg.integer,
+		weapon_reload_gl.integer,
+		weapon_reload_rl.integer,
+		weapon_reload_lg.integer,
+		weapon_reload_rg.integer,
+		weapon_reload_pg.integer,
+		weapon_reload_bfg.integer,
+		weapon_reload_hook.integer,
+		weapon_reload_ng.integer,
+		weapon_reload_prox.integer,
+		weapon_reload_cg.integer,
+		weapon_reload_hmg.integer );
+
+	if ( !forceBroadcast && !Q_stricmp( payload, s_weaponReloadPayload ) ) {
+		return;
+	}
+
+	trap_SetConfigstring( CS_WEAPON_RELOAD_TIMES, payload );
+	Q_strncpyz( s_weaponReloadPayload, payload, sizeof( s_weaponReloadPayload ) );
+}
+
+/*
+=================
+G_UpdateServerSettingsConfigstrings
+
+Publishes scalar server settings the client needs (shotgun pellets/spread)
+as an info string into CS_SERVER_SETTINGS_INFO_B. INFO_A is reserved for
+future boolean flags and left empty this pass.
+=================
+*/
+static void G_UpdateServerSettingsConfigstrings( qboolean forceBroadcast ) {
+	static char	s_serverSettingsPayloadB[MAX_INFO_STRING];
+	char		payloadB[MAX_INFO_STRING];
+
+	payloadB[0] = '\0';
+	Info_SetValueForKey( payloadB, "sgPellets", va( "%i", g_sgPellets.integer ) );
+	Info_SetValueForKey( payloadB, "sgSpread",  va( "%i", g_sgPelletSpread.integer ) );
+
+	if ( forceBroadcast || Q_stricmp( payloadB, s_serverSettingsPayloadB ) != 0 ) {
+		trap_SetConfigstring( CS_SERVER_SETTINGS_INFO_B, payloadB );
+		Q_strncpyz( s_serverSettingsPayloadB, payloadB, sizeof( s_serverSettingsPayloadB ) );
+	}
+}
+
+/*
+=================
+G_UpdatePmoveConfigstring
+
+Reserved stub: publishes an empty CS_PMOVE_SETTINGS until gameplay pmove_*
+cvars exist to carry. Kept in the driver path so the wiring is ready.
+=================
+*/
+static void G_UpdatePmoveConfigstring( qboolean forceBroadcast ) {
+	static char	s_pmovePayload[MAX_INFO_STRING];
+	char		payload[MAX_INFO_STRING];
+
+	payload[0] = '\0';
+
+	if ( !forceBroadcast && !Q_stricmp( payload, s_pmovePayload ) ) {
+		return;
+	}
+
+	trap_SetConfigstring( CS_PMOVE_SETTINGS, payload );
+	Q_strncpyz( s_pmovePayload, payload, sizeof( s_pmovePayload ) );
+}
+
+/*
+=================
+G_UpdatePublishedGameplayConfigstrings
+
+Aggregates the QL-shaped gameplay-cvar publishers. forceBroadcast pushes all
+of them unconditionally (InitGame); otherwise each diffs and only re-sends on
+change (per-frame from G_UpdateCvars).
+=================
+*/
+static void G_UpdatePublishedGameplayConfigstrings( qboolean forceBroadcast ) {
+	G_UpdateWeaponReloadConfigstring( forceBroadcast );
+	G_UpdateServerSettingsConfigstrings( forceBroadcast );
+	G_UpdatePmoveConfigstring( forceBroadcast );
+}
+// END Dimmskii
+
 /*
 =================
 G_UpdateCvars
@@ -692,6 +797,8 @@ static void G_UpdateCvars( void ) {
 	if (remapped) {
 		G_RemapTeamShaders();
 	}
+
+	G_UpdatePublishedGameplayConfigstrings( qfalse );	// ~Dimmskii - per-frame diff re-broadcast of gameplay-cvar configstrings
 }
 
 
@@ -911,6 +1018,8 @@ static void G_InitGame( int levelTime, int randomSeed, int restart ) {
 			ParseMapRotation();
 		}
 	}
+
+	G_UpdatePublishedGameplayConfigstrings( qtrue );	// ~Dimmskii - initial force-broadcast of QL-shaped gameplay-cvar configstrings
 }
 
 
@@ -1617,7 +1726,8 @@ void LogExit( const char *string ) {
 
 //#ifdef MISSIONPACK
 	if (g_singlePlayer.integer) {
-		if (g_gametype.integer >= GT_CTF) {
+//		if (g_gametype.integer >= GT_CTF) {
+		if ( GT_IsFlagGame(g_gametype.integer) ) { // ~Dimmskii
 			won = level.teamScores[TEAM_RED] > level.teamScores[TEAM_BLUE];
 		}
 		trap_SendConsoleCommand( EXEC_APPEND, (won) ? "spWin\n" : "spLose\n" );
@@ -1902,7 +2012,8 @@ static void CheckExitRules_old( void ) { // ~Dimmskii
 		}
 	}
 
-	if ( g_gametype.integer >= GT_CTF && g_capturelimit.integer ) {
+	//if ( g_gametype.integer >= GT_CTF && g_capturelimit.integer ) {
+	if ( GT_IsFlagGame( g_gametype.integer ) && g_capturelimit.integer ) { // ~Dimmskii - was: g_gametype.integer >= GT_CTF (wrongly caught Freeze/Domination/Attack-Defend/Red Rover/Team-Tournament/Arena after the enum reorder)
 
 		if ( level.teamScores[TEAM_RED] >= g_capturelimit.integer ) {
 			G_BroadcastServerCommand( -1, "print \"Red hit the capturelimit.\n\"" );

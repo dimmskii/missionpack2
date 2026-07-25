@@ -193,6 +193,15 @@ void CG_Respawn( void ) {
 	cg.weaponSelect = cg.snap->ps.weapon;
 
 	cg.timeResidual = cg.snap->ps.commandTime + 1000;
+
+// ~Dimmskii - PERS_SPAWN_COUNT (what triggers CG_Respawn) bumps on every
+// ClientSpawn, not just a death-respawn - a team change (SetTeam ->
+// ClientBegin -> ClientSpawn) goes through the exact same path, so this one
+// hook covers both "just respawned" and "just joined/changed team" for
+// refreshing the VQ3 HUD's score cards. Throttled internally by
+// CG_RequestScores, so no need to worry about this firing on every connect.
+	CG_RequestScores();
+// END Dimmskii
 }
 
 

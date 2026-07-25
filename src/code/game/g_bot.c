@@ -550,6 +550,21 @@ qboolean G_BotConnect( int clientNum, qboolean restart ) {
 	settings.skill = atof( Info_ValueForKey( userinfo, "skill" ) );
 	Q_strncpyz( settings.team, Info_ValueForKey( userinfo, "team" ), sizeof(settings.team) );
 
+// ~Dimmskii - superseded: G_InitWorldSession now detects a gametype change
+// and sets level.newSession, so ClientConnect's own firstTime/newSession
+// check already re-picks a fresh team (via G_InitSessionData) for every
+// reconnecting client - bot or human - before this function is even called.
+//	if ( restart ) {
+//		gclient_t *client = &level.clients[ clientNum ];
+//		qboolean isTeamGame = GT_IsTeam( g_gametype.integer );
+//		qboolean onTeam = ( client->sess.sessionTeam == TEAM_RED || client->sess.sessionTeam == TEAM_BLUE );
+//		if ( isTeamGame != onTeam && client->sess.sessionTeam != TEAM_SPECTATOR ) {
+//			G_InitSessionData( client, settings.team, qtrue );
+//			G_WriteClientSessionData( client );
+//		}
+//	}
+// END Dimmskii
+
 	if (!BotAISetupClient( clientNum, &settings, restart )) {
 		trap_DropClient( clientNum, "BotAISetupClient failed" );
 		return qfalse;

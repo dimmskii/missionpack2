@@ -350,7 +350,7 @@ static void CG_DrawStatusBarFlag_Old( float x, int team ) {
 
 // ~Dimmskii - moved from cg_draw.c's commented-out #ifndef MISSIONPACK
 // CG_DrawScores/CG_DrawPowerups/CG_DrawLowerRight block (lower-right corner:
-// small two-score display + active powerup icons/timers). Two real fixes
+// small two-score display + active powerup icons/timers). Three real fixes
 // applied while porting, not just an uncomment: the original raw
 // cgs.gametype >= GT_TEAM / >= GT_CTF comparisons assumed the old linear
 // gametype_t ordering (team games all >= GT_TEAM, flag games all >= GT_CTF)
@@ -359,7 +359,8 @@ static void CG_DrawStatusBarFlag_Old( float x, int team ) {
 // GT_IsFlagGame helpers already used elsewhere in this codebase for exactly
 // this reason. GT_IsFlagGame's own doc comment (bg_newgame.c) confirms it's
 // "the equivalent of pre-QL (i.e. MPP) gt >= GT_CTF", so this is a faithful
-// port, not a behavior change.
+// port, not a behavior change. Third fix: persistent powerups (Guard etc.)
+// were misread as timed countdowns - see the sort/draw loops below.
 
 #define POWERUP_BLINKS_OLD			5
 #define POWERUP_BLINK_TIME_OLD		1000
@@ -475,7 +476,38 @@ static float CG_DrawScores_Old( float y ) {
 
 		x = cgs.screenXmax + 1;
 
-		score = cg.snap->ps.persistant[PERS_SCORE];
+		//score = cg.snap->ps.persistant[PERS_SCORE];
+		
+// ~Dimmskii -- Determine scores the way we have them set up until we properly add all ql-based game pers stats in like gents
+		if ( GT_IsArenaGame( cgs.gametype ) ) {
+			// cgs.scores1/2 arrive as PERS_SCORE, which in arena is damage+frags,
+			// not the meaningful stat. Recompute the top-two round wins on the spot
+			// from the (best-effort, possibly stale between scoreboard refreshes)
+			// client scores table so the VQ3 score cards show wins, not damage.
+			// Proper fix is server-side CS_SCORES gating in the later QL pers-stat
+			// restructuring.
+			int i;
+			s1 = SCORE_NOT_PRESENT;
+			s2 = SCORE_NOT_PRESENT;
+			for ( i = 0; i < cg.numScores; i++ ) {
+				int rw;
+				if ( cg.scores[i].team == TEAM_SPECTATOR ) {
+					continue;
+				}
+				rw = cg.scores[i].roundWins;
+				if ( s1 == SCORE_NOT_PRESENT || rw > s1 ) {
+					s2 = s1;
+					s1 = rw;
+				} else if ( s2 == SCORE_NOT_PRESENT || rw > s2 ) {
+					s2 = rw;
+				}
+			}
+			score = cg.snap->ps.persistant[PERS_ROUNDWINS];
+		} else {
+			score = cg.snap->ps.persistant[PERS_SCORE];
+		}
+// END Dimmskii
+		
 		spectator = ( cg.snap->ps.persistant[PERS_TEAM] == TEAM_SPECTATOR );
 
 		// always show your score in the second box if not in first place
@@ -528,7 +560,8 @@ static float CG_DrawScores_Old( float y ) {
 		}
 
 		if ( cgs.fraglimit ) {
-			s = va( "%2i", cgs.fraglimit );
+			//s = va( "%2i", cgs.fraglimit );
+			s = va( "%2i", (GT_IsArenaGame(cgs.gametype) ? cgs.roundlimit : cgs.fraglimit) );	// ~Dimmskii
 			CG_DrawString( x-4, y, s, colorWhite, BIGCHAR_WIDTH, BIGCHAR_HEIGHT, 0, DS_SHADOW | DS_RIGHT );
 		}
 	}
@@ -553,6 +586,11 @@ static float CG_DrawPowerups_Old( float y ) {
 	int		color;
 	float	size;
 	float	f;
+// ~Dimmskii - tracks which active powerups are TA's persistent (Guard/Scout/
+// Doubler/Ammoregen) ones, indexed by powerup id (not sorted position) - see
+// the sort loop below.
+	qboolean	persistent[MAX_POWERUPS];
+// END Dimmskii
 	static const float colors[2][4] = {
 		{ 0.2f, 1.0f, 0.2f, 1.0f },
 		{ 1.0f, 0.2f, 0.2f, 1.0f }
@@ -570,12 +608,26 @@ static float CG_DrawPowerups_Old( float y ) {
 		if ( !ps->powerups[ i ] ) {
 			continue;
 		}
-		t = ps->powerups[ i ] - cg.time;
-		// ZOID--don't draw if the power up has unlimited time (999 seconds)
-		// This is true of the CTF flags
-		if ( t < 0 || t > 999000) {
-			continue;
+//		t = ps->powerups[ i ] - cg.time;
+//		// ZOID--don't draw if the power up has unlimited time (999 seconds)
+//		// This is true of the CTF flags
+//		if ( t < 0 || t > 999000) {
+//			continue;
+//		}
+// ~Dimmskii - server refreshes persistent powerups to "now" every frame, so
+// reading them as a countdown blinks at random; treat as unlimited instead.
+		persistent[i] = ( i == PW_GUARD || i == PW_SCOUT || i == PW_DOUBLER || i == PW_AMMOREGEN ) ? qtrue : qfalse;
+		if ( persistent[i] ) {
+			t = 999999; // sentinel: sorts after every real countdown, never used for display
+		} else {
+			t = ps->powerups[ i ] - cg.time;
+			// ZOID--don't draw if the power up has unlimited time (999 seconds)
+			// This is true of the CTF flags
+			if ( t < 0 || t > 999000) {
+				continue;
+			}
 		}
+// END Dimmskii
 
 		// insert into the list
 		for ( j = 0 ; j < active ; j++ ) {
@@ -603,20 +655,41 @@ static float CG_DrawPowerups_Old( float y ) {
 
 			y -= ICON_SIZE;
 
-			trap_R_SetColor( colors[color] );
-			CG_DrawField_Old( x, y, 2, sortedTime[ i ] / 1000 );
-
-			t = ps->powerups[ sorted[i] ];
-			if ( t - cg.time >= POWERUP_BLINKS_OLD * POWERUP_BLINK_TIME_OLD ) {
+//			trap_R_SetColor( colors[color] );
+//			CG_DrawField_Old( x, y, 2, sortedTime[ i ] / 1000 );
+//
+//			t = ps->powerups[ sorted[i] ];
+//			if ( t - cg.time >= POWERUP_BLINKS_OLD * POWERUP_BLINK_TIME_OLD ) {
+//				trap_R_SetColor( NULL );
+//			} else {
+//				vec4_t	modulate;
+//
+//				f = (float)( t - cg.time ) / POWERUP_BLINK_TIME_OLD;
+//				f -= (int)f;
+//				modulate[0] = modulate[1] = modulate[2] = modulate[3] = f;
+//				trap_R_SetColor( modulate );
+//			}
+// ~Dimmskii - persistent powerups (see sort loop) get a steady full-opacity
+// icon instead of the countdown digits + blink meant for real timers.
+			if ( persistent[ sorted[i] ] ) {
 				trap_R_SetColor( NULL );
 			} else {
-				vec4_t	modulate;
+				trap_R_SetColor( colors[color] );
+				CG_DrawField_Old( x, y, 2, sortedTime[ i ] / 1000 );
 
-				f = (float)( t - cg.time ) / POWERUP_BLINK_TIME_OLD;
-				f -= (int)f;
-				modulate[0] = modulate[1] = modulate[2] = modulate[3] = f;
-				trap_R_SetColor( modulate );
+				t = ps->powerups[ sorted[i] ];
+				if ( t - cg.time >= POWERUP_BLINKS_OLD * POWERUP_BLINK_TIME_OLD ) {
+					trap_R_SetColor( NULL );
+				} else {
+					vec4_t	modulate;
+
+					f = (float)( t - cg.time ) / POWERUP_BLINK_TIME_OLD;
+					f -= (int)f;
+					modulate[0] = modulate[1] = modulate[2] = modulate[3] = f;
+					trap_R_SetColor( modulate );
+				}
 			}
+// END Dimmskii
 
 			if ( cg.powerupActive == sorted[i] &&
 				cg.time - cg.powerupTime < PULSE_TIME_OLD ) {
