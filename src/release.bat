@@ -1,17 +1,27 @@
-setlocal
+setlocal enabledelayedexpansion
 @echo off
 
 set oldcd=%cd%
 
-set VERSION=061
+cd %~dp0
+
+:: version.txt: line 1 = VERSION digits, line 2 = optional TAG (indev02/rc3)
+set VERSION=
+set TAG=
+set VLINE=0
+for /f "usebackq delims=" %%A in ("version.txt") do (
+	set /a VLINE+=1
+	if "!VLINE!"=="1" set VERSION=%%A
+	if "!VLINE!"=="2" set TAG=%%A
+)
+
+:: TAG is read but not folded into PK3_NAME - dist path stays tag-free
 set PK3_NAME=pak%VERSION%
 
 :: Extract the first digit
 set MAJOR=%VERSION:~0,1%
 :: Extract the remaining digits
 set MINOR=%VERSION:~1%
-
-cd %~dp0
 
 :DESCRIPTION_TXT
 ::echo Quake III Ultimate Arena %MAJOR%.%MINOR%>..\description.txt
