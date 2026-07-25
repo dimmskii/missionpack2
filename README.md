@@ -6,6 +6,7 @@ Mod based off of Kr3m's [missionpackplus](https://github.com/Kr3m/missionpackplu
 
 ## Features
 * FFA Arena and Clan Arena gametypes.
+* Vanilla HUD with loading TA/QL .menu custom huds optional
 * Heavy Machinegun from Quake Live
 * Mostly QL-compatible `factories.txt` and `*.factories` scripts support
 * QL-Style nail bounce
@@ -16,7 +17,7 @@ Mod based off of Kr3m's [missionpackplus](https://github.com/Kr3m/missionpackplu
 * Unlagged, Instagib, PM/FB skins and much more from missionpackplus
 
 ## Screenshots
-<img src="docs/screenshots/pm.jpg" alt="PM Skinned Enemy" width="360"> <img src="docs/screenshots/teammatepois.jpg" alt="QL-Styled Teammate POIs" width="360"> <img src="docs/screenshots/green.jpg" alt="Green Armor" width="360"> <img src="docs/screenshots/hmg.jpg" alt="QL HMG" width="360"> <img src="docs/screenshots/itempois.jpg" alt="Item POIs" width="360"> <img src="docs/screenshots/itemtimers.jpg" alt="Item Timers" width="360"> 
+<img src="docs/screenshots/pm.jpg" alt="PM Skinned Enemy" width="360"> <img src="docs/screenshots/teammatepois.jpg" alt="QL-Styled Teammate POIs" width="360"> <img src="docs/screenshots/green.jpg" alt="Green Armor" width="360"> <img src="docs/screenshots/hmg.jpg" alt="QL HMG" width="360"> <img src="docs/CLIENT_files/h05_hud_vq3_ca.jpg" alt="Vanilla HUD" width="360"> <img src="docs/screenshots/itemtimers.jpg" alt="Item Timers" width="360"> 
 ## Configuration Guides
 
 For detailed setup instructions based on your use case, please refer to the specific configuration guides:
@@ -82,12 +83,18 @@ The build system included should be completely portable on both Windows (the ori
 7. FIGHT!
 
 ## To do
-* 0.62
-   * Implement Freeze Tag
-* TBD
-   * Domination, Attack/Defend, Red Rover, Race
-   * Implement fully the QL dmflags
-   * Complete QL HUD support
+* Gametypes 
+   * Freeze Tag
+   * Domination
+   * Attack/Defend
+   * Red Rover
+   * Race
+* Client
+   * Put in the rest of QL feedback like last standing, etc
+* HUD
+   * Get to 100% Quake Live HUD files compatibility
+   * Fix certain things with VHUD like switch back to fixed width chars instead of TA font
+* Other
    * Fix scores still being weird pre-round and spectator
    * Bot improvements: bunny hop and use grapple(?)
    * Off-hand hook(?)
