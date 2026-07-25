@@ -793,7 +793,7 @@ void ClientThink_real( gentity_t *ent ) {
 	}
 	
 // ~Dimmskii
-    if ( ent->client->ps.pm_flags & PMF_NOSHOOT && ent->client->ps.stats[STAT_HEALTH] > 0 && !level.intermissiontime ) { // TODO: isDeadArenaPlayer helper method or something. Check if dead and intermission time here so we can still click for respawn/ready
+    if ( client->ps.pm_flags & PMF_NOSHOOT && client->sess.sessionTeam != TEAM_SPECTATOR && client->ps.stats[STAT_HEALTH] > 0 && !level.intermissiontime ) { // Only on alive non-spectator players, so that we can still click for respawn/ready/cycle/etc
         ucmd->buttons &= ~BUTTON_ATTACK; // Server-sided gaunt hack fix: If one has the PMF_NOSHOOT flag, switching to gauntlet while holding +attack hits once
     }
 // END Dimmskii

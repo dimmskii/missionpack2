@@ -1278,7 +1278,7 @@ void ClientSpawn(gentity_t *ent) {
 
 	// Disable shooting upon respawn in Arena gamemodes if there is warmup time (  re-enabled on G_WarmupEnd in g_main.c  )
 	if ( GT_IsArenaGame(g_gametype.integer) ) {
-		if (g_warmup.integer > 0) {
+		if (!isSpectator && g_warmup.integer > 0) {
 			client->ps.pm_flags |= PMF_NOSHOOT;
 		}
 	}

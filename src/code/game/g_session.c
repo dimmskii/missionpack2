@@ -182,10 +182,10 @@ void G_InitWorldSession( void ) {
 	
 	// if the gametype changed since the last session, don't use any
 	// client sessions
-	/* if ( !*s || g_gametype.integer != gt ) {
+	if ( !*s || g_gametype.integer != gt ) { // ~Dimmskii - re-enabled; matches QL-SRP, was disabled here
 		level.newSession = qtrue;
 		G_Printf( "Gametype changed, clearing session data.\n" );
-	} */
+	}
 }
 
 

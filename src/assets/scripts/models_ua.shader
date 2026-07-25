@@ -1687,3 +1687,175 @@ models/powerups/pop2
 	}
 }
 
+
+
+
+
+//*************************************************************************//
+//      models/mapobjects/flagbase shader stanzas                          //
+//      Source: pack-qu4kezer0.pk3  scripts/models2.shader                 //
+//      Covers red_base.md3 / blue_base.md3 / ntrl_base.md3 surfaces       //
+//*************************************************************************//
+
+models/mapobjects/flagbase/base_s
+
+{
+	surfaceparm	nodraw
+}
+
+models/mapobjects/flagbase/beam_blue
+{
+	nopicmip
+     surfaceparm	trans
+     nomipmaps
+     cull disable
+    {
+		map models/mapobjects/flagbase/beam_blue.tga
+        blendFunc add
+		tcmod scroll -.5 0
+		rgbGen wave sin .5 .5 0.5 0.09
+	}
+}
+models/mapobjects/flagbase/beam_ntrl
+{
+	nopicmip
+     surfaceparm	trans
+     nomipmaps
+     cull disable
+	{
+		map models/mapobjects/flagbase/beam_ntrl.tga
+		blendFunc add
+		tcmod scroll -.5 0
+		rgbGen wave sin .5 .5 0.5 0.09
+	}
+}
+models/mapobjects/flagbase/beam_red
+{
+	nopicmip
+     surfaceparm	trans
+     nomipmaps
+     cull disable
+    {
+		map models/mapobjects/flagbase/beam_red.tga
+        blendFunc add
+        tcmod scroll -.5 0
+        rgbGen wave sin .5 .5 0.5 0.09
+	}
+}
+models/mapobjects/flagbase/swirl_ntrl
+{
+	nopicmip
+        {
+	        map models/mapobjects/flagbase/swirl_ntrl.tga
+            blendFunc GL_ONE GL_ZERO
+            tcmod rotate 130
+            tcMod stretch sin .8 0.2 0 .2
+	        rgbGen identity
+		}
+        {
+	        map models/mapobjects/flagbase/swirl_ntrl.tga
+			blendFunc Add
+            tcmod rotate 80
+            tcMod stretch sin .8 0.2 0 .1
+	        rgbGen identity
+		}
+		{
+	        map models/mapobjects/flagbase/base_r.tga
+			blendFunc blend
+	        //rgbGen lightingdiffuse
+		}
+
+}
+models/mapobjects/flagbase/swirl_red
+{
+	nopicmip
+        {
+	        map models/mapobjects/flagbase/swirl_red.tga
+            blendFunc GL_ONE GL_ZERO
+            tcmod rotate 130
+            tcMod stretch sin .8 0.2 0 .2
+	        rgbGen identity
+		}
+        {
+	        map models/mapobjects/flagbase/swirl_red.tga
+			blendFunc Add
+            tcmod rotate 80
+            tcMod stretch sin .8 0.2 0 .1
+	        rgbGen identity
+		}
+		{
+	        map models/mapobjects/flagbase/base_r.tga
+			blendFunc blend
+	        //rgbGen lightingdiffuse
+		}
+
+}
+models/mapobjects/flagbase/swirl_blue
+{
+	nopicmip
+        {
+	        map models/mapobjects/flagbase/swirl_blue.tga
+            blendFunc GL_ONE GL_ZERO
+            tcmod rotate 130
+            tcMod stretch sin .8 0.2 0 .2
+	        rgbGen identity
+		}
+        {
+	        map models/mapobjects/flagbase/swirl_blue.tga
+			blendFunc Add
+            tcmod rotate 80
+            tcMod stretch sin .8 0.2 0 .1
+	        rgbGen identity
+		}
+		{
+	        map models/mapobjects/flagbase/base_r.tga
+			blendFunc blend
+			//rgbGen lightingdiffuse
+		}
+
+}
+models/mapobjects/flagbase/env_red
+{
+	nopicmip
+       {
+	        map models/mapobjects/flagbase/env_red.tga
+			tcGen environment
+			blendfunc GL_ONE GL_ZERO
+            rgbGen identity
+       }
+       {
+	        map models/mapobjects/flagbase/base_e.tga
+			blendfunc blend
+            //rgbGen lightingdiffuse
+       }
+}
+models/mapobjects/flagbase/env_ntrl
+{
+	nopicmip
+       {
+	        map models/mapobjects/flagbase/env_ntrl.tga
+			tcGen environment
+			blendfunc GL_ONE GL_ZERO
+            rgbGen identity
+       }
+       {
+	        map models/mapobjects/flagbase/base_e.tga
+			blendfunc blend
+            //rgbGen lightingdiffuse
+       }
+}
+models/mapobjects/flagbase/env_blue
+{
+	nopicmip
+		{
+	        map models/mapobjects/flagbase/env_blue.tga
+			tcGen environment
+			blendfunc GL_ONE GL_ZERO
+            rgbGen identity
+       }
+       {
+	        map models/mapobjects/flagbase/base_e.tga
+			blendfunc blend
+            //rgbGen lightingdiffuse
+       }
+}

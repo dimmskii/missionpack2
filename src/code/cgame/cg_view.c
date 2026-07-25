@@ -794,6 +794,16 @@ static void CG_FirstFrame( void )
 		cgs.voteModified = qtrue;
 	else
 		cgs.voteModified = qfalse;
+
+// ~Dimmskii - request scores once on the very first rendered frame. The
+// CG_Respawn hook (cg_playerstate.c) can't cover this: CG_PredictPlayerState
+// bootstraps oldPlayerState from the same snapshot cg.predictedPlayerState is
+// set to on this exact frame, so there's no PERS_SPAWN_COUNT diff to detect a
+// "respawn" from on the initial spawn-in. Without this, the VQ3 HUD's
+// bottom-right score cards stay empty until the scoreboard is opened manually
+// or a later death/frag naturally triggers a request.
+	CG_RequestScores();
+// END Dimmskii
 }
 
 

@@ -128,8 +128,8 @@ CG_CVAR( cg_kickScale, "cg_kickScale", "0", CVAR_ARCHIVE )
 CG_CVAR( cg_hitSounds, "cg_hitSounds", "0", CVAR_ARCHIVE )
 //CG_CVAR( cg_enemyModel, "cg_enemyModel", "", CVAR_ARCHIVE )
 //CG_CVAR( cg_enemyColors, "cg_enemyColors", "", CVAR_ARCHIVE )
-// ~Dimmskii
-CG_CVAR( cg_enemyModel, "cg_enemyModel", "pm", CVAR_ARCHIVE )
+// ~Dimmskii -- Only preset the color; cg_enemyModel stays 0 until user opts in, following vq3 trend
+CG_CVAR( cg_enemyModel, "cg_enemyModel", "", CVAR_ARCHIVE )
 CG_CVAR( cg_enemyColors, "cg_enemyColors", "222", CVAR_ARCHIVE )
 // END Dimmskii
 CG_CVAR( cg_teamModel, "cg_teamModel", "", CVAR_ARCHIVE )

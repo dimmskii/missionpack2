@@ -62,8 +62,6 @@ models/powerups/ammo/hmgammo2
 	nopicmip
 	{
 		map models/powerups/ammo/hmgammo2.tga
-		blendfunc blend
-        rgbGen lightingDiffuse
+		rgbGen identity
 	}
-	
 }

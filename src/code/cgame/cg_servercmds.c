@@ -9,6 +9,11 @@
 //#ifdef MISSIONPACK // bk001204
 #include "../../ui/menudef.h" // bk001205 - for Q3_ui as well
 
+// ~Dimmskii - prototypes for helpers called before their definition below;
+static void CG_ParseTeamPositions( void );
+static void CG_ParseItemPositions( void );
+// END Dimmskii
+
 typedef struct {
 	const char *order;
 	int taskNum;
@@ -197,8 +202,12 @@ void CG_ParseServerinfo( void ) {
 	cgs.maxclients = atoi( Info_ValueForKey( info, "sv_maxclients" ) );
 	cgs.g_grappleDelayTime = atoi(Info_ValueForKey(info, "g_grappleDelayTime"));
 	cgs.g_grapplePull = atoi(Info_ValueForKey(info, "g_grapplePull"));
-	cgs.g_sgPelletSpread = atoi(Info_ValueForKey(info, "g_sgPelletSpread"));
-	cgs.g_sgPellets = atoi(Info_ValueForKey(info, "g_sgPellets"));
+	// ~Dimmskii - sg pellets/spread now arrive via CS_SERVER_SETTINGS_INFO_B
+	// (CG_ParseServerSettingsConfigString), no longer serverinfo. See
+	// docs/devmemos/QL_CVAR_SYNC.md.
+	//cgs.g_sgPelletSpread = atoi(Info_ValueForKey(info, "g_sgPelletSpread"));
+	//cgs.g_sgPellets = atoi(Info_ValueForKey(info, "g_sgPellets"));
+	// END Dimmskii
 	mapname = Info_ValueForKey( info, "mapname" );
 	Com_sprintf( cgs.mapname, sizeof( cgs.mapname ), "maps/%s.bsp", mapname );
 
@@ -284,6 +293,73 @@ static void CG_ParseWarmup( void ) {
 }
 
 
+// ~Dimmskii - client parsers for the QL-shaped gameplay-cvar configstrings.
+// Scope A: no struct cache - re-materialize values straight into the mirror
+// cvars (weapon_reload_*, which bg_pmove reads) and cgs.* fields. Called both
+// from CG_ConfigStringModified (live changes) and CG_SetConfigValues (initial
+// gamestate batch). See docs/devmemos/QL_CVAR_SYNC.md.
+
+/*
+================
+CG_ParseWeaponReloadConfigString
+
+Decodes the CS_WEAPON_RELOAD_TIMES int slab (WP_ order, matching bg_cvar.h)
+back into the 14 weapon_reload_* mirror cvars that bg_pmove.c reads.
+================
+*/
+static void CG_ParseWeaponReloadConfigString( void ) {
+	static const char *reloadCvars[14] = {
+		"weapon_reload_gauntlet",
+		"weapon_reload_mg",
+		"weapon_reload_sg",
+		"weapon_reload_gl",
+		"weapon_reload_rl",
+		"weapon_reload_lg",
+		"weapon_reload_rg",
+		"weapon_reload_pg",
+		"weapon_reload_bfg",
+		"weapon_reload_hook",
+		"weapon_reload_ng",
+		"weapon_reload_prox",
+		"weapon_reload_cg",
+		"weapon_reload_hmg"
+	};
+	const char	*payload;
+	char		*cursor;
+	int			i;
+
+	payload = CG_ConfigString( CS_WEAPON_RELOAD_TIMES );
+	if ( !payload || !payload[0] ) {
+		return;
+	}
+
+	cursor = (char *)payload;
+	for ( i = 0; i < 14; i++ ) {
+		const char *token = COM_ParseExt( &cursor, qfalse );
+		if ( !token[0] ) {
+			return;		// short/malformed payload - leave the remainder as-is
+		}
+		trap_Cvar_Set( reloadCvars[i], token );
+	}
+}
+
+/*
+================
+CG_ParseServerSettingsConfigString
+
+Decodes the CS_SERVER_SETTINGS_INFO_B scalar info string into the cgs.*
+fields the client reads (shotgun pellet count/spread).
+================
+*/
+static void CG_ParseServerSettingsConfigString( void ) {
+	const char	*info;
+
+	info = CG_ConfigString( CS_SERVER_SETTINGS_INFO_B );
+	cgs.g_sgPellets      = atoi( Info_ValueForKey( info, "sgPellets" ) );
+	cgs.g_sgPelletSpread = atoi( Info_ValueForKey( info, "sgSpread" ) );
+}
+// END Dimmskii
+
 /*
 ================
 CG_SetConfigValues
@@ -309,6 +385,12 @@ void CG_SetConfigValues( void ) {
 	}
 //#endif
 	CG_ParseWarmup();
+	// ~Dimmskii - seed initial gameplay-cvar values from their configstrings
+	// (the gamestate CS batch on connect isn't dispatched through
+	// CG_ConfigStringModified, so parse them once here).
+	CG_ParseWeaponReloadConfigString();
+	CG_ParseServerSettingsConfigString();
+	// END Dimmskii
 }
 
 
@@ -443,7 +525,15 @@ static void CG_ConfigStringModified( void ) {
 	else if ( num == CS_SHADERSTATE ) {
 		CG_ShaderStateChanged();
 	}
-		
+	// ~Dimmskii - QL-shaped gameplay-cvar configstrings
+	else if ( num == CS_WEAPON_RELOAD_TIMES ) {
+		CG_ParseWeaponReloadConfigString();
+	}
+	else if ( num == CS_SERVER_SETTINGS_INFO_B ) {
+		CG_ParseServerSettingsConfigString();
+	}
+	// END Dimmskii
+
 }
 
 

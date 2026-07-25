@@ -340,21 +340,6 @@ itemDef {
       		forecolor 1 1 1 1
       		visible 0
     		}
-	
-	itemDef {
-      		name display
-		group grpOptions
-      		type ITEM_TYPE_YESNO
-		text "Force Player Models:"
-		cvar "cg_forceModel"
-		rect 99 135 256 20
-      		textalign ITEM_ALIGN_RIGHT
-      		textalignx 128
-      		textaligny 20
-		textscale .3
-      		forecolor 1 1 1 1
-      		visible 0 
-    		}
 
 	itemDef {
       		name display
@@ -468,7 +453,84 @@ itemDef {
 		cvarTest "cg_flagPOIs"
 		disableCvar { "0" }
 		}
-
+	
+	itemDef {
+      		name display
+		group grpOptions
+      		type ITEM_TYPE_YESNO
+		text "Force Player Models:"
+		cvar "cg_forceModel"
+		rect 99 315 256 20
+      		textalign ITEM_ALIGN_RIGHT
+      		textalignx 128
+      		textaligny 20
+		textscale .3
+      		forecolor 1 1 1 1
+      		visible 0 
+    		}
+	
+	itemDef { // TODO: No actual model selection? ~Dimmskii
+      		name display
+		group grpOptions
+      		type ITEM_TYPE_MULTI
+		text "Force Enemy Skins:"
+		cvar "cg_enemyModel"
+		cvarStrList { Off "" Promode "pm" Fullbrights "fb" }
+		rect 99 335 256 20
+      		textalign ITEM_ALIGN_RIGHT
+      		textalignx 128
+      		textaligny 20
+		textscale .3
+      		forecolor 1 1 1 1
+      		visible 0 
+    		}
+	
+/*
+	itemDef {
+      		name display
+		group grpOptions
+      		type ITEM_TYPE_SLIDER_COLOR
+		text "Enemy Colors 1:"
+		cvar "cg_enemyColors"
+		rect 99 355 256 20
+      		textalign ITEM_ALIGN_RIGHT
+      		textalignx 128
+      		textaligny 20
+		textscale .3
+      		forecolor 1 1 1 1
+      		visible 0 
+    		}
+	
+	itemDef {
+      		name display
+		group grpOptions
+      		type ITEM_TYPE_SLIDER_COLOR
+		text "Enemy Colors 2:"
+		cvar "cg_enemyColors"
+		rect 99 375 256 20
+      		textalign ITEM_ALIGN_RIGHT
+      		textalignx 128
+      		textaligny 20
+		textscale .3
+      		forecolor 1 1 1 1
+      		visible 0 
+    		}
+	
+	itemDef {
+      		name display
+		group grpOptions
+      		type ITEM_TYPE_SLIDER_COLOR
+		text "Enemy Colors 3:"
+		cvar "cg_enemyColors"
+		rect 99 395 256 20
+      		textalign ITEM_ALIGN_RIGHT
+      		textalignx 128
+      		textaligny 20
+		textscale .3
+      		forecolor 1 1 1 1
+      		visible 0 
+    		}
+*/
 
 
 
