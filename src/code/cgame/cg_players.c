@@ -1166,15 +1166,18 @@ static void CG_SetSkinAndModel( clientInfo_t *newInfo,
 			}
 		} else { // not team game
 
-			if ( pm_model && myClientNum != clientNum && cgs.gametype != GT_SINGLE_PLAYER ) {
+//			if ( pm_model && myClientNum != clientNum && cgs.gametype != GT_SINGLE_PLAYER ) {
+			if ( ( pm_model || fb_model ) && myClientNum != clientNum && cgs.gametype != GT_SINGLE_PLAYER ) { // ~Dimmskii - fb_model was never checked here, fell through and got hardcoded to "pm"
 				Q_strncpyz( modelName, infomodel, modelNameSize );
 
 				// strip skin name from model name
 				slash = strchr( modelName, '/' );
 				if ( !slash ) {
-					Q_strncpyz( skinName, PM_SKIN, skinNameSize );
+//					Q_strncpyz( skinName, PM_SKIN, skinNameSize );
+					Q_strncpyz( skinName, pm_model ? PM_SKIN : FB_SKIN, skinNameSize ); // ~Dimmskii
 				} else {
-					Q_strncpyz( skinName, PM_SKIN, skinNameSize );
+//					Q_strncpyz( skinName, PM_SKIN, skinNameSize );
+					Q_strncpyz( skinName, pm_model ? PM_SKIN : FB_SKIN, skinNameSize ); // ~Dimmskii
 					*slash = '\0';
 				}
 
