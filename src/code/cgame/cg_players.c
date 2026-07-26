@@ -702,49 +702,80 @@ static void CG_ColorFromChar( char v, vec3_t color ) {
 }
 
 
-static void CG_SetColorInfo( const char *color, clientInfo_t *info ) 
-{
-	VectorSet ( info->headColor, 1.0f, 1.0f, 1.0f );
-	VectorSet ( info->bodyColor, 1.0f, 1.0f, 1.0f );
-	VectorSet ( info->legsColor, 1.0f, 1.0f, 1.0f );
-	
-	if ( !color[0] )
+// ~Dimmskii -- QL-style per-part hex model colors replace the packed CPMA string
+//static void CG_SetColorInfo( const char *color, clientInfo_t *info )
+//{
+//	VectorSet ( info->headColor, 1.0f, 1.0f, 1.0f );
+//	VectorSet ( info->bodyColor, 1.0f, 1.0f, 1.0f );
+//	VectorSet ( info->legsColor, 1.0f, 1.0f, 1.0f );
+//
+//	if ( !color[0] )
+//		return;
+//	CG_ColorFromChar( color[0], info->headColor );
+//
+//	if ( !color[1] )
+//		return;
+//	CG_ColorFromChar( color[1], info->bodyColor );
+//
+//	if ( !color[2] )
+//		return;
+//	CG_ColorFromChar( color[2], info->legsColor );
+//
+//	// override color1/color2 if specified
+//	if ( !color[3] )
+//		return;
+//	CG_ColorFromChar( color[3], info->color1 );
+//
+//	if ( !color[4] )
+//		return;
+//	CG_ColorFromChar( color[4], info->color2 );
+//}
+//
+//
+//static const char *CG_GetTeamColors( const char *color, team_t team ) {
+//	static char str[6];
+//
+//	Q_strncpyz( str, color, sizeof( str ) );
+//
+//	switch ( team ) {
+//		case TEAM_RED:  replace1( '?', '1', str ); break;
+//		case TEAM_BLUE: replace1( '?', '4', str ); break;
+//		case TEAM_FREE: replace1( '?', '7', str ); break;
+//		default: break;
+//    }
+//
+//	return str;
+//}
+
+// hex part color if parsable, else team auto color
+static void CG_PartColor( const char *hexstr, team_t team, vec3_t out ) {
+	vec4_t c;
+
+	if ( BG_ParseHexColor( hexstr, c ) ) {
+		BG_ClampColorBrightness( c, MIN_PLAYERCOLOR_BRIGHTNESS );
+		VectorCopy( c, out );
 		return;
-	CG_ColorFromChar( color[0], info->headColor );
-	
-	if ( !color[1] )
-		return;
-	CG_ColorFromChar( color[1], info->bodyColor );
-
-	if ( !color[2] )
-		return;
-	CG_ColorFromChar( color[2], info->legsColor );
-
-	// override color1/color2 if specified
-	if ( !color[3] )
-		return;
-	CG_ColorFromChar( color[3], info->color1 );
-
-	if ( !color[4] )
-		return;
-	CG_ColorFromChar( color[4], info->color2 );
-}
-
-
-static const char *CG_GetTeamColors( const char *color, team_t team ) {
-	static char str[6];
-
-	Q_strncpyz( str, color, sizeof( str ) );
-
+	}
 	switch ( team ) {
-		case TEAM_RED:  replace1( '?', '1', str ); break;
-		case TEAM_BLUE: replace1( '?', '4', str ); break;
-		case TEAM_FREE: replace1( '?', '7', str ); break;
-		default: break;
-    }
-
-	return str;
+		case TEAM_RED:  VectorSet( out, 1.0f, 0.0f, 0.0f ); break;
+		case TEAM_BLUE: VectorSet( out, 0.0f, 0.0f, 1.0f ); break;
+		default:        VectorSet( out, 1.0f, 1.0f, 1.0f ); break;
+	}
 }
+
+// allowCustom qfalse (free-fly spectator) forces team-auto colors
+static void CG_SetColorInfo( qboolean enemy, qboolean allowCustom, clientInfo_t *info ) {
+	if ( allowCustom ) {
+		CG_PartColor( enemy ? cg_enemyHeadColor.string : cg_teamHeadColor.string, info->team, info->headColor );
+		CG_PartColor( enemy ? cg_enemyUpperColor.string : cg_teamUpperColor.string, info->team, info->bodyColor );
+		CG_PartColor( enemy ? cg_enemyLowerColor.string : cg_teamLowerColor.string, info->team, info->legsColor );
+	} else {
+		CG_PartColor( "", info->team, info->headColor );
+		CG_PartColor( "", info->team, info->bodyColor );
+		CG_PartColor( "", info->team, info->legsColor );
+	}
+}
+// END Dimmskii
 
 
 /*
@@ -1013,7 +1044,7 @@ static void CG_SetSkinAndModel( clientInfo_t *newInfo,
 	qboolean	pm_model;
 	qboolean	fb_model;
 	team_t		team;
-	const char	*colors;
+//	const char	*colors; // ~Dimmskii - unused since hex colors
 	
 	team = newInfo->team;
 	pm_model = ( Q_stricmp( cg_enemyModel.string, PM_SKIN ) == 0 ) ? qtrue : qfalse;
@@ -1055,12 +1086,13 @@ static void CG_SetSkinAndModel( clientInfo_t *newInfo,
 				Q_strncpyz( skinName, newSkin, skinNameSize );
 
 				if ( setColor ) {
-					if ( cg_enemyColors.string[0] && myTeam != TEAM_SPECTATOR ) // free-fly?
-						colors = CG_GetTeamColors( cg_enemyColors.string, newInfo->team );
-					else
-						colors = CG_GetTeamColors( "???", newInfo->team );
-
-					CG_SetColorInfo( colors, newInfo );
+//					if ( cg_enemyColors.string[0] && myTeam != TEAM_SPECTATOR ) // free-fly?
+//						colors = CG_GetTeamColors( cg_enemyColors.string, newInfo->team );
+//					else
+//						colors = CG_GetTeamColors( "???", newInfo->team );
+//
+//					CG_SetColorInfo( colors, newInfo );
+					CG_SetColorInfo( qtrue, myTeam != TEAM_SPECTATOR, newInfo ); // ~Dimmskii - hex colors
 					newInfo->coloredSkin = qtrue;
 				}
 
@@ -1097,12 +1129,13 @@ static void CG_SetSkinAndModel( clientInfo_t *newInfo,
 				Q_strncpyz( skinName, newSkin, skinNameSize );
 
 				if ( setColor ) {
-					if ( cg_teamColors.string[0] && myTeam != TEAM_SPECTATOR ) // free-fly?
-						colors = CG_GetTeamColors( cg_teamColors.string, newInfo->team );
-					else
-						colors = CG_GetTeamColors( "???", newInfo->team );
-
-					CG_SetColorInfo( colors, newInfo );
+//					if ( cg_teamColors.string[0] && myTeam != TEAM_SPECTATOR ) // free-fly?
+//						colors = CG_GetTeamColors( cg_teamColors.string, newInfo->team );
+//					else
+//						colors = CG_GetTeamColors( "???", newInfo->team );
+//
+//					CG_SetColorInfo( colors, newInfo );
+					CG_SetColorInfo( qfalse, myTeam != TEAM_SPECTATOR, newInfo ); // ~Dimmskii - hex colors
 					newInfo->coloredSkin = qtrue;
 				}
 
@@ -1149,8 +1182,9 @@ static void CG_SetSkinAndModel( clientInfo_t *newInfo,
 					Q_strncpyz( modelName, "sarge", modelNameSize );
 
 				if ( setColor ) {
-					colors = CG_GetTeamColors( cg_enemyColors.string, newInfo->team );
-					CG_SetColorInfo( colors, newInfo );
+//					colors = CG_GetTeamColors( cg_enemyColors.string, newInfo->team );
+//					CG_SetColorInfo( colors, newInfo );
+					CG_SetColorInfo( qtrue, qtrue, newInfo ); // ~Dimmskii - hex colors
 					newInfo->coloredSkin = qtrue;
 				}
 
@@ -1167,8 +1201,9 @@ static void CG_SetSkinAndModel( clientInfo_t *newInfo,
 				}
 
 				if ( setColor ) {
-					colors = CG_GetTeamColors( cg_enemyColors.string, newInfo->team );
-					CG_SetColorInfo( colors, newInfo );
+//					colors = CG_GetTeamColors( cg_enemyColors.string, newInfo->team );
+//					CG_SetColorInfo( colors, newInfo );
+					CG_SetColorInfo( qtrue, qtrue, newInfo ); // ~Dimmskii - hex colors
 					newInfo->coloredSkin = qtrue;
 				}
 			} else { // forcemodel, etc.
@@ -1231,7 +1266,7 @@ void CG_NewClientInfo( int clientNum ) {
 	int			myClientNum;
 	team_t		myTeam;
 	team_t		team;
-	int			len;
+//	int			len; // ~Dimmskii - unused since hex colors
 
 	ci = &cgs.clientinfo[clientNum];
 
@@ -1307,17 +1342,19 @@ void CG_NewClientInfo( int clientNum ) {
 	v = Info_ValueForKey( configstring, "l" );
 	newInfo.losses = atoi( v );
 
+	// ~Dimmskii -- retired with the packed color cvars; color1/color2 stay on the vanilla c1/c2 path
 	// always apply team colors [4] and [5] if specified, this will work in non-team games too
-	if ( cg_teamColors.string[0] && team != TEAM_SPECTATOR ) {
-		if ( allowNativeModel || ( ( team == TEAM_RED || team == TEAM_BLUE ) && team == myTeam && ( clientNum != myClientNum || cg.demoPlayback ) ) ) {
-			v = CG_GetTeamColors( cg_teamColors.string, team );
-			len = strlen( v );
-			if ( len >= 4 )
-				CG_ColorFromChar( v[3], newInfo.color1 );
-			if ( len >= 5 )
-				CG_ColorFromChar( v[4], newInfo.color2 );
-		}
-	}
+//	if ( cg_teamColors.string[0] && team != TEAM_SPECTATOR ) {
+//		if ( allowNativeModel || ( ( team == TEAM_RED || team == TEAM_BLUE ) && team == myTeam && ( clientNum != myClientNum || cg.demoPlayback ) ) ) {
+//			v = CG_GetTeamColors( cg_teamColors.string, team );
+//			len = strlen( v );
+//			if ( len >= 4 )
+//				CG_ColorFromChar( v[3], newInfo.color1 );
+//			if ( len >= 5 )
+//				CG_ColorFromChar( v[4], newInfo.color2 );
+//		}
+//	}
+	// END Dimmskii
 
 	// team task
 	v = Info_ValueForKey( configstring, "tt" );

@@ -130,10 +130,18 @@ CG_CVAR( cg_hitSounds, "cg_hitSounds", "0", CVAR_ARCHIVE )
 //CG_CVAR( cg_enemyColors, "cg_enemyColors", "", CVAR_ARCHIVE )
 // ~Dimmskii -- Only preset the color; cg_enemyModel stays 0 until user opts in, following vq3 trend
 CG_CVAR( cg_enemyModel, "cg_enemyModel", "", CVAR_ARCHIVE )
-CG_CVAR( cg_enemyColors, "cg_enemyColors", "222", CVAR_ARCHIVE )
+//CG_CVAR( cg_enemyColors, "cg_enemyColors", "222", CVAR_ARCHIVE )
 // END Dimmskii
 CG_CVAR( cg_teamModel, "cg_teamModel", "", CVAR_ARCHIVE )
-CG_CVAR( cg_teamColors, "cg_teamColors", "", CVAR_ARCHIVE )
+//CG_CVAR( cg_teamColors, "cg_teamColors", "", CVAR_ARCHIVE )
+// ~Dimmskii -- QL-style per-part hex model colors replace the packed CPMA strings above; empty = team auto
+CG_CVAR( cg_enemyHeadColor, "cg_enemyHeadColor", "0x2a8000FF", CVAR_ARCHIVE )
+CG_CVAR( cg_enemyUpperColor, "cg_enemyUpperColor", "0x2a8000FF", CVAR_ARCHIVE )
+CG_CVAR( cg_enemyLowerColor, "cg_enemyLowerColor", "0x2a8000FF", CVAR_ARCHIVE )
+CG_CVAR( cg_teamHeadColor, "cg_teamHeadColor", "", CVAR_ARCHIVE )
+CG_CVAR( cg_teamUpperColor, "cg_teamUpperColor", "", CVAR_ARCHIVE )
+CG_CVAR( cg_teamLowerColor, "cg_teamLowerColor", "", CVAR_ARCHIVE )
+// END Dimmskii
 CG_CVAR( cg_deadBodyDarken, "cg_deadBodyDarken", "1", CVAR_ARCHIVE )
 CG_CVAR( cg_fovAdjust, "cg_fovAdjust", "0", CVAR_ARCHIVE )
 CG_CVAR( cg_followKiller, "cg_followKiller", "0", CVAR_ARCHIVE )

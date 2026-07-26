@@ -11,9 +11,17 @@ displayContextDef_t cgDC;
 
 int forceModelModificationCount = -1;
 int enemyModelModificationCount  = -1;
-int	enemyColorsModificationCount = -1;
+//int	enemyColorsModificationCount = -1;
 int teamModelModificationCount  = -1;
-int	teamColorsModificationCount = -1;
+//int	teamColorsModificationCount = -1;
+// ~Dimmskii -- per-part hex color cvars replace the packed pair
+int	enemyHeadColorModificationCount = -1;
+int	enemyUpperColorModificationCount = -1;
+int	enemyLowerColorModificationCount = -1;
+int	teamHeadColorModificationCount = -1;
+int	teamUpperColorModificationCount = -1;
+int	teamLowerColorModificationCount = -1;
+// END Dimmskii
 //static int crosshairColorModificationCount = -1;
 int cg_playback_follow;
 
@@ -145,9 +153,17 @@ void CG_RegisterCvars( void ) {
 
 	forceModelModificationCount = cg_forceModel.modificationCount;
 	enemyModelModificationCount = cg_enemyModel.modificationCount;
-	enemyColorsModificationCount = cg_enemyColors.modificationCount;
+//	enemyColorsModificationCount = cg_enemyColors.modificationCount;
 	teamModelModificationCount = cg_teamModel.modificationCount;
-	teamColorsModificationCount = cg_teamColors.modificationCount;
+//	teamColorsModificationCount = cg_teamColors.modificationCount;
+	// ~Dimmskii -- per-part hex color cvars replace the packed pair
+	enemyHeadColorModificationCount = cg_enemyHeadColor.modificationCount;
+	enemyUpperColorModificationCount = cg_enemyUpperColor.modificationCount;
+	enemyLowerColorModificationCount = cg_enemyLowerColor.modificationCount;
+	teamHeadColorModificationCount = cg_teamHeadColor.modificationCount;
+	teamUpperColorModificationCount = cg_teamUpperColor.modificationCount;
+	teamLowerColorModificationCount = cg_teamLowerColor.modificationCount;
+	// END Dimmskii
 
 
 	trap_Cvar_Register(NULL, "model", DEFAULT_MODEL, CVAR_USERINFO | CVAR_ARCHIVE );
@@ -256,17 +272,33 @@ void CG_UpdateCvars( void ) {
 	}
 
 	// if model changed
-	if ( forceModelModificationCount != cg_forceModel.modificationCount 
+	if ( forceModelModificationCount != cg_forceModel.modificationCount
 		|| enemyModelModificationCount != cg_enemyModel.modificationCount
-		|| enemyColorsModificationCount != cg_enemyColors.modificationCount
+//		|| enemyColorsModificationCount != cg_enemyColors.modificationCount
 		|| teamModelModificationCount != cg_teamModel.modificationCount
-		|| teamColorsModificationCount != cg_teamColors.modificationCount ) {
+//		|| teamColorsModificationCount != cg_teamColors.modificationCount ) {
+		// ~Dimmskii -- per-part hex color cvars replace the packed pair
+		|| enemyHeadColorModificationCount != cg_enemyHeadColor.modificationCount
+		|| enemyUpperColorModificationCount != cg_enemyUpperColor.modificationCount
+		|| enemyLowerColorModificationCount != cg_enemyLowerColor.modificationCount
+		|| teamHeadColorModificationCount != cg_teamHeadColor.modificationCount
+		|| teamUpperColorModificationCount != cg_teamUpperColor.modificationCount
+		|| teamLowerColorModificationCount != cg_teamLowerColor.modificationCount ) {
+		// END Dimmskii
 
 		forceModelModificationCount = cg_forceModel.modificationCount;
 		enemyModelModificationCount = cg_enemyModel.modificationCount;
-		enemyColorsModificationCount = cg_enemyColors.modificationCount;
+//		enemyColorsModificationCount = cg_enemyColors.modificationCount;
 		teamModelModificationCount = cg_teamModel.modificationCount;
-		teamColorsModificationCount = cg_teamColors.modificationCount;
+//		teamColorsModificationCount = cg_teamColors.modificationCount;
+		// ~Dimmskii -- per-part hex color cvars replace the packed pair
+		enemyHeadColorModificationCount = cg_enemyHeadColor.modificationCount;
+		enemyUpperColorModificationCount = cg_enemyUpperColor.modificationCount;
+		enemyLowerColorModificationCount = cg_enemyLowerColor.modificationCount;
+		teamHeadColorModificationCount = cg_teamHeadColor.modificationCount;
+		teamUpperColorModificationCount = cg_teamUpperColor.modificationCount;
+		teamLowerColorModificationCount = cg_teamLowerColor.modificationCount;
+		// END Dimmskii
 
 		CG_ForceModelChange();
 	}

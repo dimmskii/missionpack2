@@ -2,6 +2,7 @@
 // string allocation/managment
 
 #include "ui_shared.h"
+#include "../game/bg_newutil.h" // ~Dimmskii - hex color parsing for ITEM_TYPE_HEXCOLOR
 
 int ED_vsprintf( char *buffer, const char *fmt, va_list ap );
 
@@ -3124,6 +3125,51 @@ void Item_Multi_Paint(itemDef_t *item) {
 	}
 }
 
+// ~Dimmskii -- ITEM_TYPE_HEXCOLOR: solid swatch bar where the value text usually goes.
+// Empty/unparsable cvar (= team auto) paints just the frame.
+void Item_HexColor_Paint(itemDef_t *item) {
+	vec4_t newColor, lowLight, barColor;
+	float x, y, w, h;
+	char buff[64];
+	menuDef_t *parent = (menuDef_t*)item->parent;
+
+	if (item->window.flags & WINDOW_HASFOCUS) {
+		lowLight[0] = 0.8 * parent->focusColor[0];
+		lowLight[1] = 0.8 * parent->focusColor[1];
+		lowLight[2] = 0.8 * parent->focusColor[2];
+		lowLight[3] = 0.8 * parent->focusColor[3];
+		LerpColor(parent->focusColor,lowLight,newColor,0.5+0.5*sin(DC->realTime / PULSE_DIVISOR));
+	} else {
+		memcpy(&newColor, &item->window.foreColor, sizeof(vec4_t));
+	}
+	Item_TextColor(item, &newColor);
+
+	buff[0] = '\0';
+	if (item->cvar) {
+		DC->getCVarString(item->cvar, buff, sizeof(buff));
+	}
+
+	if (item->text) {
+		Item_Text_Paint(item);
+		x = item->textRect.x + item->textRect.w + 8;
+	} else {
+		x = item->window.rect.x + 2;
+	}
+	y = item->window.rect.y + 2;
+	w = item->window.rect.x + item->window.rect.w - x - 2;
+	h = item->window.rect.h - 4;
+	if (w < 8) {
+		w = 8;
+	}
+
+	if (BG_ParseHexColor(buff, barColor)) {
+		BG_ClampColorBrightness(barColor, MIN_PLAYERCOLOR_BRIGHTNESS); // match in-game render
+		DC->fillRect(x, y, w, h, barColor);
+	}
+	DC->drawRect(x, y, w, h, 1, newColor);
+}
+// END Dimmskii
+
 
 typedef struct {
 	char	*command;
@@ -4055,6 +4101,9 @@ void Item_Paint(itemDef_t *item) {
       break;
     case ITEM_TYPE_MULTI:
       Item_Multi_Paint(item);
+      break;
+    case ITEM_TYPE_HEXCOLOR: // ~Dimmskii - hex color swatch
+      Item_HexColor_Paint(item);
       break;
     case ITEM_TYPE_BIND:
       Item_Bind_Paint(item);
