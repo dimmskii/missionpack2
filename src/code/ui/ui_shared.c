@@ -3214,6 +3214,29 @@ void Item_Multi_Paint(itemDef_t *item) {
 	}
 }
 
+// ~Dimmskii -- tile the 2x2 checker under a swatch so translucent colors read like
+// a paint program. NoMip shaders clamp (no wrap), so tile by hand; one motif per bar
+// height, capped so at least ~3 tile across even a narrow field.
+static void Item_HexChecker_Paint(float x, float y, float w, float h) {
+	static qhandle_t checker;
+	vec4_t white = { 1.0f, 1.0f, 1.0f, 1.0f };
+	float cx, cw, tile;
+
+	if (!checker) {
+		checker = DC->registerShaderNoMip("ui/assets/translucentbg");
+	}
+	tile = h;
+	if (tile > w / 3.0f) {
+		tile = w / 3.0f;
+	}
+	DC->setColor(white);
+	for (cx = x; cx < x + w; cx += tile) {
+		cw = (cx + tile > x + w) ? (x + w - cx) : tile;
+		DC->drawStretchPic(cx, y, cw, h, 0, 0, cw / tile, 1, checker);
+	}
+	DC->setColor(NULL);
+}
+
 // ~Dimmskii -- ITEM_TYPE_HEXCOLOR: solid swatch bar where the value text usually goes.
 // Empty/unparsable cvar (= team auto) paints just the frame.
 void Item_HexColor_Paint(itemDef_t *item) {
@@ -3253,6 +3276,7 @@ void Item_HexColor_Paint(itemDef_t *item) {
 
 	if (BG_ParseHexColor(buff, barColor)) {
 		BG_ClampColorBrightness(barColor, MIN_PLAYERCOLOR_BRIGHTNESS); // match in-game render
+		Item_HexChecker_Paint(x, y, w, h);   // checker shows through when alpha < 1
 		DC->fillRect(x, y, w, h, barColor);
 	}
 	DC->drawRect(x, y, w, h, 1, newColor);
@@ -3267,6 +3291,7 @@ void Item_HexPreview_Paint(itemDef_t *item) {
 	c[2] = Com_Clamp(0.0f, 1.0f, DC->getCVarValue("ui_hexB") / 255.0f);
 	c[3] = Com_Clamp(0.0f, 1.0f, DC->getCVarValue("ui_hexA") / 255.0f);
 
+	Item_HexChecker_Paint(item->window.rect.x, item->window.rect.y, item->window.rect.w, item->window.rect.h);
 	DC->fillRect(item->window.rect.x, item->window.rect.y, item->window.rect.w, item->window.rect.h, c);
 	DC->drawRect(item->window.rect.x, item->window.rect.y, item->window.rect.w, item->window.rect.h, 1, item->window.foreColor);
 }
