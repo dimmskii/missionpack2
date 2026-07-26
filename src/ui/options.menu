@@ -546,6 +546,7 @@ itemDef {
 		textscale .3
       		forecolor 1 1 1 1
       		visible 0
+		action { play "sound/misc/menu1.wav" ; hexcoloropen } // ~Dimmskii
     		}
 
 	itemDef {
@@ -561,6 +562,7 @@ itemDef {
 		textscale .3
       		forecolor 1 1 1 1
       		visible 0
+		action { play "sound/misc/menu1.wav" ; hexcoloropen } // ~Dimmskii
     		}
 
 	itemDef {
@@ -576,6 +578,7 @@ itemDef {
 		textscale .3
       		forecolor 1 1 1 1
       		visible 0
+		action { play "sound/misc/menu1.wav" ; hexcoloropen } // ~Dimmskii
     		}
 // END Dimmskii
 

@@ -16,6 +16,7 @@
 	loadMenu { "ui/cdkey.menu" }
 	loadMenu { "ui/system.menu" }
 	loadMenu { "ui/options.menu" }
+	loadMenu { "ui/hexpicker.menu" }
  	loadMenu { "ui/mod.menu" }
 	loadMenu { "ui/demo.menu" }
 	loadMenu { "ui/cinematicmenu.menu" }

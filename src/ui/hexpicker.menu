@@ -1,0 +1,168 @@
+#include "ui/menudef.h"
+
+// ~Dimmskii -- RGBA color picker popup for ITEM_TYPE_HEXCOLOR swatches.
+// Opened via a swatch's `action { hexcoloropen }`; sliders bind to the
+// ui_hexR/G/B/A scratch cvars seeded by Script_HexColorOpen. OK/Clear write
+// the composed value back to the swatch's cvar (remembered in ui_shared.c).
+
+{
+
+menuDef {
+	name "hexpicker"
+	visible 0
+	fullscreen 0
+	rect 195 110 250 260
+	focusColor 1 .75 0 1
+	style 1
+	border 1
+	popup
+	onEsc { hexcolorclose }
+
+	itemDef {
+		name window
+		rect 0 0 250 260
+		style WINDOW_STYLE_FILLED
+		border 1
+		bordercolor .5 .5 .5 .5
+		forecolor 1 1 1 1
+		backcolor 0 0 0 .85
+		visible 1
+		decoration
+	}
+
+	itemDef {
+		name title
+		text "Color Picker"
+		style 0
+		rect 0 14 250 20
+		textalign ITEM_ALIGN_CENTER
+		textalignx 125
+		textaligny 20
+		textscale .333
+		forecolor 1 1 1 1
+		visible 1
+		decoration
+	}
+
+	itemDef {
+		name preview
+		type ITEM_TYPE_HEXPREVIEW
+		rect 30 42 190 28
+		forecolor 1 1 1 1
+		visible 1
+		decoration
+	}
+
+	itemDef {
+		name display
+		type ITEM_TYPE_SLIDER
+		text "Red:"
+		cvarfloat "ui_hexR" 255 0 255
+		rect 0 84 250 20
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 78
+		textaligny 20
+		textscale .3
+		forecolor 1 1 1 1
+		visible 1
+	}
+
+	itemDef {
+		name display
+		type ITEM_TYPE_SLIDER
+		text "Green:"
+		cvarfloat "ui_hexG" 255 0 255
+		rect 0 108 250 20
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 78
+		textaligny 20
+		textscale .3
+		forecolor 1 1 1 1
+		visible 1
+	}
+
+	itemDef {
+		name display
+		type ITEM_TYPE_SLIDER
+		text "Blue:"
+		cvarfloat "ui_hexB" 255 0 255
+		rect 0 132 250 20
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 78
+		textaligny 20
+		textscale .3
+		forecolor 1 1 1 1
+		visible 1
+	}
+
+	itemDef {
+		name display
+		type ITEM_TYPE_SLIDER
+		text "Alpha:"
+		cvarfloat "ui_hexA" 255 0 255
+		rect 0 156 250 20
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 78
+		textaligny 20
+		textscale .3
+		forecolor 1 1 1 1
+		visible 1
+	}
+
+	itemDef {
+		name ok
+		text "OK"
+		type 1
+		textscale .3
+		style WINDOW_STYLE_FILLED
+		rect 20 196 60 24
+		textalign ITEM_ALIGN_CENTER
+		textalignx 30
+		textaligny 18
+		forecolor 1 1 1 1
+		backcolor .37 .1 .1 1
+		visible 1
+		action { play "sound/misc/menu3.wav" ; hexcolorapply ; hexcolorclose }
+		mouseEnter { setitemcolor ok backcolor .1 .37 .1 1 }
+		mouseExit { setitemcolor ok backcolor .37 .1 .1 1 }
+	}
+
+	itemDef {
+		name clear
+		text "Clear"
+		type 1
+		textscale .3
+		style WINDOW_STYLE_FILLED
+		rect 95 196 60 24
+		textalign ITEM_ALIGN_CENTER
+		textalignx 30
+		textaligny 18
+		forecolor 1 1 1 1
+		backcolor .37 .1 .1 1
+		visible 1
+		action { play "sound/misc/menu3.wav" ; hexcolorclear ; hexcolorclose }
+		mouseEnter { setitemcolor clear backcolor .1 .37 .1 1 }
+		mouseExit { setitemcolor clear backcolor .37 .1 .1 1 }
+	}
+
+	itemDef {
+		name cancel
+		text "Cancel"
+		type 1
+		textscale .3
+		style WINDOW_STYLE_FILLED
+		rect 170 196 60 24
+		textalign ITEM_ALIGN_CENTER
+		textalignx 30
+		textaligny 18
+		forecolor 1 1 1 1
+		backcolor .37 .1 .1 1
+		visible 1
+		action { play "sound/misc/menu3.wav" ; hexcolorclose }
+		mouseEnter { setitemcolor cancel backcolor .1 .37 .1 1 }
+		mouseExit { setitemcolor cancel backcolor .37 .1 .1 1 }
+	}
+
+}
+
+}
