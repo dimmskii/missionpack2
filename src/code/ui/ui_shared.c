@@ -3232,7 +3232,7 @@ static void Item_HexChecker_Paint(float x, float y, float w, float h) {
 	DC->setColor(white);
 	for (cx = x; cx < x + w; cx += tile) {
 		cw = (cx + tile > x + w) ? (x + w - cx) : tile;
-		DC->drawStretchPic(cx, y, cw, h, 0, 0, cw / tile, 1, checker);
+		DC->drawStretchPic(cx * DC->scale + DC->biasX, y * DC->scale + DC->biasY, cw * DC->scale, h * DC->scale, 0, 0, cw / tile, 1, checker);
 	}
 	DC->setColor(NULL);
 }
@@ -3282,7 +3282,7 @@ void Item_HexColor_Paint(itemDef_t *item) {
 	DC->drawRect(x, y, w, h, 1, newColor);
 }
 
-// live preview swatch built from the picker's ui_hexR/G/B/A slider cvars
+// ~Dimmskii -- live preview swatch built from the picker's ui_hexR/G/B/A slider cvars
 void Item_HexPreview_Paint(itemDef_t *item) {
 	vec4_t c;
 
