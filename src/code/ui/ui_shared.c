@@ -3282,9 +3282,36 @@ void Item_HexColor_Paint(itemDef_t *item) {
 	DC->drawRect(x, y, w, h, 1, newColor);
 }
 
+// ~Dimmskii -- two-way sync between the hex text field (ui_hexStr) and the sliders:
+// while the field is being edited it drives the sliders, otherwise it mirrors them
+static void Item_HexField_Sync(void) {
+	char buff[16];
+	vec4_t p;
+
+	if (g_editingField && g_editItem && g_editItem->cvar && !Q_stricmp(g_editItem->cvar, "ui_hexStr")) {
+		DC->getCVarString("ui_hexStr", buff, sizeof(buff));
+		if (BG_ParseHexColor(buff, p)) {
+			DC->setCVar("ui_hexR", va("%i", (int)(p[0] * 255.0f + 0.5f)));
+			DC->setCVar("ui_hexG", va("%i", (int)(p[1] * 255.0f + 0.5f)));
+			DC->setCVar("ui_hexB", va("%i", (int)(p[2] * 255.0f + 0.5f)));
+			DC->setCVar("ui_hexA", va("%i", (int)(p[3] * 255.0f + 0.5f)));
+		}
+	} else {
+		buff[0] = '#';
+		HexColorDigits(&buff[1], HexColorByte("ui_hexR"));
+		HexColorDigits(&buff[3], HexColorByte("ui_hexG"));
+		HexColorDigits(&buff[5], HexColorByte("ui_hexB"));
+		HexColorDigits(&buff[7], HexColorByte("ui_hexA"));
+		buff[9] = '\0';
+		DC->setCVar("ui_hexStr", buff);
+	}
+}
+
 // ~Dimmskii -- live preview swatch built from the picker's ui_hexR/G/B/A slider cvars
 void Item_HexPreview_Paint(itemDef_t *item) {
 	vec4_t c;
+
+	Item_HexField_Sync();
 
 	c[0] = Com_Clamp(0.0f, 1.0f, DC->getCVarValue("ui_hexR") / 255.0f);
 	c[1] = Com_Clamp(0.0f, 1.0f, DC->getCVarValue("ui_hexG") / 255.0f);

@@ -110,12 +110,27 @@ menuDef {
 	}
 
 	itemDef {
+		name hexfield
+		type ITEM_TYPE_EDITFIELD
+		text "Hex:"
+		maxchars 12
+		cvar "ui_hexStr"
+		rect 0 180 250 20
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 78
+		textaligny 20
+		textscale .3
+		forecolor 1 1 1 1
+		visible 1
+	}
+
+	itemDef {
 		name ok
 		text "OK"
 		type 1
 		textscale .3
 		style WINDOW_STYLE_FILLED
-		rect 20 196 60 24
+		rect 20 210 60 24
 		textalign ITEM_ALIGN_CENTER
 		textalignx 30
 		textaligny 18
@@ -133,7 +148,7 @@ menuDef {
 		type 1
 		textscale .3
 		style WINDOW_STYLE_FILLED
-		rect 95 196 60 24
+		rect 95 210 60 24
 		textalign ITEM_ALIGN_CENTER
 		textalignx 30
 		textaligny 18
@@ -151,7 +166,7 @@ menuDef {
 		type 1
 		textscale .3
 		style WINDOW_STYLE_FILLED
-		rect 170 196 60 24
+		rect 170 210 60 24
 		textalign ITEM_ALIGN_CENTER
 		textalignx 30
 		textaligny 18
