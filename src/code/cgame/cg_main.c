@@ -10,11 +10,16 @@ displayContextDef_t cgDC;
 //#endif
 
 int forceModelModificationCount = -1;
-int enemyModelModificationCount  = -1;
+//int enemyModelModificationCount  = -1;
 //int	enemyColorsModificationCount = -1;
-int teamModelModificationCount  = -1;
+//int teamModelModificationCount  = -1;
 //int	teamColorsModificationCount = -1;
-// ~Dimmskii -- per-part hex color cvars replace the packed pair
+// ~Dimmskii -- QL force model/skin split replaces the packed model pair
+int	forceEnemyModelModificationCount = -1;
+int	forceEnemySkinModificationCount = -1;
+int	forceTeamModelModificationCount = -1;
+int	forceTeamSkinModificationCount = -1;
+// per-part hex color cvars replace the packed pair
 int	enemyHeadColorModificationCount = -1;
 int	enemyUpperColorModificationCount = -1;
 int	enemyLowerColorModificationCount = -1;
@@ -152,11 +157,16 @@ void CG_RegisterCvars( void ) {
 	cgs.localServer = atoi( var );
 
 	forceModelModificationCount = cg_forceModel.modificationCount;
-	enemyModelModificationCount = cg_enemyModel.modificationCount;
+//	enemyModelModificationCount = cg_enemyModel.modificationCount;
 //	enemyColorsModificationCount = cg_enemyColors.modificationCount;
-	teamModelModificationCount = cg_teamModel.modificationCount;
+//	teamModelModificationCount = cg_teamModel.modificationCount;
 //	teamColorsModificationCount = cg_teamColors.modificationCount;
-	// ~Dimmskii -- per-part hex color cvars replace the packed pair
+	// ~Dimmskii -- QL force model/skin split replaces the packed model pair
+	forceEnemyModelModificationCount = cg_forceEnemyModel.modificationCount;
+	forceEnemySkinModificationCount = cg_forceEnemySkin.modificationCount;
+	forceTeamModelModificationCount = cg_forceTeamModel.modificationCount;
+	forceTeamSkinModificationCount = cg_forceTeamSkin.modificationCount;
+	// per-part hex color cvars replace the packed pair
 	enemyHeadColorModificationCount = cg_enemyHeadColor.modificationCount;
 	enemyUpperColorModificationCount = cg_enemyUpperColor.modificationCount;
 	enemyLowerColorModificationCount = cg_enemyLowerColor.modificationCount;
@@ -273,11 +283,16 @@ void CG_UpdateCvars( void ) {
 
 	// if model changed
 	if ( forceModelModificationCount != cg_forceModel.modificationCount
-		|| enemyModelModificationCount != cg_enemyModel.modificationCount
+//		|| enemyModelModificationCount != cg_enemyModel.modificationCount
 //		|| enemyColorsModificationCount != cg_enemyColors.modificationCount
-		|| teamModelModificationCount != cg_teamModel.modificationCount
+//		|| teamModelModificationCount != cg_teamModel.modificationCount
 //		|| teamColorsModificationCount != cg_teamColors.modificationCount ) {
-		// ~Dimmskii -- per-part hex color cvars replace the packed pair
+		// ~Dimmskii -- QL force model/skin split replaces the packed model pair
+		|| forceEnemyModelModificationCount != cg_forceEnemyModel.modificationCount
+		|| forceEnemySkinModificationCount != cg_forceEnemySkin.modificationCount
+		|| forceTeamModelModificationCount != cg_forceTeamModel.modificationCount
+		|| forceTeamSkinModificationCount != cg_forceTeamSkin.modificationCount
+		// per-part hex color cvars replace the packed pair
 		|| enemyHeadColorModificationCount != cg_enemyHeadColor.modificationCount
 		|| enemyUpperColorModificationCount != cg_enemyUpperColor.modificationCount
 		|| enemyLowerColorModificationCount != cg_enemyLowerColor.modificationCount
@@ -287,11 +302,16 @@ void CG_UpdateCvars( void ) {
 		// END Dimmskii
 
 		forceModelModificationCount = cg_forceModel.modificationCount;
-		enemyModelModificationCount = cg_enemyModel.modificationCount;
+//		enemyModelModificationCount = cg_enemyModel.modificationCount;
 //		enemyColorsModificationCount = cg_enemyColors.modificationCount;
-		teamModelModificationCount = cg_teamModel.modificationCount;
+//		teamModelModificationCount = cg_teamModel.modificationCount;
 //		teamColorsModificationCount = cg_teamColors.modificationCount;
-		// ~Dimmskii -- per-part hex color cvars replace the packed pair
+		// ~Dimmskii -- QL force model/skin split replaces the packed model pair
+		forceEnemyModelModificationCount = cg_forceEnemyModel.modificationCount;
+		forceEnemySkinModificationCount = cg_forceEnemySkin.modificationCount;
+		forceTeamModelModificationCount = cg_forceTeamModel.modificationCount;
+		forceTeamSkinModificationCount = cg_forceTeamSkin.modificationCount;
+		// per-part hex color cvars replace the packed pair
 		enemyHeadColorModificationCount = cg_enemyHeadColor.modificationCount;
 		enemyUpperColorModificationCount = cg_enemyUpperColor.modificationCount;
 		enemyLowerColorModificationCount = cg_enemyLowerColor.modificationCount;

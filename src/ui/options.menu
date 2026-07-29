@@ -474,7 +474,7 @@ itemDef {
 		group grpOptions
       		type ITEM_TYPE_MULTI
 		text "Force Enemy Skins:"
-		cvar "cg_enemyModel"
+		cvar "cg_forceEnemySkin" // ~Dimmskii
 		cvarStrList { Off "" Promode "pm" Fullbrights "fb" }
 		rect 99 335 256 20
       		textalign ITEM_ALIGN_RIGHT
@@ -499,7 +499,7 @@ itemDef {
 		textscale .3
       		forecolor 1 1 1 1
       		visible 0
-		cvarTest "cg_enemyModel"
+		cvarTest "cg_forceEnemySkin"
 			enableCvar { "pm" ; "fb" }
 		action { play "sound/misc/menu1.wav" ; hexcoloropen } // ~Dimmskii
     		}
@@ -517,7 +517,7 @@ itemDef {
 		textscale .3
       		forecolor 1 1 1 1
       		visible 0
-		cvarTest "cg_enemyModel"
+		cvarTest "cg_forceEnemySkin"
 			enableCvar { "pm" ; "fb" }
 		action { play "sound/misc/menu1.wav" ; hexcoloropen } // ~Dimmskii
     		}
@@ -535,7 +535,7 @@ itemDef {
 		textscale .3
       		forecolor 1 1 1 1
       		visible 0
-		cvarTest "cg_enemyModel"
+		cvarTest "cg_forceEnemySkin"
 			enableCvar { "pm" ; "fb" }
 		action { play "sound/misc/menu1.wav" ; hexcoloropen } // ~Dimmskii
     		}

@@ -129,11 +129,20 @@ CG_CVAR( cg_hitSounds, "cg_hitSounds", "0", CVAR_ARCHIVE )
 //CG_CVAR( cg_enemyModel, "cg_enemyModel", "", CVAR_ARCHIVE )
 //CG_CVAR( cg_enemyColors, "cg_enemyColors", "", CVAR_ARCHIVE )
 // ~Dimmskii -- Only preset the color; cg_enemyModel stays 0 until user opts in, following vq3 trend
-CG_CVAR( cg_enemyModel, "cg_enemyModel", "", CVAR_ARCHIVE )
+//CG_CVAR( cg_enemyModel, "cg_enemyModel", "", CVAR_ARCHIVE )
 //CG_CVAR( cg_enemyColors, "cg_enemyColors", "222", CVAR_ARCHIVE )
 // END Dimmskii
-CG_CVAR( cg_teamModel, "cg_teamModel", "", CVAR_ARCHIVE )
+//CG_CVAR( cg_teamModel, "cg_teamModel", "", CVAR_ARCHIVE )
 //CG_CVAR( cg_teamColors, "cg_teamColors", "", CVAR_ARCHIVE )
+// ~Dimmskii -- QL force model/skin split replaces the packed cg_enemyModel/cg_teamModel above
+CG_CVAR( cg_forceEnemyModel, "cg_forceEnemyModel", "", CVAR_ARCHIVE )
+CG_CVAR( cg_forceEnemySkin, "cg_forceEnemySkin", "", CVAR_ARCHIVE )
+CG_CVAR( cg_forceTeamModel, "cg_forceTeamModel", "", CVAR_ARCHIVE )
+CG_CVAR( cg_forceTeamSkin, "cg_forceTeamSkin", "", CVAR_ARCHIVE )
+// only used by QL's team preview ownerdraws, which we don't have - registered so QL configs don't error
+CG_CVAR( cg_forceRedTeamModel, "cg_forceRedTeamModel", "", CVAR_ARCHIVE )
+CG_CVAR( cg_forceBlueTeamModel, "cg_forceBlueTeamModel", "", CVAR_ARCHIVE )
+// END Dimmskii
 // ~Dimmskii -- QL-style per-part hex model colors replace the packed CPMA strings above; empty = team auto
 CG_CVAR( cg_enemyHeadColor, "cg_enemyHeadColor", "0x2a8000FF", CVAR_ARCHIVE )
 CG_CVAR( cg_enemyUpperColor, "cg_enemyUpperColor", "0x2a8000FF", CVAR_ARCHIVE )

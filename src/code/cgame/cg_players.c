@@ -1029,6 +1029,274 @@ static void CG_SetDeferredClientInfo( clientInfo_t *ci ) {
 }
 
 
+//static void CG_SetSkinAndModel( clientInfo_t *newInfo,
+//		clientInfo_t *curInfo,
+//		const char *infomodel,
+//		qboolean allowNativeModel,
+//		int clientNum, int myClientNum,
+//		team_t myTeam, qboolean setColor,
+//		char *modelName, int modelNameSize,
+//		char *skinName, int skinNameSize ) 
+//{
+//	char modelStr[ MAX_QPATH * 2 ];
+//	char newSkin[ MAX_QPATH * 2 ];
+//	char *skin, *slash;
+//	qboolean	pm_model;
+//	qboolean	fb_model;
+//	team_t		team;
+////	const char	*colors; // ~Dimmskii - unused since hex colors
+//
+//	team = newInfo->team;
+//	pm_model = ( Q_stricmp( cg_enemyModel.string, PM_SKIN ) == 0 ) ? qtrue : qfalse;
+//	fb_model = ( Q_stricmp( cg_enemyModel.string, FB_SKIN ) == 0 ) ? qtrue : qfalse;
+//
+//	if ( cg_forceModel.integer || cg_enemyModel.string[0] || cg_teamModel.string[0] )
+//	{
+////		if ( cgs.gametype >= GT_TEAM )
+//		if ( GT_IsTeam(cgs.gametype) ) // ~Dimmskii
+//		{
+//			// enemy model
+//			if ( cg_enemyModel.string[0] && team != myTeam && team != TEAM_SPECTATOR ) {
+//				if ( pm_model || fb_model ) {
+//					Q_strncpyz( modelName, infomodel, modelNameSize );
+//					skin = strchr( modelName, '/' );
+//					// force skin
+//					if ( pm_model )
+//						strcpy( newSkin, PM_SKIN );
+//					else
+//						strcpy( newSkin, FB_SKIN );
+//					if ( skin )
+//						*skin = '\0';
+//				}
+//				else {
+//					Q_strncpyz( modelName, cg_enemyModel.string, modelNameSize );
+//					skin = strchr( modelName, '/' );
+//					if ( !skin ) {
+//						Q_strncpyz( newSkin, PM_SKIN, skinNameSize );
+//					} else {
+//						Q_strncpyz( newSkin, skin + 1, skinNameSize );
+//						*skin = '\0';
+//					}
+//				}
+//
+//				if ( ( pm_model || fb_model ) && !CG_IsKnownModel( modelName ) ) {
+//					// revert to default model if specified skin is not known
+//					Q_strncpyz( modelName, "sarge", modelNameSize );
+//				}
+//				Q_strncpyz( skinName, newSkin, skinNameSize );
+//
+//				if ( setColor ) {
+////					if ( cg_enemyColors.string[0] && myTeam != TEAM_SPECTATOR ) // free-fly?
+////						colors = CG_GetTeamColors( cg_enemyColors.string, newInfo->team );
+////					else
+////						colors = CG_GetTeamColors( "???", newInfo->team );
+////
+////					CG_SetColorInfo( colors, newInfo );
+//					CG_SetColorInfo( qtrue, myTeam != TEAM_SPECTATOR, newInfo ); // ~Dimmskii - hex colors
+//					newInfo->coloredSkin = qtrue;
+//				}
+//
+//			} else if ( cg_teamModel.string[0] && team == myTeam && team != TEAM_SPECTATOR && clientNum != myClientNum ) {
+//				// teammodel
+//				pm_model = ( Q_stricmp( cg_teamModel.string, PM_SKIN ) == 0 ) ? qtrue : qfalse;
+//				fb_model = ( Q_stricmp( cg_enemyModel.string, FB_SKIN ) == 0 ) ? qtrue : qfalse;
+//
+//				if ( pm_model || fb_model ) {
+//					Q_strncpyz( modelName, infomodel, modelNameSize );
+//					skin = strchr( modelName, '/' );
+//					// force skin
+//					if ( pm_model )
+//						strcpy( newSkin, PM_SKIN );
+//					else
+//						strcpy( newSkin, FB_SKIN );
+//					if ( skin )
+//						*skin = '\0';
+//				} else {
+//					Q_strncpyz( modelName, cg_teamModel.string, modelNameSize );
+//					skin = strchr( modelName, '/' );
+//					if ( !skin ) {
+//						Q_strncpyz( newSkin, PM_SKIN, skinNameSize );
+//					} else {
+//						Q_strncpyz( newSkin, skin + 1, skinNameSize );
+//						*skin = '\0';
+//					}
+//				}
+//
+//				if ( ( pm_model || fb_model ) && !CG_IsKnownModel( modelName ) ) {
+//					// revert to default model if specified skin is not known
+//					Q_strncpyz( modelName, "sarge", modelNameSize );
+//				}
+//				Q_strncpyz( skinName, newSkin, skinNameSize );
+//
+//				if ( setColor ) {
+////					if ( cg_teamColors.string[0] && myTeam != TEAM_SPECTATOR ) // free-fly?
+////						colors = CG_GetTeamColors( cg_teamColors.string, newInfo->team );
+////					else
+////						colors = CG_GetTeamColors( "???", newInfo->team );
+////
+////					CG_SetColorInfo( colors, newInfo );
+//					CG_SetColorInfo( qfalse, myTeam != TEAM_SPECTATOR, newInfo ); // ~Dimmskii - hex colors
+//					newInfo->coloredSkin = qtrue;
+//				}
+//
+//			} else {
+//				// forcemodel etc.
+//				if ( cg_forceModel.integer ) {
+//
+//					trap_Cvar_VariableStringBuffer( "model", modelStr, sizeof( modelStr ) );
+//					if ( ( skin = strchr( modelStr, '/' ) ) == NULL) {
+//						skin = "default";
+//					} else {
+//						*skin++ = '\0';
+//					}
+//
+//					Q_strncpyz( skinName, skin, skinNameSize );
+//					Q_strncpyz( modelName, modelStr, modelNameSize );
+//
+//				} else {
+//					Q_strncpyz( modelName, infomodel, modelNameSize );
+//					slash = strchr( modelName, '/' );
+//					if ( !slash ) {
+//						Q_strncpyz( skinName, "default", skinNameSize );
+//					} else {
+//						Q_strncpyz( skinName, slash + 1, skinNameSize );
+//						*slash = '\0';
+//					}
+//				}
+//			}
+//		} else { // not team game
+//
+////			if ( pm_model && myClientNum != clientNum && cgs.gametype != GT_SINGLE_PLAYER ) {
+//			if ( ( pm_model || fb_model ) && myClientNum != clientNum && cgs.gametype != GT_SINGLE_PLAYER ) { // ~Dimmskii - fb_model was never checked here, fell through and got hardcoded to "pm"
+//				Q_strncpyz( modelName, infomodel, modelNameSize );
+//
+//				// strip skin name from model name
+//				slash = strchr( modelName, '/' );
+//				if ( !slash ) {
+////					Q_strncpyz( skinName, PM_SKIN, skinNameSize );
+//					Q_strncpyz( skinName, pm_model ? PM_SKIN : FB_SKIN, skinNameSize ); // ~Dimmskii
+//				} else {
+////					Q_strncpyz( skinName, PM_SKIN, skinNameSize );
+//					Q_strncpyz( skinName, pm_model ? PM_SKIN : FB_SKIN, skinNameSize ); // ~Dimmskii
+//					*slash = '\0';
+//				}
+//
+//				if ( !CG_IsKnownModel( modelName ) )
+//					Q_strncpyz( modelName, "sarge", modelNameSize );
+//
+//				if ( setColor ) {
+////					colors = CG_GetTeamColors( cg_enemyColors.string, newInfo->team );
+////					CG_SetColorInfo( colors, newInfo );
+//					CG_SetColorInfo( qtrue, qtrue, newInfo ); // ~Dimmskii - hex colors
+//					newInfo->coloredSkin = qtrue;
+//				}
+//
+//			} else if ( cg_enemyModel.string[0] && myClientNum != clientNum && !allowNativeModel && cgs.gametype != GT_SINGLE_PLAYER ) {
+//
+//				Q_strncpyz( modelName, cg_enemyModel.string, modelNameSize );
+//
+//				slash = strchr( modelName, '/' );
+//				if ( !slash ) {
+//					Q_strncpyz( skinName, PM_SKIN, skinNameSize );
+//				} else {
+//					Q_strncpyz( skinName, slash + 1, skinNameSize );
+//					*slash = '\0';
+//				}
+//
+//				if ( setColor ) {
+////					colors = CG_GetTeamColors( cg_enemyColors.string, newInfo->team );
+////					CG_SetColorInfo( colors, newInfo );
+//					CG_SetColorInfo( qtrue, qtrue, newInfo ); // ~Dimmskii - hex colors
+//					newInfo->coloredSkin = qtrue;
+//				}
+//			} else { // forcemodel, etc.
+//				if ( cg_forceModel.integer ) {
+//
+//					trap_Cvar_VariableStringBuffer( "model", modelStr, sizeof( modelStr ) );
+//					if ( ( skin = strchr( modelStr, '/' ) ) == NULL ) {
+//						skin = "default";
+//					} else {
+//						*skin++ = '\0';
+//					}
+//
+//					Q_strncpyz( skinName, skin, skinNameSize );
+//					Q_strncpyz( modelName, modelStr, modelNameSize );
+//				} else {
+//					Q_strncpyz( modelName, infomodel, modelNameSize );
+//						slash = strchr( modelName, '/' );
+//					if ( !slash ) {
+//						// modelName didn not include a skin name
+//						Q_strncpyz( skinName, "default", skinNameSize );
+//					} else {
+//						Q_strncpyz( skinName, slash + 1, skinNameSize );
+//						// truncate modelName
+//						*slash = '\0';
+//					}
+//				}
+//			}
+//		}
+//	}
+//	else // !cg_forcemodel && !cg_enemyModel && !cg_teamModel
+//	{
+//		Q_strncpyz( modelName, infomodel, modelNameSize );
+//		slash = strchr( modelName, '/' );
+//		if ( !slash ) {
+//			// modelName didn not include a skin name
+//			Q_strncpyz( skinName, "default", skinNameSize );
+//		} else {
+//			Q_strncpyz( skinName, slash + 1, skinNameSize );
+//			// truncate modelName
+//			*slash = '\0';
+//		}
+//	}
+//}
+
+// ~Dimmskii -- QL force model/skin resolution. Context follows QL-SRP
+// (CG_GetClientOverrideContext / CG_ShouldUseTeamOverrides): ourselves and our
+// teammates take the team overrides, everyone else - including anyone seen while
+// spectating - takes the enemy ones.
+static qboolean CG_UseTeamOverrides( int clientNum, int myClientNum, team_t team, team_t myTeam ) {
+	if ( clientNum == myClientNum ) {
+		return qtrue;
+	}
+	if ( !GT_IsTeam( cgs.gametype ) ) {
+		return qfalse;
+	}
+	if ( myTeam <= TEAM_FREE || myTeam == TEAM_SPECTATOR ) {
+		return qfalse;
+	}
+	if ( team <= TEAM_FREE || team == TEAM_SPECTATOR ) {
+		return qfalse;
+	}
+	return ( myTeam == team ) ? qtrue : qfalse;
+}
+
+// "model" or "model/skin"; empty and "NULL" both mean unset
+static qboolean CG_ParseForcedModel( const char *value, char *model, int modelSize, char *skin, int skinSize ) {
+	char *slash;
+
+	if ( !value || !value[0] || !Q_stricmp( value, "NULL" ) ) {
+		return qfalse;
+	}
+	Q_strncpyz( model, value, modelSize );
+	slash = strchr( model, '/' );
+	if ( slash ) {
+		*slash = '\0';
+		Q_strncpyz( skin, slash + 1, skinSize );
+	} else {
+		skin[0] = '\0';
+	}
+	return qtrue;
+}
+
+static qboolean CG_ParseForcedSkin( const char *value, char *skin, int skinSize ) {
+	if ( !value || !value[0] || !Q_stricmp( value, "NULL" ) ) {
+		return qfalse;
+	}
+	Q_strncpyz( skin, value, skinSize );
+	return qtrue;
+}
+
 static void CG_SetSkinAndModel( clientInfo_t *newInfo,
 		clientInfo_t *curInfo,
 		const char *infomodel,
@@ -1036,220 +1304,77 @@ static void CG_SetSkinAndModel( clientInfo_t *newInfo,
 		int clientNum, int myClientNum,
 		team_t myTeam, qboolean setColor,
 		char *modelName, int modelNameSize,
-		char *skinName, int skinNameSize ) 
+		char *skinName, int skinNameSize )
 {
 	char modelStr[ MAX_QPATH * 2 ];
-	char newSkin[ MAX_QPATH * 2 ];
+	char forcedModel[ MAX_QPATH * 2 ];
+	char forcedSkin[ MAX_QPATH * 2 ];
 	char *skin, *slash;
-	qboolean	pm_model;
-	qboolean	fb_model;
-	team_t		team;
-//	const char	*colors; // ~Dimmskii - unused since hex colors
-	
-	team = newInfo->team;
-	pm_model = ( Q_stricmp( cg_enemyModel.string, PM_SKIN ) == 0 ) ? qtrue : qfalse;
-	fb_model = ( Q_stricmp( cg_enemyModel.string, FB_SKIN ) == 0 ) ? qtrue : qfalse;
+	qboolean useTeam;
+	qboolean modelForced, skinForced;
+	const char *modelValue;
+	const char *skinValue;
 
-	if ( cg_forceModel.integer || cg_enemyModel.string[0] || cg_teamModel.string[0] )
-	{
-//		if ( cgs.gametype >= GT_TEAM )
-		if ( GT_IsTeam(cgs.gametype) ) // ~Dimmskii
-		{
-			// enemy model
-			if ( cg_enemyModel.string[0] && team != myTeam && team != TEAM_SPECTATOR ) {
-				if ( pm_model || fb_model ) {
-					Q_strncpyz( modelName, infomodel, modelNameSize );
-					skin = strchr( modelName, '/' );
-					// force skin
-					if ( pm_model )
-						strcpy( newSkin, PM_SKIN );
-					else
-						strcpy( newSkin, FB_SKIN );
-					if ( skin )
-						*skin = '\0';
-				}
-				else {
-					Q_strncpyz( modelName, cg_enemyModel.string, modelNameSize );
-					skin = strchr( modelName, '/' );
-					if ( !skin ) {
-						Q_strncpyz( newSkin, PM_SKIN, skinNameSize );
-					} else {
-						Q_strncpyz( newSkin, skin + 1, skinNameSize );
-						*skin = '\0';
-					}
-				}
+	useTeam = CG_UseTeamOverrides( clientNum, myClientNum, newInfo->team, myTeam );
+	modelValue = useTeam ? cg_forceTeamModel.string : cg_forceEnemyModel.string;
+	skinValue = useTeam ? cg_forceTeamSkin.string : cg_forceEnemySkin.string;
 
-				if ( ( pm_model || fb_model ) && !CG_IsKnownModel( modelName ) ) {
-					// revert to default model if specified skin is not known
-					Q_strncpyz( modelName, "sarge", modelNameSize );
-				}
-				Q_strncpyz( skinName, newSkin, skinNameSize );
-
-				if ( setColor ) {
-//					if ( cg_enemyColors.string[0] && myTeam != TEAM_SPECTATOR ) // free-fly?
-//						colors = CG_GetTeamColors( cg_enemyColors.string, newInfo->team );
-//					else
-//						colors = CG_GetTeamColors( "???", newInfo->team );
-//
-//					CG_SetColorInfo( colors, newInfo );
-					CG_SetColorInfo( qtrue, myTeam != TEAM_SPECTATOR, newInfo ); // ~Dimmskii - hex colors
-					newInfo->coloredSkin = qtrue;
-				}
-
-			} else if ( cg_teamModel.string[0] && team == myTeam && team != TEAM_SPECTATOR && clientNum != myClientNum ) {
-				// teammodel
-				pm_model = ( Q_stricmp( cg_teamModel.string, PM_SKIN ) == 0 ) ? qtrue : qfalse;
-				fb_model = ( Q_stricmp( cg_enemyModel.string, FB_SKIN ) == 0 ) ? qtrue : qfalse;
-
-				if ( pm_model || fb_model ) {
-					Q_strncpyz( modelName, infomodel, modelNameSize );
-					skin = strchr( modelName, '/' );
-					// force skin
-					if ( pm_model )
-						strcpy( newSkin, PM_SKIN );
-					else
-						strcpy( newSkin, FB_SKIN );
-					if ( skin )
-						*skin = '\0';
-				} else {
-					Q_strncpyz( modelName, cg_teamModel.string, modelNameSize );
-					skin = strchr( modelName, '/' );
-					if ( !skin ) {
-						Q_strncpyz( newSkin, PM_SKIN, skinNameSize );
-					} else {
-						Q_strncpyz( newSkin, skin + 1, skinNameSize );
-						*skin = '\0';
-					}
-				}
-
-				if ( ( pm_model || fb_model ) && !CG_IsKnownModel( modelName ) ) {
-					// revert to default model if specified skin is not known
-					Q_strncpyz( modelName, "sarge", modelNameSize );
-				}
-				Q_strncpyz( skinName, newSkin, skinNameSize );
-
-				if ( setColor ) {
-//					if ( cg_teamColors.string[0] && myTeam != TEAM_SPECTATOR ) // free-fly?
-//						colors = CG_GetTeamColors( cg_teamColors.string, newInfo->team );
-//					else
-//						colors = CG_GetTeamColors( "???", newInfo->team );
-//
-//					CG_SetColorInfo( colors, newInfo );
-					CG_SetColorInfo( qfalse, myTeam != TEAM_SPECTATOR, newInfo ); // ~Dimmskii - hex colors
-					newInfo->coloredSkin = qtrue;
-				}
-
-			} else {
-				// forcemodel etc.
-				if ( cg_forceModel.integer ) {
-
-					trap_Cvar_VariableStringBuffer( "model", modelStr, sizeof( modelStr ) );
-					if ( ( skin = strchr( modelStr, '/' ) ) == NULL) {
-						skin = "default";
-					} else {
-						*skin++ = '\0';
-					}
-
-					Q_strncpyz( skinName, skin, skinNameSize );
-					Q_strncpyz( modelName, modelStr, modelNameSize );
-
-				} else {
-					Q_strncpyz( modelName, infomodel, modelNameSize );
-					slash = strchr( modelName, '/' );
-					if ( !slash ) {
-						Q_strncpyz( skinName, "default", skinNameSize );
-					} else {
-						Q_strncpyz( skinName, slash + 1, skinNameSize );
-						*slash = '\0';
-					}
-				}
-			}
-		} else { // not team game
-
-//			if ( pm_model && myClientNum != clientNum && cgs.gametype != GT_SINGLE_PLAYER ) {
-			if ( ( pm_model || fb_model ) && myClientNum != clientNum && cgs.gametype != GT_SINGLE_PLAYER ) { // ~Dimmskii - fb_model was never checked here, fell through and got hardcoded to "pm"
-				Q_strncpyz( modelName, infomodel, modelNameSize );
-
-				// strip skin name from model name
-				slash = strchr( modelName, '/' );
-				if ( !slash ) {
-//					Q_strncpyz( skinName, PM_SKIN, skinNameSize );
-					Q_strncpyz( skinName, pm_model ? PM_SKIN : FB_SKIN, skinNameSize ); // ~Dimmskii
-				} else {
-//					Q_strncpyz( skinName, PM_SKIN, skinNameSize );
-					Q_strncpyz( skinName, pm_model ? PM_SKIN : FB_SKIN, skinNameSize ); // ~Dimmskii
-					*slash = '\0';
-				}
-
-				if ( !CG_IsKnownModel( modelName ) )
-					Q_strncpyz( modelName, "sarge", modelNameSize );
-
-				if ( setColor ) {
-//					colors = CG_GetTeamColors( cg_enemyColors.string, newInfo->team );
-//					CG_SetColorInfo( colors, newInfo );
-					CG_SetColorInfo( qtrue, qtrue, newInfo ); // ~Dimmskii - hex colors
-					newInfo->coloredSkin = qtrue;
-				}
-
-			} else if ( cg_enemyModel.string[0] && myClientNum != clientNum && !allowNativeModel && cgs.gametype != GT_SINGLE_PLAYER ) {
-
-				Q_strncpyz( modelName, cg_enemyModel.string, modelNameSize );
-
-				slash = strchr( modelName, '/' );
-				if ( !slash ) {
-					Q_strncpyz( skinName, PM_SKIN, skinNameSize );
-				} else {
-					Q_strncpyz( skinName, slash + 1, skinNameSize );
-					*slash = '\0';
-				}
-
-				if ( setColor ) {
-//					colors = CG_GetTeamColors( cg_enemyColors.string, newInfo->team );
-//					CG_SetColorInfo( colors, newInfo );
-					CG_SetColorInfo( qtrue, qtrue, newInfo ); // ~Dimmskii - hex colors
-					newInfo->coloredSkin = qtrue;
-				}
-			} else { // forcemodel, etc.
-				if ( cg_forceModel.integer ) {
-
-					trap_Cvar_VariableStringBuffer( "model", modelStr, sizeof( modelStr ) );
-					if ( ( skin = strchr( modelStr, '/' ) ) == NULL ) {
-						skin = "default";
-					} else {
-						*skin++ = '\0';
-					}
-
-					Q_strncpyz( skinName, skin, skinNameSize );
-					Q_strncpyz( modelName, modelStr, modelNameSize );
-				} else {
-					Q_strncpyz( modelName, infomodel, modelNameSize );
-						slash = strchr( modelName, '/' );
-					if ( !slash ) {
-						// modelName didn not include a skin name
-						Q_strncpyz( skinName, "default", skinNameSize );
-					} else {
-						Q_strncpyz( skinName, slash + 1, skinNameSize );
-						// truncate modelName
-						*slash = '\0';
-					}
-				}
-			}
-		}
+	// single player never forces anything
+	if ( cgs.gametype == GT_SINGLE_PLAYER ) {
+		modelValue = "";
+		skinValue = "";
 	}
-	else // !cg_forcemodel && !cg_enemyModel && !cg_teamModel
-	{
-		Q_strncpyz( modelName, infomodel, modelNameSize );
-		slash = strchr( modelName, '/' );
-		if ( !slash ) {
-			// modelName didn not include a skin name
-			Q_strncpyz( skinName, "default", skinNameSize );
+
+	// start from whatever the client picked for itself
+	Q_strncpyz( modelName, infomodel, modelNameSize );
+	slash = strchr( modelName, '/' );
+	if ( !slash ) {
+		Q_strncpyz( skinName, "default", skinNameSize );
+	} else {
+		Q_strncpyz( skinName, slash + 1, skinNameSize );
+		*slash = '\0';
+	}
+
+	// cg_forceModel stays the fallback it has always been: everyone wears our own
+	// model, but only while no force override claims this client
+	if ( cg_forceModel.integer && !modelValue[0] && !skinValue[0] ) {
+		trap_Cvar_VariableStringBuffer( "model", modelStr, sizeof( modelStr ) );
+		if ( ( skin = strchr( modelStr, '/' ) ) == NULL ) {
+			skin = "default";
 		} else {
-			Q_strncpyz( skinName, slash + 1, skinNameSize );
-			// truncate modelName
-			*slash = '\0';
+			*skin++ = '\0';
 		}
+		Q_strncpyz( skinName, skin, skinNameSize );
+		Q_strncpyz( modelName, modelStr, modelNameSize );
+	}
+
+	// allowNativeModel leaves the player we follow in a demo/free-fly as themselves
+	modelForced = qfalse;
+	if ( !allowNativeModel && CG_ParseForcedModel( modelValue, forcedModel, sizeof( forcedModel ), forcedSkin, sizeof( forcedSkin ) ) ) {
+		Q_strncpyz( modelName, forcedModel, modelNameSize );
+		if ( forcedSkin[0] ) {
+			Q_strncpyz( skinName, forcedSkin, skinNameSize );
+		}
+		modelForced = qtrue;
+	}
+
+	// the skin override wins the skin slot, applied after the model like QL
+	skinForced = CG_ParseForcedSkin( skinValue, forcedSkin, sizeof( forcedSkin ) );
+	if ( skinForced ) {
+		Q_strncpyz( skinName, forcedSkin, skinNameSize );
+	}
+
+	// a forced skin on a native model only exists for the stock models
+	if ( skinForced && !modelForced && !CG_IsKnownModel( modelName ) ) {
+		Q_strncpyz( modelName, "sarge", modelNameSize );
+	}
+
+	if ( setColor && ( modelForced || skinForced ) ) {
+		CG_SetColorInfo( !useTeam, !GT_IsTeam( cgs.gametype ) || myTeam != TEAM_SPECTATOR, newInfo );
+		newInfo->coloredSkin = qtrue;
 	}
 }
+// END Dimmskii
 
 
 /*
