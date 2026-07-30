@@ -1063,7 +1063,7 @@ static void CG_SetDeferredClientInfo( clientInfo_t *ci ) {
 //	qboolean	pm_model;
 //	qboolean	fb_model;
 //	team_t		team;
-//	const char	*colors;
+////	const char	*colors; // ~Dimmskii - unused since hex colors
 //
 //	team = newInfo->team;
 //	pm_model = ( Q_stricmp( cg_enemyModel.string, PM_SKIN ) == 0 ) ? qtrue : qfalse;
@@ -1071,7 +1071,8 @@ static void CG_SetDeferredClientInfo( clientInfo_t *ci ) {
 //
 //	if ( cg_forceModel.integer || cg_enemyModel.string[0] || cg_teamModel.string[0] )
 //	{
-//		if ( cgs.gametype >= GT_TEAM )
+////		if ( cgs.gametype >= GT_TEAM )
+//		if ( GT_IsTeam(cgs.gametype) ) // ~Dimmskii
 //		{
 //			// enemy model
 //			if ( cg_enemyModel.string[0] && team != myTeam && team != TEAM_SPECTATOR ) {
@@ -1104,12 +1105,13 @@ static void CG_SetDeferredClientInfo( clientInfo_t *ci ) {
 //				Q_strncpyz( skinName, newSkin, skinNameSize );
 //
 //				if ( setColor ) {
-//					if ( cg_enemyColors.string[0] && myTeam != TEAM_SPECTATOR ) // free-fly?
-//						colors = CG_GetTeamColors( cg_enemyColors.string, newInfo->team );
-//					else
-//						colors = CG_GetTeamColors( "???", newInfo->team );
-//
-//					CG_SetColorInfo( colors, newInfo );
+////					if ( cg_enemyColors.string[0] && myTeam != TEAM_SPECTATOR ) // free-fly?
+////						colors = CG_GetTeamColors( cg_enemyColors.string, newInfo->team );
+////					else
+////						colors = CG_GetTeamColors( "???", newInfo->team );
+////
+////					CG_SetColorInfo( colors, newInfo );
+//					CG_SetColorInfo( qtrue, myTeam != TEAM_SPECTATOR, newInfo ); // ~Dimmskii - hex colors
 //					newInfo->coloredSkin = qtrue;
 //				}
 //
@@ -1146,12 +1148,13 @@ static void CG_SetDeferredClientInfo( clientInfo_t *ci ) {
 //				Q_strncpyz( skinName, newSkin, skinNameSize );
 //
 //				if ( setColor ) {
-//					if ( cg_teamColors.string[0] && myTeam != TEAM_SPECTATOR ) // free-fly?
-//						colors = CG_GetTeamColors( cg_teamColors.string, newInfo->team );
-//					else
-//						colors = CG_GetTeamColors( "???", newInfo->team );
-//
-//					CG_SetColorInfo( colors, newInfo );
+////					if ( cg_teamColors.string[0] && myTeam != TEAM_SPECTATOR ) // free-fly?
+////						colors = CG_GetTeamColors( cg_teamColors.string, newInfo->team );
+////					else
+////						colors = CG_GetTeamColors( "???", newInfo->team );
+////
+////					CG_SetColorInfo( colors, newInfo );
+//					CG_SetColorInfo( qfalse, myTeam != TEAM_SPECTATOR, newInfo ); // ~Dimmskii - hex colors
 //					newInfo->coloredSkin = qtrue;
 //				}
 //
@@ -1182,15 +1185,18 @@ static void CG_SetDeferredClientInfo( clientInfo_t *ci ) {
 //			}
 //		} else { // not team game
 //
-//			if ( pm_model && myClientNum != clientNum && cgs.gametype != GT_SINGLE_PLAYER ) {
+////			if ( pm_model && myClientNum != clientNum && cgs.gametype != GT_SINGLE_PLAYER ) {
+//			if ( ( pm_model || fb_model ) && myClientNum != clientNum && cgs.gametype != GT_SINGLE_PLAYER ) { // ~Dimmskii - fb_model was never checked here, fell through and got hardcoded to "pm"
 //				Q_strncpyz( modelName, infomodel, modelNameSize );
 //
 //				// strip skin name from model name
 //				slash = strchr( modelName, '/' );
 //				if ( !slash ) {
-//					Q_strncpyz( skinName, PM_SKIN, skinNameSize );
+////					Q_strncpyz( skinName, PM_SKIN, skinNameSize );
+//					Q_strncpyz( skinName, pm_model ? PM_SKIN : FB_SKIN, skinNameSize ); // ~Dimmskii
 //				} else {
-//					Q_strncpyz( skinName, PM_SKIN, skinNameSize );
+////					Q_strncpyz( skinName, PM_SKIN, skinNameSize );
+//					Q_strncpyz( skinName, pm_model ? PM_SKIN : FB_SKIN, skinNameSize ); // ~Dimmskii
 //					*slash = '\0';
 //				}
 //
@@ -1198,8 +1204,9 @@ static void CG_SetDeferredClientInfo( clientInfo_t *ci ) {
 //					Q_strncpyz( modelName, "sarge", modelNameSize );
 //
 //				if ( setColor ) {
-//					colors = CG_GetTeamColors( cg_enemyColors.string, newInfo->team );
-//					CG_SetColorInfo( colors, newInfo );
+////					colors = CG_GetTeamColors( cg_enemyColors.string, newInfo->team );
+////					CG_SetColorInfo( colors, newInfo );
+//					CG_SetColorInfo( qtrue, qtrue, newInfo ); // ~Dimmskii - hex colors
 //					newInfo->coloredSkin = qtrue;
 //				}
 //
@@ -1216,8 +1223,9 @@ static void CG_SetDeferredClientInfo( clientInfo_t *ci ) {
 //				}
 //
 //				if ( setColor ) {
-//					colors = CG_GetTeamColors( cg_enemyColors.string, newInfo->team );
-//					CG_SetColorInfo( colors, newInfo );
+////					colors = CG_GetTeamColors( cg_enemyColors.string, newInfo->team );
+////					CG_SetColorInfo( colors, newInfo );
+//					CG_SetColorInfo( qtrue, qtrue, newInfo ); // ~Dimmskii - hex colors
 //					newInfo->coloredSkin = qtrue;
 //				}
 //			} else { // forcemodel, etc.
@@ -1384,10 +1392,9 @@ static void CG_SetSkinAndModel( clientInfo_t *newInfo,
 		CG_SetColorInfo( !useTeam, !GT_IsTeam( cgs.gametype ) || myTeam != TEAM_SPECTATOR, newInfo );
 	}
 
-	// a pm/fb skin is colorizable however it was picked, but only an override may take
-	// a team game off the red/blue skins - self-picked pm never beats team identification
-	if ( ( !Q_stricmp( skinName, PM_SKIN ) || !Q_stricmp( skinName, FB_SKIN ) )
-		&& ( modelForced || skinForced || !GT_IsTeam( cgs.gametype ) ) ) {
+	// a pm/fb skin is colorizable however it was picked, so the skin lookup needs to
+	// know even when nothing was forced - otherwise team games swap it for the team skin
+	if ( !Q_stricmp( skinName, PM_SKIN ) || !Q_stricmp( skinName, FB_SKIN ) ) {
 		newInfo->coloredSkin = qtrue;
 	}
 }
@@ -1474,11 +1481,9 @@ void CG_NewClientInfo( int clientNum ) {
 
 	// ~Dimmskii -- the client's own broadcast part colors, only worn on a pm/fb skin.
 	// A force override still overwrites these further down in CG_SetSkinAndModel.
-	// Team games keep the red/blue skins unless overridden, so there is nothing to tint.
 	v = Info_ValueForKey( configstring, "model" );
 	skin = strchr( v, '/' );
-	if ( !GT_IsTeam( cgs.gametype ) && skin
-		&& ( !Q_stricmp( skin + 1, PM_SKIN ) || !Q_stricmp( skin + 1, FB_SKIN ) ) ) {
+	if ( skin && ( !Q_stricmp( skin + 1, PM_SKIN ) || !Q_stricmp( skin + 1, FB_SKIN ) ) ) {
 		CG_BroadcastPartColor( Info_ValueForKey( configstring, "c3" ), newInfo.headColor );
 		CG_BroadcastPartColor( Info_ValueForKey( configstring, "c4" ), newInfo.bodyColor );
 		CG_BroadcastPartColor( Info_ValueForKey( configstring, "c5" ), newInfo.legsColor );
