@@ -1394,7 +1394,8 @@ static void CG_SetSkinAndModel( clientInfo_t *newInfo,
 
 	// a pm/fb skin is colorizable however it was picked, so the skin lookup needs to
 	// know even when nothing was forced - otherwise team games swap it for the team skin
-	if ( !Q_stricmp( skinName, PM_SKIN ) || !Q_stricmp( skinName, FB_SKIN ) ) {
+	if ( ( !Q_stricmp( skinName, PM_SKIN ) || !Q_stricmp( skinName, FB_SKIN ) )
+		&& ( modelForced || skinForced || !GT_IsTeam( cgs.gametype ) ) ) {
 		newInfo->coloredSkin = qtrue;
 	}
 }
@@ -1483,7 +1484,8 @@ void CG_NewClientInfo( int clientNum ) {
 	// A force override still overwrites these further down in CG_SetSkinAndModel.
 	v = Info_ValueForKey( configstring, "model" );
 	skin = strchr( v, '/' );
-	if ( skin && ( !Q_stricmp( skin + 1, PM_SKIN ) || !Q_stricmp( skin + 1, FB_SKIN ) ) ) {
+	if ( !GT_IsTeam( cgs.gametype ) && skin
+		&& ( !Q_stricmp( skin + 1, PM_SKIN ) || !Q_stricmp( skin + 1, FB_SKIN ) ) ) {
 		CG_BroadcastPartColor( Info_ValueForKey( configstring, "c3" ), newInfo.headColor );
 		CG_BroadcastPartColor( Info_ValueForKey( configstring, "c4" ), newInfo.bodyColor );
 		CG_BroadcastPartColor( Info_ValueForKey( configstring, "c5" ), newInfo.legsColor );
