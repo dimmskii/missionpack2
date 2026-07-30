@@ -58,10 +58,18 @@ General config improvements upon vanilla Q3/TA:
 | `cg_trueLightning` | `0.0` | Controls lightning shaft flexibility. At `1.0`, the beam sticks perfectly straight to your crosshair vector with zero lag-bending. |
 | `cg_kickScale` | `0` | Sets screen vibration scaling factors when sustaining damage. Set to `0` to completely disable screen shake during combat. |
 | `cg_hitSounds` | `0` | Hit sound mode |
-| `cg_enemyModel` | `pm` | Forces all enemy players to one explicit model/skin (e.g., `keel/pm`). Set to `pm` for promode skin and no model change. Set to empty string to disable. |
-| `cg_enemyColors` | `222` | Colors of enemy team PM models for head, torso, and bottom. Set to empty string to disable. |
-| `cg_teamModel` | ` ` | Forces all friendly players to one explicit model/skin (e.g., `keel/pm`). Set to `pm` for promode skin and no model change. Set to empty string to disable. |
-| `cg_teamColors` | ` ` | Colors of friendly team PM models for head, torso, and bottom. Set to empty string to disable. |
+| `cg_forceEnemyModel` | ` ` | Forces all enemy players to one model, optionally with a skin (e.g., `keel` or `keel/pm`). Set to empty string to disable. |
+| `cg_forceEnemySkin` | ` ` | Forces the skin on enemy players without touching their model (e.g., `pm`, `fb`). Applied after the model, so it wins the skin slot. Set to empty string to disable. |
+| `cg_forceTeamModel` | ` ` | As `cg_forceEnemyModel`, but for teammates and yourself. |
+| `cg_forceTeamSkin` | ` ` | As `cg_forceEnemySkin`, but for teammates and yourself. |
+| `cg_enemyHeadColor` | `0x2a8000FF` | Head color of enemy pm/fb skins. Accepts `#RGB`, `#RRGGBB` or `#RRGGBBAA`, with `#`, `0x` or no prefix; alpha is ignored on player models. Set to empty string for the team color. |
+| `cg_enemyUpperColor` | `0x2a8000FF` | Torso color of enemy pm/fb skins, same format. |
+| `cg_enemyLowerColor` | `0x2a8000FF` | Legs color of enemy pm/fb skins, same format. |
+| `cg_teamHeadColor` | ` ` | Head color of teammate (and your own) pm/fb skins, same format. |
+| `cg_teamUpperColor` | ` ` | Torso color of teammate (and your own) pm/fb skins, same format. |
+| `cg_teamLowerColor` | ` ` | Legs color of teammate (and your own) pm/fb skins, same format. |
+| `cg_forceRedTeamModel` | ` ` | Accepted for Quake Live config compatibility. No effect. |
+| `cg_forceBlueTeamModel` | ` ` | Accepted for Quake Live config compatibility. No effect. |
 | `cg_deadBodyDarken` | `1` | Automatically darkens dropped player corpses lying on the map floor to increase visibility contrast with combatants. |
 | `cg_fovAdjust` | `0` | Automatically scales focal viewing calculations to properly compensate for modern widescreen aspect ratio variations. |
 | `cg_followKiller` | `0` | Directs the spectator follow-cam system to automatically focus over the player who eliminated you. |
