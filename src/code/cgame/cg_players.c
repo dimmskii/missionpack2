@@ -747,12 +747,31 @@ static void CG_ColorFromChar( char v, vec3_t color ) {
 //	return str;
 //}
 
-// hex part color if parsable, else team auto color
+// the client's own broadcast color; left untouched when unset, keeping the white baseline
+static void CG_BroadcastPartColor( const char *hexstr, vec3_t out ) {
+	vec4_t c;
+
+	if ( BG_ParseHexColor( hexstr, c ) ) {
+		VectorCopy( c, out );
+	}
+}
+
+// vec3 wrapper so the shared vec4 helper can floor a part color in place
+static void CG_ClampPartColor( vec3_t out ) {
+	vec4_t c;
+
+	VectorCopy( out, c );
+	c[3] = 1.0f;
+	BG_ClampColorBrightness( c, MIN_PLAYERCOLOR_BRIGHTNESS );
+	VectorCopy( c, out );
+}
+
+// hex part color if parsable, else team auto color. Brightness is floored once
+// in CG_NewClientInfo, after every color source has had its say.
 static void CG_PartColor( const char *hexstr, team_t team, vec3_t out ) {
 	vec4_t c;
 
 	if ( BG_ParseHexColor( hexstr, c ) ) {
-		BG_ClampColorBrightness( c, MIN_PLAYERCOLOR_BRIGHTNESS );
 		VectorCopy( c, out );
 		return;
 	}
@@ -1371,6 +1390,11 @@ static void CG_SetSkinAndModel( clientInfo_t *newInfo,
 
 	if ( setColor && ( modelForced || skinForced ) ) {
 		CG_SetColorInfo( !useTeam, !GT_IsTeam( cgs.gametype ) || myTeam != TEAM_SPECTATOR, newInfo );
+	}
+
+	// a pm/fb skin is colorizable however it was picked, so the skin lookup needs to
+	// know even when nothing was forced - otherwise team games swap it for the team skin
+	if ( !Q_stricmp( skinName, PM_SKIN ) || !Q_stricmp( skinName, FB_SKIN ) ) {
 		newInfo->coloredSkin = qtrue;
 	}
 }
@@ -1395,6 +1419,7 @@ void CG_NewClientInfo( int clientNum ) {
 	team_t		myTeam;
 	team_t		team;
 //	int			len; // ~Dimmskii - unused since hex colors
+	const char	*skin; // ~Dimmskii
 
 	ci = &cgs.clientinfo[clientNum];
 
@@ -1454,6 +1479,17 @@ void CG_NewClientInfo( int clientNum ) {
 	VectorSet( newInfo.bodyColor, 1.0, 1.0, 1.0 );
 	VectorSet( newInfo.legsColor, 1.0, 1.0, 1.0 );
 
+	// ~Dimmskii -- the client's own broadcast part colors, only worn on a pm/fb skin.
+	// A force override still overwrites these further down in CG_SetSkinAndModel.
+	v = Info_ValueForKey( configstring, "model" );
+	skin = strchr( v, '/' );
+	if ( skin && ( !Q_stricmp( skin + 1, PM_SKIN ) || !Q_stricmp( skin + 1, FB_SKIN ) ) ) {
+		CG_BroadcastPartColor( Info_ValueForKey( configstring, "c3" ), newInfo.headColor );
+		CG_BroadcastPartColor( Info_ValueForKey( configstring, "c4" ), newInfo.bodyColor );
+		CG_BroadcastPartColor( Info_ValueForKey( configstring, "c5" ), newInfo.legsColor );
+	}
+	// END Dimmskii
+
 	// bot skill
 	v = Info_ValueForKey( configstring, "skill" );
 	newInfo.botSkill = atoi( v );
@@ -1499,8 +1535,14 @@ void CG_NewClientInfo( int clientNum ) {
 
 	// head model
 	v = Info_ValueForKey( configstring, "hmodel" );
-	CG_SetSkinAndModel( &newInfo, ci, v, allowNativeModel, clientNum, myClientNum, myTeam, qfalse, 
+	CG_SetSkinAndModel( &newInfo, ci, v, allowNativeModel, clientNum, myClientNum, myTeam, qfalse,
 		newInfo.headModelName, sizeof( newInfo.headModelName ),	newInfo.headSkinName, sizeof( newInfo.headSkinName ) );
+
+	// ~Dimmskii -- every color source has had its say by now, so floor the brightness once
+	CG_ClampPartColor( newInfo.headColor );
+	CG_ClampPartColor( newInfo.bodyColor );
+	CG_ClampPartColor( newInfo.legsColor );
+	// END Dimmskii
 
 	// allow deferred load at some conditions
 	can_defer = cg_deferPlayers.integer == 2 || ( cg_deferPlayers.integer == 1 && myTeam != TEAM_SPECTATOR && team == TEAM_SPECTATOR );

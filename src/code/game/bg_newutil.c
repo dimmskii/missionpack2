@@ -67,6 +67,42 @@ qboolean BG_ParseHexColor( const char *str, vec4_t color ) {
 
 /*
 ===============
+BG_NormalizeHexColor
+
+Rewrites any accepted hex form as canonical #RRGGBB, dropping alpha - model
+rendering forces shaderRGBA[3] anyway. Unparsable input yields an empty string.
+===============
+*/
+void BG_NormalizeHexColor( const char *in, char *out, int outSize ) {
+	static const char hexDigits[] = "0123456789ABCDEF";
+	vec4_t c;
+	int i, v;
+
+	if ( !out || outSize < 1 ) {
+		return;
+	}
+	if ( outSize < MAX_HEXCOLOR_STRING || !BG_ParseHexColor( in, c ) ) {
+		out[0] = '\0';
+		return;
+	}
+
+	out[0] = '#';
+	for ( i = 0 ; i < 3 ; i++ ) {
+		v = (int)( c[i] * 255.0f + 0.5f );
+		if ( v < 0 ) {
+			v = 0;
+		}
+		if ( v > 255 ) {
+			v = 255;
+		}
+		out[1 + i * 2] = hexDigits[( v >> 4 ) & 0xF];
+		out[2 + i * 2] = hexDigits[v & 0xF];
+	}
+	out[7] = '\0';
+}
+
+/*
+===============
 BG_ClampColorBrightness
 
 Raises color to at least floor average RGB brightness so players can't force
