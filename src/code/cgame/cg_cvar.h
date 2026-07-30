@@ -128,12 +128,9 @@ CG_CVAR( cg_kickScale, "cg_kickScale", "0", CVAR_ARCHIVE )
 CG_CVAR( cg_hitSounds, "cg_hitSounds", "0", CVAR_ARCHIVE )
 //CG_CVAR( cg_enemyModel, "cg_enemyModel", "", CVAR_ARCHIVE )
 //CG_CVAR( cg_enemyColors, "cg_enemyColors", "", CVAR_ARCHIVE )
-// ~Dimmskii -- Only preset the color; cg_enemyModel stays 0 until user opts in, following vq3 trend
-//CG_CVAR( cg_enemyModel, "cg_enemyModel", "", CVAR_ARCHIVE )
-//CG_CVAR( cg_enemyColors, "cg_enemyColors", "222", CVAR_ARCHIVE )
-// END Dimmskii
 //CG_CVAR( cg_teamModel, "cg_teamModel", "", CVAR_ARCHIVE )
 //CG_CVAR( cg_teamColors, "cg_teamColors", "", CVAR_ARCHIVE )
+
 // ~Dimmskii -- QL force model/skin split replaces the packed cg_enemyModel/cg_teamModel above
 CG_CVAR( cg_forceEnemyModel, "cg_forceEnemyModel", "", CVAR_ARCHIVE )
 CG_CVAR( cg_forceEnemySkin, "cg_forceEnemySkin", "", CVAR_ARCHIVE )
@@ -143,6 +140,7 @@ CG_CVAR( cg_forceTeamSkin, "cg_forceTeamSkin", "", CVAR_ARCHIVE )
 CG_CVAR( cg_forceRedTeamModel, "cg_forceRedTeamModel", "", CVAR_ARCHIVE )
 CG_CVAR( cg_forceBlueTeamModel, "cg_forceBlueTeamModel", "", CVAR_ARCHIVE )
 // END Dimmskii
+
 // ~Dimmskii -- QL-style per-part hex model colors replace the packed CPMA strings above; empty = team auto
 CG_CVAR( cg_enemyHeadColor, "cg_enemyHeadColor", "0x2a8000FF", CVAR_ARCHIVE )
 CG_CVAR( cg_enemyUpperColor, "cg_enemyUpperColor", "0x2a8000FF", CVAR_ARCHIVE )
@@ -151,6 +149,7 @@ CG_CVAR( cg_teamHeadColor, "cg_teamHeadColor", "", CVAR_ARCHIVE )
 CG_CVAR( cg_teamUpperColor, "cg_teamUpperColor", "", CVAR_ARCHIVE )
 CG_CVAR( cg_teamLowerColor, "cg_teamLowerColor", "", CVAR_ARCHIVE )
 // END Dimmskii
+
 CG_CVAR( cg_deadBodyDarken, "cg_deadBodyDarken", "1", CVAR_ARCHIVE )
 CG_CVAR( cg_fovAdjust, "cg_fovAdjust", "0", CVAR_ARCHIVE )
 CG_CVAR( cg_followKiller, "cg_followKiller", "0", CVAR_ARCHIVE )
@@ -191,9 +190,7 @@ CG_CVAR( cg_flagPOIsIconMaxSize, "cg_flagPOIsIconMaxSize", "24", CVAR_ARCHIVE ) 
 // Item timers
 CG_CVAR( cg_itemTimers, "cg_itemTimers", "1", CVAR_ARCHIVE ) //  No longer handled with POI code TODO: Has no effect. Implement this.
 
-// END DIMMSKII
-
-// ~Dimmskii
+// Sound
 CG_CVAR( cg_killBeep, "cg_killBeep", "0", CVAR_ARCHIVE ) // QL-style kill confirmation beep on frag (sound/world/bell_01.ogg)
 // END Dimmskii
 
