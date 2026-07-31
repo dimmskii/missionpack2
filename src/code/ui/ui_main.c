@@ -5912,6 +5912,12 @@ static void UI_BuildQ3Model_List( void )
 			filelen = strlen(fileptr);
 
 			COM_StripExtension(fileptr,skinname,sizeof(skinname));
+			
+			// ~Dimmskii -- Skip all fb skins (not pm) -- reasoning is that we already arbitrarily treat 'pm' and 'fb' as special conditions, so it's OK.
+			if ( Q_stricmp(skinname,"icon_fb") == 0 ) {
+				continue;
+			}
+			// END Dimmskii
 
 			// look for icon_????
 			if (Q_stricmpn(skinname, "icon_", 5) == 0 && !(Q_stricmp(skinname,"icon_blue") == 0 || Q_stricmp(skinname,"icon_red") == 0))
