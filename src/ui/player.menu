@@ -49,59 +49,6 @@ itemDef {
 	decoration 
 }
 
-itemDef {
-      	name quakeimage
-      	style WINDOW_STYLE_SHADER
-	group grpquaketype
- 	background "ui/assets/playerpatriot.tga"
- 	rect 60 24 128 256
-      	forecolor .25 .25 .25 1
-	decoration
-    	}
-
-itemDef {
-      	name quakeimage
-	group grpquaketype
-      	style WINDOW_STYLE_SHADER	
- 	background "ui/assets/playerpi.tga"
- 	rect 100 24 128 256
-      	visible 1 
-	decoration
-    	}
-itemDef {
-      	name quakeimage
-	group grpquaketype		
-      	style WINDOW_STYLE_SHADER	
- 	background "ui/assets/playerklesk.tga"
- 	rect 440 24 128 256
-      	forecolor .5 .5 .5 1
-      	visible 1 
-	decoration
-    	}
-
-
-itemDef {
-      	name quakeimage
-	group grpquaketype	
-      	style WINDOW_STYLE_SHADER	
- 	background "ui/assets/playerbiker.tga"
- 	rect 384 24 128 256
-      	visible 1 
-	decoration
-    	}
-
-
-
-itemDef {
-      	name window
-	style WINDOW_STYLE_FILLED
-      	rect 238 153 170 133
-	forecolor 0 0 0 1
-	backcolor 0 0 0 1
-      	visible 1
-	decoration
-   	}
-
 
 
 itemDef {
@@ -167,7 +114,7 @@ itemDef {
 itemDef {
 	name modelselection
 	ownerdraw UI_PLAYERMODEL
-	rect 424 80 260 260
+	rect 344 40 260 340
 	style 1
 	decoration 
 	visible 1
@@ -182,9 +129,9 @@ itemDef {
 	cvar "ui_Name"
 	textstyle 6
 	maxChars 32
-      	rect 0 70 215 32 
-      	textalign ITEM_ALIGN_LEFT		
-      	textalignx 20
+      	rect 115 70 215 32 
+      	textalign ITEM_ALIGN_RIGHT		
+      	textalignx 20     
       	textaligny 21 
 	textscale .333        
       	outlinecolor 1 .5 .5 .5
@@ -204,9 +151,9 @@ itemDef {
 	text "Handicap:"
 	ownerdraw UI_HANDICAP
 	textstyle 6
-	rect 0 175 215 32 
-      	textalign ITEM_ALIGN_LEFT		
-      	textalignx 20
+	rect 115 100 215 32 
+      	textalign ITEM_ALIGN_RIGHT		
+      	textalignx 56     
       	textaligny 21 
 	textscale .333        
       	outlinecolor 1 .5 .5 .5
@@ -225,9 +172,9 @@ itemDef {
       	style 0	
 	text "Effect:"
 	ownerdraw UI_EFFECTS
-      	rect 0 205 215 32 
+      	rect 115 175 215 32 
 	textstyle 6
-      	textalign ITEM_ALIGN_LEFT		
+      	textalign ITEM_ALIGN_RIGHT		
       	textalignx 20     
       	textaligny 21 
 	textscale .333        
@@ -240,6 +187,81 @@ itemDef {
 	mouseEnter { show message_effect } 
 	mouseExit { hide message_effect }   
     	}
+
+itemDef {
+		name c3field
+	group "playersettinggroup"
+		type ITEM_TYPE_HEXCOLOR
+	text "Head Color:"
+	cvar "color3"
+    rect 115 205 215 24 
+	textstyle 6
+      	textalign ITEM_ALIGN_RIGHT		
+      	textalignx 20     
+      	textaligny 21 
+	textscale .333        
+      	outlinecolor 1 .5 .5 .5
+      	backcolor 0 0 0 0
+      	forecolor 1 1 1 1
+      	border 0
+      	bordercolor 0 0 0 0
+		visible 1
+//	cvarTest "ui_skinIsColored"
+//		enableCvar { "1" }
+	action { play "sound/misc/menu1.wav" ; hexcoloropen }
+	mouseEnter { show message_modelcolor } 
+	mouseExit { hide message_modelcolor }   
+		}
+
+itemDef {
+		name c4field
+	group "playersettinggroup"
+		type ITEM_TYPE_HEXCOLOR
+	text "Upper Color:"
+	cvar "color4"
+    rect 115 235 215 24 
+	textstyle 6
+      	textalign ITEM_ALIGN_RIGHT		
+      	textalignx 20     
+      	textaligny 21 
+	textscale .333        
+      	outlinecolor 1 .5 .5 .5
+      	backcolor 0 0 0 0
+      	forecolor 1 1 1 1
+      	border 0
+      	bordercolor 0 0 0 0
+		visible 1
+//	cvarTest "ui_skinIsColored"
+//		enableCvar { "1" }
+	action { play "sound/misc/menu1.wav" ; hexcoloropen }
+	mouseEnter { show message_modelcolor } 
+	mouseExit { hide message_modelcolor }   
+		}
+
+itemDef {
+		name c5field
+	group "playersettinggroup"
+		type ITEM_TYPE_HEXCOLOR
+	text "Lower Color:"
+	cvar "color5"
+    rect 115 265 215 24 
+	textstyle 6
+      	textalign ITEM_ALIGN_RIGHT		
+      	textalignx 20     
+      	textaligny 21 
+	textscale .333        
+      	outlinecolor 1 .5 .5 .5
+      	backcolor 0 0 0 0
+      	forecolor 1 1 1 1
+      	border 0
+      	bordercolor 0 0 0 0
+		visible 1
+//	cvarTest "ui_skinIsColored"
+//		enableCvar { "1" }
+	action { play "sound/misc/menu1.wav" ; hexcoloropen }
+	mouseEnter { show message_modelcolor } 
+	mouseExit { hide message_modelcolor }   
+		}
 
 
 
@@ -340,7 +362,7 @@ itemDef {
 	textalignx 0
 	textaligny 25
 	textscale .416
-	text "Enter Player Name"
+	text "Enter player name"
 	forecolor 1 1 1 1
 	decoration 
 	visible 0
@@ -356,7 +378,7 @@ itemDef {
 	textalignx 0
 	textaligny 25
 	textscale .416
-	text "Click to Change Handicap"
+	text "Click to change handicap"
 	forecolor 1 1 1 1
 	decoration 
 	visible 0
@@ -372,14 +394,14 @@ itemDef {
 	textalignx 0
 	textaligny 25
 	textscale .416
-	text "Select Bar to Change Effect Color"
+	text "Click to change effect color"
 	forecolor 1 1 1 1
 	decoration 
 	visible 0
 	}
 
 itemDef {
-	name message_clan
+	name message_modelcolor
 	group grpmessage
 	style 0 
 	rect 320 430 128 30
@@ -388,22 +410,7 @@ itemDef {
 	textalignx 0
 	textaligny 25
 	textscale .416
-	text "Click to Cycle Clan Selection"
-	forecolor 1 1 1 1
-	decoration 
-	visible 0
-	}
-itemDef {
-	name message_type
-	group grpmessage
-	style 0 
-	rect 320 430 128 30
-	textalign 1
-	textstyle 1
-	textalignx 0
-	textaligny 25
-	textscale .416
-	text "Click to View Team Arena or Quake III Models"
+	text "Click to change player model colors"
 	forecolor 1 1 1 1
 	decoration 
 	visible 0
@@ -419,38 +426,10 @@ itemDef {
 	textalignx 0
 	textaligny 25
 	textscale .416
-	text "Click to Change Player Model"
+	text "Click to change player model"
 	forecolor 1 1 1 1
 	decoration 
 	visible 0
-	}
-
-itemDef {
-      	name clancinematic
-	group grpquaketype
-      	style 3	
- 	background "ui/assets/q3imagepage.tga"
-	rect 238 157 170 133
-      	visible 1 
-	decoration
-    	}
-
-itemDef {
-      	name clancinematic
-      	style 3	
- 	background "menuscreen"
-	rect 238 153 170 133
-      	visible 1 
-	decoration
-    	}
-
-itemDef {
-  	name menuback_g
-    	style WINDOW_STYLE_SHADER
-     	rect 195 120 255 202
-     	background "menuback_g"
-   	visible 1
-	decoration
 	}
 
 itemDef {
