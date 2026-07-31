@@ -513,7 +513,7 @@
 		type ITEM_TYPE_YESNO
 		text "Gauntlet:"
 		cvar "ui_wpflags_g"
-		rect 231 75 128 12
+		rect 231 75 90 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
 		textaligny 12
@@ -530,7 +530,7 @@
 		type ITEM_TYPE_YESNO
 		text "Machinegun:"
 		cvar "ui_wpflags_mg"
-		rect 231 90 128 12
+		rect 231 90 90 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
 		textaligny 12
@@ -547,7 +547,7 @@
 		type ITEM_TYPE_YESNO
 		text "Shotgun:"
 		cvar "ui_wpflags_sg"
-		rect 231 105 128 12
+		rect 231 105 90 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
 		textaligny 12
@@ -564,7 +564,7 @@
 		type ITEM_TYPE_YESNO
 		text "Grenade:"
 		cvar "ui_wpflags_gl"
-		rect 231 120 128 12
+		rect 231 120 90 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
 		textaligny 12
@@ -581,7 +581,7 @@
 		type ITEM_TYPE_YESNO
 		text "Rocket:"
 		cvar "ui_wpflags_rl"
-		rect 231 135 128 12
+		rect 231 135 90 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
 		textaligny 12
@@ -598,7 +598,7 @@
 		type ITEM_TYPE_YESNO
 		text "Lightning:"
 		cvar "ui_wpflags_lg"
-		rect 231 150 128 12
+		rect 231 150 90 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
 		textaligny 12
@@ -615,7 +615,7 @@
 		type ITEM_TYPE_YESNO
 		text "Railgun:"
 		cvar "ui_wpflags_rg"
-		rect 231 165 128 12
+		rect 231 165 90 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
 		textaligny 12
@@ -632,7 +632,7 @@
 		type ITEM_TYPE_YESNO
 		text "Plasma:"
 		cvar "ui_wpflags_pg"
-		rect 231 180 128 12
+		rect 231 180 90 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
 		textaligny 12
@@ -649,7 +649,7 @@
 		type ITEM_TYPE_YESNO
 		text "BFG:"
 		cvar "ui_wpflags_bfg"
-		rect 231 195 128 12
+		rect 231 195 90 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
 		textaligny 12
@@ -666,7 +666,7 @@
 		type ITEM_TYPE_YESNO
 		text "Grapple:"
 		cvar "ui_wpflags_grapple"
-		rect 231 210 128 12
+		rect 231 210 90 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
 		textaligny 12
@@ -683,7 +683,7 @@
 		type ITEM_TYPE_YESNO
 		text "Nail Gun:"
 		cvar "ui_wpflags_ng"
-		rect 231 225 128 12
+		rect 231 225 90 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
 		textaligny 12
@@ -700,7 +700,7 @@
 		type ITEM_TYPE_YESNO
 		text "Prox:"
 		cvar "ui_wpflags_pl"
-		rect 231 240 128 12
+		rect 231 240 90 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
 		textaligny 12
@@ -717,7 +717,7 @@
 		type ITEM_TYPE_YESNO
 		text "Chaingun:"
 		cvar "ui_wpflags_cg"
-		rect 231 255 128 12
+		rect 231 255 90 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
 		textaligny 12
@@ -734,7 +734,7 @@
 		type ITEM_TYPE_YESNO
 		text "HMG:"
 		cvar "ui_wpflags_hmg"
-		rect 231 270 128 12
+		rect 231 270 90 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
 		textaligny 12
