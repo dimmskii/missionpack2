@@ -749,6 +749,12 @@ void UI_DrawPlayer( float x, float y, float w, float h, playerInfo_t *pi, int ti
 	//
 	legs.hModel = pi->legsModel;
 	legs.customSkin = pi->legsSkin;
+	// ~Dimmskii -- colored skins modulate through rgbGen entity; white leaves others alone
+	legs.shaderRGBA[0] = pi->legsColor[0] * 255;
+	legs.shaderRGBA[1] = pi->legsColor[1] * 255;
+	legs.shaderRGBA[2] = pi->legsColor[2] * 255;
+	legs.shaderRGBA[3] = 255;
+	// END Dimmskii
 
 	VectorCopy( origin, legs.origin );
 
@@ -771,6 +777,12 @@ void UI_DrawPlayer( float x, float y, float w, float h, playerInfo_t *pi, int ti
 	}
 
 	torso.customSkin = pi->torsoSkin;
+	// ~Dimmskii
+	torso.shaderRGBA[0] = pi->torsoColor[0] * 255;
+	torso.shaderRGBA[1] = pi->torsoColor[1] * 255;
+	torso.shaderRGBA[2] = pi->torsoColor[2] * 255;
+	torso.shaderRGBA[3] = 255;
+	// END Dimmskii
 
 	VectorCopy( origin, torso.lightingOrigin );
 
@@ -788,6 +800,12 @@ void UI_DrawPlayer( float x, float y, float w, float h, playerInfo_t *pi, int ti
 		return;
 	}
 	head.customSkin = pi->headSkin;
+	// ~Dimmskii
+	head.shaderRGBA[0] = pi->headColor[0] * 255;
+	head.shaderRGBA[1] = pi->headColor[1] * 255;
+	head.shaderRGBA[2] = pi->headColor[2] * 255;
+	head.shaderRGBA[3] = 255;
+	// END Dimmskii
 
 	VectorCopy( origin, head.lightingOrigin );
 
@@ -1235,6 +1253,11 @@ void UI_PlayerInfo_SetModel( playerInfo_t *pi, const char *model, const char *he
 	pi->weaponTimer = 0;
 	pi->chat = qfalse;
 	pi->newModel = qtrue;
+	// ~Dimmskii -- neutral until a preview overrides them
+	VectorSet( pi->headColor, 1.0f, 1.0f, 1.0f );
+	VectorSet( pi->torsoColor, 1.0f, 1.0f, 1.0f );
+	VectorSet( pi->legsColor, 1.0f, 1.0f, 1.0f );
+	// END Dimmskii
 	UI_PlayerInfo_SetWeapon( pi, pi->weapon );
 }
 

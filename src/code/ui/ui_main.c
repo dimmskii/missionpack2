@@ -1446,6 +1446,30 @@ static void UI_DrawMapCinematic(rectDef_t *rect, float scale, vec4_t color, qboo
 static qboolean updateModel = qtrue;
 //static qboolean q3Model = qtrue;
 
+// ~Dimmskii -- a "model/skin" string wearing the colorizable pm or fb skin
+static qboolean UI_SkinIsColored( const char *modelSkin ) {
+	const char *skin = strchr( modelSkin, '/' );
+
+	if ( !skin ) {
+		return qfalse;
+	}
+	skin++;
+	return ( !Q_stricmp( skin, "pm" ) || !Q_stricmp( skin, "fb" ) ) ? qtrue : qfalse;
+}
+
+// our own broadcast part color, floored the same way everyone else will see it
+static void UI_PartColor( const char *cvarName, qboolean colored, vec3_t out ) {
+	vec4_t c;
+
+	if ( colored && BG_ParseHexColor( UI_Cvar_VariableString( cvarName ), c ) ) {
+		BG_ClampColorBrightness( c, MIN_PLAYERCOLOR_BRIGHTNESS );
+		VectorCopy( c, out );
+		return;
+	}
+	VectorSet( out, 1.0f, 1.0f, 1.0f );
+}
+// END Dimmskii
+
 static void UI_DrawPlayerModel(rectDef_t *rect) {
   static playerInfo_t info;
   char model[MAX_QPATH];
@@ -1490,6 +1514,12 @@ static void UI_DrawPlayerModel(rectDef_t *rect) {
 //		UI_RegisterClientModelname( &info, model, head, team);
     updateModel = qfalse;
   }
+
+  // ~Dimmskii -- preview our own color3/4/5, per part, so the picker matches in-game
+  UI_PartColor( "color3", UI_SkinIsColored( head ), info.headColor );
+  UI_PartColor( "color4", UI_SkinIsColored( model ), info.torsoColor );
+  UI_PartColor( "color5", UI_SkinIsColored( model ), info.legsColor );
+  // END Dimmskii
 
   UI_DrawPlayer( rect->x, rect->y, rect->w, rect->h, &info, uiInfo.uiDC.realTime / 2);
 
