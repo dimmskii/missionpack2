@@ -172,7 +172,7 @@ itemDef {
       	style 0	
 	text "Effect:"
 	ownerdraw UI_EFFECTS
-      	rect 115 175 215 32 
+      	rect 115 145 215 32 
 	textstyle 6
       	textalign ITEM_ALIGN_RIGHT		
       	textalignx 20     
