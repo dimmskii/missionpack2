@@ -916,7 +916,6 @@
 		rect 320 210 128 12
 		textalign ITEM_ALIGN_LEFT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor .8 .8 .8 1
