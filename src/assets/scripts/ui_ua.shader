@@ -177,20 +177,6 @@ menuback_f
 	
 }
 
-menuback_g
-{	
-	
-
-	nopicmip
-	nomipmaps
-	{
-		map ui/assets/singleplayer1.tga
-		blendfunc blend
-	}
-	
-	
-	}
-
 menuscreen2
 {
 	nopicmip
