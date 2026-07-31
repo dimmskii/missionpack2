@@ -9,6 +9,7 @@ ui_shared
 ui_gameinfo
 bg_misc
 bg_newgame
+bg_newutil
 bg_lib
 q_math
 q_shared

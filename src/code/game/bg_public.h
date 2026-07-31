@@ -113,6 +113,7 @@ typedef enum {
 */
 
 #include "bg_newgame.h" // ~Dimmskii -- Include new gametype shared wiring/logic header
+#include "bg_newutil.h" // ~Dimmskii -- Include new shared utility helpers header
 
 typedef enum { GENDER_MALE, GENDER_FEMALE, GENDER_NEUTER } gender_t;
 

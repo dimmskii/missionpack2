@@ -2,6 +2,7 @@
 // string allocation/managment
 
 #include "ui_shared.h"
+#include "../game/bg_newutil.h" // ~Dimmskii - hex color parsing for ITEM_TYPE_HEXCOLOR
 
 int ED_vsprintf( char *buffer, const char *fmt, va_list ap );
 
@@ -1226,6 +1227,91 @@ void Script_playLooped(itemDef_t *item, char **args) {
 }
 
 
+// ~Dimmskii -- hex color picker plumbing: an ITEM_TYPE_HEXCOLOR swatch's action opens
+// the hexpicker popup, whose R/G/B/A sliders bind to ui_hexR/G/B/A; apply/clear write
+// the composed value back to the swatch's cvar, remembered here across the menu switch.
+static char hexColorTarget[MAX_CVAR_VALUE_STRING];
+static char hexColorParent[MAX_QPATH];  // menu to refocus when the picker closes
+
+static int HexColorByte( const char *cvar ) {
+	int v = (int)( DC->getCVarValue( cvar ) + 0.5f );
+	if ( v < 0 ) v = 0;
+	if ( v > 255 ) v = 255;
+	return v;
+}
+
+// the VM's vsprintf has no %x conversion, so write the two hex digits by hand
+static void HexColorDigits( char *out, int v ) {
+	static const char h[] = "0123456789ABCDEF";
+	out[0] = h[( v >> 4 ) & 0xF];
+	out[1] = h[v & 0xF];
+}
+
+// seed the slider cvars from the swatch's current value, then open the picker
+void Script_HexColorOpen(itemDef_t *item, char **args) {
+	menuDef_t *parent;
+	char buff[64];
+	vec4_t c;
+
+	if (!item || !item->cvar) {
+		return;
+	}
+	Q_strncpyz(hexColorTarget, item->cvar, sizeof(hexColorTarget));
+
+	// remember which menu to refocus on close (options now, player.menu later)
+	parent = (menuDef_t*)item->parent;
+	hexColorParent[0] = '\0';
+	if (parent) {
+		Q_strncpyz(hexColorParent, parent->window.name, sizeof(hexColorParent));
+	}
+
+	DC->getCVarString(item->cvar, buff, sizeof(buff));
+	if (!BG_ParseHexColor(buff, c)) {
+		c[0] = c[1] = c[2] = c[3] = 1.0f; // empty/auto - neutral starting point
+	}
+	DC->setCVar("ui_hexR", va("%i", (int)(c[0] * 255.0f + 0.5f)));
+	DC->setCVar("ui_hexG", va("%i", (int)(c[1] * 255.0f + 0.5f)));
+	DC->setCVar("ui_hexB", va("%i", (int)(c[2] * 255.0f + 0.5f)));
+	DC->setCVar("ui_hexA", va("%i", (int)(c[3] * 255.0f + 0.5f)));
+
+	Menus_OpenByName("hexpicker");
+}
+
+void Script_HexColorApply(itemDef_t *item, char **args) {
+	char hex[10];
+	if (!hexColorTarget[0]) {
+		return;
+	}
+	hex[0] = '#';
+	HexColorDigits(&hex[1], HexColorByte("ui_hexR"));
+	HexColorDigits(&hex[3], HexColorByte("ui_hexG"));
+	HexColorDigits(&hex[5], HexColorByte("ui_hexB"));
+	HexColorDigits(&hex[7], HexColorByte("ui_hexA"));
+	hex[9] = '\0';
+	DC->setCVar(hexColorTarget, hex);
+}
+
+void Script_HexColorClear(itemDef_t *item, char **args) {
+	if (!hexColorTarget[0]) {
+		return;
+	}
+	DC->setCVar(hexColorTarget, "");
+}
+
+// Menus_CloseByName only clears flags; without refocusing the parent,
+// Menu_GetFocused() returns NULL and the whole UI goes dead until ESC.
+void Script_HexColorClose(itemDef_t *item, char **args) {
+	menuDef_t *parent;
+	Menus_CloseByName("hexpicker");
+	if (hexColorParent[0]) {
+		parent = Menus_FindByName(hexColorParent);
+		if (parent) {
+			parent->window.flags |= WINDOW_HASFOCUS;
+		}
+	}
+}
+// END Dimmskii
+
 commandDef_t commandList[] =
 {
   {"fadein", &Script_FadeIn},                   // group/name
@@ -1248,7 +1334,11 @@ commandDef_t commandList[] =
   {"exec", &Script_Exec},           // group/name
   {"play", &Script_Play},           // group/name
   {"playlooped", &Script_playLooped},           // group/name
-  {"orbit", &Script_Orbit}                      // group/name
+  {"orbit", &Script_Orbit},                     // group/name
+  {"hexcoloropen", &Script_HexColorOpen},       // ~Dimmskii - open RGBA picker for this swatch's cvar
+  {"hexcolorapply", &Script_HexColorApply},     // ~Dimmskii - write composed #RRGGBBAA back
+  {"hexcolorclear", &Script_HexColorClear},     // ~Dimmskii - clear cvar (empty = auto)
+  {"hexcolorclose", &Script_HexColorClose}      // ~Dimmskii - close picker + refocus parent menu
 };
 
 int scriptCommandCount = sizeof(commandList) / sizeof(commandDef_t);
@@ -3124,6 +3214,116 @@ void Item_Multi_Paint(itemDef_t *item) {
 	}
 }
 
+// ~Dimmskii -- tile the 2x2 checker under a swatch so translucent colors read like
+// a paint program. NoMip shaders clamp (no wrap), so tile by hand; one motif per bar
+// height, capped so at least ~3 tile across even a narrow field.
+static void Item_HexChecker_Paint(float x, float y, float w, float h) {
+	static qhandle_t checker;
+	vec4_t white = { 1.0f, 1.0f, 1.0f, 1.0f };
+	float cx, cw, tile;
+
+	if (!checker) {
+		checker = DC->registerShaderNoMip("ui/assets/translucentbg");
+	}
+	tile = h;
+	if (tile > w / 3.0f) {
+		tile = w / 3.0f;
+	}
+	DC->setColor(white);
+	for (cx = x; cx < x + w; cx += tile) {
+		cw = (cx + tile > x + w) ? (x + w - cx) : tile;
+		DC->drawStretchPic(cx * DC->scale + DC->biasX, y * DC->scale + DC->biasY, cw * DC->scale, h * DC->scale, 0, 0, cw / tile, 1, checker);
+	}
+	DC->setColor(NULL);
+}
+
+// ~Dimmskii -- ITEM_TYPE_HEXCOLOR: solid swatch bar where the value text usually goes.
+// Empty/unparsable cvar (= team auto) paints just the frame.
+void Item_HexColor_Paint(itemDef_t *item) {
+	vec4_t newColor, lowLight, barColor;
+	float x, y, w, h;
+	char buff[64];
+	menuDef_t *parent = (menuDef_t*)item->parent;
+
+	if (item->window.flags & WINDOW_HASFOCUS) {
+		lowLight[0] = 0.8 * parent->focusColor[0];
+		lowLight[1] = 0.8 * parent->focusColor[1];
+		lowLight[2] = 0.8 * parent->focusColor[2];
+		lowLight[3] = 0.8 * parent->focusColor[3];
+		LerpColor(parent->focusColor,lowLight,newColor,0.5+0.5*sin(DC->realTime / PULSE_DIVISOR));
+	} else {
+		memcpy(&newColor, &item->window.foreColor, sizeof(vec4_t));
+	}
+	Item_TextColor(item, &newColor);
+
+	buff[0] = '\0';
+	if (item->cvar) {
+		DC->getCVarString(item->cvar, buff, sizeof(buff));
+	}
+
+	if (item->text) {
+		Item_Text_Paint(item);
+		x = item->textRect.x + item->textRect.w + 8;
+	} else {
+		x = item->window.rect.x + 2;
+	}
+	y = item->window.rect.y + 2;
+	w = item->window.rect.x + item->window.rect.w - x - 2;
+	h = item->window.rect.h - 4;
+	if (w < 8) {
+		w = 8;
+	}
+
+	if (BG_ParseHexColor(buff, barColor)) {
+		BG_ClampColorBrightness(barColor, MIN_PLAYERCOLOR_BRIGHTNESS); // match in-game render
+		Item_HexChecker_Paint(x, y, w, h);   // checker shows through when alpha < 1
+		DC->fillRect(x, y, w, h, barColor);
+	}
+	DC->drawRect(x, y, w, h, 1, newColor);
+}
+
+// ~Dimmskii -- two-way sync between the hex text field (ui_hexStr) and the sliders:
+// while the field is being edited it drives the sliders, otherwise it mirrors them
+static void Item_HexField_Sync(void) {
+	char buff[16];
+	vec4_t p;
+
+	if (g_editingField && g_editItem && g_editItem->cvar && !Q_stricmp(g_editItem->cvar, "ui_hexStr")) {
+		DC->getCVarString("ui_hexStr", buff, sizeof(buff));
+		if (BG_ParseHexColor(buff, p)) {
+			DC->setCVar("ui_hexR", va("%i", (int)(p[0] * 255.0f + 0.5f)));
+			DC->setCVar("ui_hexG", va("%i", (int)(p[1] * 255.0f + 0.5f)));
+			DC->setCVar("ui_hexB", va("%i", (int)(p[2] * 255.0f + 0.5f)));
+			DC->setCVar("ui_hexA", va("%i", (int)(p[3] * 255.0f + 0.5f)));
+		}
+	} else {
+		buff[0] = '#';
+		HexColorDigits(&buff[1], HexColorByte("ui_hexR"));
+		HexColorDigits(&buff[3], HexColorByte("ui_hexG"));
+		HexColorDigits(&buff[5], HexColorByte("ui_hexB"));
+		HexColorDigits(&buff[7], HexColorByte("ui_hexA"));
+		buff[9] = '\0';
+		DC->setCVar("ui_hexStr", buff);
+	}
+}
+
+// ~Dimmskii -- live preview swatch built from the picker's ui_hexR/G/B/A slider cvars
+void Item_HexPreview_Paint(itemDef_t *item) {
+	vec4_t c;
+
+	Item_HexField_Sync();
+
+	c[0] = Com_Clamp(0.0f, 1.0f, DC->getCVarValue("ui_hexR") / 255.0f);
+	c[1] = Com_Clamp(0.0f, 1.0f, DC->getCVarValue("ui_hexG") / 255.0f);
+	c[2] = Com_Clamp(0.0f, 1.0f, DC->getCVarValue("ui_hexB") / 255.0f);
+	c[3] = Com_Clamp(0.0f, 1.0f, DC->getCVarValue("ui_hexA") / 255.0f);
+
+	Item_HexChecker_Paint(item->window.rect.x, item->window.rect.y, item->window.rect.w, item->window.rect.h);
+	DC->fillRect(item->window.rect.x, item->window.rect.y, item->window.rect.w, item->window.rect.h, c);
+	DC->drawRect(item->window.rect.x, item->window.rect.y, item->window.rect.w, item->window.rect.h, 1, item->window.foreColor);
+}
+// END Dimmskii
+
 
 typedef struct {
 	char	*command;
@@ -4055,6 +4255,12 @@ void Item_Paint(itemDef_t *item) {
       break;
     case ITEM_TYPE_MULTI:
       Item_Multi_Paint(item);
+      break;
+    case ITEM_TYPE_HEXCOLOR: // ~Dimmskii - hex color swatch
+      Item_HexColor_Paint(item);
+      break;
+    case ITEM_TYPE_HEXPREVIEW: // ~Dimmskii - live picker preview
+      Item_HexPreview_Paint(item);
       break;
     case ITEM_TYPE_BIND:
       Item_Bind_Paint(item);

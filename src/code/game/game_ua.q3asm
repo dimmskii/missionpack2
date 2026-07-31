@@ -4,6 +4,7 @@ g_main
 jsmndr
 bg_misc
 bg_newgame
+bg_newutil
 bg_lib
 bg_pmove
 bg_slidemove

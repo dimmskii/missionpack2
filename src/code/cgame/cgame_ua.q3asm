@@ -23,6 +23,7 @@ bg_slidemove
 bg_pmove
 bg_lib
 bg_newgame
+bg_newutil
 bg_misc
 q_math
 q_shared

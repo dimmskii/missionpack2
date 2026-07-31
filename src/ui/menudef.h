@@ -15,6 +15,8 @@
 #define ITEM_TYPE_SLIDER_COLOR 14         // TODO: QL Stub - Implement this
 #define ITEM_TYPE_PRESET 15               // TODO: QL Stub - Implement this
 #define ITEM_TYPE_PRESETLIST 16           // TODO: QL Stub - Implement this
+#define ITEM_TYPE_HEXCOLOR 17             // ~Dimmskii - hex color cvar swatch, ours (not a QL compat stub)
+#define ITEM_TYPE_HEXPREVIEW 18           // ~Dimmskii - live swatch from ui_hexR/G/B/A picker sliders
     
 #define ITEM_ALIGN_LEFT 0                 // left alignment
 #define ITEM_ALIGN_CENTER 1               // center alignment

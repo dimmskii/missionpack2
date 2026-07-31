@@ -622,6 +622,11 @@ qboolean ClientUserinfoChanged( int clientNum ) {
 	gclient_t	*client;
 	char	c1[8];
 	char	c2[8];
+	// ~Dimmskii -- broadcast pm/fb part colors, normalized to #RRGGBB
+	char	c3[MAX_HEXCOLOR_STRING];
+	char	c4[MAX_HEXCOLOR_STRING];
+	char	c5[MAX_HEXCOLOR_STRING];
+	// END Dimmskii
 	char	userinfo[MAX_INFO_STRING];
 
 	ent = g_entities + clientNum;
@@ -742,18 +747,32 @@ qboolean ClientUserinfoChanged( int clientNum ) {
 	// colors
 	Q_strncpyz( c1, Info_ValueForKey( userinfo, "color1" ), sizeof( c1 ) );
 	Q_strncpyz( c2, Info_ValueForKey( userinfo, "color2" ), sizeof( c2 ) );
+	// ~Dimmskii -- head/upper/lower part colors; alpha is dropped here, models force it opaque
+	BG_NormalizeHexColor( Info_ValueForKey( userinfo, "color3" ), c3, sizeof( c3 ) );
+	BG_NormalizeHexColor( Info_ValueForKey( userinfo, "color4" ), c4, sizeof( c4 ) );
+	BG_NormalizeHexColor( Info_ValueForKey( userinfo, "color5" ), c5, sizeof( c5 ) );
+	// END Dimmskii
 
 	// send over a subset of the userinfo keys so other clients can
 	// print scoreboards, display models, and play custom sounds
 	if ( ent->r.svFlags & SVF_BOT ) {
-		s = va("n\\%s\\t\\%i\\model\\%s\\hmodel\\%s\\c1\\%s\\c2\\%s\\hc\\%i\\w\\%i\\l\\%i\\skill\\%s\\tt\\%d\\tl\\%d",
-			client->pers.netname, client->sess.sessionTeam, model, headModel, c1, c2,
+//		s = va("n\\%s\\t\\%i\\model\\%s\\hmodel\\%s\\c1\\%s\\c2\\%s\\hc\\%i\\w\\%i\\l\\%i\\skill\\%s\\tt\\%d\\tl\\%d",
+//			client->pers.netname, client->sess.sessionTeam, model, headModel, c1, c2,
+//			client->pers.maxHealth, client->sess.wins, client->sess.losses,
+//			Info_ValueForKey( userinfo, "skill" ), teamTask, teamLeader );
+		// ~Dimmskii -- relay the part colors too
+		s = va("n\\%s\\t\\%i\\model\\%s\\hmodel\\%s\\c1\\%s\\c2\\%s\\c3\\%s\\c4\\%s\\c5\\%s\\hc\\%i\\w\\%i\\l\\%i\\skill\\%s\\tt\\%d\\tl\\%d",
+			client->pers.netname, client->sess.sessionTeam, model, headModel, c1, c2, c3, c4, c5,
 			client->pers.maxHealth, client->sess.wins, client->sess.losses,
 			Info_ValueForKey( userinfo, "skill" ), teamTask, teamLeader );
 	} else {
-		s = va("n\\%s\\t\\%i\\model\\%s\\hmodel\\%s\\c1\\%s\\c2\\%s\\hc\\%i\\w\\%i\\l\\%i\\tt\\%d\\tl\\%d",
-			client->pers.netname, client->sess.sessionTeam, model, headModel, c1, c2, 
+//		s = va("n\\%s\\t\\%i\\model\\%s\\hmodel\\%s\\c1\\%s\\c2\\%s\\hc\\%i\\w\\%i\\l\\%i\\tt\\%d\\tl\\%d",
+//			client->pers.netname, client->sess.sessionTeam, model, headModel, c1, c2,
+//			client->pers.maxHealth, client->sess.wins, client->sess.losses, teamTask, teamLeader );
+		s = va("n\\%s\\t\\%i\\model\\%s\\hmodel\\%s\\c1\\%s\\c2\\%s\\c3\\%s\\c4\\%s\\c5\\%s\\hc\\%i\\w\\%i\\l\\%i\\tt\\%d\\tl\\%d",
+			client->pers.netname, client->sess.sessionTeam, model, headModel, c1, c2, c3, c4, c5,
 			client->pers.maxHealth, client->sess.wins, client->sess.losses, teamTask, teamLeader );
+		// END Dimmskii
 	}
 
 	trap_SetConfigstring( CS_PLAYERS+clientNum, s );

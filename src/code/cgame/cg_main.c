@@ -10,10 +10,23 @@ displayContextDef_t cgDC;
 //#endif
 
 int forceModelModificationCount = -1;
-int enemyModelModificationCount  = -1;
-int	enemyColorsModificationCount = -1;
-int teamModelModificationCount  = -1;
-int	teamColorsModificationCount = -1;
+//int enemyModelModificationCount  = -1;
+//int	enemyColorsModificationCount = -1;
+//int teamModelModificationCount  = -1;
+//int	teamColorsModificationCount = -1;
+// ~Dimmskii -- QL force model/skin split replaces the packed model pair
+int	forceEnemyModelModificationCount = -1;
+int	forceEnemySkinModificationCount = -1;
+int	forceTeamModelModificationCount = -1;
+int	forceTeamSkinModificationCount = -1;
+// per-part hex color cvars replace the packed pair
+int	enemyHeadColorModificationCount = -1;
+int	enemyUpperColorModificationCount = -1;
+int	enemyLowerColorModificationCount = -1;
+int	teamHeadColorModificationCount = -1;
+int	teamUpperColorModificationCount = -1;
+int	teamLowerColorModificationCount = -1;
+// END Dimmskii
 //static int crosshairColorModificationCount = -1;
 int cg_playback_follow;
 
@@ -144,14 +157,32 @@ void CG_RegisterCvars( void ) {
 	cgs.localServer = atoi( var );
 
 	forceModelModificationCount = cg_forceModel.modificationCount;
-	enemyModelModificationCount = cg_enemyModel.modificationCount;
-	enemyColorsModificationCount = cg_enemyColors.modificationCount;
-	teamModelModificationCount = cg_teamModel.modificationCount;
-	teamColorsModificationCount = cg_teamColors.modificationCount;
+//	enemyModelModificationCount = cg_enemyModel.modificationCount;
+//	enemyColorsModificationCount = cg_enemyColors.modificationCount;
+//	teamModelModificationCount = cg_teamModel.modificationCount;
+//	teamColorsModificationCount = cg_teamColors.modificationCount;
+	// ~Dimmskii -- QL force model/skin split replaces the packed model pair
+	forceEnemyModelModificationCount = cg_forceEnemyModel.modificationCount;
+	forceEnemySkinModificationCount = cg_forceEnemySkin.modificationCount;
+	forceTeamModelModificationCount = cg_forceTeamModel.modificationCount;
+	forceTeamSkinModificationCount = cg_forceTeamSkin.modificationCount;
+	// per-part hex color cvars replace the packed pair
+	enemyHeadColorModificationCount = cg_enemyHeadColor.modificationCount;
+	enemyUpperColorModificationCount = cg_enemyUpperColor.modificationCount;
+	enemyLowerColorModificationCount = cg_enemyLowerColor.modificationCount;
+	teamHeadColorModificationCount = cg_teamHeadColor.modificationCount;
+	teamUpperColorModificationCount = cg_teamUpperColor.modificationCount;
+	teamLowerColorModificationCount = cg_teamLowerColor.modificationCount;
+	// END Dimmskii
 
 
 	trap_Cvar_Register(NULL, "model", DEFAULT_MODEL, CVAR_USERINFO | CVAR_ARCHIVE );
 	trap_Cvar_Register(NULL, "headmodel", DEFAULT_MODEL, CVAR_USERINFO | CVAR_ARCHIVE );
+	// ~Dimmskii -- our own pm/fb part colors, broadcast to everyone else; empty = white
+	trap_Cvar_Register(NULL, "color3", "", CVAR_USERINFO | CVAR_ARCHIVE );
+	trap_Cvar_Register(NULL, "color4", "", CVAR_USERINFO | CVAR_ARCHIVE );
+	trap_Cvar_Register(NULL, "color5", "", CVAR_USERINFO | CVAR_ARCHIVE );
+	// END Dimmskii
 	//trap_Cvar_Register(NULL, "team_model", DEFAULT_TEAM_MODEL, CVAR_USERINFO | CVAR_ARCHIVE );
 	//trap_Cvar_Register(NULL, "team_headmodel", DEFAULT_TEAM_HEAD, CVAR_USERINFO | CVAR_ARCHIVE );
 }
@@ -256,17 +287,43 @@ void CG_UpdateCvars( void ) {
 	}
 
 	// if model changed
-	if ( forceModelModificationCount != cg_forceModel.modificationCount 
-		|| enemyModelModificationCount != cg_enemyModel.modificationCount
-		|| enemyColorsModificationCount != cg_enemyColors.modificationCount
-		|| teamModelModificationCount != cg_teamModel.modificationCount
-		|| teamColorsModificationCount != cg_teamColors.modificationCount ) {
+	if ( forceModelModificationCount != cg_forceModel.modificationCount
+//		|| enemyModelModificationCount != cg_enemyModel.modificationCount
+//		|| enemyColorsModificationCount != cg_enemyColors.modificationCount
+//		|| teamModelModificationCount != cg_teamModel.modificationCount
+//		|| teamColorsModificationCount != cg_teamColors.modificationCount ) {
+		// ~Dimmskii -- QL force model/skin split replaces the packed model pair
+		|| forceEnemyModelModificationCount != cg_forceEnemyModel.modificationCount
+		|| forceEnemySkinModificationCount != cg_forceEnemySkin.modificationCount
+		|| forceTeamModelModificationCount != cg_forceTeamModel.modificationCount
+		|| forceTeamSkinModificationCount != cg_forceTeamSkin.modificationCount
+		// per-part hex color cvars replace the packed pair
+		|| enemyHeadColorModificationCount != cg_enemyHeadColor.modificationCount
+		|| enemyUpperColorModificationCount != cg_enemyUpperColor.modificationCount
+		|| enemyLowerColorModificationCount != cg_enemyLowerColor.modificationCount
+		|| teamHeadColorModificationCount != cg_teamHeadColor.modificationCount
+		|| teamUpperColorModificationCount != cg_teamUpperColor.modificationCount
+		|| teamLowerColorModificationCount != cg_teamLowerColor.modificationCount ) {
+		// END Dimmskii
 
 		forceModelModificationCount = cg_forceModel.modificationCount;
-		enemyModelModificationCount = cg_enemyModel.modificationCount;
-		enemyColorsModificationCount = cg_enemyColors.modificationCount;
-		teamModelModificationCount = cg_teamModel.modificationCount;
-		teamColorsModificationCount = cg_teamColors.modificationCount;
+//		enemyModelModificationCount = cg_enemyModel.modificationCount;
+//		enemyColorsModificationCount = cg_enemyColors.modificationCount;
+//		teamModelModificationCount = cg_teamModel.modificationCount;
+//		teamColorsModificationCount = cg_teamColors.modificationCount;
+		// ~Dimmskii -- QL force model/skin split replaces the packed model pair
+		forceEnemyModelModificationCount = cg_forceEnemyModel.modificationCount;
+		forceEnemySkinModificationCount = cg_forceEnemySkin.modificationCount;
+		forceTeamModelModificationCount = cg_forceTeamModel.modificationCount;
+		forceTeamSkinModificationCount = cg_forceTeamSkin.modificationCount;
+		// per-part hex color cvars replace the packed pair
+		enemyHeadColorModificationCount = cg_enemyHeadColor.modificationCount;
+		enemyUpperColorModificationCount = cg_enemyUpperColor.modificationCount;
+		enemyLowerColorModificationCount = cg_enemyLowerColor.modificationCount;
+		teamHeadColorModificationCount = cg_teamHeadColor.modificationCount;
+		teamUpperColorModificationCount = cg_teamUpperColor.modificationCount;
+		teamLowerColorModificationCount = cg_teamLowerColor.modificationCount;
+		// END Dimmskii
 
 		CG_ForceModelChange();
 	}

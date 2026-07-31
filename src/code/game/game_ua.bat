@@ -45,6 +45,8 @@ rem @if errorlevel 1 goto errorquit
 @if errorlevel 1 goto errorquit
 %cc% ../bg_newgame.c 
 @if errorlevel 1 goto errorquit
+%cc% ../bg_newutil.c
+@if errorlevel 1 goto errorquit
 %cc% ../bg_pmove.c
 @if errorlevel 1 goto errorquit
 %cc% ../bg_slidemove.c

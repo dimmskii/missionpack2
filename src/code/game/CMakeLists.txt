@@ -19,6 +19,7 @@ set(GAME_SOURCES
   bg_lib.c
   bg_misc.c
   bg_newgame.c
+  bg_newutil.c
   bg_pmove.c
   bg_slidemove.c
   g_active.c
