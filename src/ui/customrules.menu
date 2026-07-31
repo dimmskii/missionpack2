@@ -128,7 +128,6 @@
 		rect 70 60 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -146,7 +145,6 @@
 		rect 70 75 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -164,7 +162,6 @@
 		rect 70 90 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -182,7 +179,6 @@
 		rect 70 105 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -200,7 +196,6 @@
 		rect 70 120 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -236,7 +231,6 @@
 		rect 70 165 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -256,7 +250,6 @@
 		rect 70 180 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -276,7 +269,6 @@
 		rect 70 195 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -296,7 +288,6 @@
 		rect 70 210 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -316,7 +307,6 @@
 		rect 70 240 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -334,7 +324,6 @@
 		rect 70 255 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -352,7 +341,6 @@
 		rect 70 270 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -453,7 +441,6 @@
 		rect 70 360 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -467,7 +454,7 @@
 	itemDef {
 		name general
 		group grpsettings
-		type ITEM_TYPE_YESNO
+		type ITEM_TYPE_NUMERICFIELD
 		text "Rail Jump Damage"
 		cvar "ui_railJumpDamage:"
 		rect 70 375 128 12
@@ -529,7 +516,6 @@
 		rect 231 75 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -547,7 +533,6 @@
 		rect 231 90 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -565,7 +550,6 @@
 		rect 231 105 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -583,7 +567,6 @@
 		rect 231 120 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -601,7 +584,6 @@
 		rect 231 135 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -619,7 +601,6 @@
 		rect 231 150 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -637,7 +618,6 @@
 		rect 231 165 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -655,7 +635,6 @@
 		rect 231 180 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -673,7 +652,6 @@
 		rect 231 195 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -691,7 +669,6 @@
 		rect 231 210 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -709,7 +686,6 @@
 		rect 231 225 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -727,7 +703,6 @@
 		rect 231 240 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -745,7 +720,6 @@
 		rect 231 255 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -763,7 +737,6 @@
 		rect 231 270 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -783,7 +756,6 @@
 		rect 320 75 128 12
 		textalign ITEM_ALIGN_LEFT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor .8 .8 .8 1
