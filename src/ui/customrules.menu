@@ -455,8 +455,8 @@
 		name general
 		group grpsettings
 		type ITEM_TYPE_NUMERICFIELD
-		text "Rail Jump Damage"
-		cvar "ui_railJumpDamage:"
+		text "Rail Jump Damage:"
+		cvar "ui_railJumpDamage"
 		rect 70 375 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
