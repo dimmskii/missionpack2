@@ -485,7 +485,6 @@
 		rect 231 60 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor .8 .8 .8 1
@@ -500,7 +499,6 @@
 		rect 231 60 128 12
 		textalign ITEM_ALIGN_LEFT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor .8 .8 .8 1
