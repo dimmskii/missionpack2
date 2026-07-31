@@ -13,6 +13,7 @@ set(CGAME_SOURCES
   "${COMMON_DIR}/jsmndr.c"
   "${GAME_DIR}/bg_misc.c"
   "${GAME_DIR}/bg_newgame.c"
+  "${GAME_DIR}/bg_newutil.c"
   "${GAME_DIR}/bg_pmove.c"
   "${GAME_DIR}/bg_slidemove.c"
   "${GAME_DIR}/bg_lib.c"

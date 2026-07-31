@@ -474,7 +474,7 @@ itemDef {
 		group grpOptions
       		type ITEM_TYPE_MULTI
 		text "Force Enemy Skins:"
-		cvar "cg_enemyModel"
+		cvar "cg_forceEnemySkin" // ~Dimmskii
 		cvarStrList { Off "" Promode "pm" Fullbrights "fb" }
 		rect 99 335 256 20
       		textalign ITEM_ALIGN_RIGHT
@@ -484,53 +484,62 @@ itemDef {
       		forecolor 1 1 1 1
       		visible 0 
     		}
-	
-/*
+
+// ~Dimmskii -- per-part enemy hex color swatches (replaces the dead SLIDER_COLOR block above)
 	itemDef {
       		name display
 		group grpOptions
-      		type ITEM_TYPE_SLIDER_COLOR
-		text "Enemy Colors 1:"
-		cvar "cg_enemyColors"
+      		type ITEM_TYPE_HEXCOLOR
+		text "Enemy Head Color:"
+		cvar "cg_enemyHeadColor"
 		rect 99 355 256 20
       		textalign ITEM_ALIGN_RIGHT
       		textalignx 128
       		textaligny 20
 		textscale .3
       		forecolor 1 1 1 1
-      		visible 0 
+      		visible 0
+		cvarTest "cg_forceEnemySkin"
+			enableCvar { "pm" ; "fb" }
+		action { play "sound/misc/menu1.wav" ; hexcoloropen } // ~Dimmskii
     		}
-	
+
 	itemDef {
       		name display
 		group grpOptions
-      		type ITEM_TYPE_SLIDER_COLOR
-		text "Enemy Colors 2:"
-		cvar "cg_enemyColors"
+      		type ITEM_TYPE_HEXCOLOR
+		text "Enemy Upper Color:"
+		cvar "cg_enemyUpperColor"
 		rect 99 375 256 20
       		textalign ITEM_ALIGN_RIGHT
       		textalignx 128
       		textaligny 20
 		textscale .3
       		forecolor 1 1 1 1
-      		visible 0 
+      		visible 0
+		cvarTest "cg_forceEnemySkin"
+			enableCvar { "pm" ; "fb" }
+		action { play "sound/misc/menu1.wav" ; hexcoloropen } // ~Dimmskii
     		}
-	
+
 	itemDef {
       		name display
 		group grpOptions
-      		type ITEM_TYPE_SLIDER_COLOR
-		text "Enemy Colors 3:"
-		cvar "cg_enemyColors"
+      		type ITEM_TYPE_HEXCOLOR
+		text "Enemy Lower Color:"
+		cvar "cg_enemyLowerColor"
 		rect 99 395 256 20
       		textalign ITEM_ALIGN_RIGHT
       		textalignx 128
       		textaligny 20
 		textscale .3
       		forecolor 1 1 1 1
-      		visible 0 
+      		visible 0
+		cvarTest "cg_forceEnemySkin"
+			enableCvar { "pm" ; "fb" }
+		action { play "sound/misc/menu1.wav" ; hexcoloropen } // ~Dimmskii
     		}
-*/
+// END Dimmskii
 
 
 
