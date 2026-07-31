@@ -35,16 +35,6 @@ menuDef {
 	soundLoop "music/fla22k_04_loop.wav" 
 	onESC { open quit_popmenu }
 
-
-itemDef {
-      	name menuback_f
-      	style WINDOW_STYLE_SHADER
-      	rect 0 0 640 480
-     	background "menuback_f"
-      	visible 1
-	decoration
-    }
-
 itemDef {
       	name menuback_b
      	style WINDOW_STYLE_SHADER

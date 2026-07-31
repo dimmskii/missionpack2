@@ -100,23 +100,6 @@ lightningkc
 	}	
 	}
 
-menuback_a
-{	
-	nopicmip
-	nomipmaps	
-
-	{
-		map ui/assets/menuback_a.tga
-	}
-	
-
-	{
-		map ui/assets/console02.tga
-		blendfunc filter
-		tcmod rotate -60
-	}
-}
-
 menuback_b
 {
 	
@@ -163,18 +146,6 @@ menuback_e
 		blendfunc add
 		tcmod rotate -100
 	}
-}
-
-menuback_f
-{	
-	
-	nopicmip
-	nomipmaps
-	{
-		map ui/assets/menuback_f.tga
-		blendfunc blend
-	}
-	
 }
 
 menuscreen2
