@@ -738,6 +738,22 @@ itemDef {
 	visible 0
 	decoration
 }
+	
+	itemDef {
+      		name sounds
+		group grpOptions
+      		type ITEM_TYPE_MULTI
+		text "Kill Beep Style:"
+		cvar "cg_killBeep"
+		cvarStrList { Off "0" Ting "1" }
+		rect 99 35 256 20
+      		textalign ITEM_ALIGN_RIGHT
+      		textalignx 128
+      		textaligny 20
+		textscale .3
+      		forecolor 1 1 1 1
+      		visible 0 
+    		}
 
 
 
