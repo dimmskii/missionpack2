@@ -44,15 +44,6 @@ itemDef {
 	visible 1
 	}
 
-/*itemDef {
-      	name iconlogo_ghost
-     	style WINDOW_STYLE_SHADER
-     	rect 0 0 640 481
-     	visible 1
-     	background "iconlogo_ghost"
-    	decoration 
-	}*/
-
 itemDef {
       	name textlogo_addpulse
      	style WINDOW_STYLE_SHADER
@@ -79,6 +70,15 @@ itemDef {
       	visible 1
 	decoration
     }
+	
+itemDef {
+		name logo_diffuseadd
+		style WINDOW_STYLE_SHADER
+		rect 0 0 640 481
+		visible 1
+		background "logo_diffuseadd"
+		decoration 
+	}
 
 
 

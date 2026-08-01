@@ -108,7 +108,7 @@ menuback_b
 	{
 		map ui/assets/menuback_b.tga
 		blendfunc add
-		rgbgen wave sin .75 0 0 0
+		rgbgen wave sin .3 0 0 0
 		tcmod scroll 0 .2
 	}
 	{
@@ -234,13 +234,13 @@ textlogo_addpulse
 }
 
 // Translucent UA-colorized Q3 logo with no bg
-iconlogo_ghost
+logo_diffuseadd
 {
 	nopicmip
 	nomipmaps
 	{
-		map ui/assets/ualogo.tga
+		map ui/assets/diffuseadd.tga
 		blendfunc add
-		alphaGen const 0.322
+		rgbgen wave square .25 .05 0 5
 	}
 }
