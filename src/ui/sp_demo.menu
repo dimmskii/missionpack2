@@ -8,7 +8,7 @@
     	visible 0
     	fullscreen MENU_TRUE
     	rect 0 0 640 480
-	background "menuback_b"
+	background "menubacknologo"
 	outOfBoundsClick	
 	focusColor 1 .75 0 1
 	onEsc { play "sound/misc/menu3.wav" ; close singleplayer ; open main }
@@ -23,6 +23,15 @@
 	hide back_alt ;
 	show back ;
 	hide grpmessage }
+
+itemDef {
+      	name menuback_b
+      	style WINDOW_STYLE_SHADER
+      	rect 0 0 640 480
+     	background "menuback_b"
+      	visible 1
+	decoration
+    }
 
 	
 itemDef {

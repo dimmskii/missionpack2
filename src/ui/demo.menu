@@ -8,7 +8,7 @@
     	visible 0
     	fullscreen 1
     	rect 0 0 640 480
-    	background "menuback_b"
+    	background "menubacknologo"
     	focusColor 1 .67 0 1
 	onOpen { setitemcolor fadebox backcolor 0 0 0 1 ; 
 	fadeout fadebox ; uiScript LoadDemos ;
@@ -23,6 +23,15 @@
 	    
  
 
+
+itemDef {
+      	name menuback_b
+      	style WINDOW_STYLE_SHADER
+      	rect 0 0 640 480
+     	background "menuback_b"
+      	visible 1
+	decoration
+    }
 
 
 

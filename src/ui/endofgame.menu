@@ -9,7 +9,7 @@ menuDef {
    	fullscreen 1
    	rect 0 0 640 480
 	backcolor 0 0 0 1
-	background "menuback_a"
+	background "menubacknologo"
 	fadeClamp 1.0					// sets the fadeup alpha
 	fadeCycle 1					// how often fade happens in milliseconds
 	fadeAmount 0.05	
@@ -24,6 +24,15 @@ menuDef {
 		transition playerlogo 250 160 160 160 110 30 80 80 20 10 ; 
 		transition opposinglogo 250 160 160 160 450 30 80 80 20 10 ;  
 		fadeout fadebox }  
+
+itemDef {
+      	name menuback_b
+      	style WINDOW_STYLE_SHADER
+      	rect 0 0 640 480
+     	background "menuback_b"
+      	visible 1
+	decoration
+    }
 	
 
 
@@ -70,27 +79,6 @@ itemDef {
 	bordersize 1
 	decoration
 	visible 1
-	}
-
-
-
-itemDef {
-	name windowscreen
-	rect 0 0 640 240
-	style 3
-	background levelshotdetail
-	forecolor 0 0 0 0
-	visible 1
-	decoration
-	}
-itemDef {
-	name windowscreen
-	rect 0 240 640 240
-	style 3
-	background levelshotdetail
-	forecolor 0 0 0 0
-	visible 1
-	decoration
 	}
 
 
