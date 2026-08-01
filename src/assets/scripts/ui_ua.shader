@@ -100,7 +100,7 @@ lightningkc
 	}	
 	}
 
-menuback_b
+menuback_b_main
 {
 	
 	nopicmip
@@ -110,6 +110,40 @@ menuback_b
 		blendfunc add
 		rgbgen wave sin .3 0 0 0
 		tcmod scroll 0 .2
+	}
+	{
+			map textures/effects2/console01.tga
+                	blendFunc Add
+                	tcMod scroll -.01  -.02 
+                	tcmod scale .02 .01
+                	tcmod rotate 3
+	}
+	
+}
+
+menuback_b
+{
+	
+	nopicmip
+	nomipmaps
+	{
+		map ui/assets/menuback_b.tga
+		blendfunc add
+		rgbgen wave sin .10 0 0 0
+		tcmod scale 1.5 1.5
+		tcmod scroll 0 .2.13
+	}
+	{
+		map ui/assets/menuback_b.tga
+		blendfunc add
+		rgbgen wave sin .15 0 0 0
+		tcmod scroll 0 .2
+	}
+	{
+		map ui/assets/menuback_b.tga
+		blendfunc add
+		rgbgen wave sin .15 0 0 0
+		tcmod scroll 0 .1.7
 	}
 	{
 			map textures/effects2/console01.tga

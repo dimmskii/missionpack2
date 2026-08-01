@@ -63,7 +63,7 @@ itemDef {
     }
 
 itemDef {
-      	name menuback_b
+      	name menuback_b_main
       	style WINDOW_STYLE_SHADER
       	rect 0 0 640 480
      	background "menuback_b"
