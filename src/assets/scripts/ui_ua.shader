@@ -107,7 +107,7 @@ menuback_b
 	nomipmaps
 	{
 		map ui/assets/menuback_b.tga
-		//blendfunc add
+		blendfunc add
 		rgbgen wave sin .75 0 0 0
 		tcmod scroll 0 .2
 	}
@@ -205,5 +205,42 @@ warning
 		map ui/assets/warning.tga
 		blendfunc blend
 		tcmod scale 8 8 
+	}
+}
+
+
+// UA loading screen text logo additive
+textlogo_addpulse
+{
+	nopicmip
+	nomipmaps
+	{
+		map ui/assets/backscreen.tga
+		blendfunc add
+		tcMod turb 0 0.005 0 0.05
+	}
+	{
+		map ui/assets/backscreen.tga
+		blendfunc add
+		rgbGen wave sin 0.5 0.5 1.1 0.7
+		tcMod turb 0 0.005 0 0.05
+	}
+	{
+		map ui/assets/backscreen.tga
+		blendfunc add
+		rgbGen wave sin 0.5 0.5 1.1 0.7
+		tcMod turb 0 0.005 0 0.05
+	}
+}
+
+// Translucent UA-colorized Q3 logo with no bg
+iconlogo_ghost
+{
+	nopicmip
+	nomipmaps
+	{
+		map ui/assets/ualogo.tga
+		blendfunc add
+		alphaGen const 0.322
 	}
 }
