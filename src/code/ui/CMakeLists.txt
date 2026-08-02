@@ -38,7 +38,7 @@ foreach(src ${UI_SOURCES})
             -S -Wf-target=bytecode -Wf-g ${Q3_INCLUDE_FLAGS}
             "${src_path}"
     WORKING_DIRECTORY "${UI_VM_DIR}"
-    DEPENDS "${src_path}"
+    DEPENDS "${src_path}" ${Q3_VM_HEADERS}
     COMMENT "q3lcc ui/${name}.c"
     VERBATIM
   )
@@ -78,7 +78,7 @@ foreach(src ${UI_SOURCES})
             -S -Wf-target=bytecode -Wf-g ${Q3_INCLUDE_FLAGS}
             "${src_path}"
     WORKING_DIRECTORY "${UI_VM_DEBUG_DIR}"
-    DEPENDS "${src_path}"
+    DEPENDS "${src_path}" ${Q3_VM_HEADERS}
     COMMENT "q3lcc -DDEBUG ui/${name}.c"
     VERBATIM
   )
