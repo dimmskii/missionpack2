@@ -450,6 +450,12 @@ typedef struct {
 	int				barrelTime;
 
 	int				realWeapon;
+
+	// ~Dimmskii -- pm/fb part colors, white unless the preview fills them in
+	vec3_t			headColor;
+	vec3_t			torsoColor;
+	vec3_t			legsColor;
+	// END Dimmskii
 } playerInfo_t;
 
 void UI_DrawPlayer( float x, float y, float w, float h, playerInfo_t *pi, int time );

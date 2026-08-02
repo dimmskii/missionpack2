@@ -1,0 +1,670 @@
+#include "ui/menudef.h"
+
+// team menu
+// 
+
+assetGlobalDef {
+	cursor "ui/assets/3_cursor2"			// cursor	
+	gradientBar "ui/assets/gradientbar2.tga"	// gradient bar
+	fadeClamp 1.0					// sets the fadeup alpha
+	fadeCycle 1					// how often fade happens in milliseconds
+	fadeAmount 0.1					// amount to adjust alpha per cycle
+
+	shadowX  5					// x amount for shadow offset
+	shadowY  5					// y amount for shadow offset
+	shadowColor 0.1 0.1 0.1 0.25			// shadow color
+
+	font "fonts/impact.ttf" 16			// font
+	smallFont "fonts/impact.ttf" 12			// font
+	bigFont "fonts/impact.ttf" 20			// font
+}
+
+
+
+//	POWERUP AREA	//
+
+menuDef {
+	name "powerup area"
+	fullScreen MENU_FALSE
+	visible MENU_TRUE
+	rect 570 220 50 100
+
+	itemDef {
+	name "powerupArea"
+	rect 0 0 40 40
+    	visible 1
+	decoration
+	ownerdraw CG_AREA_POWERUP
+	special 4		
+	align HUD_VERTICAL
+	}
+
+}
+
+
+
+//	MINI_SELECTPLAYER	//
+
+
+menuDef {
+    	name "miniSelectPlayer"
+    	fullScreen MENU_FALSE
+    	visible MENU_TRUE
+	rect 3 447 155 30
+
+	itemDef {
+    	name "miniSelectPlayerRect"
+    	fullScreen MENU_FALSE
+    	visible 1
+    	rect 0 0 155 30
+	style 4
+	border 1
+	bordersize 1
+	bordercolor 0 0 0 0
+	backcolor 0 0 0 0
+	mouseEnter { show miniSelectPlayerRectAlt }
+   	mouseExit { hide miniSelectPlayerRectAlt }
+	}
+
+	itemDef {
+    	name "miniSelectPlayerRectAlt"
+    	fullScreen MENU_FALSE
+    	visible 0
+    	rect 0 0 155 30
+	style 1
+	border 1
+	bordersize 1
+	bordercolor 1 1 1 1
+	backcolor 0 0 0 0
+	}	
+
+	itemDef {
+      	name "b"
+        rect 3 4 25 25
+	visible 1
+	ownerdraw CG_SELECTEDPLAYER_HEAD 
+	action { open altteamMenu }
+	}
+
+	itemDef {
+      	name "b"
+        rect 33 7 20 20
+	visible 1
+	decoration
+	ownerdraw CG_SELECTEDPLAYER_STATUS
+	}
+
+	itemDef {
+      	name "b"
+        rect 65 4 20 10
+	visible 1
+	style 3
+	decoration
+	background "ui/assets/statusbar/selectedhealth.tga"
+	addColorRange -999 25 1 0 0 1
+	addColorRange 26 100 1 .75 0 1
+	addColorRange 101 999 1 1 1 1
+	ownerdraw CG_SELECTEDPLAYER_HEALTH
+	}
+
+	itemDef {
+      	name "b"
+        rect 65 17 20 10
+	visible 1
+	style 3
+	decoration
+	background "ui/assets/statusbar/selectedarmor.tga"
+	addColorRange -999 25 1 0 0 1
+	addColorRange 26 100 1 .75 0 1
+	addColorRange 101 999 1 1 1 1
+	ownerdraw CG_SELECTEDPLAYER_ARMOR
+	}
+
+	
+	itemDef {
+      	name "b"
+        rect 90 7 20 20
+	visible 1
+	decoration
+	ownerdraw CG_SELECTEDPLAYER_WEAPON
+	}
+
+	itemDef {
+      	name "b"
+        rect 125 7 20 20
+	visible 1
+	decoration
+	ownerdraw CG_SELECTEDPLAYER_POWERUP
+	}
+}
+
+
+
+
+//	MINI_STATUS	//
+
+menuDef {
+    	name "miniPlayerStatus"
+    	fullScreen MENU_FALSE
+    	visible MENU_TRUE
+	rect 162 447 155 30
+
+
+	itemDef {
+    	name "miniPlayerStatusRect"
+    	fullScreen MENU_FALSE
+    	visible 1
+    	rect 0 0 155 30
+	style 4
+	border 1
+	bordersize 1
+	bordercolor 0 0 0 0
+	backcolor 0 0 0 0
+	mouseEnter { show miniPlayerStatusRectAlt }
+   	mouseExit { hide miniPlayerStatusRectAlt }
+	}
+
+	itemDef {
+    	name "miniPlayerStatusRectAlt"
+    	fullScreen MENU_FALSE
+    	visible 0
+    	rect 0 0 155 30
+	style 1
+	border 1
+	bordersize 1
+	bordercolor 1 1 1 1
+	backcolor 0 0 0 0
+	}	
+	
+	itemDef {
+ 	name "miniAmmoValue"
+	rect 10 7 25 15
+	visible 1
+	decoration
+	textscale .33
+	forecolor 1 1 1 1
+	ownerdraw CG_PLAYER_AMMO_VALUE
+	addColorRange -999 5 1 0 0 1
+	addColorRange 6 999 1 .75 0 1
+	}
+
+
+itemDef {
+      	name "miniHealthValue"
+        rect 60 7 25 15
+	visible 1
+	decoration
+	forecolor 1 1 1 1
+	textscale .33
+	ownerdraw CG_PLAYER_HEALTH
+	addColorRange -999 25 1 0 0 1
+	addColorRange 26 100 1 .75 0 1
+	addColorRange 101 999 1 1 1 1
+	}
+
+itemDef {
+      	name "MiniArmorValue"
+        rect 110 7 25 15
+	visible 1
+	decoration
+	textscale .33
+	ownerdraw CG_PLAYER_ARMOR_VALUE
+	addColorRange -999 25 1 0 0 1
+	addColorRange 26 100 1 .75 0 1
+	addColorRange 101 999 1 1 1 1
+	}
+}
+
+
+
+
+//	MINI_ITEMS	//
+
+menuDef {
+    	name "miniItems"
+    	fullScreen MENU_FALSE
+    	visible MENU_TRUE
+	style 4
+    	rect 321 447 155 30
+
+	itemDef {
+    	name "miniItemRect"
+    	fullScreen MENU_FALSE
+    	visible 1
+    	rect 0 0 155 30
+	style 4
+	border 1
+	bordersize 1
+	bordercolor 0 0 0 0
+	backcolor 0 0 0 0
+	mouseEnter { show miniItemRectAlt }
+   	mouseExit { hide miniItemRectAlt }
+	}
+
+	itemDef {
+    	name "miniITemRectAlt"
+    	fullScreen MENU_FALSE
+    	visible 0
+    	rect 0 0 155 30
+	style 1
+	border 1
+	bordersize 1
+	bordercolor 1 1 1 1
+	backcolor 0 0 0 0
+	}	
+
+	itemDef {
+      	name "b"
+        rect 5 6 20 20
+	visible 1
+	decoration
+	ownerdraw CG_PLAYER_STATUS
+	}
+
+	itemDef {
+      	name "b"
+        rect 45 6 20 20
+	visible 1
+	decoration
+	ownerdraw CG_PLAYER_ITEM
+	}
+
+
+	itemDef {
+      	name "b"
+        rect 80 6 20 20
+	visible 1
+	decoration
+	ownerdraw CG_CTF_POWERUP
+	}
+
+	itemDef {
+      	name "flag"
+        rect 120 4 25 25
+	visible 1
+	decoration
+	ownerdraw CG_PLAYER_HASFLAG 
+	}
+
+
+
+}
+
+//	MINI_CTF_STATUS	//
+
+menuDef {
+    	name "miniCTFStatus"
+    	fullScreen MENU_FALSE
+    	visible MENU_TRUE
+	style 4
+	rect 480 447 155 30
+
+	itemDef {
+    	name "miniCTFStatusRect"
+    	fullScreen MENU_FALSE
+    	visible 1
+    	rect 0 0 155 30
+	style 4
+	border 1
+	bordersize 1
+	bordercolor 0 0 0 0
+	backcolor 0 0 0 0
+	mouseEnter { show miniCTFStatusRectAlt }
+   	mouseExit { hide miniCTFStatusRectAlt }
+	}
+
+	itemDef {
+    	name "miniCTFStatusRectAlt"
+    	fullScreen MENU_FALSE
+    	visible 0
+    	rect 0 0 155 30
+	style 1
+	border 1
+	bordersize 1
+	bordercolor 1 1 1 1
+	backcolor 0 0 0 0
+	}	
+
+
+itemDef {
+	name "f"
+	rect 8 6 20 20
+	visible 1
+	bordercolor 1 1 1 .75
+	decoration	
+	style 3
+	background "ui/assets/bluechip.tga"
+	}
+
+itemDef {
+     	name "miniFlagBlue"
+        rect 8 6 20 20    
+	visible 1
+	decoration	
+	ownerdraw CG_BLUE_FLAGSTATUS
+	}
+
+itemDef {
+      	name "miniBlueScore"
+        rect 25 7 30 15
+	visible 1
+	decoration
+	forecolor 1 1 1 1
+	textscale 0.33
+	ownerdraw CG_BLUE_SCORE
+	}
+
+itemDef {
+	name "f"
+	rect 85 6 20 20
+	visible 1
+	bordercolor 1 1 1 .75
+	decoration	
+	style 3
+	background "ui/assets/redchip.tga"
+	}
+
+itemDef {
+      	name "miniFlagRed"
+        rect 85 6 20 20
+	visible 1
+	decoration
+	ownerdraw CG_RED_FLAGSTATUS
+	}
+
+itemDef {
+      	name "miniRedScore"
+        rect 100 7 30 15
+	visible 1
+	decoration
+	forecolor 1 1 1 1
+	textscale 0.33
+	ownerdraw CG_RED_SCORE
+	}
+
+}
+
+{
+  menuDef {
+    	name "altTeamMenu"
+    	fullScreen MENU_FALSE
+    	visible MENU_FALSE
+	rect 5 300 80 132
+	style WINDOW_STYLE_FILLED
+	backcolor 0 0 0.8 .25
+	border WINDOW_BORDER_FULL 
+	bordersize 1
+	bordercolor .5 .5 1 1
+
+	itemDef {
+      	name "Possess"
+	text "Possess"
+	textaligny 10
+	textalign ITEM_ALIGN_LEFT
+      	rect 5 5 75 10 
+      	visible 1
+	textscale 0.22
+      	mouseEnter { hide highlight ; show pbar }
+    	}
+	
+	itemDef {
+      	name "pbar"
+	group "highlight"
+	style WINDOW_STYLE_FILLED
+	rect 0 5 79 13 
+      	visible 0
+	backcolor 0.8 0.8 0.8 0.3
+	decoration
+    	}
+	
+	itemDef {
+      	name "Follow"
+	text "Follow"
+	textaligny 10
+	textalign ITEM_ALIGN_Left
+	rect 5 17 75 10 
+  	visible 1
+	textscale 0.22
+	mouseEnter { hide highlight ; show fbar }
+    	}
+
+	itemDef {
+      	name "fbar"
+	group "highlight"
+	style WINDOW_STYLE_FILLED
+	rect 0 17 79 13 
+	visible 0
+	backcolor 0.8 0.8 0.8 0.3
+	decoration
+    	}
+
+	itemDef {
+      	name "Go To"
+	text "Go To"
+	textaligny 10
+	textalign ITEM_ALIGN_Left
+	rect 5 29 75 10 
+	visible 1
+	textscale 0.22
+	mouseEnter { hide highlight ; show gbar }
+    	}
+
+	itemDef {
+      	name "gbar"
+	group "highlight"
+	style WINDOW_STYLE_FILLED
+      	rect 0 29 79 13 
+      	visible 0
+	backcolor 0.8 0.8 0.8 0.3
+	decoration
+    	}
+
+	itemDef {
+      	name "Get"
+	text "Get"
+	textaligny 10
+	textalign ITEM_ALIGN_Left
+      	rect 5 41 75 10 
+      	visible 1
+	textscale 0.22
+ 	mouseEnter { hide highlight ; show g2bar }
+	action { open altGetMenu }
+    	}
+
+	itemDef {
+	name 	"g2bar"
+	group "highlight"
+	style WINDOW_STYLE_FILLED
+	rect 0 41 79 13 
+ 	visible 0
+	backcolor 0.8 0.8 0.8 0.3
+	decoration
+    	}
+
+	itemDef {
+ 	name "Patrol From"	
+	text "Patrol From"
+	textaligny 10
+	textalign ITEM_ALIGN_Left
+      	rect 5 53 75 10 
+      	visible 1
+	textscale 0.22
+ 	mouseEnter { hide highlight ; show p2bar }
+    	}
+
+	itemDef {
+      	name "p2bar"
+	group "highlight"
+	style WINDOW_STYLE_FILLED
+     	rect 0 53 79 13 
+      	visible 0
+	backcolor 0.8 0.8 0.8 0.3
+	decoration
+   	}
+
+	itemDef {
+      	name "Patrol To"
+	text "Patrol To"
+	textaligny 10
+	textalign ITEM_ALIGN_Left
+      	rect 5 65 75 10 
+      	visible 1
+	textscale 0.22
+    	mouseEnter { hide highlight ; show p3bar }
+    	}
+
+	itemDef {
+      	name "p3bar"
+	group "highlight"
+	style WINDOW_STYLE_FILLED
+      	rect 0 65 79 13 
+      	visible 0
+	backcolor 0.8 0.8 0.8 0.3
+	decoration
+    	}
+
+	itemDef {
+      	name "Camp Near"
+	text "Camp Near"
+	textaligny 10
+	textalign ITEM_ALIGN_Left
+      	rect 5 77 75 10 
+      	visible 1
+	textscale 0.22
+ 	mouseEnter { hide highlight ; show cbar }
+    	}
+
+	itemDef {
+      	name "cbar"
+	group "highlight"
+	style WINDOW_STYLE_FILLED
+      	rect 0 75 79 13 
+      	visible 0
+	backcolor 0.8 0.8 0.8 0.3
+	decoration
+    	}
+
+	itemDef {
+	name "Defend"
+	text "Defend"
+	textaligny 10
+	textalign ITEM_ALIGN_Left
+      	rect 5 89 75 10 
+      	visible 1
+	textscale 0.22
+      	mouseEnter { hide highlight ; show dbar }
+    	}
+
+	itemDef {
+      	name "dbar"
+	group "highlight"
+	style WINDOW_STYLE_FILLED
+      	rect 0 89 79 13 
+      	visible 0
+	backcolor 0.8 0.8 0.8 0.3
+	decoration
+    	}
+
+	itemDef {
+      	name "Attack"
+	text "Attack"
+	textaligny 10
+	textalign ITEM_ALIGN_Left
+      	rect 5 101 75 10 
+      	visible 1
+	textscale 0.22
+     	mouseEnter { hide highlight ; show abar }
+    	}
+
+	itemDef {
+      	name "abar"
+	group "highlight"
+	style WINDOW_STYLE_FILLED
+      	rect 0 101 79 13 
+      	visible 0
+	backcolor 0.8 0.8 0.8 0.3
+	decoration
+    	}
+
+	itemDef {
+      	name "Drop Command"
+	text "Drop Command"
+	textaligny 10
+	textalign ITEM_ALIGN_Left
+      	rect 5 113 75 10 
+      	visible 1
+	textscale 0.22
+      	mouseEnter { hide highlight ; show dcbar }
+    	}
+
+	itemDef {
+      	name "dcbar"
+	group "highlight"
+	style WINDOW_STYLE_FILLED
+      	rect 0 113 79 13 
+      	visible 0
+	backcolor 0.8 0.8 0.8 0.3
+	decoration
+    }
+  }
+
+
+menuDef {
+    	name "altGetMenu"
+    	fullScreen MENU_FALSE
+    	visible MENU_FALSE
+	rect 86 338 85 35
+	style WINDOW_STYLE_FILLED
+	backcolor 0 0 0.8 .25
+	border WINDOW_BORDER_FULL 
+	bordersize 1
+	bordercolor .5 .5 1 1
+
+	itemDef {
+      	name "Enemy Flag"
+	text "Enemy Flag"
+	textaligny 10
+	textalign ITEM_ALIGN_LEFT
+	rect 5 3 80 10 
+      	visible 1
+	textscale 0.22
+      	mouseEnter { hide highlight2 ; show efbar }
+	action { close altGetMenu ; close altTeamMenu ; orders get flag }
+
+    }
+	itemDef {
+      	name "efbar"
+	group "highlight2"
+	style WINDOW_STYLE_FILLED
+      	rect 0 3 84 13 
+      	visible 0
+	backcolor 0.8 0.8 0.8 0.3
+	decoration
+    }
+
+	itemDef {
+      	name "Rocket Launcher"
+	text "Rocket Launcher"
+	textaligny 10
+	textalign ITEM_ALIGN_LEFT
+      	rect 5 17 80 10 
+      	visible 1
+	textscale 0.22
+  	mouseEnter { hide highlight2 ; show rlbar }
+	action { close altGetMenu ; close altTeamMenu ; orders get rocketlauncher }
+
+    }
+	itemDef {
+      	name "rlbar"
+	group "highlight2"
+	style WINDOW_STYLE_FILLED
+      	rect 0 17 84 13 
+      	visible 0
+	backcolor 0.8 0.8 0.8 0.3
+	decoration
+    }
+
+  }
+
+}
+

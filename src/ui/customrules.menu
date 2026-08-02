@@ -8,7 +8,7 @@
 	visible 0
 	fullscreen MENU_TRUE
 	rect 0 0 640 480
-	background "menuback_b"
+	background "menubacknologo"
 	outOfBoundsClick	
 	focusColor 1 .75 0 1
 	disableColor .5 .5 .5 1
@@ -24,6 +24,15 @@
 		show back ;
 		hide grpmessage
 	}
+
+itemDef {
+      	name menuback_b
+      	style WINDOW_STYLE_SHADER
+      	rect 0 0 640 480
+     	background "menuback_b"
+      	visible 1
+	decoration
+    }
 
 
 // Spanning BG
@@ -128,7 +137,6 @@
 		rect 70 60 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -146,7 +154,6 @@
 		rect 70 75 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -164,7 +171,6 @@
 		rect 70 90 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -182,7 +188,6 @@
 		rect 70 105 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -200,7 +205,6 @@
 		rect 70 120 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -236,7 +240,6 @@
 		rect 70 165 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -256,7 +259,6 @@
 		rect 70 180 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -276,7 +278,6 @@
 		rect 70 195 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -296,7 +297,6 @@
 		rect 70 210 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -316,7 +316,6 @@
 		rect 70 240 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -334,7 +333,6 @@
 		rect 70 255 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -352,7 +350,6 @@
 		rect 70 270 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -453,7 +450,6 @@
 		rect 70 360 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -467,9 +463,9 @@
 	itemDef {
 		name general
 		group grpsettings
-		type ITEM_TYPE_YESNO
-		text "Rail Jump Damage"
-		cvar "ui_railJumpDamage:"
+		type ITEM_TYPE_NUMERICFIELD
+		text "Rail Jump Damage:"
+		cvar "ui_railJumpDamage"
 		rect 70 375 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
@@ -498,7 +494,6 @@
 		rect 231 60 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor .8 .8 .8 1
@@ -513,7 +508,6 @@
 		rect 231 60 128 12
 		textalign ITEM_ALIGN_LEFT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor .8 .8 .8 1
@@ -526,10 +520,9 @@
 		type ITEM_TYPE_YESNO
 		text "Gauntlet:"
 		cvar "ui_wpflags_g"
-		rect 231 75 128 12
+		rect 231 75 90 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -544,10 +537,9 @@
 		type ITEM_TYPE_YESNO
 		text "Machinegun:"
 		cvar "ui_wpflags_mg"
-		rect 231 90 128 12
+		rect 231 90 90 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -562,10 +554,9 @@
 		type ITEM_TYPE_YESNO
 		text "Shotgun:"
 		cvar "ui_wpflags_sg"
-		rect 231 105 128 12
+		rect 231 105 90 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -580,10 +571,9 @@
 		type ITEM_TYPE_YESNO
 		text "Grenade:"
 		cvar "ui_wpflags_gl"
-		rect 231 120 128 12
+		rect 231 120 90 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -598,10 +588,9 @@
 		type ITEM_TYPE_YESNO
 		text "Rocket:"
 		cvar "ui_wpflags_rl"
-		rect 231 135 128 12
+		rect 231 135 90 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -616,10 +605,9 @@
 		type ITEM_TYPE_YESNO
 		text "Lightning:"
 		cvar "ui_wpflags_lg"
-		rect 231 150 128 12
+		rect 231 150 90 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -634,10 +622,9 @@
 		type ITEM_TYPE_YESNO
 		text "Railgun:"
 		cvar "ui_wpflags_rg"
-		rect 231 165 128 12
+		rect 231 165 90 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -652,10 +639,9 @@
 		type ITEM_TYPE_YESNO
 		text "Plasma:"
 		cvar "ui_wpflags_pg"
-		rect 231 180 128 12
+		rect 231 180 90 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -670,10 +656,9 @@
 		type ITEM_TYPE_YESNO
 		text "BFG:"
 		cvar "ui_wpflags_bfg"
-		rect 231 195 128 12
+		rect 231 195 90 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -688,10 +673,9 @@
 		type ITEM_TYPE_YESNO
 		text "Grapple:"
 		cvar "ui_wpflags_grapple"
-		rect 231 210 128 12
+		rect 231 210 90 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -706,10 +690,9 @@
 		type ITEM_TYPE_YESNO
 		text "Nail Gun:"
 		cvar "ui_wpflags_ng"
-		rect 231 225 128 12
+		rect 231 225 90 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -724,10 +707,9 @@
 		type ITEM_TYPE_YESNO
 		text "Prox:"
 		cvar "ui_wpflags_pl"
-		rect 231 240 128 12
+		rect 231 240 90 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -742,10 +724,9 @@
 		type ITEM_TYPE_YESNO
 		text "Chaingun:"
 		cvar "ui_wpflags_cg"
-		rect 231 255 128 12
+		rect 231 255 90 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -760,10 +741,9 @@
 		type ITEM_TYPE_YESNO
 		text "HMG:"
 		cvar "ui_wpflags_hmg"
-		rect 231 270 128 12
+		rect 231 270 90 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor 1 1 1 1
@@ -780,10 +760,9 @@
 		group grpsettings
 		type ITEM_TYPE_TEXT
 		text "---"
-		rect 320 75 128 12
+		rect 320 75 80 12
 		textalign ITEM_ALIGN_LEFT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor .8 .8 .8 1
@@ -798,7 +777,7 @@
 		type ITEM_TYPE_NUMERICFIELD
 		text ""
 		cvar "ui_startingAmmo_mg"
-		rect 320 90 128 12
+		rect 320 90 80 12
 		textalign ITEM_ALIGN_LEFT
 		textalignx 65
 		maxchars 4
@@ -816,7 +795,7 @@
 		type ITEM_TYPE_NUMERICFIELD
 		text ""
 		cvar "ui_startingAmmo_sg"
-		rect 320 105 128 12
+		rect 320 105 80 12
 		textalign ITEM_ALIGN_LEFT
 		textalignx 65
 		maxchars 4
@@ -834,7 +813,7 @@
 		type ITEM_TYPE_NUMERICFIELD
 		text ""
 		cvar "ui_startingAmmo_gl"
-		rect 320 120 128 12
+		rect 320 120 80 12
 		textalign ITEM_ALIGN_LEFT
 		textalignx 65
 		maxchars 4
@@ -852,7 +831,7 @@
 		type ITEM_TYPE_NUMERICFIELD
 		text ""
 		cvar "ui_startingAmmo_rl"
-		rect 320 135 128 12
+		rect 320 135 80 12
 		textalign ITEM_ALIGN_LEFT
 		textalignx 65
 		maxchars 4
@@ -870,7 +849,7 @@
 		type ITEM_TYPE_NUMERICFIELD
 		text ""
 		cvar "ui_startingAmmo_lg"
-		rect 320 150 128 12
+		rect 320 150 80 12
 		textalign ITEM_ALIGN_LEFT
 		textalignx 65
 		maxchars 4
@@ -888,7 +867,7 @@
 		type ITEM_TYPE_NUMERICFIELD
 		text ""
 		cvar "ui_startingAmmo_rg"
-		rect 320 165 128 12
+		rect 320 165 80 12
 		textalign ITEM_ALIGN_LEFT
 		textalignx 65
 		maxchars 4
@@ -906,7 +885,7 @@
 		type ITEM_TYPE_NUMERICFIELD
 		text ""
 		cvar "ui_startingAmmo_pg"
-		rect 320 180 128 12
+		rect 320 180 80 12
 		textalign ITEM_ALIGN_LEFT
 		textalignx 65
 		maxchars 4
@@ -924,7 +903,7 @@
 		type ITEM_TYPE_NUMERICFIELD
 		text ""
 		cvar "ui_startingAmmo_bfg"
-		rect 320 195 128 12
+		rect 320 195 80 12
 		textalign ITEM_ALIGN_LEFT
 		textalignx 65
 		maxchars 4
@@ -941,10 +920,9 @@
 		group grpsettings
 		type ITEM_TYPE_TEXT
 		text "---"
-		rect 320 210 128 12
+		rect 320 210 80 12
 		textalign ITEM_ALIGN_LEFT
 		textalignx 65
-		maxchars 4
 		textaligny 12
 		textscale .25        
 		forecolor .8 .8 .8 1
@@ -959,7 +937,7 @@
 		type ITEM_TYPE_NUMERICFIELD
 		text ""
 		cvar "ui_startingAmmo_ng"
-		rect 320 225 128 12
+		rect 320 225 80 12
 		textalign ITEM_ALIGN_LEFT
 		textalignx 65
 		maxchars 4
@@ -977,7 +955,7 @@
 		type ITEM_TYPE_NUMERICFIELD
 		text ""
 		cvar "ui_startingAmmo_pl"
-		rect 320 240 128 12
+		rect 320 240 80 12
 		textalign ITEM_ALIGN_LEFT
 		textalignx 65
 		maxchars 4
@@ -995,7 +973,7 @@
 		type ITEM_TYPE_NUMERICFIELD
 		text ""
 		cvar "ui_startingAmmo_cg"
-		rect 320 255 128 12
+		rect 320 255 80 12
 		textalign ITEM_ALIGN_LEFT
 		textalignx 65
 		maxchars 4
@@ -1013,7 +991,7 @@
 		type ITEM_TYPE_NUMERICFIELD
 		text ""
 		cvar "ui_startingAmmo_hmg"
-		rect 320 270 128 12
+		rect 320 270 80 12
 		textalign ITEM_ALIGN_LEFT
 		textalignx 65
 		maxchars 4

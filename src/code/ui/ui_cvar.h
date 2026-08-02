@@ -159,6 +159,11 @@ UI_CVAR( ui_serverFilterType, "ui_serverFilterType", "-1", 0 )
 UI_CVAR( ui_hostGameFactory, "ui_hostGameFactory", "0", 0 )
 UI_CVAR( ui_realSmoothClients, "g_smoothClients", "1", CVAR_ARCHIVE )
 
+// Archive shadow cvars to fix blank values in settings pages, etc on first run
+UI_CVAR( ui_cg_powerupPOIs, "cg_powerupPOIs", "0", CVAR_ARCHIVE )
+UI_CVAR( ui_cg_flagPOIs, "cg_flagPOIs", "0", CVAR_ARCHIVE )
+UI_CVAR( ui_cg_killBeep, "cg_killBeep", "0", CVAR_ARCHIVE )
+
 // Below this line are UI cvars to be transformed into real factory cvars on menuscript 'StartServer' run
 // These cvars are archived so that selecting "Custom" factory will recall the user's custom rules
 UI_CVAR( ui_fraglimit, "ui_fraglimit", "50", CVAR_ARCHIVE )

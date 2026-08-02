@@ -236,6 +236,8 @@ typedef struct {
 	// ~Dimmskii
 	int widescreen;										// WIDESCREEN_* from menudef.h, resolved via UI_ResolveMenuWidescreenMode
 	qboolean widescreenSet;					// qtrue if the "widescreen" menu keyword was parsed
+	Rectangle backgroundRect;				// source image bounds for the "backgroundSize" aspect-crop path
+	qboolean backgroundSizeSet;			// qtrue if the "backgroundSize" menu keyword was parsed
 	// END Dimmskii
   int itemCount;										// number of items;
   int fontIndex;										// 

@@ -4470,6 +4470,34 @@ static int UI_ResolveMenuWidescreenMode( const menuDef_t *menu ) {
 }
 // END Dimmskii
 
+// ~Dimmskii -- ported from QL-SRP's UI_DrawFullscreenBackground. With a
+// "backgroundSize" declared we crop the source by its own aspect so a widescreen
+// display fills without distorting; without it we keep the legacy full stretch.
+static void UI_DrawFullscreenBackground( const menuDef_t *menu ) {
+	float sourceWidth, sourceHeight, screenWidth, screenHeight, s0;
+
+	if ( !menu || !DC ) {
+		return;
+	}
+
+	sourceWidth = menu->backgroundRect.w;
+	sourceHeight = menu->backgroundRect.h;
+	screenWidth = (float)DC->glconfig.vidWidth;
+	screenHeight = (float)DC->glconfig.vidHeight;
+
+	if ( menu->backgroundSizeSet && sourceWidth > 0.0f && sourceHeight > 0.0f && screenHeight > 0.0f ) {
+		s0 = ( ( sourceWidth - screenWidth * ( sourceHeight / screenHeight ) ) / sourceWidth ) * 0.5f;
+		if ( s0 < 0.0f ) {
+			s0 = 0.0f;	// display is wider than the source; nothing left to crop
+		}
+		DC->drawStretchPic( 0.0f, 0.0f, screenWidth, screenHeight, s0, 0.0f, 1.0f - s0, 1.0f, menu->window.background );
+		return;
+	}
+
+	DC->drawStretchPic( 0.0f, 0.0f, screenWidth, screenHeight, 0, 0, 1, 1, menu->window.background );
+}
+// END Dimmskii
+
 void Menu_Paint(menuDef_t *menu, qboolean forcePaint) {
 	int i;
 
@@ -4499,7 +4527,8 @@ void Menu_Paint(menuDef_t *menu, qboolean forcePaint) {
 	if (menu->fullScreen) {
 		// implies a background shader
 		// FIXME: make sure we have a default shader if fullscreen is set with no background
-		DC->drawStretchPic( 0, 0, DC->glconfig.vidWidth, DC->glconfig.vidHeight, 0, 0, 1, 1, menu->window.background );
+//		DC->drawStretchPic( 0, 0, DC->glconfig.vidWidth, DC->glconfig.vidHeight, 0, 0, 1, 1, menu->window.background );
+		UI_DrawFullscreenBackground( menu ); // ~Dimmskii
 	} else if (menu->window.background) {
 		// this allows a background shader without being full screen
 		//UI_DrawHandlePic(menu->window.rect.x, menu->window.rect.y, menu->window.rect.w, menu->window.rect.h, menu->backgroundShader);
@@ -5615,6 +5644,19 @@ qboolean MenuParse_backcolor( itemDef_t *item, int handle ) {
 	return qtrue;
 }
 
+// ~Dimmskii -- ported from QL-SRP: source image bounds for the fullscreen
+// background, e.g. "backgroundSize 0 0 1280 1024". Enables the aspect-crop path.
+qboolean MenuParse_backgroundSize( itemDef_t *item, int handle ) {
+	menuDef_t *menu = (menuDef_t*)item;
+
+	if ( !PC_Rect_Parse( handle, &menu->backgroundRect ) ) {
+		return qfalse;
+	}
+	menu->backgroundSizeSet = qtrue;
+	return qtrue;
+}
+// END Dimmskii
+
 qboolean MenuParse_forecolor( itemDef_t *item, int handle ) {
 	int i;
 	float f;
@@ -5801,6 +5843,7 @@ keywordHash_t menuParseKeywords[] = {
 	{"border", MenuParse_border, NULL},
 	{"borderSize", MenuParse_borderSize, NULL},
 	{"backcolor", MenuParse_backcolor, NULL},
+	{"backgroundSize", MenuParse_backgroundSize, NULL},	// ~Dimmskii
 	{"forecolor", MenuParse_forecolor, NULL},
 	{"bordercolor", MenuParse_bordercolor, NULL},
 	{"focuscolor", MenuParse_focuscolor, NULL},

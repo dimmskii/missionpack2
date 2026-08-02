@@ -8,10 +8,8 @@
     	visible 0
     	fullscreen 1
 		rect 0 0 640 480
-    	background "menuback_b"
+    	background "menubacknologo"
     	focusColor 1 .67 0 1
-    	style 1
-    	border 1
 	soundloop ""
 	onEsc { close credit ; open menu }
 	onOpen { setitemcolor fadebox backcolor 0 0 0 1 ; 	
@@ -21,6 +19,15 @@
 	hide back_alt ;
 	show back ;
 	hide grpmessage }
+
+itemDef {
+      	name menuback_b
+      	style WINDOW_STYLE_SHADER
+      	rect 0 0 640 480
+     	background "menuback_b"
+      	visible 1
+	decoration
+    }
 
 
 	    

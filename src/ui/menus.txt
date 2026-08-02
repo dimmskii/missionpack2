@@ -21,7 +21,6 @@
 	loadMenu { "ui/demo.menu" }
 	loadMenu { "ui/cinematicmenu.menu" }
 	loadMenu { "ui/credit.menu" }
-	loadMenu { "ui/demo_quit.menu" }
 	loadMenu { "ui/connect.menu" }
 	loadMenu { "ui/password.menu" }
 	loadMenu { "ui/quit.menu" }
