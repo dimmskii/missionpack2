@@ -8,7 +8,7 @@
     	visible 0
     	fullscreen 1
     	rect 0 0 640 480
-    	background "menuback_a"
+    	background "menubacknologo"
     	focusColor 1 .67 0 1
     	style 1
     	border 1
@@ -16,6 +16,15 @@
 	onOpen { setitemcolor fadebox backcolor 0 0 0 1 ; 
 	fadeout fadebox ; 
 	show grpidcredit }
+
+itemDef {
+      	name menuback_b
+      	style WINDOW_STYLE_SHADER
+      	rect 0 0 640 480
+     	background "menuback_b"
+      	visible 1
+	decoration
+    }
 
 
 

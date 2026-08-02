@@ -27,42 +27,30 @@
 
 menuDef {
     	name "main"
-	background "menuback_a"
     	fullScreen MENU_TRUE
 	rect 0 0 640 480
     	visible MENU_TRUE
+		background "menubacknologo"
 	focusColor .25 .25 1 1
 	soundLoop "music/fla22k_04_loop.wav" 
 	onESC { open quit_popmenu }
-
-
-itemDef {
-      	name menuback_f
-      	style WINDOW_STYLE_SHADER
-      	rect 0 0 640 480
-     	background "menuback_f"
-      	visible 1
-	decoration
-    }
-
-itemDef {
-      	name menuback_b
-     	style WINDOW_STYLE_SHADER
-     	rect 0 0 640 480
-     	visible 1
-     	background "menuback_b"
-     	bordercolor 0.5 0.5 0.5 .7
-    	decoration 
-	}
 
 itemDef {
 	name cinematic
       	style 5
 	cinematic "menubg.roq"
 	rect 0 0 640 480
-	backcolor 1 1 1 .25
 	decoration
 	visible 1
+	}
+
+itemDef {
+      	name textlogo_addpulse
+     	style WINDOW_STYLE_SHADER
+     	rect 0 0 640 480
+     	visible 1
+     	background "textlogo_addpulse"
+    	decoration 
 	}
 
 itemDef {
@@ -74,7 +62,23 @@ itemDef {
 	decoration
     }
 
-
+itemDef {
+      	name menuback_b_main
+      	style WINDOW_STYLE_SHADER
+      	rect 0 0 640 480
+     	background "menuback_b_main"
+      	visible 1
+	decoration
+    }
+	
+itemDef {
+		name logo_diffuseadd
+		style WINDOW_STYLE_SHADER
+		rect 0 0 640 481
+		visible 1
+		background "logo_diffuseadd"
+		decoration 
+	}
 
 
 

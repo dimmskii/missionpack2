@@ -8,7 +8,7 @@
     	visible 0
     	fullscreen 1
     	rect 0 0 640 480
-    	background "menuback_b"
+    	background "menubacknologo"
     	focusColor 1 .67 0 1
 	onEsc { close cinematicMenu ; open main }
 	onOpen { setitemcolor fadebox backcolor 0 0 0 1 ; 
@@ -22,49 +22,16 @@
 	hide back_alt ;
 	show back ;
 	hide grpmessage }
-		 
-
-
-	
-itemDef {
-      	name menuback_e
-      	style WINDOW_STYLE_SHADER
-      	rect 0 163 640 155
-     	background "menuback_e"
-      	visible 1
-	decoration
-    	}
-
-									
 
 itemDef {
       	name menuback_b
-     	style WINDOW_STYLE_SHADER
-     	rect 0 163 640 155
-     	visible 1
+      	style WINDOW_STYLE_SHADER
+      	rect 0 0 640 480
      	background "menuback_b"
-     	bordercolor 0.5 0.5 0.5 .7
-    	decoration 
-	}
-
-itemDef {
-	name windowscreen
-	rect 0 0 640 240
-	style 3
-	background levelshotdetail
-	forecolor 0 0 0 0
-	visible 1
+      	visible 1
 	decoration
-	}
-itemDef {
-	name windowscreen
-	rect 0 240 640 240
-	style 3
-	background levelshotdetail
-	forecolor 0 0 0 0
-	visible 1
-	decoration
-	}
+    }
+		 
 
 
 
