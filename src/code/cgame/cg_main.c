@@ -178,11 +178,14 @@ void CG_RegisterCvars( void ) {
 
 	trap_Cvar_Register(NULL, "model", DEFAULT_MODEL, CVAR_USERINFO | CVAR_ARCHIVE );
 	trap_Cvar_Register(NULL, "headmodel", DEFAULT_MODEL, CVAR_USERINFO | CVAR_ARCHIVE );
-	// ~Dimmskii -- our own pm/fb part colors, broadcast to everyone else; empty = white
-	trap_Cvar_Register(NULL, "color3", "", CVAR_USERINFO | CVAR_ARCHIVE );
-	trap_Cvar_Register(NULL, "color4", "", CVAR_USERINFO | CVAR_ARCHIVE );
-	trap_Cvar_Register(NULL, "color5", "", CVAR_USERINFO | CVAR_ARCHIVE );
-	// END Dimmskii
+// ~Dimmskii -- our own pm/fb part colors, broadcast to everyone else; empty = white
+	trap_Cvar_Register(NULL, "modelColorHead", "", CVAR_USERINFO | CVAR_ARCHIVE );
+	trap_Cvar_Register(NULL, "modelColorUpper", "", CVAR_USERINFO | CVAR_ARCHIVE );
+	trap_Cvar_Register(NULL, "modelColorLower", "", CVAR_USERINFO | CVAR_ARCHIVE );
+	// Optional hex override cvars for color1, color2: effectColor1, effectColor2 ; empty = fallback to respective vq3 color1/color2 cvar
+	trap_Cvar_Register(NULL, "effectsColor1", "", CVAR_USERINFO | CVAR_ARCHIVE ); // TODO: Implement me.
+	trap_Cvar_Register(NULL, "effectsColor2", "", CVAR_USERINFO | CVAR_ARCHIVE ); // TODO: Implement me.
+// END Dimmskii
 	//trap_Cvar_Register(NULL, "team_model", DEFAULT_TEAM_MODEL, CVAR_USERINFO | CVAR_ARCHIVE );
 	//trap_Cvar_Register(NULL, "team_headmodel", DEFAULT_TEAM_HEAD, CVAR_USERINFO | CVAR_ARCHIVE );
 }

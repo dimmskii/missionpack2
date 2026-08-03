@@ -748,9 +748,9 @@ qboolean ClientUserinfoChanged( int clientNum ) {
 	Q_strncpyz( c1, Info_ValueForKey( userinfo, "color1" ), sizeof( c1 ) );
 	Q_strncpyz( c2, Info_ValueForKey( userinfo, "color2" ), sizeof( c2 ) );
 	// ~Dimmskii -- head/upper/lower part colors; alpha is dropped here, models force it opaque
-	BG_NormalizeHexColor( Info_ValueForKey( userinfo, "color3" ), c3, sizeof( c3 ) );
-	BG_NormalizeHexColor( Info_ValueForKey( userinfo, "color4" ), c4, sizeof( c4 ) );
-	BG_NormalizeHexColor( Info_ValueForKey( userinfo, "color5" ), c5, sizeof( c5 ) );
+	BG_NormalizeHexColor( Info_ValueForKey( userinfo, "modelColorHead" ), c3, sizeof( c3 ) );
+	BG_NormalizeHexColor( Info_ValueForKey( userinfo, "modelColorUpper" ), c4, sizeof( c4 ) );
+	BG_NormalizeHexColor( Info_ValueForKey( userinfo, "modelColorLower" ), c5, sizeof( c5 ) );
 	// END Dimmskii
 
 	// send over a subset of the userinfo keys so other clients can

@@ -175,6 +175,7 @@ itemDef {
 	mouseExit { hide message_handicap } 
     	}
 
+/*
 itemDef {
       	name effectfield
 	group "playersettinggroup"
@@ -196,13 +197,60 @@ itemDef {
 	mouseEnter { show message_effect } 
 	mouseExit { hide message_effect }   
     	}
+*/
+
+itemDef {
+		name effect1field
+	group "playersettinggroup"
+		type ITEM_TYPE_HEXCOLOR
+	text "Primary FX:"
+	cvar "effectsColor1"
+    rect 115 145 215 24 
+	textstyle 6
+      	textalign ITEM_ALIGN_RIGHT		
+      	textalignx 20     
+      	textaligny 21 
+	textscale .333        
+      	outlinecolor 1 .5 .5 .5
+      	backcolor 0 0 0 0
+      	forecolor 1 1 1 1
+      	border 0
+      	bordercolor 0 0 0 0
+		visible 1
+	action { play "sound/misc/menu1.wav" ; hexcoloropen }
+	mouseEnter { show message_effect } 
+	mouseExit { hide message_effect }   
+    	}
+
+itemDef {
+		name effect2field
+	group "playersettinggroup"
+		type ITEM_TYPE_HEXCOLOR
+	text "Secondary FX:"
+	cvar "effectsColor2"
+    rect 115 175 215 24 
+	textstyle 6
+      	textalign ITEM_ALIGN_RIGHT		
+      	textalignx 20     
+      	textaligny 21 
+	textscale .333        
+      	outlinecolor 1 .5 .5 .5
+      	backcolor 0 0 0 0
+      	forecolor 1 1 1 1
+      	border 0
+      	bordercolor 0 0 0 0
+		visible 1
+	action { play "sound/misc/menu1.wav" ; hexcoloropen }
+	mouseEnter { show message_effect } 
+	mouseExit { hide message_effect }   
+    	}
 
 itemDef {
 		name c3field
 	group "playersettinggroup"
 		type ITEM_TYPE_HEXCOLOR
 	text "Head Color:"
-	cvar "color3"
+	cvar "modelColorHead"
     rect 115 205 215 24 
 	textstyle 6
       	textalign ITEM_ALIGN_RIGHT		
@@ -227,7 +275,7 @@ itemDef {
 	group "playersettinggroup"
 		type ITEM_TYPE_HEXCOLOR
 	text "Upper Color:"
-	cvar "color4"
+	cvar "modelColorUpper"
     rect 115 235 215 24 
 	textstyle 6
       	textalign ITEM_ALIGN_RIGHT		
@@ -252,7 +300,7 @@ itemDef {
 	group "playersettinggroup"
 		type ITEM_TYPE_HEXCOLOR
 	text "Lower Color:"
-	cvar "color5"
+	cvar "modelColorLower"
     rect 115 265 215 24 
 	textstyle 6
       	textalign ITEM_ALIGN_RIGHT		
