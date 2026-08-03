@@ -156,9 +156,42 @@ void Arena_BeginRound( void ) {
 	CalculateRanks(); // Make sure scoreboard is sorted immediately? -- AKA Fix my scores please fresh out of spec mod
 }
 
+/*
+=============
+Arena_FreezeSurvivorWeapons
+
+Round decided: take weapons away from everyone still alive so nobody can shoot
+during the ARENA_ROUND_DELAY_TIME gap before the next round starts. Cleared
+again by G_WarmupEnd when the new round goes live.
+=============
+*/
+void Arena_FreezeSurvivorWeapons( void ) {
+	int			i;
+	gentity_t	*ent;
+
+	for ( i = 0 ; i < level.maxclients ; i++ ) {
+		ent = g_entities + i;
+		if ( !ent->inuse || !ent->client ) {
+			continue;
+		}
+		if ( ent->client->pers.connected != CON_CONNECTED ) {
+			continue;
+		}
+		if ( ent->client->sess.sessionTeam == TEAM_SPECTATOR ) {
+			continue;
+		}
+		if ( ent->health <= 0 ) {
+			continue;
+		}
+		ent->client->ps.pm_flags |= PMF_NOSHOOT;
+	}
+}
+
 vec3_t zeroVec3 = {0, 0, 0};
 void Arena_EndRound( team_t winningTeam ) {
-	
+
+	Arena_FreezeSurvivorWeapons();
+
 	if ( winningTeam == TEAM_RED || winningTeam == TEAM_BLUE ) { // CA
 		AddTeamScore(zeroVec3, winningTeam, 1);
 		trap_SetConfigstring( CS_SCORES1, va("%i", level.teamScores[TEAM_RED]) );
