@@ -13,7 +13,7 @@ Mod based off of Kr3m's [missionpackplus](https://github.com/Kr3m/missionpackplu
 * QL-Style Teammate POIs (`cg_drawFriend 2`)
 * Green armor
 * Flag POIs
-* HUD files from QL parse without error. This project strives for near-total CG and UI scripts compatibility with both MPP and QL.
+* HUD files from QL parse without error. This project strives for near-total CG (HUD) scripts compatibility with both MPP and QL.
 * Unlagged, Instagib, PM/FB skins and much more from missionpackplus
 
 ## Screenshots
