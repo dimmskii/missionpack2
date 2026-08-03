@@ -196,6 +196,31 @@ void Arena_ResetMatchScores( void ) {
 
 /*
 =============
+Arena_ThawWeapons
+
+Lifts the weapon freeze while no round is running. Counterpart to
+Arena_FreezeSurvivorWeapons - see the call in Arena_CheckRules for why it runs
+per frame instead of once.
+=============
+*/
+void Arena_ThawWeapons( void ) {
+	int			i;
+	gclient_t	*client;
+
+	for ( i = 0 ; i < level.maxclients ; i++ ) {
+		client = level.clients + i;
+		if ( client->pers.connected != CON_CONNECTED ) {
+			continue;
+		}
+		if ( client->sess.sessionTeam == TEAM_SPECTATOR ) {
+			continue;
+		}
+		client->ps.pm_flags &= ~PMF_NOSHOOT;
+	}
+}
+
+/*
+=============
 Arena_FreezeSurvivorWeapons
 
 Round decided: take weapons away from everyone still alive so nobody can shoot
@@ -369,6 +394,14 @@ void Arena_ForceRespawnDead( void ) {
 }
 
 void Arena_CheckRules( void ) {
+	// "Waiting for players": no round is running, so nothing should be holding a
+	// weapon freeze. ClientSpawn re-sets PMF_NOSHOOT on every spawn and
+	// G_WarmupEnd - the only place it is cleared - is unreachable while waiting,
+	// so this has to run per frame rather than once on the transition.
+	if ( level.warmupTime < 0 ) {
+		Arena_ThawWeapons();
+	}
+
 	if ( level.warmupTime || level.intermissiontime || level.intermissionQueued ) {
 		return;
 	}

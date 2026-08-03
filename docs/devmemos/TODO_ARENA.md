@@ -131,3 +131,26 @@ Watch out for: map-placed entities share a `classname` with dropped items, so
 any pickup filter must test `ent->flags & FL_DROPPED_ITEM` (`g_local.h:37`, set
 at `g_items.c:715`) rather than classname, or respawning items get deleted
 permanently.
+
+## 8. `PMF_NOSHOOT` lifted while "Waiting for players" - DONE
+
+Players stuck in the waiting state could not shoot, indefinitely.
+`ClientSpawn:1301` sets `PMF_NOSHOOT` on every arena spawn where `g_warmup > 0`,
+and `Arena_FreezeSurvivorWeapons` sets it at round end - but `G_WarmupEnd` is the
+only place it was ever cleared, and that is unreachable while waiting, because
+the countdown never completes below two players.
+
+`Arena_ThawWeapons` clears it for connected non-spectators, called from a block
+at the top of `Arena_CheckRules` gated on `level.warmupTime < 0`. Purely
+additive: no existing line changed, and `Arena_CheckRules` already runs every
+frame for arena gametypes so nothing new needed wiring up.
+
+Per frame rather than one-shot at the `notEnough` transition on purpose - it has
+to cover both players already frozen when waiting began *and* anyone spawning
+during the wait, since `ClientSpawn` re-sets the flag on every spawn. The loop
+only runs while `warmupTime < 0`, i.e. only when no match is in progress.
+
+Verified on a dedicated server: thaws fire only in the pre-match window and
+after dropping below two players, never during live rounds or round warmups. The
+decisive case is a client spawning mid-wait - `ClientSpawn` sets the flag and the
+next frame clears it again.

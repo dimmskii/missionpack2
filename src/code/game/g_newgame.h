@@ -30,6 +30,7 @@ void 		Arena_CheckRules(void);
 void 		Arena_ForceRespawnDead(void);
 void 		Arena_FreezeSurvivorWeapons(void);
 void 		Arena_ResetMatchScores(void);
+void 		Arena_ThawWeapons(void);
 
 qboolean	Arena_MatchDecided(void);
 

@@ -2288,8 +2288,9 @@ static void CheckTournament( void ) {
 			if ( level.warmupTime != -1 ) {
 				level.warmupTime = -1;
 				trap_SetConfigstring( CS_WARMUP, va("%i", level.warmupTime) );
-				// ~Dimmskii - the match segment is over; G_WarmupEnd claims round 1
-				// again on resume, and 0 hides the round display while waiting.
+// ~Dimmskii
+				// The match segment is over; G_WarmupEnd claims round 1 again on
+				// resume, and 0 hides the round display while waiting.
 				level.roundNumber = 0;
 				trap_SetConfigstring( CS_ROUND_NUMBER, "0" );
 				// Scores go with it - an abandoned match must not bleed into the
@@ -2297,6 +2298,7 @@ static void CheckTournament( void ) {
 				if ( GT_IsArenaGame(g_gametype.integer) ) {
 					Arena_ResetMatchScores();
 				}
+// END Dimmskii
 				G_LogPrintf( "Warmup:\n" );
 			}
 			return; // still waiting for team members
@@ -2316,6 +2318,14 @@ static void CheckTournament( void ) {
 		if ( level.warmupTime < 0 ) {
 			if ( g_warmup.integer > 0 ) {
 				level.warmupTime = level.time + g_warmup.integer * 1000;
+// ~Dimmskii
+				// The round is now imminent, so re-apply the freeze
+				// Arena_ThawWeapons has been lifting all through the wait. Only
+				// ClientSpawn sets it otherwise, and everyone already spawned.
+				if ( GT_IsArenaGame(g_gametype.integer) ) {
+					Arena_FreezeSurvivorWeapons();
+				}
+// END Dimmskii
 			} else {
 				level.warmupTime = 0;
 			}
