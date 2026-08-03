@@ -608,14 +608,52 @@ static void CG_DrawPlayerHealth(rectDef_t *rect, float scale, vec4_t color, qhan
 }
 
 
+// ~Dimmskii -- In FFA arena, cgs.scores1/2 arrive as PERS_SCORE (damage+frags), not
+// the meaningful stat. Recompute the top-two round wins from the (best-effort,
+// possibly stale between scoreboard refreshes) client scores table, as cg_olddraw.c
+// already does for the VQ3 HUD. Team arenas are left alone: their team scores are
+// already round wins. Proper fix is server-side CS_SCORES gating in the later QL
+// pers-stat restructuring, which is also when the scoreboard changes to match.
+static void CG_HudScores( int *s1, int *s2 ) {
+	int i;
+
+	*s1 = cgs.scores1;
+	*s2 = cgs.scores2;
+
+	if ( !GT_IsArenaGame( cgs.gametype ) || GT_IsTeam( cgs.gametype ) ) {
+		return;
+	}
+
+	*s1 = SCORE_NOT_PRESENT;
+	*s2 = SCORE_NOT_PRESENT;
+	for ( i = 0; i < cg.numScores; i++ ) {
+		int rw;
+		if ( cg.scores[i].team == TEAM_SPECTATOR ) {
+			continue;
+		}
+		rw = cg.scores[i].roundWins;
+		if ( *s1 == SCORE_NOT_PRESENT || rw > *s1 ) {
+			*s2 = *s1;
+			*s1 = rw;
+		} else if ( *s2 == SCORE_NOT_PRESENT || rw > *s2 ) {
+			*s2 = rw;
+		}
+	}
+}
+// END Dimmskii
+
 static void CG_DrawRedScore(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader, int textStyle ) {
 	int value;
 	char num[16];
-	if ( cgs.scores1 == SCORE_NOT_PRESENT ) {
+	int s1, s2; // ~Dimmskii
+	CG_HudScores( &s1, &s2 ); // ~Dimmskii
+//	if ( cgs.scores1 == SCORE_NOT_PRESENT ) {
+	if ( s1 == SCORE_NOT_PRESENT ) { // ~Dimmskii
 		Com_sprintf (num, sizeof(num), "-");
 	}
 	else {
-		Com_sprintf (num, sizeof(num), "%i", cgs.scores1);
+//		Com_sprintf (num, sizeof(num), "%i", cgs.scores1);
+		Com_sprintf (num, sizeof(num), "%i", s1); // ~Dimmskii
 	}
 	value = CG_Text_Width(num, scale, 0);
 	CG_Text_Paint(rect->x + rect->w - value, rect->y + rect->h, scale, color, num, 0, 0, textStyle);
@@ -624,12 +662,16 @@ static void CG_DrawRedScore(rectDef_t *rect, float scale, vec4_t color, qhandle_
 static void CG_DrawBlueScore(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader, int textStyle ) {
 	int value;
 	char num[16];
+	int s1, s2; // ~Dimmskii
+	CG_HudScores( &s1, &s2 ); // ~Dimmskii
 
-	if ( cgs.scores2 == SCORE_NOT_PRESENT ) {
+//	if ( cgs.scores2 == SCORE_NOT_PRESENT ) {
+	if ( s2 == SCORE_NOT_PRESENT ) { // ~Dimmskii
 		Com_sprintf (num, sizeof(num), "-");
 	}
 	else {
-		Com_sprintf (num, sizeof(num), "%i", cgs.scores2);
+//		Com_sprintf (num, sizeof(num), "%i", cgs.scores2);
+		Com_sprintf (num, sizeof(num), "%i", s2); // ~Dimmskii
 	}
 	value = CG_Text_Width(num, scale, 0);
 	CG_Text_Paint(rect->x + rect->w - value, rect->y + rect->h, scale, color, num, 0, 0, textStyle);
@@ -1417,14 +1459,22 @@ static void CG_DrawBlueOwnedFlags(rectDef_t *rect, float scale, vec4_t color, qh
 // END Dimmskii
 
 static void CG_Draw1stPlace(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader, int textStyle) {
-	if (cgs.scores1 != SCORE_NOT_PRESENT) {
-		CG_Text_Paint(rect->x, rect->y, scale, color, va("%2i", cgs.scores1),0, 0, textStyle); 
+	int s1, s2; // ~Dimmskii
+	CG_HudScores( &s1, &s2 ); // ~Dimmskii
+//	if (cgs.scores1 != SCORE_NOT_PRESENT) {
+//		CG_Text_Paint(rect->x, rect->y, scale, color, va("%2i", cgs.scores1),0, 0, textStyle);
+	if (s1 != SCORE_NOT_PRESENT) { // ~Dimmskii
+		CG_Text_Paint(rect->x, rect->y, scale, color, va("%2i", s1),0, 0, textStyle); // ~Dimmskii
 	}
 }
 
 static void CG_Draw2ndPlace(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader, int textStyle) {
-	if (cgs.scores2 != SCORE_NOT_PRESENT) {
-		CG_Text_Paint(rect->x, rect->y, scale, color, va("%2i", cgs.scores2),0, 0, textStyle); 
+	int s1, s2; // ~Dimmskii
+	CG_HudScores( &s1, &s2 ); // ~Dimmskii
+//	if (cgs.scores2 != SCORE_NOT_PRESENT) {
+//		CG_Text_Paint(rect->x, rect->y, scale, color, va("%2i", cgs.scores2),0, 0, textStyle);
+	if (s2 != SCORE_NOT_PRESENT) { // ~Dimmskii
+		CG_Text_Paint(rect->x, rect->y, scale, color, va("%2i", s2),0, 0, textStyle); // ~Dimmskii
 	}
 }
 
