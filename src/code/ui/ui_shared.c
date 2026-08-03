@@ -3237,6 +3237,22 @@ static void Item_HexChecker_Paint(float x, float y, float w, float h) {
 	DC->setColor(NULL);
 }
 
+// mean Rec.709 luma of ui/assets/translucentbg - it is a light checker, so a
+// translucent swatch trends bright and wants dark text over it
+#define HEX_CHECKER_LUMA	0.87f
+
+// black or white, whichever reads against what is actually on screen at c:
+// luma of the color, composited over the checker by its own alpha
+static void Item_HexContrastColor(const vec4_t c, vec4_t out) {
+	float luma;
+
+	luma = 0.2126f * c[0] + 0.7152f * c[1] + 0.0722f * c[2];
+	luma = luma * c[3] + HEX_CHECKER_LUMA * (1.0f - c[3]);
+
+	out[0] = out[1] = out[2] = (luma > 0.5f) ? 0.0f : 1.0f;
+	out[3] = 1.0f;
+}
+
 // ~Dimmskii -- ITEM_TYPE_HEXCOLOR: solid swatch bar where the value text usually goes.
 // Empty/unparsable cvar (= team auto) paints just the frame.
 void Item_HexColor_Paint(itemDef_t *item) {
@@ -3275,9 +3291,34 @@ void Item_HexColor_Paint(itemDef_t *item) {
 	}
 
 	if (BG_ParseHexColor(buff, barColor)) {
+		vec4_t textColor;
+		char label[16];
+		float scale;
+		int alpha;
+
 		BG_ClampColorBrightness(barColor, MIN_PLAYERCOLOR_BRIGHTNESS); // match in-game render
 		Item_HexChecker_Paint(x, y, w, h);   // checker shows through when alpha < 1
 		DC->fillRect(x, y, w, h, barColor);
+
+		// Label the bar with the color actually painted, i.e. post-clamp, so the
+		// text and the swatch can never disagree. Alpha only when it isn't opaque.
+		alpha = (int)(barColor[3] * 255.0f + 0.5f);
+		label[0] = '#';
+		HexColorDigits(&label[1], (int)(barColor[0] * 255.0f + 0.5f));
+		HexColorDigits(&label[3], (int)(barColor[1] * 255.0f + 0.5f));
+		HexColorDigits(&label[5], (int)(barColor[2] * 255.0f + 0.5f));
+		if (alpha < 255) {
+			HexColorDigits(&label[7], alpha);
+			label[9] = '\0';
+		} else {
+			label[7] = '\0';
+		}
+
+		Item_HexContrastColor(barColor, textColor);
+		scale = (item->textscale > 0.0f) ? item->textscale : 0.25f;
+		DC->drawText(x + (w - DC->textWidth(label, scale, 0)) / 2.0f,
+			y + (h + DC->textHeight(label, scale, 0)) / 2.0f,
+			scale, textColor, label, 0, 0, ITEM_TEXTSTYLE_NORMAL);
 	}
 	DC->drawRect(x, y, w, h, 1, newColor);
 }
