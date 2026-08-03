@@ -80,21 +80,22 @@ frozen through the intermission queue rather than only across the
 Reads as correct (the match is over), but it is broader than the stated scope.
 Tighten only if it feels wrong in play.
 
-## 5. Scores are not reset by "Waiting for players"
+## 5. Scores reset by "Waiting for players" - DONE
 
-`c538382` resets `roundNumber` to 0 when the server drops below two players, so
-a resumed match legitimately restarts at Round 1 - but `PERS_ROUNDWINS` and
-`level.teamScores` survive, because `G_WarmupEnd` preserves them for arena
-(`if (!isArena)` at `g_main.c:2072` and `:2113`). So "Round 1" can appear beside
-a player already holding 3 round wins.
+`Arena_ResetMatchScores` now wipes `PERS_ROUNDWINS`, `PERS_SCORE`, captures and
+the award counters, plus `level.teamScores`, from the same one-shot `notEnough`
+transition that zeroes `roundNumber`. `CalculateRanks()` re-publishes
+`CS_SCORES1/2` correctly for both the team and non-team cases, so those
+configstrings are deliberately not set by hand.
 
-Deliberately not fixed: the trigger is a transient `numPlayingClients < 2` dip,
-so in a 2-player arena one player briefly reconnecting would wipe the whole
-match score. That is a worse failure than the cosmetic mismatch, and a cheap
-grief vector.
+It cannot live in `G_WarmupEnd` like the non-arena reset does (`g_main.c:2113`),
+because that runs at the end of every round's warmup - resetting there would
+stop anyone ever accumulating round wins. That is exactly what the `if (!isArena)`
+guards at `:2072` are protecting.
 
-Right place to settle it is the QL pers-stat restructuring, where match state
-gets reorganised anyway.
+Accepted tradeoff: the trigger is a transient `numPlayingClients < 2` dip, so in
+a 2-player arena one player briefly reconnecting wipes the match. Judged better
+than an abandoned match's scores bleeding into the next one.
 
 ## 6. `cg_newdraw.c` / `cg_olddraw.c` duplicate the arena score rescan
 
@@ -108,28 +109,25 @@ configstrings - again the QL pers-stat work. Until then, keep them in sync.
 
 ## 7. Wipe leftover world state between rounds
 
-A new round should start on a clean map. Today it doesn't: rockets, grenades,
-plasma and prox mines fired in the dying seconds of a round survive the round
-break and can kill someone on the next round's spawn. Corpses, dropped items
-and other debris linger the same way.
+Narrower than it first looks - most of the sweep already exists. `G_WarmupEnd`'s
+entity loop (`g_main.c:2141-2193`) runs for arena too and already frees every
+`ET_MISSILE`, removes `FL_DROPPED_ITEM` pickups and respawns picked-up items;
+`ClearBodyQue()` (`:2033`) unlinks the recycled bodies. Gibs and explosions are
+client-side temp entities that expire on their own.
 
-What already happens in `G_WarmupEnd`: `ClearBodyQue()` (`g_main.c:2033`) only
-unlinks the `BODY_QUEUE_SIZE` recycled body entities, and `Team_ResetFlags()`
-returns flags. Nothing touches in-flight projectiles or dropped pickups.
+The real gap is **timing**. That cleanup happens in `G_WarmupEnd`, i.e. when the
+round goes *live* - but `Arena_BeginRound` respawns everyone at the *start* of
+warmup, one `g_warmup` period earlier. So for the whole warmup, players stand
+freshly spawned while the previous round's rockets and grenades are still in
+flight and can damage or telefrag them. It self-corrects only because
+`Arena_ForceRespawnDead` revives anyone killed that way.
 
-Candidates to sweep, by `classname` in `g_missile.c`: `rocket`, `grenade`,
-`plasma`, `bfg`, `nail`, `prox mine`, `proxmine_trigger`, `hook`, plus
-`kamikaze` (`g_weapon.c:1232`) and items dropped on death
-(`dropped->classname = item->classname`, `g_items.c:688`). Client-side gib and
-explosion effects are temp entities and expire on their own - no server-side
-work needed there.
+Fix shape: sweep at round end or at `Arena_BeginRound` instead of (or as well
+as) `G_WarmupEnd`, so the map is clean for the entire warmup rather than only
+from the go-live instant. Easiest is to factor the `ET_MISSILE` free out of
+`G_WarmupEnd`'s loop into a small helper both can call.
 
-Fix shape: one `Arena_ClearRoundDebris()` beside the other `Arena_*` helpers,
-walking `g_entities` and freeing the above. Call it from `Arena_BeginRound`
-(round warmup start, where `respawnAll()` already resets players) rather than
-`G_WarmupEnd`, so the map is clean for the whole warmup rather than only from
-the go-live instant.
-
-Watch out for: map-placed entities sharing a `classname` with dropped items -
-filter on `ent->flags & FL_DROPPED_ITEM` rather than classname alone for
-pickups, or respawning items get deleted permanently.
+Watch out for: map-placed entities share a `classname` with dropped items, so
+any pickup filter must test `ent->flags & FL_DROPPED_ITEM` (`g_local.h:37`, set
+at `g_items.c:715`) rather than classname, or respawning items get deleted
+permanently.

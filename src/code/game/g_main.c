@@ -2292,6 +2292,11 @@ static void CheckTournament( void ) {
 				// again on resume, and 0 hides the round display while waiting.
 				level.roundNumber = 0;
 				trap_SetConfigstring( CS_ROUND_NUMBER, "0" );
+				// Scores go with it - an abandoned match must not bleed into the
+				// next one. Arena only; other gametypes never reach here mid-match.
+				if ( GT_IsArenaGame(g_gametype.integer) ) {
+					Arena_ResetMatchScores();
+				}
 				G_LogPrintf( "Warmup:\n" );
 			}
 			return; // still waiting for team members

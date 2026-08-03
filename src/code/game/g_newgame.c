@@ -158,6 +158,44 @@ void Arena_BeginRound( void ) {
 
 /*
 =============
+Arena_ResetMatchScores
+
+Wipes match scoring when a segment ends - the server drops below two players and
+CheckTournament falls back to "Waiting for players", so whatever was being played
+is abandoned. G_WarmupEnd can't do this for arena the way it does for every other
+gametype: it runs at the end of EVERY round's warmup, so resetting there would
+stop anyone ever accumulating round wins.
+
+CalculateRanks re-publishes CS_SCORES1/2 itself, correctly for both the team and
+non-team cases, so don't set those configstrings here.
+=============
+*/
+void Arena_ResetMatchScores( void ) {
+	int			i;
+	gclient_t	*client;
+
+	memset( level.teamScores, 0, sizeof( level.teamScores ) );
+
+	for ( i = 0 ; i < level.maxclients ; i++ ) {
+		client = level.clients + i;
+		if ( client->pers.connected == CON_DISCONNECTED ) {
+			continue;
+		}
+		client->ps.persistant[PERS_ROUNDWINS] = 0;
+		client->ps.persistant[PERS_SCORE] = 0;
+		client->ps.persistant[PERS_CAPTURES] = 0;
+		client->ps.persistant[PERS_IMPRESSIVE_COUNT] = 0;
+		client->ps.persistant[PERS_EXCELLENT_COUNT] = 0;
+		client->ps.persistant[PERS_DEFEND_COUNT] = 0;
+		client->ps.persistant[PERS_ASSIST_COUNT] = 0;
+		client->ps.persistant[PERS_GAUNTLET_FRAG_COUNT] = 0;
+	}
+
+	CalculateRanks();
+}
+
+/*
+=============
 Arena_FreezeSurvivorWeapons
 
 Round decided: take weapons away from everyone still alive so nobody can shoot
