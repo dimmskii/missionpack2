@@ -68,6 +68,9 @@ General config improvements upon vanilla Q3/TA:
 | `cg_teamHeadColor` | ` ` | Head color of teammate (and your own) pm/fb skins, same format. |
 | `cg_teamUpperColor` | ` ` | Torso color of teammate (and your own) pm/fb skins, same format. |
 | `cg_teamLowerColor` | ` ` | Legs color of teammate (and your own) pm/fb skins, same format. |
+| `modelColorHead` | ` ` | Head color of *your own* pm/fb skin, broadcast to everyone else on the server. Same format as the cvars above. Set to empty string for white. Only applies while your own skin is `pm` or `fb`; other players can still override it with their force/color cvars. Settable from the Player menu. |
+| `modelColorUpper` | ` ` | Torso color of your own pm/fb skin, same format. |
+| `modelColorLower` | ` ` | Legs color of your own pm/fb skin, same format. |
 | `cg_forceRedTeamModel` | ` ` | Accepted for Quake Live config compatibility. No effect. |
 | `cg_forceBlueTeamModel` | ` ` | Accepted for Quake Live config compatibility. No effect. |
 | `cg_deadBodyDarken` | `1` | Automatically darkens dropped player corpses lying on the map floor to increase visibility contrast with combatants. |
