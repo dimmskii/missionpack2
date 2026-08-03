@@ -53,25 +53,6 @@
   
   {
     "cvars": {
-	  "g_gametype": "1",
-	  "timelimit": "10",
-      "fraglimit": "0",
-	  "removeammo": "4095",
-	  "removeitem": "16383",
-	  "removepowerup": "1023",
-	  "removeweapon": "1023",
-	  "dmflags": "8"
-    },
-    "author": "UA Dev Team",
-    "description": "Duel with Arena starting weapons and rules.",
-    "basegt": "ca",
-    "id": "caduel",
-    "title": "CA Duel"
-  },
-  
-  
-  {
-    "cvars": {
 	  "g_gametype": "3",
 	  "g_startingHealth": "100",
 	  "g_startingHealthBonus": "25",
