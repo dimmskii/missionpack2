@@ -756,6 +756,19 @@ static void CG_BroadcastPartColor( const char *hexstr, vec3_t out ) {
 	}
 }
 
+// Outer gate for the effect colors: our nullable hex key wins, and anything
+// empty or unparsable falls back to the vq3 c1/c2 digit. Kept separate from the
+// hex parsing so the compat rule lives in exactly one place.
+static void CG_ResolveEffectColor( const char *hexstr, const char *vq3, vec3_t out ) {
+	vec4_t c;
+
+	if ( hexstr[0] && BG_ParseHexColor( hexstr, c ) ) {
+		VectorCopy( c, out );
+		return;
+	}
+	CG_ColorFromChar( vq3[0], out );
+}
+
 // vec3 wrapper so the shared vec4 helper can floor a part color in place
 static void CG_ClampPartColor( vec3_t out ) {
 	vec4_t c;
@@ -1470,11 +1483,19 @@ void CG_NewClientInfo( int clientNum ) {
 	newInfo.team = team;
 
 	// colors
-	v = Info_ValueForKey( configstring, "c1" );
-	CG_ColorFromChar( v[0], newInfo.color1 );
-
-	v = Info_ValueForKey( configstring, "c2" );
-	CG_ColorFromChar( v[0], newInfo.color2 );
+//	v = Info_ValueForKey( configstring, "c1" );
+//	CG_ColorFromChar( v[0], newInfo.color1 );
+//
+//	v = Info_ValueForKey( configstring, "c2" );
+//	CG_ColorFromChar( v[0], newInfo.color2 );
+// ~Dimmskii
+	// Two live Info_ValueForKey results per call: safe because it rotates exactly
+	// two static buffers, but that is the ceiling - a third would stomp the first.
+	CG_ResolveEffectColor( Info_ValueForKey( configstring, "e1" ),
+		Info_ValueForKey( configstring, "c1" ), newInfo.color1 );
+	CG_ResolveEffectColor( Info_ValueForKey( configstring, "e2" ),
+		Info_ValueForKey( configstring, "c2" ), newInfo.color2 );
+// END Dimmskii
 
 	VectorSet( newInfo.headColor, 1.0, 1.0, 1.0 );
 	VectorSet( newInfo.bodyColor, 1.0, 1.0, 1.0 );
@@ -1486,9 +1507,9 @@ void CG_NewClientInfo( int clientNum ) {
 	skin = strchr( v, '/' );
 	if ( !GT_IsTeam( cgs.gametype ) && skin
 		&& ( !Q_stricmp( skin + 1, PM_SKIN ) || !Q_stricmp( skin + 1, FB_SKIN ) ) ) {
-		CG_BroadcastPartColor( Info_ValueForKey( configstring, "c3" ), newInfo.headColor );
-		CG_BroadcastPartColor( Info_ValueForKey( configstring, "c4" ), newInfo.bodyColor );
-		CG_BroadcastPartColor( Info_ValueForKey( configstring, "c5" ), newInfo.legsColor );
+		CG_BroadcastPartColor( Info_ValueForKey( configstring, "mh" ), newInfo.headColor );
+		CG_BroadcastPartColor( Info_ValueForKey( configstring, "mu" ), newInfo.bodyColor );
+		CG_BroadcastPartColor( Info_ValueForKey( configstring, "ml" ), newInfo.legsColor );
 	}
 	// END Dimmskii
 

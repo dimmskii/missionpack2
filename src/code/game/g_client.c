@@ -622,10 +622,13 @@ qboolean ClientUserinfoChanged( int clientNum ) {
 	gclient_t	*client;
 	char	c1[8];
 	char	c2[8];
-	// ~Dimmskii -- broadcast pm/fb part colors, normalized to #RRGGBB
-	char	c3[MAX_HEXCOLOR_STRING];
-	char	c4[MAX_HEXCOLOR_STRING];
-	char	c5[MAX_HEXCOLOR_STRING];
+	// ~Dimmskii -- broadcast pm/fb part colors and hex effect colors, normalized
+	// to #RRGGBB. Kept out of c1/c2, which are only 8 bytes and stay vq3-shaped.
+	char	mh[MAX_HEXCOLOR_STRING];
+	char	mu[MAX_HEXCOLOR_STRING];
+	char	ml[MAX_HEXCOLOR_STRING];
+	char	e1[MAX_HEXCOLOR_STRING];
+	char	e2[MAX_HEXCOLOR_STRING];
 	// END Dimmskii
 	char	userinfo[MAX_INFO_STRING];
 
@@ -747,10 +750,14 @@ qboolean ClientUserinfoChanged( int clientNum ) {
 	// colors
 	Q_strncpyz( c1, Info_ValueForKey( userinfo, "color1" ), sizeof( c1 ) );
 	Q_strncpyz( c2, Info_ValueForKey( userinfo, "color2" ), sizeof( c2 ) );
-	// ~Dimmskii -- head/upper/lower part colors; alpha is dropped here, models force it opaque
-	BG_NormalizeHexColor( Info_ValueForKey( userinfo, "modelColorHead" ), c3, sizeof( c3 ) );
-	BG_NormalizeHexColor( Info_ValueForKey( userinfo, "modelColorUpper" ), c4, sizeof( c4 ) );
-	BG_NormalizeHexColor( Info_ValueForKey( userinfo, "modelColorLower" ), c5, sizeof( c5 ) );
+	// ~Dimmskii -- head/upper/lower part colors, plus the hex effect colors that
+	// override c1/c2 when set. Alpha is dropped throughout; both the model and
+	// the rail effects force shaderRGBA[3] opaque anyway.
+	BG_NormalizeHexColor( Info_ValueForKey( userinfo, "modelColorHead" ), mh, sizeof( mh ) );
+	BG_NormalizeHexColor( Info_ValueForKey( userinfo, "modelColorUpper" ), mu, sizeof( mu ) );
+	BG_NormalizeHexColor( Info_ValueForKey( userinfo, "modelColorLower" ), ml, sizeof( ml ) );
+	BG_NormalizeHexColor( Info_ValueForKey( userinfo, "effectsColor1" ), e1, sizeof( e1 ) );
+	BG_NormalizeHexColor( Info_ValueForKey( userinfo, "effectsColor2" ), e2, sizeof( e2 ) );
 	// END Dimmskii
 
 	// send over a subset of the userinfo keys so other clients can
@@ -760,17 +767,17 @@ qboolean ClientUserinfoChanged( int clientNum ) {
 //			client->pers.netname, client->sess.sessionTeam, model, headModel, c1, c2,
 //			client->pers.maxHealth, client->sess.wins, client->sess.losses,
 //			Info_ValueForKey( userinfo, "skill" ), teamTask, teamLeader );
-		// ~Dimmskii -- relay the part colors too
-		s = va("n\\%s\\t\\%i\\model\\%s\\hmodel\\%s\\c1\\%s\\c2\\%s\\c3\\%s\\c4\\%s\\c5\\%s\\hc\\%i\\w\\%i\\l\\%i\\skill\\%s\\tt\\%d\\tl\\%d",
-			client->pers.netname, client->sess.sessionTeam, model, headModel, c1, c2, c3, c4, c5,
+		// ~Dimmskii -- relay the part colors and hex effect colors too
+		s = va("n\\%s\\t\\%i\\model\\%s\\hmodel\\%s\\c1\\%s\\c2\\%s\\mh\\%s\\mu\\%s\\ml\\%s\\e1\\%s\\e2\\%s\\hc\\%i\\w\\%i\\l\\%i\\skill\\%s\\tt\\%d\\tl\\%d",
+			client->pers.netname, client->sess.sessionTeam, model, headModel, c1, c2, mh, mu, ml, e1, e2,
 			client->pers.maxHealth, client->sess.wins, client->sess.losses,
 			Info_ValueForKey( userinfo, "skill" ), teamTask, teamLeader );
 	} else {
 //		s = va("n\\%s\\t\\%i\\model\\%s\\hmodel\\%s\\c1\\%s\\c2\\%s\\hc\\%i\\w\\%i\\l\\%i\\tt\\%d\\tl\\%d",
 //			client->pers.netname, client->sess.sessionTeam, model, headModel, c1, c2,
 //			client->pers.maxHealth, client->sess.wins, client->sess.losses, teamTask, teamLeader );
-		s = va("n\\%s\\t\\%i\\model\\%s\\hmodel\\%s\\c1\\%s\\c2\\%s\\c3\\%s\\c4\\%s\\c5\\%s\\hc\\%i\\w\\%i\\l\\%i\\tt\\%d\\tl\\%d",
-			client->pers.netname, client->sess.sessionTeam, model, headModel, c1, c2, c3, c4, c5,
+		s = va("n\\%s\\t\\%i\\model\\%s\\hmodel\\%s\\c1\\%s\\c2\\%s\\mh\\%s\\mu\\%s\\ml\\%s\\e1\\%s\\e2\\%s\\hc\\%i\\w\\%i\\l\\%i\\tt\\%d\\tl\\%d",
+			client->pers.netname, client->sess.sessionTeam, model, headModel, c1, c2, mh, mu, ml, e1, e2,
 			client->pers.maxHealth, client->sess.wins, client->sess.losses, teamTask, teamLeader );
 		// END Dimmskii
 	}
