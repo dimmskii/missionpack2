@@ -2055,6 +2055,12 @@ static void G_WarmupEnd( void )
 	if ( GT_IsArenaGame(g_gametype.integer) ) {
 		isArena = qtrue;
 	}
+
+	// Must run before warmupTime is zeroed below (ClientSpawn would freeze the
+	// respawn) and before the loop that clears the PMF_NOSHOOT it re-sets.
+	if ( isArena ) {
+		Arena_ForceRespawnDead();
+	}
 // END Dimmskii
 
 	// remove corpses
@@ -2255,7 +2261,11 @@ static void CheckTournament( void ) {
 			G_WarmupEnd();
 			return;
 		}
-	} else if ( g_gametype.integer != GT_SINGLE_PLAYER && level.warmupTime != 0 ) {
+//	} else if ( g_gametype.integer != GT_SINGLE_PLAYER && level.warmupTime != 0 ) {
+	// Arena's live rounds run at warmupTime 0, where the stock gate blocks the
+	// "Waiting for players" path and leaves lone joiners frozen mid-round.
+	} else if ( g_gametype.integer != GT_SINGLE_PLAYER
+		&& ( level.warmupTime != 0 || GT_IsArenaGame(g_gametype.integer) ) ) { // ~Dimmskii
 		int		counts[TEAM_NUM_TEAMS];
 		qboolean	notEnough = qfalse;
 

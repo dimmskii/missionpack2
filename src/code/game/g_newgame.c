@@ -264,6 +264,39 @@ qboolean Arena_MatchDecided( void ) {
 	return qfalse;
 }
 
+/*
+=============
+Arena_ForceRespawnDead
+
+Round-start revive: anyone still dead goes straight back in, ignoring
+respawnTime / g_forcerespawn / attack-button gating (all of which live in
+ClientThink_real, not respawn()). A round must never begin with a player dead -
+they'd lose it without ever playing it. Only the dead are touched, so living
+players keep the positions they held during warmup.
+=============
+*/
+void Arena_ForceRespawnDead( void ) {
+	int			i;
+	gentity_t	*ent;
+
+	for ( i = 0 ; i < level.maxclients ; i++ ) {
+		ent = g_entities + i;
+		if ( !ent->inuse || !ent->client ) {
+			continue;
+		}
+		if ( ent->client->pers.connected != CON_CONNECTED ) {
+			continue;
+		}
+		if ( ent->client->sess.sessionTeam == TEAM_SPECTATOR ) {
+			continue;
+		}
+		if ( ent->health > 0 ) {
+			continue;
+		}
+		respawn( ent );
+	}
+}
+
 void Arena_CheckRules( void ) {
 	if ( level.warmupTime || level.intermissiontime || level.intermissionQueued ) {
 		return;

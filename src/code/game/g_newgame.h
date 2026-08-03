@@ -27,6 +27,7 @@ void 		Arena_BeginRound(void);
 void 		Arena_EndRound(team_t winningTeam);
 void 		Arena_TimeoutRound(void);
 void 		Arena_CheckRules(void);
+void 		Arena_ForceRespawnDead(void);
 
 qboolean	Arena_MatchDecided(void);
 
