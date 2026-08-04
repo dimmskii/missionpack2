@@ -2055,6 +2055,12 @@ static void G_WarmupEnd( void )
 	if ( GT_IsArenaGame(g_gametype.integer) ) {
 		isArena = qtrue;
 	}
+
+	// Must run before warmupTime is zeroed below (ClientSpawn would freeze the
+	// respawn) and before the loop that clears the PMF_NOSHOOT it re-sets.
+	if ( isArena ) {
+		Arena_ForceRespawnDead();
+	}
 // END Dimmskii
 
 	// remove corpses
@@ -2080,11 +2086,14 @@ static void G_WarmupEnd( void )
 	trap_SetConfigstring( CS_WARMUP, "" );
 	trap_SetConfigstring( CS_LEVEL_START_TIME, va( "%i", level.startTime ) );
 // ~Dimmskii
-	// Round 1 begins here for arena/round-based gametypes (Arena_BeginRound
-	// only fires for round 2+). Left at 0 for non-arena gametypes so
-	// CG_ROUND/CG_ROUNDTIMER's cgs.roundNumber <= 0 guard keeps them hidden.
-	level.roundNumber = isArena ? 1 : 0;
-	trap_SetConfigstring( CS_ROUND_NUMBER, isArena ? "1" : "0" );
+	// Round 1 begins here, but this runs at the end of EVERY round's warmup, so
+	// only claim round 1 when no round has begun in this match segment - zero
+	// means map load/restart or a "Waiting for players" reset. Non-arena stays 0
+	// so CG_ROUND/CG_ROUNDTIMER's cgs.roundNumber <= 0 guard keeps them hidden.
+	if ( isArena && level.roundNumber == 0 ) {
+		level.roundNumber = 1;
+		trap_SetConfigstring( CS_ROUND_NUMBER, "1" );
+	}
 // END Dimmskii
 	
 	client = level.clients;
@@ -2255,7 +2264,11 @@ static void CheckTournament( void ) {
 			G_WarmupEnd();
 			return;
 		}
-	} else if ( g_gametype.integer != GT_SINGLE_PLAYER && level.warmupTime != 0 ) {
+//	} else if ( g_gametype.integer != GT_SINGLE_PLAYER && level.warmupTime != 0 ) {
+	// Arena's live rounds run at warmupTime 0, where the stock gate blocks the
+	// "Waiting for players" path and leaves lone joiners frozen mid-round.
+	} else if ( g_gametype.integer != GT_SINGLE_PLAYER
+		&& ( level.warmupTime != 0 || GT_IsArenaGame(g_gametype.integer) ) ) { // ~Dimmskii
 		int		counts[TEAM_NUM_TEAMS];
 		qboolean	notEnough = qfalse;
 
@@ -2275,6 +2288,17 @@ static void CheckTournament( void ) {
 			if ( level.warmupTime != -1 ) {
 				level.warmupTime = -1;
 				trap_SetConfigstring( CS_WARMUP, va("%i", level.warmupTime) );
+// ~Dimmskii
+				// The match segment is over; G_WarmupEnd claims round 1 again on
+				// resume, and 0 hides the round display while waiting.
+				level.roundNumber = 0;
+				trap_SetConfigstring( CS_ROUND_NUMBER, "0" );
+				// Scores go with it - an abandoned match must not bleed into the
+				// next one. Arena only; other gametypes never reach here mid-match.
+				if ( GT_IsArenaGame(g_gametype.integer) ) {
+					Arena_ResetMatchScores();
+				}
+// END Dimmskii
 				G_LogPrintf( "Warmup:\n" );
 			}
 			return; // still waiting for team members
@@ -2294,6 +2318,14 @@ static void CheckTournament( void ) {
 		if ( level.warmupTime < 0 ) {
 			if ( g_warmup.integer > 0 ) {
 				level.warmupTime = level.time + g_warmup.integer * 1000;
+// ~Dimmskii
+				// The round is now imminent, so re-apply the freeze
+				// Arena_ThawWeapons has been lifting all through the wait. Only
+				// ClientSpawn sets it otherwise, and everyone already spawned.
+				if ( GT_IsArenaGame(g_gametype.integer) ) {
+					Arena_FreezeSurvivorWeapons();
+				}
+// END Dimmskii
 			} else {
 				level.warmupTime = 0;
 			}

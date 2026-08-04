@@ -57,7 +57,7 @@ foreach(src ${CGAME_SOURCES})
             -S -Wf-target=bytecode -Wf-g ${Q3_INCLUDE_FLAGS}
             "${src_path}"
     WORKING_DIRECTORY "${CGAME_VM_DIR}"
-    DEPENDS "${src_path}"
+    DEPENDS "${src_path}" ${Q3_VM_HEADERS}
     COMMENT "q3lcc cgame/${name}.c"
     VERBATIM
   )
@@ -97,7 +97,7 @@ foreach(src ${CGAME_SOURCES})
             -S -Wf-target=bytecode -Wf-g ${Q3_INCLUDE_FLAGS}
             "${src_path}"
     WORKING_DIRECTORY "${CGAME_VM_DEBUG_DIR}"
-    DEPENDS "${src_path}"
+    DEPENDS "${src_path}" ${Q3_VM_HEADERS}
     COMMENT "q3lcc -DDEBUG cgame/${name}.c"
     VERBATIM
   )

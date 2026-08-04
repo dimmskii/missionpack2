@@ -23,6 +23,20 @@ set(Q3_INCLUDE_FLAGS
   "-I${CMAKE_CURRENT_SOURCE_DIR}/code/common"
 )
 
+# Every header the VM modules can pull in, mirroring the include dirs above plus
+# ui/menudef.h (reached through ui_shared.h). q3lcc's -M implies -E, so it can't
+# emit a usable depfile while compiling; each module lists these in DEPENDS
+# instead. Coarse - any header touch rebuilds that module - but a header change
+# silently not rebuilding is far worse. CONFIGURE_DEPENDS re-runs cmake when a
+# header is added or removed.
+file(GLOB Q3_VM_HEADERS CONFIGURE_DEPENDS
+  "${CMAKE_CURRENT_SOURCE_DIR}/code/cgame/*.h"
+  "${CMAKE_CURRENT_SOURCE_DIR}/code/game/*.h"
+  "${CMAKE_CURRENT_SOURCE_DIR}/code/ui/*.h"
+  "${CMAKE_CURRENT_SOURCE_DIR}/code/common/*.h"
+  "${CMAKE_CURRENT_SOURCE_DIR}/ui/menudef.h"
+)
+
 # Mirrors the %1 (-DDEBUG) argument debug.bat passes to every module bat.
 option(Q3_DEBUG_VM "Compile QVM modules with -DDEBUG, like debug.bat" OFF)
 if(Q3_DEBUG_VM)
