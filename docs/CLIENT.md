@@ -71,6 +71,8 @@ General config improvements upon vanilla Q3/TA:
 | `modelColorHead` | ` ` | Head color of *your own* pm/fb skin, broadcast to everyone else on the server. Same format as the cvars above. Set to empty string for white. Only applies while your own skin is `pm` or `fb`; other players can still override it with their force/color cvars. Settable from the Player menu. |
 | `modelColorUpper` | ` ` | Torso color of your own pm/fb skin, same format. |
 | `modelColorLower` | ` ` | Legs color of your own pm/fb skin, same format. |
+| `effectsColor1` | ` ` | Hex color of *your own* rail core, rail trail and railgun pickup tint, broadcast to everyone else. Hex only (`#RGB`, `#RRGGBB` or `#RRGGBBAA`, with `#`, `0x` or no prefix); alpha is ignored. **Set to empty string to fall back to `color1`**, which keeps working as the vanilla `1`-`7` value. Settable from the Player menu. |
+| `effectsColor2` | ` ` | As `effectsColor1`, but for your rail rings. Falls back to `color2` when empty. |
 | `cg_forceRedTeamModel` | ` ` | Accepted for Quake Live config compatibility. No effect. |
 | `cg_forceBlueTeamModel` | ` ` | Accepted for Quake Live config compatibility. No effect. |
 | `cg_deadBodyDarken` | `1` | Automatically darkens dropped player corpses lying on the map floor to increase visibility contrast with combatants. |
