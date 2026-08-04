@@ -156,9 +156,105 @@ void Arena_BeginRound( void ) {
 	CalculateRanks(); // Make sure scoreboard is sorted immediately? -- AKA Fix my scores please fresh out of spec mod
 }
 
+/*
+=============
+Arena_ResetMatchScores
+
+Wipes match scoring when a segment ends - the server drops below two players and
+CheckTournament falls back to "Waiting for players", so whatever was being played
+is abandoned. G_WarmupEnd can't do this for arena the way it does for every other
+gametype: it runs at the end of EVERY round's warmup, so resetting there would
+stop anyone ever accumulating round wins.
+
+CalculateRanks re-publishes CS_SCORES1/2 itself, correctly for both the team and
+non-team cases, so don't set those configstrings here.
+=============
+*/
+void Arena_ResetMatchScores( void ) {
+	int			i;
+	gclient_t	*client;
+
+	memset( level.teamScores, 0, sizeof( level.teamScores ) );
+
+	for ( i = 0 ; i < level.maxclients ; i++ ) {
+		client = level.clients + i;
+		if ( client->pers.connected == CON_DISCONNECTED ) {
+			continue;
+		}
+		client->ps.persistant[PERS_ROUNDWINS] = 0;
+		client->ps.persistant[PERS_SCORE] = 0;
+		client->ps.persistant[PERS_CAPTURES] = 0;
+		client->ps.persistant[PERS_IMPRESSIVE_COUNT] = 0;
+		client->ps.persistant[PERS_EXCELLENT_COUNT] = 0;
+		client->ps.persistant[PERS_DEFEND_COUNT] = 0;
+		client->ps.persistant[PERS_ASSIST_COUNT] = 0;
+		client->ps.persistant[PERS_GAUNTLET_FRAG_COUNT] = 0;
+	}
+
+	CalculateRanks();
+}
+
+/*
+=============
+Arena_ThawWeapons
+
+Lifts the weapon freeze while no round is running. Counterpart to
+Arena_FreezeSurvivorWeapons - see the call in Arena_CheckRules for why it runs
+per frame instead of once.
+=============
+*/
+void Arena_ThawWeapons( void ) {
+	int			i;
+	gclient_t	*client;
+
+	for ( i = 0 ; i < level.maxclients ; i++ ) {
+		client = level.clients + i;
+		if ( client->pers.connected != CON_CONNECTED ) {
+			continue;
+		}
+		if ( client->sess.sessionTeam == TEAM_SPECTATOR ) {
+			continue;
+		}
+		client->ps.pm_flags &= ~PMF_NOSHOOT;
+	}
+}
+
+/*
+=============
+Arena_FreezeSurvivorWeapons
+
+Round decided: take weapons away from everyone still alive so nobody can shoot
+during the ARENA_ROUND_DELAY_TIME gap before the next round starts. Cleared
+again by G_WarmupEnd when the new round goes live.
+=============
+*/
+void Arena_FreezeSurvivorWeapons( void ) {
+	int			i;
+	gentity_t	*ent;
+
+	for ( i = 0 ; i < level.maxclients ; i++ ) {
+		ent = g_entities + i;
+		if ( !ent->inuse || !ent->client ) {
+			continue;
+		}
+		if ( ent->client->pers.connected != CON_CONNECTED ) {
+			continue;
+		}
+		if ( ent->client->sess.sessionTeam == TEAM_SPECTATOR ) {
+			continue;
+		}
+		if ( ent->health <= 0 ) {
+			continue;
+		}
+		ent->client->ps.pm_flags |= PMF_NOSHOOT;
+	}
+}
+
 vec3_t zeroVec3 = {0, 0, 0};
 void Arena_EndRound( team_t winningTeam ) {
-	
+
+	Arena_FreezeSurvivorWeapons();
+
 	if ( winningTeam == TEAM_RED || winningTeam == TEAM_BLUE ) { // CA
 		AddTeamScore(zeroVec3, winningTeam, 1);
 		trap_SetConfigstring( CS_SCORES1, va("%i", level.teamScores[TEAM_RED]) );
@@ -264,7 +360,48 @@ qboolean Arena_MatchDecided( void ) {
 	return qfalse;
 }
 
+/*
+=============
+Arena_ForceRespawnDead
+
+Round-start revive: anyone still dead goes straight back in, ignoring
+respawnTime / g_forcerespawn / attack-button gating (all of which live in
+ClientThink_real, not respawn()). A round must never begin with a player dead -
+they'd lose it without ever playing it. Only the dead are touched, so living
+players keep the positions they held during warmup.
+=============
+*/
+void Arena_ForceRespawnDead( void ) {
+	int			i;
+	gentity_t	*ent;
+
+	for ( i = 0 ; i < level.maxclients ; i++ ) {
+		ent = g_entities + i;
+		if ( !ent->inuse || !ent->client ) {
+			continue;
+		}
+		if ( ent->client->pers.connected != CON_CONNECTED ) {
+			continue;
+		}
+		if ( ent->client->sess.sessionTeam == TEAM_SPECTATOR ) {
+			continue;
+		}
+		if ( ent->health > 0 ) {
+			continue;
+		}
+		respawn( ent );
+	}
+}
+
 void Arena_CheckRules( void ) {
+	// "Waiting for players": no round is running, so nothing should be holding a
+	// weapon freeze. ClientSpawn re-sets PMF_NOSHOOT on every spawn and
+	// G_WarmupEnd - the only place it is cleared - is unreachable while waiting,
+	// so this has to run per frame rather than once on the transition.
+	if ( level.warmupTime < 0 ) {
+		Arena_ThawWeapons();
+	}
+
 	if ( level.warmupTime || level.intermissiontime || level.intermissionQueued ) {
 		return;
 	}

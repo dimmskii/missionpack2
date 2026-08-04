@@ -134,3 +134,48 @@ void BG_ClampColorBrightness( vec4_t color, float floor ) {
 		}
 	}
 }
+
+/*
+===============
+BG_CompressColorBrightness
+
+Squeezes a color into [floor,1] by its brightest channel, for additive shaders
+where a dark color doesn't read as dark, it reads as invisible. Unlike
+BG_ClampColorBrightness this lifts every color, not just ones under a floor -
+the target rises with the input, so brighter stays brighter and white is
+untouched. Keys on the max channel rather than the average on purpose: scaling by
+the average drives saturated colors past 1.0, and the clamp then flattens the
+whole dark end to full saturation, losing the depth this is meant to keep. A pure
+scale of the max preserves hue and saturation exactly and can never overflow.
+Alpha untouched.
+===============
+*/
+void BG_CompressColorBrightness( vec4_t color, float floor ) {
+	float value, target, scale;
+	int i;
+
+	value = color[0];
+	for ( i = 1 ; i < 3 ; i++ ) {
+		if ( color[i] > value ) {
+			value = color[i];
+		}
+	}
+
+	target = floor + value * ( 1.0f - floor );
+	if ( value >= target ) {
+		return;
+	}
+
+	if ( value < 0.01f ) {
+		// no hue worth scaling; grey at the floor instead
+		for ( i = 0 ; i < 3 ; i++ ) {
+			color[i] = target;
+		}
+		return;
+	}
+
+	scale = target / value;
+	for ( i = 0 ; i < 3 ; i++ ) {
+		color[i] *= scale;
+	}
+}

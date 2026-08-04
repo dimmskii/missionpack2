@@ -1515,10 +1515,10 @@ static void UI_DrawPlayerModel(rectDef_t *rect) {
     updateModel = qfalse;
   }
 
-  // ~Dimmskii -- preview our own color3/4/5, per part, so the picker matches in-game
-  UI_PartColor( "color3", UI_SkinIsColored( head ), info.headColor );
-  UI_PartColor( "color4", UI_SkinIsColored( model ), info.torsoColor );
-  UI_PartColor( "color5", UI_SkinIsColored( model ), info.legsColor );
+  // ~Dimmskii -- preview our own model color, per part, so the picker matches in-game
+  UI_PartColor( "modelColorHead", UI_SkinIsColored( head ), info.headColor );
+  UI_PartColor( "modelColorUpper", UI_SkinIsColored( model ), info.torsoColor );
+  UI_PartColor( "modelColorLower", UI_SkinIsColored( model ), info.legsColor );
   // END Dimmskii
 
   UI_DrawPlayer( rect->x, rect->y, rect->w, rect->h, &info, uiInfo.uiDC.realTime / 2);

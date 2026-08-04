@@ -27,6 +27,10 @@ void 		Arena_BeginRound(void);
 void 		Arena_EndRound(team_t winningTeam);
 void 		Arena_TimeoutRound(void);
 void 		Arena_CheckRules(void);
+void 		Arena_ForceRespawnDead(void);
+void 		Arena_FreezeSurvivorWeapons(void);
+void 		Arena_ResetMatchScores(void);
+void 		Arena_ThawWeapons(void);
 
 qboolean	Arena_MatchDecided(void);
 

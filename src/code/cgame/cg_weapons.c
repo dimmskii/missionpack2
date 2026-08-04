@@ -199,6 +199,19 @@ void CG_RailTrail( const clientInfo_t *ci, const vec3_t start, const vec3_t end 
  
 	localEntity_t *le;
 	refEntity_t   *re;
+
+// ~Dimmskii
+	// railCore/railDisc are additive, so a dark color renders as invisible rather
+	// than dark. Compress local copies only - ci->color1/color2 stay raw for the
+	// railgun model, its muzzle flash and the pickup tint.
+	vec4_t railColor1, railColor2;
+
+	VectorCopy( ci->color1, railColor1 );
+	VectorCopy( ci->color2, railColor2 );
+	railColor1[3] = railColor2[3] = 1.0f;
+	BG_CompressColorBrightness( railColor1, MIN_RAILCOLOR_BRIGHTNESS );
+	BG_CompressColorBrightness( railColor2, MIN_RAILCOLOR_BRIGHTNESS );
+// END Dimmskii
  
 	#define RADIUS   4
 	#define ROTATION 1
@@ -223,14 +236,24 @@ void CG_RailTrail( const clientInfo_t *ci, const vec3_t start, const vec3_t end 
 	VectorCopy(start, re->origin);
 	VectorCopy(end, re->oldorigin);
  
-	re->shaderRGBA[0] = ci->color1[0] * 255;
-    re->shaderRGBA[1] = ci->color1[1] * 255;
-    re->shaderRGBA[2] = ci->color1[2] * 255;
+//	re->shaderRGBA[0] = ci->color1[0] * 255;
+//    re->shaderRGBA[1] = ci->color1[1] * 255;
+//    re->shaderRGBA[2] = ci->color1[2] * 255;
+// ~Dimmskii - compressed copies, built at the top of this function
+	re->shaderRGBA[0] = railColor1[0] * 255;
+    re->shaderRGBA[1] = railColor1[1] * 255;
+    re->shaderRGBA[2] = railColor1[2] * 255;
+// END Dimmskii
     re->shaderRGBA[3] = 255;
 
-	le->color[0] = ci->color1[0] * 0.75;
-	le->color[1] = ci->color1[1] * 0.75;
-	le->color[2] = ci->color1[2] * 0.75;
+//	le->color[0] = ci->color1[0] * 0.75;
+//	le->color[1] = ci->color1[1] * 0.75;
+//	le->color[2] = ci->color1[2] * 0.75;
+// ~Dimmskii
+	le->color[0] = railColor1[0] * 0.75;
+	le->color[1] = railColor1[1] * 0.75;
+	le->color[2] = railColor1[2] * 0.75;
+// END Dimmskii
 	le->color[3] = 1.0f;
 
 	AxisClear( re->axis );
@@ -278,14 +301,24 @@ void CG_RailTrail( const clientInfo_t *ci, const vec3_t start, const vec3_t end 
 			re->radius = 1.1f;
 			re->customShader = cgs.media.railRingsShader;
 
-			re->shaderRGBA[0] = ci->color2[0] * 255;
-			re->shaderRGBA[1] = ci->color2[1] * 255;
-			re->shaderRGBA[2] = ci->color2[2] * 255;
+//			re->shaderRGBA[0] = ci->color2[0] * 255;
+//			re->shaderRGBA[1] = ci->color2[1] * 255;
+//			re->shaderRGBA[2] = ci->color2[2] * 255;
+// ~Dimmskii - compressed copies, built at the top of this function
+			re->shaderRGBA[0] = railColor2[0] * 255;
+			re->shaderRGBA[1] = railColor2[1] * 255;
+			re->shaderRGBA[2] = railColor2[2] * 255;
+// END Dimmskii
 			re->shaderRGBA[3] = 255;
 
-			le->color[0] = ci->color2[0] * 0.75;
-			le->color[1] = ci->color2[1] * 0.75;
-			le->color[2] = ci->color2[2] * 0.75;
+//			le->color[0] = ci->color2[0] * 0.75;
+//			le->color[1] = ci->color2[1] * 0.75;
+//			le->color[2] = ci->color2[2] * 0.75;
+// ~Dimmskii
+			le->color[0] = railColor2[0] * 0.75;
+			le->color[1] = railColor2[1] * 0.75;
+			le->color[2] = railColor2[2] * 0.75;
+// END Dimmskii
 			le->color[3] = 1.0f;
 
 			le->pos.trType = TR_LINEAR;
