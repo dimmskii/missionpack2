@@ -105,14 +105,18 @@ static const int gameTypes_missionpack2[] = { // So we can filter to our own gam
 	GT_FFA,
 	GT_TOURNAMENT,
 	GT_SINGLE_PLAYER,
-	GT_ARENA,
 	GT_TEAM,
 	GT_TEAMARENA,
-	GT_FREEZETAG,
 	GT_CTF,	
 	GT_1FCTF,
 	GT_OBELISK,	
 	GT_HARVESTER,
+	GT_FREEZE,		// freeze tag
+	GT_DOMINATION,
+	GT_ATTACK_DEFEND,
+	GT_RED_ROVER,
+	GT_TEAMTOURNAMENT,	// team tournament
+	GT_ARENA,
 };
 
 static const int gameTypes_baseq3[] = {
