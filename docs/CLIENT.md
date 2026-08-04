@@ -71,7 +71,7 @@ General config improvements upon vanilla Q3/TA:
 | `modelColorHead` | ` ` | Head color of *your own* pm/fb skin, broadcast to everyone else on the server. Same format as the cvars above. Set to empty string for white. Only applies while your own skin is `pm` or `fb`; other players can still override it with their force/color cvars. Settable from the Player menu. |
 | `modelColorUpper` | ` ` | Torso color of your own pm/fb skin, same format. |
 | `modelColorLower` | ` ` | Legs color of your own pm/fb skin, same format. |
-| `effectsColor1` | ` ` | Hex color of *your own* rail core, rail trail and railgun pickup tint, broadcast to everyone else. Hex only (`#RGB`, `#RRGGBB` or `#RRGGBBAA`, with `#`, `0x` or no prefix); alpha is ignored. **Set to empty string to fall back to `color1`**, which keeps working as the vanilla `1`-`7` value. Settable from the Player menu. See the note below on dark values. |
+| `effectsColor1` | ` ` | Hex color of *your own* rail core, rail trail and railgun pickup tint, broadcast to everyone else. Hex only (`#RGB`, `#RRGGBB` or `#RRGGBBAA`, with `#`, `0x` or no prefix); alpha is ignored. **Set to empty string to fall back to `color1`**, which keeps working as the vanilla `1`-`7` value. Settable from the Player menu. |
 | `effectsColor2` | ` ` | As `effectsColor1`, but for your rail rings. Falls back to `color2` when empty. |
 | `cg_forceRedTeamModel` | ` ` | Accepted for Quake Live config compatibility. No effect. |
 | `cg_forceBlueTeamModel` | ` ` | Accepted for Quake Live config compatibility. No effect. |
@@ -82,18 +82,6 @@ General config improvements upon vanilla Q3/TA:
 | `cg_oldRail` | `1` | Enables vanilla rail effect. Default `1`. |
 | `cg_oldRocket` | `1` | Enables vanilla rocket effect. Default `1`. |
 | `cg_killBeep` | `0` | Plays a confirmation beep locally when you score a kill (not suicides/world deaths). `0` = Off, `1` = On (plays a single fixed sound currently). *Planned: QL-style preset selection via other integer values (different beep sounds), not implemented yet.* |
-
-> **Dark rail colors are brightened on purpose.** The rail beam and rings draw with
-> additive shaders, where a dark color doesn't render as dark — it renders as nearly
-> invisible. So `effectsColor1`/`effectsColor2` are compressed into a brighter band
-> before the rail is drawn: `#000000` comes out around `#808080`, and darker values are
-> lifted more than lighter ones. Relative differences survive, so a range like
-> `#200000` → `#800000` → `#FF0000` still reads as three distinct shades, and colors
-> that are already bright are unchanged.
->
-> Only the **rail effect** is treated this way. The railgun model, its muzzle flash and
-> the pickup tint keep your exact value, so setting a very dark color still darkens the
-> weapon while leaving the beam visible.
 
 ---
 
