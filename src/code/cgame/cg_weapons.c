@@ -196,7 +196,7 @@ void CG_RailTrail( const clientInfo_t *ci, const vec3_t start, const vec3_t end 
 	vec3_t axis[36], move, move2, vec, temp;
 	float  len;
 	int    i, j, skip;
-
+ 
 	localEntity_t *le;
 	refEntity_t   *re;
 
@@ -236,14 +236,24 @@ void CG_RailTrail( const clientInfo_t *ci, const vec3_t start, const vec3_t end 
 	VectorCopy(start, re->origin);
 	VectorCopy(end, re->oldorigin);
  
-	re->shaderRGBA[0] = railColor1[0] * 255;	// ~Dimmskii - compressed, see top
-    re->shaderRGBA[1] = railColor1[1] * 255;	// ~Dimmskii
-    re->shaderRGBA[2] = railColor1[2] * 255;	// ~Dimmskii
+//	re->shaderRGBA[0] = ci->color1[0] * 255;
+//    re->shaderRGBA[1] = ci->color1[1] * 255;
+//    re->shaderRGBA[2] = ci->color1[2] * 255;
+// ~Dimmskii - compressed copies, built at the top of this function
+	re->shaderRGBA[0] = railColor1[0] * 255;
+    re->shaderRGBA[1] = railColor1[1] * 255;
+    re->shaderRGBA[2] = railColor1[2] * 255;
+// END Dimmskii
     re->shaderRGBA[3] = 255;
 
-	le->color[0] = railColor1[0] * 0.75;	// ~Dimmskii
-	le->color[1] = railColor1[1] * 0.75;	// ~Dimmskii
-	le->color[2] = railColor1[2] * 0.75;	// ~Dimmskii
+//	le->color[0] = ci->color1[0] * 0.75;
+//	le->color[1] = ci->color1[1] * 0.75;
+//	le->color[2] = ci->color1[2] * 0.75;
+// ~Dimmskii
+	le->color[0] = railColor1[0] * 0.75;
+	le->color[1] = railColor1[1] * 0.75;
+	le->color[2] = railColor1[2] * 0.75;
+// END Dimmskii
 	le->color[3] = 1.0f;
 
 	AxisClear( re->axis );
@@ -291,14 +301,24 @@ void CG_RailTrail( const clientInfo_t *ci, const vec3_t start, const vec3_t end 
 			re->radius = 1.1f;
 			re->customShader = cgs.media.railRingsShader;
 
-			re->shaderRGBA[0] = railColor2[0] * 255;	// ~Dimmskii - compressed, see top
-			re->shaderRGBA[1] = railColor2[1] * 255;	// ~Dimmskii
-			re->shaderRGBA[2] = railColor2[2] * 255;	// ~Dimmskii
+//			re->shaderRGBA[0] = ci->color2[0] * 255;
+//			re->shaderRGBA[1] = ci->color2[1] * 255;
+//			re->shaderRGBA[2] = ci->color2[2] * 255;
+// ~Dimmskii - compressed copies, built at the top of this function
+			re->shaderRGBA[0] = railColor2[0] * 255;
+			re->shaderRGBA[1] = railColor2[1] * 255;
+			re->shaderRGBA[2] = railColor2[2] * 255;
+// END Dimmskii
 			re->shaderRGBA[3] = 255;
 
-			le->color[0] = railColor2[0] * 0.75;	// ~Dimmskii
-			le->color[1] = railColor2[1] * 0.75;	// ~Dimmskii
-			le->color[2] = railColor2[2] * 0.75;	// ~Dimmskii
+//			le->color[0] = ci->color2[0] * 0.75;
+//			le->color[1] = ci->color2[1] * 0.75;
+//			le->color[2] = ci->color2[2] * 0.75;
+// ~Dimmskii
+			le->color[0] = railColor2[0] * 0.75;
+			le->color[1] = railColor2[1] * 0.75;
+			le->color[2] = railColor2[2] * 0.75;
+// END Dimmskii
 			le->color[3] = 1.0f;
 
 			le->pos.trType = TR_LINEAR;
