@@ -7,6 +7,7 @@ Mod based off of Kr3m's [missionpackplus](https://github.com/Kr3m/missionpackplu
 ## Features
 * FFA Arena and Clan Arena gametypes.
 * Vanilla HUD with loading TA/QL .menu custom huds optional
+* PM/FB Hex color support: force enemies/team + user skin customization
 * Heavy Machinegun from Quake Live
 * Mostly QL-compatible `factories.txt` and `*.factories` scripts support
 * QL-Style nail bounce
@@ -14,7 +15,7 @@ Mod based off of Kr3m's [missionpackplus](https://github.com/Kr3m/missionpackplu
 * Green armor
 * Flag POIs
 * HUD files from QL parse without error. This project strives for near-total CG (HUD) scripts compatibility with both MPP and QL.
-* Unlagged, Instagib, PM/FB skins and much more from missionpackplus
+* Unlagged, Instagib, and much more from missionpackplus
 
 ## Screenshots
 <img src="docs/screenshots/pm.jpg" alt="PM Skinned Enemy" width="360"> <img src="docs/screenshots/teammatepois.jpg" alt="QL-Styled Teammate POIs" width="360"> <img src="docs/screenshots/green.jpg" alt="Green Armor" width="360"> <img src="docs/screenshots/hmg.jpg" alt="QL HMG" width="360"> <img src="docs/CLIENT_files/h05_hud_vq3_ca.jpg" alt="Vanilla HUD" width="360"> <img src="docs/screenshots/itemtimers.jpg" alt="Item Timers" width="360"> 
