@@ -18,7 +18,7 @@ Mod based off of Kr3m's [missionpackplus](https://github.com/Kr3m/missionpackplu
 * Unlagged, Instagib, and much more from missionpackplus
 
 ## Screenshots
-<img src="docs/screenshots/pm.jpg" alt="PM Skinned Enemy" width="360"> <img src="docs/screenshots/teammatepois.jpg" alt="QL-Styled Teammate POIs" width="360"> <img src="docs/screenshots/green.jpg" alt="Green Armor" width="360"> <img src="docs/screenshots/hmg.jpg" alt="QL HMG" width="360"> <img src="docs/CLIENT_files/h05_hud_vq3_ca.jpg" alt="Vanilla HUD" width="360"> <img src="docs/screenshots/itemtimers.jpg" alt="Item Timers" width="360"> 
+<img src="docs/screenshots/usercolors.jpg" alt="PM Skin User Colors" width="360"> <img src="docs/screenshots/teammatepois.jpg" alt="QL-Styled Teammate POIs" width="360"> <img src="docs/screenshots/green.jpg" alt="Green Armor" width="360"> <img src="docs/screenshots/hmg.jpg" alt="QL HMG" width="360"> <img src="docs/CLIENT_files/h05_hud_vq3_ca.jpg" alt="Vanilla HUD" width="360"> <img src="docs/screenshots/itemtimers.jpg" alt="Item Timers" width="360"> 
 ## Configuration Guides
 
 For detailed setup instructions based on your use case, please refer to the specific configuration guides:
