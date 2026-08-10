@@ -221,6 +221,11 @@ void G_FreezeFreezeClient( gentity_t *ent, qboolean environmental ) {
 		(int)( ent - g_entities ), client->freezeThawTimeRemaining );
 #endif
 
+	// G_Damage stamps FL_NO_KNOCKBACK on a client the moment the killing blow lands,
+	// and only ClientSpawn ever clears it - which a frozen player never reaches, so
+	// the body would absorb every later hit. Clear it here; we run after that stamp.
+	ent->flags &= ~FL_NO_KNOCKBACK;
+
 	// PM_FREEZE no longer returns early out of PmoveSingle, so the body still ducks,
 	// falls and slides - it just can't drive itself. ClientThink_real re-asserts this
 	// every frame; setting it here makes the freeze take effect on the same frame.
