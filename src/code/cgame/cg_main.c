@@ -837,6 +837,11 @@ static void CG_RegisterGraphics( void ) {
 	cgs.media.battleWeaponShader = trap_R_RegisterShader("powerups/battleWeapon" );
 	cgs.media.invisShader = trap_R_RegisterShader("powerups/invisibility" );
 	cgs.media.regenShader = trap_R_RegisterShader("powerups/regen" );
+	// ~Dimmskii Freeze Tag body shell, three layers like retail QL
+	cgs.media.ice1Shader = trap_R_RegisterShader("powerups/ice1" );
+	cgs.media.ice2Shader = trap_R_RegisterShader("powerups/ice2" );
+	cgs.media.ice3Shader = trap_R_RegisterShader("powerups/ice3" );
+	// END Dimmskii
 	cgs.media.hastePuffShader = trap_R_RegisterShader("hasteSmokePuff" );
 
 //#ifdef MISSIONPACK

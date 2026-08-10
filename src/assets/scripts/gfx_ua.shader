@@ -1039,3 +1039,60 @@ pois/flags/neutral3
 
 
 
+
+
+//===================================================
+// FREEZE TAG ~Dimmskii
+//
+// Body shell, transcribed from retail QL scripts/gfx.shader. cgame registers
+// all three and applies them as customShader passes in
+// CG_AddRefEntityWithPowerups, the choke point legs, torso and head all take.
+//
+// The three differ only in deformVertexes amplitude (1, 2, 3) and scroll speed,
+// which drops as the shell grows - together they read as concentric layers of
+// ice sliding at different rates. Zero wave amplitude and frequency make each a
+// constant outward push, not a pulse; that is what separates frozen from the
+// pulsing powerup shells above.
+//
+// All three want textures/effects/icemap - 64x64 in retail, additive, so alpha
+// goes unused. The .tga matches retail's shader text even though retail ships a
+// .jpg; the renderer falls back across extensions.
+
+powerups/ice1
+{
+	nopicmip
+	deformVertexes wave 100 sin 1 0 0 0
+	{
+		map textures/effects/icemap.tga
+		blendfunc add
+		tcGen environment
+		tcmod rotate 30
+		tcmod scroll 0.75 -0.075
+	}
+}
+
+powerups/ice2
+{
+	nopicmip
+	deformVertexes wave 100 sin 2 0 0 0
+	{
+		map textures/effects/icemap.tga
+		blendfunc add
+		tcGen environment
+		tcmod rotate 30
+		tcmod scroll 0.5 -0.05
+	}
+}
+
+powerups/ice3
+{
+	nopicmip
+	deformVertexes wave 100 sin 3 0 0 0
+	{
+		map textures/effects/icemap.tga
+		blendfunc add
+		tcGen environment
+		tcmod rotate 30
+		tcmod scroll 0.25 -0.025
+	}
+}

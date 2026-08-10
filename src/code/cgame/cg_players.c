@@ -2738,6 +2738,17 @@ void CG_AddRefEntityWithPowerups( refEntity_t *ent, entityState_t *state, int te
 			ent->customShader = cgs.media.battleSuitShader;
 			trap_R_AddRefEntityToScene( ent );
 		}
+		// ~Dimmskii Frozen shell. Legs, torso and head all come through here, so
+		// these passes ice the whole model. Three concentric layers like retail QL.
+		if ( cgs.freezeEnabled && ( state->powerups & ( 1 << PW_NUM_POWERUPS ) ) ) {
+			ent->customShader = cgs.media.ice1Shader;
+			trap_R_AddRefEntityToScene( ent );
+			ent->customShader = cgs.media.ice2Shader;
+			trap_R_AddRefEntityToScene( ent );
+			ent->customShader = cgs.media.ice3Shader;
+			trap_R_AddRefEntityToScene( ent );
+		}
+		// END Dimmskii
 	}
 }
 

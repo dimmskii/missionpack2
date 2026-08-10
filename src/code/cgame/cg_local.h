@@ -823,6 +823,11 @@ typedef struct {
 	qhandle_t	invisShader;
 	qhandle_t	regenShader;
 	qhandle_t	battleSuitShader;
+	// ~Dimmskii QL's three-layer frozen shell, names taken from retail gfx.shader
+	qhandle_t	ice1Shader;
+	qhandle_t	ice2Shader;
+	qhandle_t	ice3Shader;
+	// END Dimmskii
 	qhandle_t	battleWeaponShader;
 	qhandle_t	hastePuffShader;
 //#ifdef MISSIONPACK
