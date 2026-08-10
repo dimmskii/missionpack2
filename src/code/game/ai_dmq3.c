@@ -3606,6 +3606,15 @@ void BotCheckAttack(bot_state_t *bs) {
 	attackentity = bs->enemy;
 	//
 	BotEntityInfo(attackentity, &entinfo);
+// ~Dimmskii Never shoot a frozen player. EntityIsDead already stops a bot picking
+// one as a new enemy (PM_FREEZE fails its pm_type != PM_NORMAL test), but this is
+// the one gate every firing path passes through, so it also covers an enemy that
+// freezes mid-fight before the battle node has dropped them.
+	if ( attackentity >= 0 && attackentity < MAX_CLIENTS
+		&& G_FreezeIsFrozen( &g_entities[attackentity] ) ) {
+		return;
+	}
+// END Dimmskii
 	// if not attacking a player
 	if (attackentity >= MAX_CLIENTS) {
 //#ifdef MISSIONPACK
@@ -5528,7 +5537,9 @@ void BotArenaPickEnemyToKill(bot_state_t *bs) {
 		// If on specified team and alive (health > 0), add to alive count
 //		if ( gametype < GT_TEAM || clientEnt->client->sess.sessionTeam != BotTeam(bs) ) {
 		if ( !GT_IsTeam(gametype) || clientEnt->client->sess.sessionTeam != BotTeam(bs) ) { // ~Dimmskii
-			if ( bs->client != clientEnt->client->ps.clientNum && clientEnt->client->sess.sessionTeam != TEAM_SPECTATOR && clientEnt->health > 0 ) {
+			// ~Dimmskii - a frozen player has health 1, so the health test alone
+			// still picks them; hunting a body nobody can kill just stalls the bot
+			if ( bs->client != clientEnt->client->ps.clientNum && clientEnt->client->sess.sessionTeam != TEAM_SPECTATOR && clientEnt->health > 0 && !G_FreezeIsFrozen( clientEnt ) ) {
 	#ifdef DEBUG
 				ClientName(bs->client, botname, sizeof(botname));
 				ClientName( clientEnt->client->ps.clientNum, othername, sizeof( othername ) );
