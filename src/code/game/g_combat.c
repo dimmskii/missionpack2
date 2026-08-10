@@ -526,7 +526,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 		if ( attacker == self || OnSameTeam (self, attacker ) ) {
 //			AddScore( attacker, self->r.currentOrigin, -1 );
 // ~Dimmskii
-			if ( !GT_IsRoundBased(g_gametype.integer) ) {  // Suicides don't subtract points in arena gamemodes.
+			if ( !GT_IsRoundBased(g_gametype.integer) ) {  // Suicides don't subtract points in arena or freeze tag gamemodes.
 				AddScore( attacker, self->r.currentOrigin, -1 );
 			}
 // END Dimmskii
@@ -572,7 +572,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 		//AddScore( self, self->r.currentOrigin, -1 );
 
 		// ~Dimmskii
-		if ( !GT_IsRoundBased(g_gametype.integer) ) {  // Suicides don't subtract points in arena gamemodes.
+		if ( !GT_IsRoundBased(g_gametype.integer) ) {  // Suicides don't subtract points in arena or freeze tag gamemodes.
 			AddScore( self, self->r.currentOrigin, -1 );
 		}
 		// END Dimmskii

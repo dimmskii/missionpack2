@@ -454,7 +454,7 @@ void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops ) {
 			if ( ps->persistant[PERS_RANK] != ops->persistant[PERS_RANK] ) {
 //				if ( cgs.gametype < GT_TEAM) {
 // ~Dimmskii
-				if ( !GT_IsTeam(cgs.gametype) && !GT_IsRoundBased(cgs.gametype) ) { // Only play on non-team, non-arena games.
+				if ( !GT_IsTeam(cgs.gametype) && !GT_IsRoundBased(cgs.gametype) ) { // Only play on non-team, non-round-based games.
 // END ~Dimmskii
 					if (  ps->persistant[PERS_RANK] == 0 ) {
 						CG_AddBufferedSound(cgs.media.takenLeadSound);

@@ -1987,7 +1987,7 @@ static void CheckExitRules_old( void ) { // ~Dimmskii
 		}
 	}
 	
-	// Don't check any more fraglimit or capture limit stuff in Arena gametypes
+	// Don't check any more fraglimit or capture limit stuff in Arena or FT gametypes
 	if ( GT_IsRoundBased(g_gametype.integer) ) {
 		return;
 	}
