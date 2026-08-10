@@ -2223,7 +2223,7 @@ BotAggression
 */
 float BotAggression(bot_state_t *bs) {
 // BEGIN ~DIMMSKII
-	if ( GT_IsRoundBased(gametype) ) {
+	if ( GT_IsArenaGame(gametype) ) {
 		return 100; // Always agressive in arena gamemodes
 	}
 // END ~DIMMSKII
@@ -2276,7 +2276,7 @@ BotFeelingBad
 */
 float BotFeelingBad(bot_state_t *bs) {
 // BEGIN ~DIMMSKII
-	if ( GT_IsRoundBased(gametype) ) {
+	if ( GT_IsArenaGame(gametype) ) {
 		return 0; // Bots never feel bad in arena gamemodes
 	}
 // END ~DIMMSKII
