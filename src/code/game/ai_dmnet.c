@@ -333,6 +333,42 @@ int BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal) 
 	aas_entityinfo_t entinfo, botinfo;
 	bot_waypoint_t *wp;
 
+// ~Dimmskii Thawing a team mate outranks the generic help/accompany goals below,
+// so it is tested first.
+	if (bs->ltgtype == LTG_UNFREEZE && !retreat) {
+		float thawradius;
+
+		//stop as soon as they are thawed, or the goal has run its time
+		if (!G_FreezeIsFrozen(&g_entities[bs->teammate]) || bs->teamgoal_time < FloatTime()) {
+			bs->ltgtype = 0;
+			return qfalse;
+		}
+		//get entity information of the frozen team mate
+		BotEntityInfo(bs->teammate, &entinfo);
+		if (entinfo.valid) {
+			areanum = BotPointAreaNum(entinfo.origin);
+			if (areanum && trap_AAS_AreaReachability(areanum)) {
+				//update team goal
+				bs->teamgoal.entitynum = bs->teammate;
+				bs->teamgoal.areanum = areanum;
+				VectorCopy(entinfo.origin, bs->teamgoal.origin);
+				VectorSet(bs->teamgoal.mins, -8, -8, -8);
+				VectorSet(bs->teamgoal.maxs, 8, 8, 8);
+			}
+			//once inside the thaw radius stand still and let the timer do the work,
+			//short of it so the bot doesn't hover on the edge and drop out
+			thawradius = g_freezeThawRadius.value * 0.75f;
+			VectorSubtract(entinfo.origin, bs->origin, dir);
+			if (VectorLengthSquared(dir) < Square(thawradius)) {
+				trap_BotResetAvoidReach(bs->ms);
+				return qfalse;
+			}
+		}
+		memcpy(goal, &bs->teamgoal, sizeof(bot_goal_t));
+		return qtrue;
+	}
+// END Dimmskii
+
 	if (bs->ltgtype == LTG_TEAMHELP && !retreat) {
 		//check for bot typing status message
 		if (bs->teammessage_time && bs->teammessage_time < FloatTime()) {
