@@ -70,6 +70,7 @@ void AddTeamScore( vec3_t origin, team_t team, int score );
 // BEGIN ~DIMMSKII
 int Team_PlayerCount( team_t team );
 int Team_PlayerCountAlive( team_t team );
+int Team_PlayerCountFighting( team_t team );	// ~Dimmskii - alive and not frozen
 int Team_CountTotalHealth( team_t team, qboolean includeDead );
 int Team_CountTotalArmor( team_t team, qboolean includeDead );
 

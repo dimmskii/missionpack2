@@ -1096,6 +1096,7 @@ typedef struct {
 	int				g_teamVisibility;
 	int				g_itemVisibility;	// TODO: break up into perhaps g_flagVisibility, g_powerupVisibility, etc.
 	int				g_itemTimers;
+	qboolean		freezeEnabled;		// resolved freeze gate from CS_SERVER_SETTINGS_INFO_A
 // END ~Dimmskii
 	int				timelimit;
 	int				maxclients;

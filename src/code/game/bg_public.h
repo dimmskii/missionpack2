@@ -473,6 +473,11 @@ typedef enum {
 	EV_TAUNT_GETFLAG,
 	EV_TAUNT_GUARDBASE,
 	EV_TAUNT_PATROL,
+// ~Dimmskii -- Freeze Tag. Appended, never inserted: the event index rides an
+// 8-bit field (EV_EVENT_BIT1 == 0x100), so renumbering would desync qagame/cgame.
+	EV_THAW_PLAYER,
+	EV_THAW_TICK,
+// END Dimmskii
 	EV_MAX
 
 } entity_event_t;
@@ -677,6 +682,9 @@ typedef enum {
 	MOD_HMG,
 // END Dimmskii
 	MOD_GRAPPLE
+// ~Dimmskii -- Freeze Tag; appended last so no existing MOD_ value shifts
+	,MOD_THAW
+// END Dimmskii
 } meansOfDeath_t;
 
 

@@ -709,17 +709,29 @@ static void G_UpdateWeaponReloadConfigstring( qboolean forceBroadcast ) {
 G_UpdateServerSettingsConfigstrings
 
 Publishes scalar server settings the client needs (shotgun pellets/spread)
-as an info string into CS_SERVER_SETTINGS_INFO_B. INFO_A is reserved for
-future boolean flags and left empty this pass.
+as an info string into CS_SERVER_SETTINGS_INFO_B, and the boolean gameplay
+flags the client gates on into CS_SERVER_SETTINGS_INFO_A.
 =================
 */
 static void G_UpdateServerSettingsConfigstrings( qboolean forceBroadcast ) {
+	static char	s_serverSettingsPayloadA[MAX_INFO_STRING];
 	static char	s_serverSettingsPayloadB[MAX_INFO_STRING];
+	char		payloadA[MAX_INFO_STRING];
 	char		payloadB[MAX_INFO_STRING];
+
+	// INFO_A - booleans. "freeze" is the resolved gate, not the raw cvar, so the
+	// client never has to know whether it came from the gametype or g_freeze.
+	payloadA[0] = '\0';
+	Info_SetValueForKey( payloadA, "freeze", G_FreezeEnabled() ? "1" : "0" );
 
 	payloadB[0] = '\0';
 	Info_SetValueForKey( payloadB, "sgPellets", va( "%i", g_sgPellets.integer ) );
 	Info_SetValueForKey( payloadB, "sgSpread",  va( "%i", g_sgPelletSpread.integer ) );
+
+	if ( forceBroadcast || Q_stricmp( payloadA, s_serverSettingsPayloadA ) != 0 ) {
+		trap_SetConfigstring( CS_SERVER_SETTINGS_INFO_A, payloadA );
+		Q_strncpyz( s_serverSettingsPayloadA, payloadA, sizeof( s_serverSettingsPayloadA ) );
+	}
 
 	if ( forceBroadcast || Q_stricmp( payloadB, s_serverSettingsPayloadB ) != 0 ) {
 		trap_SetConfigstring( CS_SERVER_SETTINGS_INFO_B, payloadB );
@@ -2703,6 +2715,11 @@ static void G_RunFrame( int levelTime ) {
 */
 	
 // ~Dimmskii
+	// Thaw ticking. Outside the arena branch on purpose - g_freeze can enable the
+	// mechanic in gametypes GT_IsArenaGame doesn't cover. Returns immediately when
+	// freeze is off or nobody is frozen.
+	G_FreezeRunFrame();
+
 	if ( GT_IsArenaGame(g_gametype.integer) ) {
 		// see if Clan arena is
 		Arena_CheckRules();

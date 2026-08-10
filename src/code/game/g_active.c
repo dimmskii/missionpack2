@@ -873,6 +873,15 @@ void ClientThink_real( gentity_t *ent ) {
 		client->ps.pm_type = PM_NORMAL;
 	}
 
+// ~Dimmskii -- Freeze Tag. This runs every frame and a frozen player sits at
+// health 1, so the branch above hands them PM_NORMAL and undoes the PM_FREEZE
+// set once at freeze time - they keep full movement. Re-assert it here, after
+// the chain, so nothing above needs changing.
+	if ( G_FreezeIsFrozen( ent ) ) {
+		client->ps.pm_type = PM_FREEZE;
+	}
+// END Dimmskii
+
 	client->ps.gravity = g_gravity.value;
 
 	// set speed

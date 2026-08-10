@@ -1248,6 +1248,17 @@ void CG_EntityEvent( centity_t *cent, vec3_t position, int entityNum ) {
 		CG_Beam( cent );
 		break;
 
+// ~Dimmskii -- Freeze Tag. These MUST have cases even while the visuals are
+// still to come: any event the server emits without a case here falls through
+// to the default below and CG_Error kills the client.
+	case EV_THAW_PLAYER:
+		trap_S_StartSound( NULL, es->number, CHAN_AUTO, cgs.media.respawnSound );
+		break;
+
+	case EV_THAW_TICK:
+		// thaw-in-progress feedback; deliberately silent for now
+		break;
+// END Dimmskii
 
 	default:
 		CG_Error( "Unknown event: %i", event );

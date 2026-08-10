@@ -176,7 +176,13 @@ static const char *GFACTORY_CVARS[] = {
 	"g_obeliskRegenPeriod",
 	"g_obeliskRegenAmount",
 	"g_obeliskRespawnDelay",
-	
+
+	// Freeze Tag
+	"g_freeze",
+	"g_freezeThawTime",
+	"g_freezeThawRadius",
+	"g_freezeAutoThawTime",
+
     NULL                    // Null-terminator for safe iteration loops
 };
 

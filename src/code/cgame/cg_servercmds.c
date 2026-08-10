@@ -347,12 +347,17 @@ static void CG_ParseWeaponReloadConfigString( void ) {
 ================
 CG_ParseServerSettingsConfigString
 
-Decodes the CS_SERVER_SETTINGS_INFO_B scalar info string into the cgs.*
-fields the client reads (shotgun pellet count/spread).
+Decodes CS_SERVER_SETTINGS_INFO_A (boolean gameplay flags) and
+CS_SERVER_SETTINGS_INFO_B (scalars) into the cgs.* fields the client reads.
 ================
 */
 static void CG_ParseServerSettingsConfigString( void ) {
 	const char	*info;
+
+	// INFO_A carries the already-resolved freeze gate, so the client never has to
+	// know whether the server enabled it by gametype or by g_freeze.
+	info = CG_ConfigString( CS_SERVER_SETTINGS_INFO_A );
+	cgs.freezeEnabled    = atoi( Info_ValueForKey( info, "freeze" ) ) ? qtrue : qfalse;
 
 	info = CG_ConfigString( CS_SERVER_SETTINGS_INFO_B );
 	cgs.g_sgPellets      = atoi( Info_ValueForKey( info, "sgPellets" ) );
@@ -529,7 +534,7 @@ static void CG_ConfigStringModified( void ) {
 	else if ( num == CS_WEAPON_RELOAD_TIMES ) {
 		CG_ParseWeaponReloadConfigString();
 	}
-	else if ( num == CS_SERVER_SETTINGS_INFO_B ) {
+	else if ( num == CS_SERVER_SETTINGS_INFO_A || num == CS_SERVER_SETTINGS_INFO_B ) {
 		CG_ParseServerSettingsConfigString();
 	}
 	// END Dimmskii

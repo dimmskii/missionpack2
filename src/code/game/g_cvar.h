@@ -196,6 +196,14 @@ G_CVAR( g_capturelimit, "capturelimit", "8", CVAR_SERVERINFO | CVAR_NORESTART, 0
 G_CVAR( g_roundlimit, "roundlimit", "10", CVAR_SERVERINFO | CVAR_NORESTART, 0, qtrue, qfalse )
 G_CVAR( g_roundtimelimit, "roundtimelimit", "180", CVAR_SERVERINFO | CVAR_NORESTART, 0, qtrue, qfalse )
 
+// Freeze Tag. The mechanic is gated on G_FreezeEnabled() - gametype GT_FREEZE OR
+// this cvar - so it can also be switched on inside other round-based gametypes.
+// Reaches the client through CS_SERVER_SETTINGS_INFO_A, not serverinfo.
+G_CVAR( g_freeze, "g_freeze", "0", 0, 0, qtrue, qfalse )
+G_CVAR( g_freezeThawTime, "g_freezeThawTime", "3000", 0, 0, qtrue, qfalse )			// ms of contact to thaw
+G_CVAR( g_freezeThawRadius, "g_freezeThawRadius", "96", 0, 0, qtrue, qfalse )		// units a helper must be within
+G_CVAR( g_freezeAutoThawTime, "g_freezeAutoThawTime", "0", 0, 0, qtrue, qfalse )	// 0 = never auto-thaw
+
 G_CVAR( g_teamVisibility, "g_teamVisibility", "1", CVAR_SERVERINFO, 0, qtrue, qfalse )
 G_CVAR( g_itemVisibility, "g_itemVisibility", "1", CVAR_SERVERINFO, 0, qtrue, qfalse )	// TODO: break up into perhaps g_flagVisibility, g_powerupVisibility, etc.
 G_CVAR( g_itemTimers, "g_itemTimers", "1", CVAR_SERVERINFO, 0, qtrue, qfalse )

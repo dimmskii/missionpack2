@@ -123,6 +123,24 @@ void G_LoadFactories( void ) {
 
 
 
+/*
+=============
+G_FreezeEnabled
+
+The single gate for the whole freeze/thaw mechanic. QL-SRP tests the gametype
+directly in ~12 places on top of its own predicate; we deliberately funnel
+everything through here instead, so g_freeze can enable freeze inside any
+round-based gametype and there is exactly one place to change the rule.
+=============
+*/
+qboolean G_FreezeEnabled( void ) {
+	if ( g_gametype.integer == GT_FREEZE ) {
+		return qtrue;
+	}
+	return g_freeze.integer ? qtrue : qfalse;
+}
+
+
 // ARENA / CA GAMETYPE LOGIC
 
 
@@ -272,8 +290,12 @@ void Arena_EndRound( team_t winningTeam ) {
 			if ( !clientEnt->inuse )
 				continue;
 			
-			// If not spectator and alive, add arena score
-			if ( clientEnt->client->sess.sessionTeam != TEAM_SPECTATOR && clientEnt->health > 0 ) {
+			// If not spectator and still fighting, add arena score. Frozen players
+			// sit at health 1, so the frozen test matters here too or the round
+			// win goes unawarded when freeze is on.
+			if ( clientEnt->client->sess.sessionTeam != TEAM_SPECTATOR
+				&& clientEnt->health > 0
+				&& !G_FreezeIsFrozen( clientEnt ) ) {
 				clientEntWon = clientEnt;
 				aliveCount ++;
 			}
@@ -386,7 +408,10 @@ void Arena_ForceRespawnDead( void ) {
 		if ( ent->client->sess.sessionTeam == TEAM_SPECTATOR ) {
 			continue;
 		}
-		if ( ent->health > 0 ) {
+		// Frozen counts as "not in the fight" even though health is 1, so a player
+		// still frozen when a round goes live gets respawned rather than starting
+		// the round stuck. respawn() -> ClientSpawn() clears the frozen state.
+		if ( ent->health > 0 && !G_FreezeIsFrozen( ent ) ) {
 			continue;
 		}
 		respawn( ent );
@@ -423,19 +448,22 @@ void Arena_CheckRules( void ) {
 		return;
 	}
 	
+	// Team_PlayerCountFighting, not ...Alive: a frozen player sits at health 1 and
+	// would otherwise keep the round open forever. Identical to the alive count
+	// when freeze is off, so this needs no gating.
 	if ( g_gametype.integer == GT_ARENA ) {
 		// Check if one person remains on FFA team
-		if ( Team_PlayerCountAlive(TEAM_FREE) < 2 ) {
+		if ( Team_PlayerCountFighting(TEAM_FREE) < 2 ) {
 			Arena_EndRound( TEAM_FREE ); // The round wins the round
 		}
 	} else if ( g_gametype.integer == GT_CLAN_ARENA || g_gametype.integer == GT_FREEZE ) {
 		// Check if either team has no players remaining ; if so, call Arena_EndRound
-		if ( Team_PlayerCountAlive(TEAM_RED) < 1 ) {
+		if ( Team_PlayerCountFighting(TEAM_RED) < 1 ) {
 			Arena_EndRound( TEAM_BLUE ); // Blue wins the round
-		} else if ( Team_PlayerCountAlive(TEAM_BLUE) < 1 ) {
+		} else if ( Team_PlayerCountFighting(TEAM_BLUE) < 1 ) {
 			Arena_EndRound( TEAM_RED ); // Red wins the round
 		}
-	} 
+	}
 }
 
 

@@ -1376,6 +1376,11 @@ void ClientSpawn(gentity_t *ent) {
 	}
 	
 // ~Dimmskii
+	// A freshly spawned player is never frozen. Clear it before the mid-round
+	// guard below, so a player frozen at the moment a round ended doesn't come
+	// back still carrying the marker.
+	G_FreezeInitClient( ent );
+
 	// Set the entity/client hp, etc back to zero (kill again) if spawned mid-round in an arena game
 	if ( GT_IsArenaGame(g_gametype.integer) ) {
 		if (!level.warmupTime && !level.intermissiontime && client->sess.sessionTeam != TEAM_SPECTATOR) {

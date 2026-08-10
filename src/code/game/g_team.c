@@ -141,9 +141,45 @@ int Team_PlayerCountAlive( team_t team ) {
 			count++;
 		}
 	}
-	
+
 	return count;
 }
+
+// ~Dimmskii
+/*
+================
+Team_PlayerCountFighting
+
+Players on a team who can still contest the round: alive AND not frozen.
+
+A frozen player is deliberately left at health 1 rather than 0, so
+Team_PlayerCountAlive counts them and a round-end test built on it would never
+fire once a team is fully frozen. This is the count the round logic wants.
+
+Identical to Team_PlayerCountAlive whenever freeze is off, since nothing is ever
+frozen then - so callers can use it unconditionally without gating.
+================
+*/
+int Team_PlayerCountFighting( team_t team ) {
+	int			i;
+	gentity_t	*clientEnt;
+	int count = 0;
+
+	for ( i = 0 ; i < level.maxclients ; i++ ) {
+		clientEnt = g_entities + i;
+		if ( !clientEnt->inuse )
+			continue;
+
+		if ( clientEnt->client->sess.sessionTeam == team
+			&& clientEnt->health > 0
+			&& !G_FreezeIsFrozen( clientEnt ) ) {
+			count++;
+		}
+	}
+
+	return count;
+}
+// END Dimmskii
 
 
 /*

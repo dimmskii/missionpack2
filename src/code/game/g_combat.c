@@ -599,6 +599,17 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 		}
 	}
 
+// ~Dimmskii -- Freeze Tag intercept. Deliberately placed here rather than at the
+// top of player_die (where QL-SRP puts it): everything above has already run, so
+// the frag credit, awards and obituary all happen exactly as normal - including
+// our own scoring fixes - with no duplicated death logic. Everything below is
+// what a frozen player must NOT get: dropped items, a corpse, a respawn timer.
+// Flags are returned above, so a frozen flag carrier still drops the flag.
+	if ( G_FreezeHandlePlayerDeath( self, attacker, meansOfDeath ) ) {
+		return;
+	}
+// END Dimmskii
+
 	// if client is in a nodrop area, don't drop anything (but return CTF flags!)
 	contents = trap_PointContents( self->r.currentOrigin, -1 );
 	if ( !( contents & CONTENTS_NODROP )) {
