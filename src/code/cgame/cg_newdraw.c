@@ -620,7 +620,7 @@ static void CG_HudScores( int *s1, int *s2 ) {
 	*s1 = cgs.scores1;
 	*s2 = cgs.scores2;
 
-	if ( !GT_IsArenaGame( cgs.gametype ) || GT_IsTeam( cgs.gametype ) ) {
+	if ( !GT_IsRoundBased( cgs.gametype ) || GT_IsTeam( cgs.gametype ) ) {
 		return;
 	}
 
@@ -1118,13 +1118,13 @@ qboolean CG_OwnerDrawVisible(int flags) {
 
 // ~Dimmskii
 	if (flags & CG_SHOW_ANYARENAGAME) {
-		if( !GT_IsArenaGame(cgs.gametype) ) {
+		if( !GT_IsRoundBased(cgs.gametype) ) {
 			return qfalse;
 		}
 	}
 
 	if (flags & CG_SHOW_ANYNONARENAGAME) {
-		if( GT_IsArenaGame(cgs.gametype)  ) {
+		if( GT_IsRoundBased(cgs.gametype)  ) {
 			return qfalse;
 		}
 	}
@@ -1280,7 +1280,7 @@ static void CG_DrawCapFragLimit(rectDef_t *rect, float scale, vec4_t color, qhan
 	//int limit = (cgs.gametype >= GT_CTF) ? cgs.capturelimit : cgs.fraglimit;
 // ~Dimmskii
 	int limit;
-	if ( GT_IsArenaGame(cgs.gametype) ) {
+	if ( GT_IsRoundBased(cgs.gametype) ) {
 		limit = cgs.roundlimit;
 	} else if ( GT_IsFlagGame(cgs.gametype) ) {
 		limit = cgs.capturelimit;

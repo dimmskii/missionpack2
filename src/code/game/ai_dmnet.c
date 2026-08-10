@@ -304,7 +304,7 @@ int BotGetItemLongTermGoal(bot_state_t *bs, int tfl, bot_goal_t *goal) {
 // TODO: Move this out of here (and eventually port QL-SRP's dedicated
 // instagib/arena hunt AI node - this reactive LTG-failure kludge is a stopgap).
 //			if ( GT_IsArenaGame(g_gametype.integer) ) {
-			if ( GT_IsArenaGame(g_gametype.integer) || g_instagib.integer ) { // ~Dimmskii - also cover instagib in any gametype
+			if ( GT_IsRoundBased(g_gametype.integer) || g_instagib.integer ) { // ~Dimmskii - also cover instagib in any gametype
 				// Hackish Dimmskii fix for bots not moving in Arena gametypes where all pickups are absent
 				BotArenaPickEnemyToKill(bs);
 			}

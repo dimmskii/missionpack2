@@ -2760,7 +2760,7 @@ static void CG_Draw2D( stereoFrame_t stereoFrame )
 		CG_DrawCrosshair();
 		CG_DrawCrosshairNames();
 // ~Dimmskii
-	} else if ( GT_IsArenaGame(cgs.gametype)
+	} else if ( GT_IsRoundBased(cgs.gametype)
 		&& cg.snap->ps.stats[STAT_HEALTH] <= 0
 		&& ( cg.snap->ps.pm_flags & PMF_FOLLOW ) ) {
 		CG_DrawCrosshair();

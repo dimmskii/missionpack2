@@ -1922,7 +1922,7 @@ static void CheckExitRules_old( void ) { // ~Dimmskii
 	}
 	
 // ~Dimmskii
-	if ( GT_IsArenaGame(g_gametype.integer) && g_roundtimelimit.integer && !level.warmupTime && !level.arenaRoundQueued && !Arena_MatchDecided() ) {
+	if ( GT_IsRoundBased(g_gametype.integer) && g_roundtimelimit.integer && !level.warmupTime && !level.arenaRoundQueued && !Arena_MatchDecided() ) {
 		if ( level.time - level.startTime >= g_roundtimelimit.integer*1000 ) {
 			G_BroadcastServerCommand( -1, "print \"Round timelimit hit.\n\"");
 			Arena_TimeoutRound();
@@ -1940,7 +1940,7 @@ static void CheckExitRules_old( void ) { // ~Dimmskii
 	if ( g_timelimit.integer && !level.warmupTime ) {
 		if ( level.time - level.startTime >= g_timelimit.integer*60000 ) {
 // ~Dimmskii
-			if ( GT_IsArenaGame(g_gametype.integer) ) {
+			if ( GT_IsRoundBased(g_gametype.integer) ) {
 				return;
 			}
 // END Dimmskii
@@ -1988,7 +1988,7 @@ static void CheckExitRules_old( void ) { // ~Dimmskii
 	}
 	
 	// Don't check any more fraglimit or capture limit stuff in Arena gametypes
-	if ( GT_IsArenaGame(g_gametype.integer) ) {
+	if ( GT_IsRoundBased(g_gametype.integer) ) {
 		return;
 	}
 // END Dimmskii
@@ -2064,7 +2064,7 @@ static void G_WarmupEnd( void )
 	qboolean isArena = qfalse;
 	
 // ~Dimmskii
-	if ( GT_IsArenaGame(g_gametype.integer) ) {
+	if ( GT_IsRoundBased(g_gametype.integer) ) {
 		isArena = qtrue;
 	}
 
@@ -2280,7 +2280,7 @@ static void CheckTournament( void ) {
 	// Arena's live rounds run at warmupTime 0, where the stock gate blocks the
 	// "Waiting for players" path and leaves lone joiners frozen mid-round.
 	} else if ( g_gametype.integer != GT_SINGLE_PLAYER
-		&& ( level.warmupTime != 0 || GT_IsArenaGame(g_gametype.integer) ) ) { // ~Dimmskii
+		&& ( level.warmupTime != 0 || GT_IsRoundBased(g_gametype.integer) ) ) { // ~Dimmskii
 		int		counts[TEAM_NUM_TEAMS];
 		qboolean	notEnough = qfalse;
 
@@ -2307,7 +2307,7 @@ static void CheckTournament( void ) {
 				trap_SetConfigstring( CS_ROUND_NUMBER, "0" );
 				// Scores go with it - an abandoned match must not bleed into the
 				// next one. Arena only; other gametypes never reach here mid-match.
-				if ( GT_IsArenaGame(g_gametype.integer) ) {
+				if ( GT_IsRoundBased(g_gametype.integer) ) {
 					Arena_ResetMatchScores();
 				}
 // END Dimmskii
@@ -2334,7 +2334,7 @@ static void CheckTournament( void ) {
 				// The round is now imminent, so re-apply the freeze
 				// Arena_ThawWeapons has been lifting all through the wait. Only
 				// ClientSpawn sets it otherwise, and everyone already spawned.
-				if ( GT_IsArenaGame(g_gametype.integer) ) {
+				if ( GT_IsRoundBased(g_gametype.integer) ) {
 					Arena_FreezeSurvivorWeapons();
 				}
 // END Dimmskii
@@ -2720,7 +2720,7 @@ static void G_RunFrame( int levelTime ) {
 	// freeze is off or nobody is frozen.
 	G_FreezeRunFrame();
 
-	if ( GT_IsArenaGame(g_gametype.integer) ) {
+	if ( GT_IsRoundBased(g_gametype.integer) ) {
 		// see if Clan arena is
 		Arena_CheckRules();
 	} else {

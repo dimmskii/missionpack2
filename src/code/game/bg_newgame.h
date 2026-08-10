@@ -210,7 +210,8 @@ extern const char *const s_gametypeSpawnNames[GT_MAX_GAME_TYPE][MAX_GAMETYPE_NAM
 
 qboolean GT_IsTeam( int gt );
 qboolean GT_IsDMGame( int gt );
-qboolean GT_IsArenaGame( int gt );
+qboolean GT_IsArenaGame( int gt );		// elimination modes: CA, Arena (NOT Freeze)
+qboolean GT_IsRoundBased( int gt );		// round structure: CA, Arena, Freeze
 qboolean GT_IsFlagGame( int gt );
 
 // Factories parsed from scripts/factories.txt plus any scripts/*.factories
