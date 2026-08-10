@@ -472,7 +472,7 @@ itemDef {
 		type ITEM_TYPE_MULTI
 		text "Game Type:"
 		cvar "ui_gametype"
-		cvarFloatList { "Free For All" 0 "Tournament" 1 "TDM" 3 "Clan Arena" 4 "Capture the Flag" 5 "One Flag CTF" 6 "Overload" 7 "Harvester" 8 "Arena" 14 }
+		cvarFloatList { "Free For All" 0 "Tournament" 1 "TDM" 3 "Clan Arena" 4 "Capture the Flag" 5 "One Flag CTF" 6 "Overload" 7 "Harvester" 8 "Freeze Tag" 9 "Arena" 14 }
 		rect 260 60 128 12
 		textalign ITEM_ALIGN_RIGHT
 		textalignx 65
