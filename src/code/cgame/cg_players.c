@@ -2739,13 +2739,17 @@ void CG_AddRefEntityWithPowerups( refEntity_t *ent, entityState_t *state, int te
 			trap_R_AddRefEntityToScene( ent );
 		}
 		// ~Dimmskii Frozen shell. Legs, torso and head all come through here, so
-		// these passes ice the whole model. Three concentric layers like retail QL.
+		// one pass ices the whole model. The three shells are thaw stages, not
+		// layers - time2 carries thaw remaining as a percentage and QL splits it
+		// into thirds, so the ice visibly thins as a teammate works on you.
 		if ( cgs.freezeEnabled && ( state->powerups & ( 1 << PW_NUM_POWERUPS ) ) ) {
-			ent->customShader = cgs.media.ice1Shader;
-			trap_R_AddRefEntityToScene( ent );
-			ent->customShader = cgs.media.ice2Shader;
-			trap_R_AddRefEntityToScene( ent );
-			ent->customShader = cgs.media.ice3Shader;
+			if ( state->time2 > 66 ) {
+				ent->customShader = cgs.media.ice3Shader;
+			} else if ( state->time2 > 33 ) {
+				ent->customShader = cgs.media.ice2Shader;
+			} else {
+				ent->customShader = cgs.media.ice1Shader;
+			}
 			trap_R_AddRefEntityToScene( ent );
 		}
 		// END Dimmskii

@@ -47,10 +47,59 @@ static void G_FreezeSetClientFrozenPowerupMarker( gentity_t *ent, qboolean froze
 	if ( frozen ) {
 		ent->client->ps.powerups[PW_NUM_POWERUPS] = INT_MAX;
 		ent->s.powerups |= ( 1 << PW_NUM_POWERUPS );
+		ent->s.time2 = 100;
 	} else {
 		ent->client->ps.powerups[PW_NUM_POWERUPS] = 0;
 		ent->s.powerups &= ~( 1 << PW_NUM_POWERUPS );
+		ent->s.time2 = 0;
 	}
+}
+
+/*
+=============
+G_FreezeThawTotal
+
+Thaw duration in ms, with QL-SRP's fallback when the cvar is unset.
+=============
+*/
+static int G_FreezeThawTotal( void ) {
+	int		thawTime;
+
+	thawTime = g_freezeThawTime.integer;
+	if ( thawTime <= 0 ) {
+		thawTime = 2000;
+	}
+
+	return thawTime;
+}
+
+/*
+=============
+G_FreezeUpdateThawProgress
+
+Publishes thaw remaining as 0-100 so the client can pick a shell stage.
+
+QL buckets this into thirds on ps.eFlags using EF_DEAD and EF_TICKING, but
+BG_PlayerStateToEntityState rebuilds EF_DEAD from health every frame and a frozen
+player has health 1, so that bit never survives to other clients. time2 is unused
+on player entitystates and carries the same three buckets intact.
+=============
+*/
+static void G_FreezeUpdateThawProgress( gentity_t *ent, int thawTotal ) {
+	int		remaining;
+
+	if ( !ent || !ent->client || thawTotal <= 0 ) {
+		return;
+	}
+
+	remaining = ent->client->freezeThawTimeRemaining;
+	if ( remaining < 0 ) {
+		remaining = 0;
+	} else if ( remaining > thawTotal ) {
+		remaining = thawTotal;
+	}
+
+	ent->s.time2 = ( remaining * 100 ) / thawTotal;
 }
 
 /*
@@ -355,6 +404,7 @@ to run unconditionally because it exits immediately when nobody is frozen.
 */
 void G_FreezeRunFrame( void ) {
 	int			i, helpers, helperNum;
+	int			thawTotal, oldSec, newSec;
 	gentity_t	*ent;
 	gclient_t	*client;
 
@@ -390,24 +440,40 @@ void G_FreezeRunFrame( void ) {
 			continue;
 		}
 
+		thawTotal = G_FreezeThawTotal();
+		if ( client->freezeThawTimeRemaining <= 0 || client->freezeThawTimeRemaining > thawTotal ) {
+			client->freezeThawTimeRemaining = thawTotal;
+		}
+
 		helpers = G_FreezeCountThawHelpers( ent, &helperNum );
-		if ( helpers <= 0 ) {
-			continue;
+		if ( helpers > 0 ) {
+			oldSec = client->freezeThawTimeRemaining / 1000;
+
+			client->freezeLastHelper = helperNum;
+			client->freezeThawTimeRemaining -= level.msec * helpers;
+
+			if ( client->freezeThawTimeRemaining <= 0 ) {
+				G_FreezeThawClient( ent, qfalse, helperNum );
+				continue;
+			}
+
+			// one tick per whole second crossed, matching QL-SRP
+			newSec = client->freezeThawTimeRemaining / 1000;
+			if ( oldSec > 0 && oldSec != newSec ) {
+				gentity_t *tent = G_TempEntity( client->ps.origin, EV_THAW_TICK );
+				tent->s.otherEntityNum = ent->s.number;
+			}
+		} else {
+			// nobody helping, so the ice creeps back rather than a half-done thaw
+			// sitting there indefinitely. QL-SRP regenerates at the same rate.
+			client->freezeLastHelper = -1;
+			client->freezeThawTimeRemaining += level.msec;
+			if ( client->freezeThawTimeRemaining > thawTotal ) {
+				client->freezeThawTimeRemaining = thawTotal;
+			}
 		}
 
-		client->freezeLastHelper = helperNum;
-		client->freezeThawTimeRemaining -= level.msec * helpers;
-
-		if ( client->freezeThawTimeRemaining <= 0 ) {
-			G_FreezeThawClient( ent, qfalse, helperNum );
-			continue;
-		}
-
-		// let the thawee (and onlookers) see progress
-		if ( ( level.time % 500 ) < level.msec ) {
-			gentity_t *tent = G_TempEntity( client->ps.origin, EV_THAW_TICK );
-			tent->s.otherEntityNum = ent->s.number;
-		}
+		G_FreezeUpdateThawProgress( ent, thawTotal );
 	}
 }
 
