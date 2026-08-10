@@ -203,6 +203,13 @@ static void PM_Friction( void ) {
 		drop += speed*pm_spectatorfriction*pml.frametime;
 	}
 
+	// ~Dimmskii A frozen body keeps most of its momentum, so knockback shoves it
+	// along the floor instead of stopping dead. Quarter drop, same as retail QL.
+	if ( pm->ps->pm_type == PM_FREEZE ) {
+		drop *= 0.25f;
+	}
+	// END Dimmskii
+
 	// scale the velocity
 	newspeed = speed - drop;
 	if (newspeed < 0) {
@@ -1607,7 +1614,9 @@ static void PM_Weapon( void ) {
 	
 // ~Dimmskii
 	// don't allow attack with PMF_NOSHOOT flag (usually for Arena gamemodes' round prep)
-	if ( pm->ps->pm_flags & PMF_NOSHOOT ) {
+	// PM_FREEZE rides the same block: a frozen player can't shoot either, and unlike
+	// the movement strip this one isn't covered by the pm_type >= PM_DEAD case
+	if ( ( pm->ps->pm_flags & PMF_NOSHOOT ) || pm->ps->pm_type == PM_FREEZE ) {
 		pm->cmd.buttons &= ~BUTTON_ATTACK; // Take away BUTTON_ATTACK flag
 		return;
 	}
@@ -1977,9 +1986,17 @@ void PmoveSingle (pmove_t *pmove) {
 		return;
 	}
 
-	if (pm->ps->pm_type == PM_FREEZE) {
-		return;		// no movement at all
-	}
+//	if (pm->ps->pm_type == PM_FREEZE) {
+//		return;		// no movement at all
+//	}
+// ~Dimmskii Falling through instead of returning is what gives a frozen body real
+// physics. The return skipped PM_CheckDuck, so pm->mins/maxs stayed zeroed and the
+// entity got a zero-size bbox - the walk-through ghosts hovering in mid-air. Self
+// movement is already killed further down by the vanilla pm_type >= PM_DEAD strip,
+// and PM_Friction slides them. Retail QL runs pmove for PM_FREEZE too; QL-SRP keeps
+// this return only because it inherited it from vanilla, contradicting its own
+// PM_FREEZE friction case.
+// END Dimmskii
 
 	if ( pm->ps->pm_type == PM_INTERMISSION || pm->ps->pm_type == PM_SPINTERMISSION) {
 		return;		// no movement at all

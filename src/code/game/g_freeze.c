@@ -221,8 +221,11 @@ void G_FreezeFreezeClient( gentity_t *ent, qboolean environmental ) {
 		(int)( ent - g_entities ), client->freezeThawTimeRemaining );
 #endif
 
-	// pm_type is left alone on purpose - immobilisation is done by stripping input
-	// in ClientThink_real, so physics keep running. See the note at that strip.
+	// PM_FREEZE no longer returns early out of PmoveSingle, so the body still ducks,
+	// falls and slides - it just can't drive itself. ClientThink_real re-asserts this
+	// every frame; setting it here makes the freeze take effect on the same frame.
+	client->ps.pm_type = PM_FREEZE;
+
 	client->ps.eFlags &= ~( EF_DEAD | EF_TICKING );
 	ent->health = 1;
 	client->ps.stats[STAT_HEALTH] = 1;
@@ -258,6 +261,7 @@ void G_FreezeThawClient( gentity_t *ent, qboolean wasAuto, int helperNum ) {
 
 	G_FreezeSetClientFrozenPowerupMarker( ent, qfalse );
 
+	client->ps.pm_type = PM_NORMAL;
 	client->ps.eFlags &= ~( EF_DEAD | EF_TICKING );
 	ent->takedamage = qtrue;
 

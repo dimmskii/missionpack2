@@ -896,13 +896,25 @@ void ClientThink_real( gentity_t *ent ) {
 		client->ps.eFlags &= ~EF_AWARDS;
 	}
 
+//	if ( client->noclip ) {
+//		client->ps.pm_type = PM_NOCLIP;
+//	} else if ( client->ps.stats[STAT_HEALTH] <= 0 ) {
+//		client->ps.pm_type = PM_DEAD;
+//	} else {
+//		client->ps.pm_type = PM_NORMAL;
+//	}
+// ~Dimmskii This chain reruns every frame, so a frozen player has to be re-asserted
+// here or the next frame hands them straight back to PM_NORMAL.
 	if ( client->noclip ) {
 		client->ps.pm_type = PM_NOCLIP;
 	} else if ( client->ps.stats[STAT_HEALTH] <= 0 ) {
 		client->ps.pm_type = PM_DEAD;
+	} else if ( G_FreezeIsFrozen( ent ) ) {
+		client->ps.pm_type = PM_FREEZE;
 	} else {
 		client->ps.pm_type = PM_NORMAL;
 	}
+// END Dimmskii
 
 	client->ps.gravity = g_gravity.value;
 
