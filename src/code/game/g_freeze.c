@@ -13,8 +13,11 @@
 //      round flow in g_newgame.c instead, which QL-SRP effectively does too
 //      (its G_CAFZCheckExitRules shares Clan Arena and Freeze logic).
 //
-// A frozen player stays *alive* at health 1 with pm_type PM_FREEZE - vanilla
-// pmove already refuses all movement for that type, so there is no pmove work.
+// A frozen player stays *alive* at health 1 and keeps normal physics - they
+// collide, fall, slide under friction and can be pushed, but cannot drive
+// themselves, because ClientThink_real strips their movement input. See the
+// note there for why it is done that way.
+//
 // The client learns someone is frozen from the PW_NUM_POWERUPS marker bit
 // mirrored into ps.powerups / s.powerups, so nothing here touches protocol.
 
@@ -160,14 +163,15 @@ void G_FreezeFreezeClient( gentity_t *ent ) {
 		(int)( ent - g_entities ), client->freezeThawTimeRemaining );
 #endif
 
-	client->ps.pm_type = PM_FREEZE;
+	// pm_type is left alone on purpose - immobilisation is done by stripping input
+	// in ClientThink_real, so physics keep running. See the note at that strip.
 	client->ps.eFlags &= ~( EF_DEAD | EF_TICKING );
-	ent->takedamage = qfalse;
 	ent->health = 1;
 	client->ps.stats[STAT_HEALTH] = 1;
 
-	// stop them dead rather than letting momentum slide the body around
-	VectorClear( client->ps.velocity );
+	// takedamage stays on so knockback still applies; G_Damage zeroes the actual
+	// health loss for frozen players. Momentum is left alone so the body carries
+	// on and settles under friction rather than stopping dead in the air.
 }
 
 /*
@@ -195,7 +199,6 @@ void G_FreezeThawClient( gentity_t *ent, qboolean wasAuto, int helperNum ) {
 
 	G_FreezeSetClientFrozenPowerupMarker( ent, qfalse );
 
-	client->ps.pm_type = PM_NORMAL;
 	client->ps.eFlags &= ~( EF_DEAD | EF_TICKING );
 	ent->takedamage = qtrue;
 

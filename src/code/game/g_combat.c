@@ -1055,6 +1055,16 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 	}
 	take = damage;
 
+// ~Dimmskii -- A frozen player takes no damage but must still be shovable: the
+// knockback above is computed from `damage` and already applied to their
+// velocity, so zeroing only the health loss here leaves them pushable while
+// keeping them frozen. Done here rather than with takedamage = qfalse, which
+// returns at the top of this function and would kill the knockback too.
+	if ( G_FreezeIsFrozen( targ ) ) {
+		take = 0;
+	}
+// END Dimmskii
+
     // save some from armor
     asave = CheckArmor( targ, take, dflags );
     take -= asave;

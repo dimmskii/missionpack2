@@ -230,6 +230,20 @@ void	G_TouchTriggers( gentity_t *ent ) {
 		return;
 	}
 
+// ~Dimmskii -- and neither do frozen ones. Items are triggers, so this is what
+// stops a frozen player picking anything up; it also keeps a body that has been
+// shoved onto a jump pad or into a teleporter from setting it off. Sits here
+// with the dead-client guard because it is the same idea: out of the fight, so
+// not interacting with the world.
+//
+// QL-SRP gets this for free instead - its frozen players sit in a pm_type that
+// bails out of pmove early, so nothing is ever touched. We run full physics on
+// purpose, so it has to be explicit.
+	if ( G_FreezeIsFrozen( ent ) ) {
+		return;
+	}
+// END Dimmskii
+
 	VectorSubtract( ent->client->ps.origin, range, mins );
 	VectorAdd( ent->client->ps.origin, range, maxs );
 
@@ -796,6 +810,23 @@ void ClientThink_real( gentity_t *ent ) {
     if ( client->ps.pm_flags & PMF_NOSHOOT && client->sess.sessionTeam != TEAM_SPECTATOR && client->ps.stats[STAT_HEALTH] > 0 && !level.intermissiontime ) { // Only on alive non-spectator players, so that we can still click for respawn/ready/cycle/etc
         ucmd->buttons &= ~BUTTON_ATTACK; // Server-sided gaunt hack fix: If one has the PMF_NOSHOOT flag, switching to gauntlet while holding +attack hits once
     }
+
+    // Freeze Tag immobilisation. Same gating as the PMF_NOSHOOT strip directly
+    // above - alive, non-spectator, not intermission - so spectator controls and
+    // the respawn/ready/cycle clicks are never touched.
+    //
+    // Input is stripped rather than parking the player in a no-movement pm_type:
+    // those bail out of pmove before PM_CheckDuck fills pm->mins/maxs, and
+    // ClientThink_real copies those onto the entity, so the body would end up
+    // with a zero-size bounding box - no collision, no gravity, a ghost stuck in
+    // mid-air. Letting pmove run in full and taking the input away instead keeps
+    // a frozen body colliding, falling, sliding under friction and shovable.
+    if ( G_FreezeIsFrozen( ent ) && client->sess.sessionTeam != TEAM_SPECTATOR && client->ps.stats[STAT_HEALTH] > 0 && !level.intermissiontime ) {
+        ucmd->forwardmove = 0;
+        ucmd->rightmove = 0;
+        ucmd->upmove = 0;
+        ucmd->buttons &= ~BUTTON_ATTACK;
+    }
 // END Dimmskii
 
 	// unlagged
@@ -872,15 +903,6 @@ void ClientThink_real( gentity_t *ent ) {
 	} else {
 		client->ps.pm_type = PM_NORMAL;
 	}
-
-// ~Dimmskii -- Freeze Tag. This runs every frame and a frozen player sits at
-// health 1, so the branch above hands them PM_NORMAL and undoes the PM_FREEZE
-// set once at freeze time - they keep full movement. Re-assert it here, after
-// the chain, so nothing above needs changing.
-	if ( G_FreezeIsFrozen( ent ) ) {
-		client->ps.pm_type = PM_FREEZE;
-	}
-// END Dimmskii
 
 	client->ps.gravity = g_gravity.value;
 
