@@ -88,6 +88,7 @@ void G_FreezeInitClient( gentity_t *ent ) {
 	client->freezeThawTimeRemaining = 0;
 	client->freezeLastHelper = -1;
 	client->freezeAutoThawTime = 0;
+	client->freezeEnvRespawnTime = 0;
 
 	G_FreezeSetClientFrozenPowerupMarker( ent, qfalse );
 }
@@ -127,7 +128,7 @@ Death replacement: the player is immobilised instead of killed. Health stays at
 1 rather than 0 so nothing in the codebase mistakes a frozen player for a corpse.
 =============
 */
-void G_FreezeFreezeClient( gentity_t *ent ) {
+void G_FreezeFreezeClient( gentity_t *ent, qboolean environmental ) {
 	gclient_t	*client;
 	int			thawTime;
 
@@ -154,6 +155,14 @@ void G_FreezeFreezeClient( gentity_t *ent ) {
 	client->freezeAutoThawTime = 0;
 	if ( g_freezeAutoThawTime.integer > 0 ) {
 		client->freezeAutoThawTime = level.time + g_freezeAutoThawTime.integer;
+	}
+
+	// An environmental freeze (lava, void, crusher) is unreachable by definition -
+	// nobody can walk over there to thaw it - so it respawns on its own instead of
+	// deadlocking the round. QL-SRP does the same via environmentalRespawnDelay.
+	client->freezeEnvRespawnTime = 0;
+	if ( environmental && g_freezeEnvironmentalRespawnDelay.integer > 0 ) {
+		client->freezeEnvRespawnTime = level.time + g_freezeEnvironmentalRespawnDelay.integer;
 	}
 
 	G_FreezeSetClientFrozenPowerupMarker( ent, qtrue );
@@ -196,6 +205,7 @@ void G_FreezeThawClient( gentity_t *ent, qboolean wasAuto, int helperNum ) {
 	client->freezeThawTimeRemaining = 0;
 	client->freezeLastHelper = -1;
 	client->freezeAutoThawTime = 0;
+	client->freezeEnvRespawnTime = 0;
 
 	G_FreezeSetClientFrozenPowerupMarker( ent, qfalse );
 
@@ -216,6 +226,48 @@ void G_FreezeThawClient( gentity_t *ent, qboolean wasAuto, int helperNum ) {
 	G_Printf( "[FZ] thawed client %i by %i (auto %i)\n",
 		(int)( ent - g_entities ), helperNum, wasAuto );
 #endif
+}
+
+/*
+=============
+G_FreezeThawWinningTeam
+
+Round end: the winners' frozen players are thawed and respawned as part of
+winning, rather than waiting for the round reset. Mirrors QL-SRP's
+G_FreezeThawWinningPlayers, gated the same way on g_freezeThawWinningTeam.
+=============
+*/
+void G_FreezeThawWinningTeam( team_t winner ) {
+	int			i;
+	gentity_t	*ent;
+
+	if ( !G_FreezeEnabled() || !g_freezeThawWinningTeam.integer ) {
+		return;
+	}
+	if ( winner != TEAM_RED && winner != TEAM_BLUE ) {
+		return;
+	}
+
+	for ( i = 0 ; i < level.maxclients ; i++ ) {
+		ent = &g_entities[i];
+		if ( !ent->inuse || !ent->client ) {
+			continue;
+		}
+		if ( ent->client->sess.sessionTeam != winner ) {
+			continue;
+		}
+		if ( !ent->client->freezeFrozen ) {
+			continue;
+		}
+
+		// respawn rather than thaw in place: QL puts the winners back on spawn
+		// points ready for the next round, not wherever they were frozen
+		G_FreezeInitClient( ent );
+		respawn( ent );
+#ifdef DEBUG
+		G_Printf( "[FZ] round win thaw+respawn client %i\n", i );
+#endif
+	}
 }
 
 /*
@@ -321,6 +373,17 @@ void G_FreezeRunFrame( void ) {
 			continue;
 		}
 
+		// an environmentally frozen body is unreachable - respawn it outright
+		// rather than thawing it in place inside the lava it died in
+		if ( client->freezeEnvRespawnTime > 0 && level.time >= client->freezeEnvRespawnTime ) {
+			G_FreezeInitClient( ent );
+			respawn( ent );
+#ifdef DEBUG
+			G_Printf( "[FZ] env respawn client %i\n", (int)( ent - g_entities ) );
+#endif
+			continue;
+		}
+
 		// auto-thaw is a safety valve for a stranded frozen player
 		if ( client->freezeAutoThawTime > 0 && level.time >= client->freezeAutoThawTime ) {
 			G_FreezeThawClient( ent, qtrue, -1 );
@@ -361,6 +424,8 @@ teammate to reach them.
 =============
 */
 qboolean G_FreezeHandlePlayerDeath( gentity_t *self, gentity_t *attacker, int meansOfDeath ) {
+	qboolean	environmental;
+
 	if ( !G_FreezeEnabled() ) {
 		return qfalse;
 	}
@@ -375,25 +440,27 @@ qboolean G_FreezeHandlePlayerDeath( gentity_t *self, gentity_t *attacker, int me
 		return qtrue;
 	}
 
-	switch ( meansOfDeath ) {
-	case MOD_WATER:
-	case MOD_SLIME:
-	case MOD_LAVA:
-	case MOD_CRUSH:
-	case MOD_FALLING:
-	case MOD_SUICIDE:
-	case MOD_TRIGGER_HURT:
-		return qfalse;
-	default:
-		break;
+	// EVERY death freezes, including lava, void and suicide - matching QL-SRP,
+	// which classifies rather than excludes. A death with no player attacker is
+	// environmental, and so is any death inside a NODROP volume (the void), since
+	// a body there is unreachable however it got there. Environmental freezes are
+	// respawned on a timer by G_FreezeRunFrame instead of waiting for a thaw that
+	// can never come.
+	environmental = qfalse;
+	if ( !attacker || !attacker->client ) {
+		environmental = qtrue;
+	}
+	if ( trap_PointContents( self->r.currentOrigin, -1 ) & CONTENTS_NODROP ) {
+		environmental = qtrue;
 	}
 
 #ifdef DEBUG
-	G_Printf( "[FZ] death->freeze: client %i mod %i (gt %i, g_freeze %i)\n",
-		(int)( self - g_entities ), meansOfDeath, g_gametype.integer, g_freeze.integer );
+	G_Printf( "[FZ] death->freeze: client %i mod %i env %i (gt %i, g_freeze %i)\n",
+		(int)( self - g_entities ), meansOfDeath, environmental,
+		g_gametype.integer, g_freeze.integer );
 #endif
 
-	G_FreezeFreezeClient( self );
+	G_FreezeFreezeClient( self, environmental );
 
 	// keep the killer's credit identical to a normal frag
 	if ( attacker && attacker->client && attacker != self ) {

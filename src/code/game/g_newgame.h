@@ -45,9 +45,10 @@ qboolean	G_FreezeEnabled(void);
 // g_freeze.c
 qboolean	G_FreezeIsFrozen( const gentity_t *ent );
 void		G_FreezeInitClient( gentity_t *ent );
-void		G_FreezeFreezeClient( gentity_t *ent );
+void		G_FreezeFreezeClient( gentity_t *ent, qboolean environmental );
 void		G_FreezeThawClient( gentity_t *ent, qboolean wasAuto, int helperNum );
 void		G_FreezeRunFrame( void );
 qboolean	G_FreezeHandlePlayerDeath( gentity_t *self, gentity_t *attacker, int meansOfDeath );
+void		G_FreezeThawWinningTeam( team_t winner );
 
 int getHealthSoftLimit( void );

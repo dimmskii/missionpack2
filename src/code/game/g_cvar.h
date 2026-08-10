@@ -199,10 +199,14 @@ G_CVAR( g_roundtimelimit, "roundtimelimit", "180", CVAR_SERVERINFO | CVAR_NOREST
 // Freeze Tag. The mechanic is gated on G_FreezeEnabled() - gametype GT_FREEZE OR
 // this cvar - so it can also be switched on inside other round-based gametypes.
 // Reaches the client through CS_SERVER_SETTINGS_INFO_A, not serverinfo.
+// Defaults mirror QL-SRP's so a stock Freeze game plays like retail.
 G_CVAR( g_freeze, "g_freeze", "0", 0, 0, qtrue, qfalse )
-G_CVAR( g_freezeThawTime, "g_freezeThawTime", "3000", 0, 0, qtrue, qfalse )			// ms of contact to thaw
-G_CVAR( g_freezeThawRadius, "g_freezeThawRadius", "96", 0, 0, qtrue, qfalse )		// units a helper must be within
-G_CVAR( g_freezeAutoThawTime, "g_freezeAutoThawTime", "0", 0, 0, qtrue, qfalse )	// 0 = never auto-thaw
+G_CVAR( g_freezeThawTime, "g_freezeThawTime", "2000", 0, 0, qtrue, qfalse )						// ms of contact to thaw
+G_CVAR( g_freezeThawRadius, "g_freezeThawRadius", "96", 0, 0, qtrue, qfalse )					// units a helper must be within
+G_CVAR( g_freezeAutoThawTime, "g_freezeAutoThawTime", "120000", 0, 0, qtrue, qfalse )			// 0 = never auto-thaw
+G_CVAR( g_freezeRoundDelay, "g_freezeRoundDelay", "4000", 0, 0, qtrue, qfalse )					// ms between round end and next warmup
+G_CVAR( g_freezeEnvironmentalRespawnDelay, "g_freezeEnvironmentalRespawnDelay", "5000", 0, 0, qtrue, qfalse )	// ms before a lava/void freeze respawns
+G_CVAR( g_freezeThawWinningTeam, "g_freezeThawWinningTeam", "1", 0, 0, qtrue, qfalse )			// thaw+respawn the winners at round end
 
 G_CVAR( g_teamVisibility, "g_teamVisibility", "1", CVAR_SERVERINFO, 0, qtrue, qfalse )
 G_CVAR( g_itemVisibility, "g_itemVisibility", "1", CVAR_SERVERINFO, 0, qtrue, qfalse )	// TODO: break up into perhaps g_flagVisibility, g_powerupVisibility, etc.

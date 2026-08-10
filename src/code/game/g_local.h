@@ -333,6 +333,7 @@ struct gclient_s {
 	int			freezeThawTimeRemaining;// ms of contact still needed to thaw
 	int			freezeLastHelper;		// clientNum of the last thawer, -1 for none
 	int			freezeAutoThawTime;		// level.time to auto-thaw at, 0 = never
+	int			freezeEnvRespawnTime;	// level.time to respawn an environmentally frozen player, 0 = n/a
 
 	// Per-match stats that cannot live in ps.persistant[] - that array is full at
 	// MAX_PERSISTANT (16/16, PERS_ROUNDWINS is the last slot) and sits inside

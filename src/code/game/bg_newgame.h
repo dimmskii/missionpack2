@@ -182,6 +182,9 @@ static const char *GFACTORY_CVARS[] = {
 	"g_freezeThawTime",
 	"g_freezeThawRadius",
 	"g_freezeAutoThawTime",
+	"g_freezeRoundDelay",
+	"g_freezeEnvironmentalRespawnDelay",
+	"g_freezeThawWinningTeam",
 
     NULL                    // Null-terminator for safe iteration loops
 };

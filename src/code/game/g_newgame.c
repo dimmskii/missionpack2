@@ -274,6 +274,10 @@ void Arena_EndRound( team_t winningTeam ) {
 	Arena_FreezeSurvivorWeapons();
 
 	if ( winningTeam == TEAM_RED || winningTeam == TEAM_BLUE ) { // CA
+		// Freeze: the winning side's frozen players are freed as part of winning,
+		// not left waiting for the round reset. No-op outside freeze.
+		G_FreezeThawWinningTeam( winningTeam );
+
 		AddTeamScore(zeroVec3, winningTeam, 1);
 		trap_SetConfigstring( CS_SCORES1, va("%i", level.teamScores[TEAM_RED]) );
 		trap_SetConfigstring( CS_SCORES2, va("%i", level.teamScores[TEAM_BLUE]) );
@@ -436,7 +440,12 @@ void Arena_CheckRules( void ) {
 	}
 	
 	if ( level.arenaRoundQueued ) {
-		if ( level.time - level.arenaRoundQueued >= ARENA_ROUND_DELAY_TIME ) {
+		// Freeze runs a longer gap between rounds than the arena modes do.
+		int roundDelay = ARENA_ROUND_DELAY_TIME;
+		if ( G_FreezeEnabled() && g_freezeRoundDelay.integer > 0 ) {
+			roundDelay = g_freezeRoundDelay.integer;
+		}
+		if ( level.time - level.arenaRoundQueued >= roundDelay ) {
 			// Don't spin up a new round once the match is already decided;
 			// CheckExitRules will queue the intermission shortly.
 			if ( Arena_MatchDecided() ) {
