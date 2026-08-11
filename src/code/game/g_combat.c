@@ -1102,7 +1102,12 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 */
 
 // ~DIMMSKII
+	// A frozen player is health 1, so the health test alone still counts a hit and
+	// beeps at the shooter. QL gets this for free by setting takedamage = qfalse,
+	// which we can't do - that returns above, before the knockback that keeps a
+	// frozen body shovable. Excluded explicitly instead. ~Dimmskii
 	if ( attacker->client && client && targ != attacker && targ->health > 0
+			&& !G_FreezeIsFrozen( targ )
 			&& targ->s.eType != ET_MISSILE
 			&& targ->s.eType != ET_GENERAL) {
 
