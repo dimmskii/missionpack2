@@ -242,6 +242,53 @@ void G_FreezeFreezeClient( gentity_t *ent, qboolean environmental ) {
 
 /*
 =============
+G_FreezeEmitThawCompletionEvents
+
+The obituary and team sound QL fires on a completed thaw. The sound reuses the
+CTF flag-return cue, which works in Freeze because the announcer VO samples
+behind it are only registered for GT_CTF, so only the generic teamplay sample
+survives.
+
+Note the ternary is flipped from QL-SRP. Theirs picks the sound slot the way
+vanilla's Team_ReturnFlagSound does - keyed to the *flag's* team - which lands
+the "your team" cue on the opposite team to the one that just got a player back.
+Ours plays the friendly cue to the thawed player's own team.
+=============
+*/
+static void G_FreezeEmitThawCompletionEvents( gentity_t *ent, int helperNum ) {
+	gclient_t	*client;
+	gentity_t	*tent;
+	int			sound;
+	int			thawerNum;
+
+	if ( !ent || !ent->client ) {
+		return;
+	}
+
+	client = ent->client;
+
+	thawerNum = ENTITYNUM_WORLD;
+	if ( helperNum >= 0 && helperNum < level.maxclients ) {
+		if ( g_entities[helperNum].inuse && g_entities[helperNum].client ) {
+			thawerNum = helperNum;
+		}
+	}
+
+	tent = G_TempEntity( ent->r.currentOrigin, EV_OBITUARY );
+	tent->s.eventParm = MOD_THAW;
+	tent->s.otherEntityNum = ent->s.number;
+	tent->s.otherEntityNum2 = thawerNum;
+	tent->r.svFlags = SVF_BROADCAST;
+
+	sound = ( client->sess.sessionTeam == TEAM_BLUE ) ? GTS_BLUE_RETURN : GTS_RED_RETURN;
+
+	tent = G_TempEntity( ent->s.pos.trBase, EV_GLOBAL_TEAM_SOUND );
+	tent->s.eventParm = sound;
+	tent->r.svFlags |= SVF_BROADCAST;
+}
+
+/*
+=============
 G_FreezeThawClient
 
 Restores a frozen player in place. wasAuto suppresses the reward/effects for
@@ -279,6 +326,8 @@ void G_FreezeThawClient( gentity_t *ent, qboolean wasAuto, int helperNum ) {
 
 	tent = G_TempEntity( client->ps.origin, EV_THAW_PLAYER );
 	tent->s.otherEntityNum = ent->s.number;
+
+	G_FreezeEmitThawCompletionEvents( ent, helperNum );
 
 #ifdef DEBUG
 	G_Printf( "[FZ] thawed client %i by %i (auto %i)\n",

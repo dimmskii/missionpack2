@@ -583,6 +583,7 @@ static void CG_RegisterSounds( void ) {
 	cgs.media.teleInSound = trap_S_RegisterSound( "sound/world/telein.wav", qfalse );
 	cgs.media.teleOutSound = trap_S_RegisterSound( "sound/world/teleout.wav", qfalse );
 	cgs.media.respawnSound = trap_S_RegisterSound( "sound/items/respawn1.wav", qfalse );
+	cgs.media.thawTickSound = trap_S_RegisterSound( "sound/misc/tim_pump.wav", qfalse ); // ~Dimmskii same sample QL uses for thaw ticks
 
 	cgs.media.noAmmoSound = trap_S_RegisterSound( "sound/weapons/noammo.wav", qfalse );
 

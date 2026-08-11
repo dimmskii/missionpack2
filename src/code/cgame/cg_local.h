@@ -254,13 +254,16 @@ typedef enum {
 typedef enum {
 	LEMT_NONE,
 	LEMT_BURN,
-	LEMT_BLOOD
+	LEMT_BLOOD,
+	LEMT_ICE				// ~Dimmskii thaw shards - no mark shader yet, so cg_localents
+							// leaves it unhandled, which is the point: not blood
 } leMarkType_t;			// fragment local entities can leave marks on walls
 
 typedef enum {
 	LEBS_NONE,
 	LEBS_BLOOD,
-	LEBS_BRASS
+	LEBS_BRASS,
+	LEBS_ICE				// ~Dimmskii thaw shards - see LEMT_ICE
 } leBounceSoundType_t;	// fragment local entities can make sounds on impacts
 
 typedef struct localEntity_s {
@@ -939,6 +942,7 @@ typedef struct {
 	sfxHandle_t	teleOutSound;
 	sfxHandle_t	noAmmoSound;
 	sfxHandle_t	respawnSound;
+	sfxHandle_t	thawTickSound;	// ~Dimmskii
 	sfxHandle_t talkSound;
 	sfxHandle_t landSound;
 	sfxHandle_t jumpPadSound;
@@ -1499,6 +1503,7 @@ void CG_LightningBoltBeam( vec3_t start, vec3_t end );
 void CG_ScorePlum( int client, const vec3_t origin, int score );
 
 void CG_GibPlayer( const vec3_t playerOrigin );
+void CG_ThawPlayer( const vec3_t playerOrigin );	// ~Dimmskii
 void CG_BigExplode( vec3_t playerOrigin );
 
 void CG_Bleed( const vec3_t origin, int entityNum );
