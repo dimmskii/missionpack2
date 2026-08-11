@@ -815,6 +815,8 @@ static void CG_RegisterGraphics( void ) {
 //#endif
 	cgs.media.plasmaBallShader = trap_R_RegisterShader( "sprites/plasma1" );
 	cgs.media.bloodTrailShader = trap_R_RegisterShader( "bloodTrail" );
+	cgs.media.iceShardShader = trap_R_RegisterShader( "gfx/misc/iceshard" ); // ~Dimmskii
+	cgs.media.iceTrailShader = trap_R_RegisterShader( "iceTrail" ); // ~Dimmskii
 	cgs.media.lagometerShader = trap_R_RegisterShader("lagometer" );
 	cgs.media.connectionShader = trap_R_RegisterShader( "disconnected" );
 
@@ -1026,6 +1028,7 @@ static void CG_RegisterGraphics( void ) {
 	cgs.media.shadowMarkShader = trap_R_RegisterShader( "markShadow" );
 	cgs.media.wakeMarkShader = trap_R_RegisterShader( "wake" );
 	cgs.media.bloodMarkShader = trap_R_RegisterShader( "bloodMark" );
+	cgs.media.iceMarkShader = trap_R_RegisterShader( "iceMark" ); // ~Dimmskii
 
 	// register the inline models
 	cgs.numInlineModels = trap_CM_NumInlineModels();

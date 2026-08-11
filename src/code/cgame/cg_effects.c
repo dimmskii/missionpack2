@@ -573,7 +573,9 @@ Generated a bunch of gibs launching out from the bodies location
 ==================
 CG_LaunchThawGib
 
-Same fragment as a gib, but marked as ice so it leaves no blood behind.
+Same fragment as a gib, but marked as ice so it leaves no blood behind, and
+coated in an ice shader. Retail flies the gib models bare, which reads as meat
+rather than ice - the coat is ours.
 ==================
 */
 static void CG_LaunchThawGib( const vec3_t origin, const vec3_t velocity, qhandle_t hModel ) {
@@ -590,6 +592,7 @@ static void CG_LaunchThawGib( const vec3_t origin, const vec3_t velocity, qhandl
 	VectorCopy( origin, re->origin );
 	AxisCopy( axisDefault, re->axis );
 	re->hModel = hModel;
+	re->customShader = cgs.media.iceShardShader;
 
 	le->pos.trType = TR_GRAVITY;
 	VectorCopy( origin, le->pos.trBase );

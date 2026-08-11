@@ -799,6 +799,8 @@ typedef struct {
 	qhandle_t	plasmaBallShader;
 	qhandle_t	waterBubbleShader;
 	qhandle_t	bloodTrailShader;
+	qhandle_t	iceShardShader;	// ~Dimmskii thaw shard coating
+	qhandle_t	iceTrailShader;	// ~Dimmskii
 	qhandle_t	grappleShader;	// leilei - grapple hook
 //#ifdef MISSIONPACK
 	qhandle_t	nailPuffShader;
@@ -814,6 +816,7 @@ typedef struct {
 	// wall mark shaders
 	qhandle_t	wakeMarkShader;
 	qhandle_t	bloodMarkShader;
+	qhandle_t	iceMarkShader;	// ~Dimmskii
 	qhandle_t	bulletMarkShader;
 	qhandle_t	burnMarkShader;
 	qhandle_t	holeMarkShader;

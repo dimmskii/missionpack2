@@ -1096,3 +1096,53 @@ powerups/ice3
 		tcmod scroll 0.25 -0.025
 	}
 }
+
+// Wall stain a thaw shard leaves where it bounces, and the trail it throws off in
+// flight. Both transcribed from retail gfx.shader - the ice counterparts of
+// bloodMark and bloodTrail, and used at the same radius and cadence.
+
+iceMark
+{
+	nopicmip			// make sure a border remains
+	polygonOffset
+	{
+		clampmap gfx/damage/ice_stain.tga
+		blendfunc blend
+		rgbGen identityLighting
+		alphaGen vertex
+	}
+}
+
+iceTrail
+{
+	nopicmip			// make sure a border remains
+	entityMergable		// allow all the sprites to be merged together
+	{
+		clampmap gfx/damage/ice_spurt.tga
+		blendfunc blend
+		rgbGen vertex
+		alphaGen vertex
+	}
+}
+
+// Shards thrown when a player is thawed, applied as a customShader over the gib
+// fragment models. Retail flies those models bare, which reads as meat rather
+// than ice - this coats them instead. First stage is opaque so the chunk is
+// solid, second is the same envmap added back over it for glint.
+gfx/misc/iceshard
+{
+	nopicmip
+	{
+		map textures/effects/icemap.tga
+		rgbGen identity
+		tcGen environment
+	}
+	{
+		map textures/effects/icemap.tga
+		blendfunc add
+		rgbGen identity
+		tcGen environment
+		tcmod rotate 40
+		tcmod scroll 0.4 -0.04
+	}
+}
