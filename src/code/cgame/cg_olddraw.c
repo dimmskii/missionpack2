@@ -479,7 +479,7 @@ static float CG_DrawScores_Old( float y ) {
 		//score = cg.snap->ps.persistant[PERS_SCORE];
 		
 // ~Dimmskii -- Determine scores the way we have them set up until we properly add all ql-based game pers stats in like gents
-		if ( GT_IsRoundBased( cgs.gametype ) ) {
+		if ( GT_IsArenaGame( cgs.gametype ) ) { // Wins instead of damage in scorebox fixes for FFA Arena
 			// cgs.scores1/2 arrive as PERS_SCORE, which in arena is damage+frags,
 			// not the meaningful stat. Recompute the top-two round wins on the spot
 			// from the (best-effort, possibly stale between scoreboard refreshes)
