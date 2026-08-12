@@ -1117,13 +1117,13 @@ qboolean CG_OwnerDrawVisible(int flags) {
 	}
 
 // ~Dimmskii
-	if (flags & CG_SHOW_ANYARENAGAME) {
+	if (flags & CG_SHOW_ANYROUNDGAME) {
 		if( !GT_IsRoundBased(cgs.gametype) ) {
 			return qfalse;
 		}
 	}
 
-	if (flags & CG_SHOW_ANYNONARENAGAME) {
+	if (flags & CG_SHOW_ANYNONROUNDGAME) {
 		if( GT_IsRoundBased(cgs.gametype)  ) {
 			return qfalse;
 		}

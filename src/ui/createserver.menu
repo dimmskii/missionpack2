@@ -540,7 +540,7 @@ itemDef {
 		textscale .25
 		forecolor 1 1 1 1
 		visible 1
-		ownerdrawflag UI_SHOW_ARENAGAME
+		ownerdrawflag UI_SHOW_ROUNDGAME
 		cvarTest "ui_hostGameFactory"
 		showCvar { "-1" }
 		mouseEnter { fadein message_customrules }
@@ -560,7 +560,7 @@ itemDef {
 		textscale .25
 		forecolor 1 1 1 1
 		visible 1
-		ownerdrawflag UI_SHOW_NOTARENAGAME
+		ownerdrawflag UI_SHOW_NOTROUNDGAME
 		cvarTest "ui_hostGameFactory"
 		showCvar { "-1" }
 		mouseEnter { fadein message_customrules }
@@ -580,7 +580,7 @@ itemDef {
 		textscale .25
 		forecolor 1 1 1 1
 		visible 1
-		ownerdrawflag UI_SHOW_ARENAGAME
+		ownerdrawflag UI_SHOW_ROUNDGAME
 		cvarTest "ui_hostGameFactory"
 		showCvar { "-1" }
 		mouseEnter { fadein message_customrules }

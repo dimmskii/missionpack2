@@ -2540,17 +2540,17 @@ static qboolean UI_OwnerDrawVisible(int flags) {
 			flags &= ~UI_SHOW_NETANYNONTEAMGAME;
 		} */
 // ~Dimmskii
-		if (flags & UI_SHOW_ARENAGAME) {
-			if ( !GT_IsArenaGame(uiInfo.gameTypes[ui_gameType.integer].gtEnum) ) {
+		if (flags & UI_SHOW_ROUNDGAME) {
+			if ( !GT_IsRoundBased(uiInfo.gameTypes[ui_gameType.integer].gtEnum) ) {
 				vis = qfalse;
 			}
-			flags &= ~UI_SHOW_ARENAGAME;
+			flags &= ~UI_SHOW_ROUNDGAME;
 		} 
-		if (flags & UI_SHOW_NOTARENAGAME) {
-			if ( GT_IsArenaGame(uiInfo.gameTypes[ui_gameType.integer].gtEnum) ) {
+		if (flags & UI_SHOW_NOTROUNDGAME) {
+			if ( GT_IsRoundBased(uiInfo.gameTypes[ui_gameType.integer].gtEnum) ) {
 				vis = qfalse;
 			}
-			flags &= ~UI_SHOW_NOTARENAGAME;
+			flags &= ~UI_SHOW_NOTROUNDGAME;
 		} 
 // End Dimmskii
 		if (flags & UI_SHOW_NEWHIGHSCORE) {
