@@ -95,7 +95,9 @@ static void CG_ParseScores( void ) {
 */
 
 // ~Dimmskii
-#define SCORE_FIELDS 15
+// Must match the field count in DeathmatchScoreboardMessage exactly - every row is
+// indexed as i * SCORE_FIELDS + n, so a mismatch shifts every client past the first.
+#define SCORE_FIELDS 18
 
 static void CG_ParseScores( void ) {
 	int		i, powerups;
@@ -126,6 +128,9 @@ static void CG_ParseScores( void ) {
 		cg.scores[i].perfect = atoi(CG_Argv(i * SCORE_FIELDS + 16));
 		cg.scores[i].captures = atoi(CG_Argv(i * SCORE_FIELDS + 17));
 		cg.scores[i].roundWins = atoi(CG_Argv(i * SCORE_FIELDS + 18));
+		cg.scores[i].thawsGiven = atoi(CG_Argv(i * SCORE_FIELDS + 19));
+		cg.scores[i].thawsReceived = atoi(CG_Argv(i * SCORE_FIELDS + 20));
+		cg.scores[i].timesFrozen = atoi(CG_Argv(i * SCORE_FIELDS + 21));
 
 		if ( cg.scores[i].client < 0 || cg.scores[i].client >= MAX_CLIENTS ) {
 			cg.scores[i].client = 0;

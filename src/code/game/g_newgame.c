@@ -207,6 +207,10 @@ void Arena_ResetMatchScores( void ) {
 		client->ps.persistant[PERS_DEFEND_COUNT] = 0;
 		client->ps.persistant[PERS_ASSIST_COUNT] = 0;
 		client->ps.persistant[PERS_GAUNTLET_FRAG_COUNT] = 0;
+
+		// matchStats lives outside persistant[], so nothing else clears it here.
+		// ClientConnect memsets it per map; this covers an abandoned segment.
+		memset( &client->matchStats, 0, sizeof( client->matchStats ) );
 	}
 
 	CalculateRanks();

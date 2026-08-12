@@ -315,6 +315,10 @@ typedef struct {
 	qboolean		perfect;
 // ~Dimmskii
 	int				roundWins;
+	// Parsed but not drawn yet - the columns land with the per-gametype scoreboard.
+	int				thawsGiven;
+	int				thawsReceived;
+	int				timesFrozen;
 // END Dimmskii
 	team_t			team;
 

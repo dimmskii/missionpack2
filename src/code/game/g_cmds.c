@@ -13,7 +13,8 @@ DeathmatchScoreboardMessage
 ==================
 */
 void DeathmatchScoreboardMessage( gentity_t *ent ) {
-	char		entry[256]; // enough to hold 14 integers
+//	char		entry[256]; // enough to hold 14 integers
+	char		entry[256]; // enough to hold 18 integers ~Dimmskii
 	char		string[MAX_STRING_CHARS-1];
 	int			stringlength;
 	int			i, j, ping, prefix;
@@ -67,7 +68,7 @@ void DeathmatchScoreboardMessage( gentity_t *ent ) {
 
 */
 // ~Dimmskii
-		j = BG_sprintf( entry, " %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i",
+		j = BG_sprintf( entry, " %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i",
 			level.sortedClients[i],
 			cl->ps.persistant[PERS_SCORE],
 			ping,
@@ -82,7 +83,15 @@ void DeathmatchScoreboardMessage( gentity_t *ent ) {
 			cl->ps.persistant[PERS_ASSIST_COUNT],
 			perfect,
 			cl->ps.persistant[PERS_CAPTURES],
-			cl->ps.persistant[PERS_ROUNDWINS]);
+			cl->ps.persistant[PERS_ROUNDWINS],
+			// Freeze stats ride here because persistant[] is full at 16/16 and is
+			// inside playerState_t, so growing it would be a protocol change. Sent
+			// unconditionally to keep SCORE_FIELDS a constant on both ends. Parsed
+			// into score_t but not drawn yet - the scoreboard columns land with the
+			// per-gametype HUD work. ~Dimmskii
+			cl->matchStats.thawsGiven,
+			cl->matchStats.thawsReceived,
+			cl->matchStats.timesFrozen);
 			// TODO: A PERS_DAMAGE stat instead of misusing score
 // END Dimmskii
 
