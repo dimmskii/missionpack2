@@ -915,6 +915,7 @@ static void CG_RegisterGraphics( void ) {
 //	if ( cgs.gametype >= GT_TEAM || cg_buildScript.integer ) {
 	if ( GT_IsTeam(cgs.gametype) || cg_buildScript.integer ) { // ~Dimmskii
 		cgs.media.friendShader = trap_R_RegisterShader( "sprites/foe" );
+		cgs.media.frozenFriendShader = trap_R_RegisterShader( "sprites/frozen" );	// ~Dimmskii
 		cgs.media.redQuadShader = trap_R_RegisterShader("powerups/blueflag" );
 		cgs.media.teamStatusBar = trap_R_RegisterShader( "gfx/2d/colorbar.tga" );
 //#ifdef MISSIONPACK
