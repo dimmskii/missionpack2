@@ -620,7 +620,7 @@ static void CG_HudScores( int *s1, int *s2 ) {
 	*s1 = cgs.scores1;
 	*s2 = cgs.scores2;
 
-	if ( !GT_IsRoundBased( cgs.gametype ) || GT_IsTeam( cgs.gametype ) ) {
+	if ( !GT_IsArenaGame( cgs.gametype ) || GT_IsTeam( cgs.gametype ) ) {
 		return;
 	}
 
