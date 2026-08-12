@@ -1354,22 +1354,28 @@ CG_ParseTeamPositions
 Parses team origins message when the server allows full team visibility.
 ====================
 */
+// Must match the field count TeamplayPositionMessage writes in g_team.c exactly -
+// each teammate is indexed as i * TPOS_FIELDS + n, so a mismatch shifts every
+// teammate past the first.
+#define TPOS_FIELDS 5
+
 static void CG_ParseTeamPositions( void ) {
     int     i, count, client;
 
     count = atoi( CG_Argv( 1 ) );
 
     for ( i = 0; i < count; i++ ) {
-        client = atoi( CG_Argv( i * 4 + 2 ) );
+        client = atoi( CG_Argv( i * TPOS_FIELDS + 2 ) );
         if ( (unsigned)client >= MAX_CLIENTS )
             continue;
 
         VectorCopy( cg_teammatePositions[client].origin, cg_teammatePositions[client].prevOrigin );
         cg_teammatePositions[client].prevServerTime = cg_teammatePositions[client].serverTime;
 
-        cg_teammatePositions[client].origin[0] = atoi( CG_Argv( i * 4 + 3 ) );
-        cg_teammatePositions[client].origin[1] = atoi( CG_Argv( i * 4 + 4 ) );
-        cg_teammatePositions[client].origin[2] = atoi( CG_Argv( i * 4 + 5 ) );
+        cg_teammatePositions[client].origin[0] = atoi( CG_Argv( i * TPOS_FIELDS + 3 ) );
+        cg_teammatePositions[client].origin[1] = atoi( CG_Argv( i * TPOS_FIELDS + 4 ) );
+        cg_teammatePositions[client].origin[2] = atoi( CG_Argv( i * TPOS_FIELDS + 5 ) );
+        cg_teammatePositions[client].frozen = atoi( CG_Argv( i * TPOS_FIELDS + 6 ) ) ? qtrue : qfalse;
         cg_teammatePositions[client].serverTime = cg.snap->serverTime;
         cg_teammatePositions[client].valid = qtrue;
     }

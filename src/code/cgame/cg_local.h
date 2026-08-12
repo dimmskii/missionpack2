@@ -1217,6 +1217,7 @@ typedef struct {
     int         serverTime;
     int         prevServerTime;
     qboolean    valid;
+    qboolean    frozen;		// only source of frozen state for an off-PVS teammate
 } teammatePos_t;
 
 typedef struct {

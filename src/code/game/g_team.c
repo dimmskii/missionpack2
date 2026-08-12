@@ -241,7 +241,10 @@ int Team_CountTotalArmor( team_t team, qboolean includeDead ) {
 TeamplayPositionMessage
 
 Lightweight position-only message for teammates
-Format: "tpos <count> <clientNum> <x> <y> <z> ..."
+Format: "tpos <count> <clientNum> <x> <y> <z> <frozen> ..."
+
+Field count must stay in lockstep with TPOS_FIELDS in cg_servercmds.c - the parser
+strides by it, so a mismatch shifts every teammate past the first.
 ==================
 */
 static void TeamplayPositionMessage( gentity_t *ent ) {
@@ -280,11 +283,15 @@ static void TeamplayPositionMessage( gentity_t *ent ) {
 			continue;
 		}
 
-        j = BG_sprintf( entry, " %i %i %i %i",
+        // Frozen rides along because this message exists for teammates the client
+        // cannot see: off-PVS there is no entity state to read the powerup marker
+        // from, so the POI has nothing else to gate its icon on.
+        j = BG_sprintf( entry, " %i %i %i %i %i",
             i,
             (int)player->client->ps.origin[0],
             (int)player->client->ps.origin[1],
-            (int)player->client->ps.origin[2] );
+            (int)player->client->ps.origin[2],
+            G_FreezeIsFrozen( player ) ? 1 : 0 );
 
         if ( stringlength + j >= sizeof( string ) )
             break;
