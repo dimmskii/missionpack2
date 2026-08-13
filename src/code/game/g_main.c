@@ -1972,7 +1972,7 @@ static void CheckExitRules_old( void ) { // ~Dimmskii
 				return;
 			}
 		}
-	} else if ( g_gametype.integer == GT_TEAMARENA && g_roundlimit.integer ) {
+	} else if ( (g_gametype.integer == GT_CLAN_ARENA || g_gametype.integer == GT_FREEZE) && g_roundlimit.integer ) {
 
 		if ( level.teamScores[TEAM_RED] >= g_roundlimit.integer ) {
 			G_BroadcastServerCommand( -1, "print \"Red hit the roundlimit.\n\"" );
