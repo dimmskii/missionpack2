@@ -201,7 +201,8 @@ int Team_CountTotalHealth( team_t team, qboolean includeDead ) {
 			continue;
 		
 		// If on specified team, add their health
-		if ( clientEnt->client->sess.sessionTeam == team && (clientEnt->health > 0 || includeDead) ) {
+//		if ( clientEnt->client->sess.sessionTeam == team && (clientEnt->health > 0 || includeDead) ) {
+		if ( clientEnt->client->sess.sessionTeam == team && !G_FreezeIsFrozen( clientEnt ) && (clientEnt->health > 0 || includeDead) ) {	// ~Dimmskii - Frozen sits at health 1 by design, so exclude it like QL's pm_type != PM_NORMAL does or a fully frozen team banks health into a round timeout tiebreak
 			totalHealth += clientEnt->health;
 		}
 	}

@@ -333,21 +333,41 @@ void Arena_EndRound( team_t winningTeam ) {
 	
 }
 
+/*
+=============
+Arena_TimeoutRound
+
+Resolves a round that ran out the clock rather than ending by elimination.
+
+QL decides this on living player count first and only falls through to health to
+break a count tie - G_CAResolveRoundWinner and G_FreezeEvaluateRoundWinner share
+the same ladder, so every round-based mode there resolves identically. Health
+means health alone; armor is never part of either stage.
+
+FFA arena falls straight through both stages, since its players are TEAM_FREE and
+both tallies come back zero. Arena_EndRound's own survivor check handles it.
+=============
+*/
 void Arena_TimeoutRound( void ) {
-	int totalRed, totalBlue;
-	
-	totalRed = Team_CountTotalHealth(TEAM_RED,qfalse)+Team_CountTotalArmor(TEAM_RED,qfalse);
-	totalBlue = Team_CountTotalHealth(TEAM_BLUE,qfalse)+Team_CountTotalArmor(TEAM_BLUE,qfalse);
-	
-	// Decided Team Arena round end
-	if ( totalRed > totalBlue ) {
-		Arena_EndRound( TEAM_RED );
-		return;
-	} else if ( totalBlue > totalRed ) {
-		Arena_EndRound( TEAM_BLUE );
+	int countRed, countBlue;
+	int healthRed, healthBlue;
+
+	countRed = Team_PlayerCountFighting( TEAM_RED );
+	countBlue = Team_PlayerCountFighting( TEAM_BLUE );
+
+	if ( countRed != countBlue ) {
+		Arena_EndRound( ( countRed > countBlue ) ? TEAM_RED : TEAM_BLUE );
 		return;
 	}
-	
+
+	healthRed = Team_CountTotalHealth( TEAM_RED, qfalse );
+	healthBlue = Team_CountTotalHealth( TEAM_BLUE, qfalse );
+
+	if ( healthRed != healthBlue ) {
+		Arena_EndRound( ( healthRed > healthBlue ) ? TEAM_RED : TEAM_BLUE );
+		return;
+	}
+
 	Arena_EndRound( TEAM_FREE ); // FFA Arena and undecided Team Arena round end
 }
 
