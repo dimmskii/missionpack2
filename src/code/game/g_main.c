@@ -2720,6 +2720,10 @@ static void G_RunFrame( int levelTime ) {
 	// freeze is off or nobody is frozen.
 	G_FreezeRunFrame();
 
+	// Full-team-freeze rule for the roundless team gametypes. Gated inside; the
+	// round-based modes resolve the same condition through Arena_CheckRules.
+	G_FreezeCheckTeamWipe();
+
 	if ( GT_IsRoundBased(g_gametype.integer) ) {
 		// see if Clan arena is
 		Arena_CheckRules();

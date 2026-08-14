@@ -52,5 +52,6 @@ void		G_FreezeRunFrame( void );
 qboolean	G_FreezeHandlePlayerDeath( gentity_t *self, gentity_t *attacker, int meansOfDeath );
 void		G_FreezeThawWinningTeam( team_t winner );
 qboolean	G_FreezeResetClientsForRound( void );
+void		G_FreezeCheckTeamWipe( void );
 
 int getHealthSoftLimit( void );

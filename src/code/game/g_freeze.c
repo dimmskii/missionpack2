@@ -489,6 +489,159 @@ qboolean G_FreezeResetClientsForRound( void ) {
 
 /*
 =============
+G_FreezeTeamIsWiped
+
+A team with at least one frozen member and nobody left fighting. The frozen
+requirement is what stops an empty team - or one that simply got shot rather
+than frozen - from reading as wiped.
+=============
+*/
+static qboolean G_FreezeTeamIsWiped( int team ) {
+	int			i, frozen;
+	gentity_t	*ent;
+
+	frozen = 0;
+	for ( i = 0 ; i < level.maxclients ; i++ ) {
+		ent = &g_entities[i];
+		if ( !ent->inuse || !ent->client ) {
+			continue;
+		}
+		if ( ent->client->pers.connected != CON_CONNECTED ) {
+			continue;
+		}
+		if ( ent->client->sess.sessionTeam != team ) {
+			continue;
+		}
+		if ( ent->client->freezeFrozen ) {
+			frozen++;
+		}
+	}
+
+	if ( frozen < 1 ) {
+		return qfalse;
+	}
+
+	return ( Team_PlayerCountFighting( team ) > 0 ) ? qfalse : qtrue;
+}
+
+/*
+=============
+G_FreezeRespawnTeam
+
+Thaws and respawns every frozen member of one team. No thaw effects or assist
+credit - this is a board reset, not a rescue.
+=============
+*/
+static void G_FreezeRespawnTeam( int team ) {
+	int			i;
+	gentity_t	*ent;
+
+	for ( i = 0 ; i < level.maxclients ; i++ ) {
+		ent = &g_entities[i];
+		if ( !ent->inuse || !ent->client ) {
+			continue;
+		}
+		if ( ent->client->sess.sessionTeam != team || !ent->client->freezeFrozen ) {
+			continue;
+		}
+
+		G_FreezeInitClient( ent );
+		respawn( ent );
+	}
+}
+
+/*
+=============
+G_FreezeCheckTeamWipe
+
+Filler rule for team gametypes that have no rounds. Freezing an entire team is
+the whole point of the mechanic, but in CTF or Harvester there is no round end
+to resolve it - the losing side just stops existing until the auto-thaw timer
+expires, and the side that pulled it off gets nothing for it. So: respawn the
+frozen team, and credit the other one.
+
+Excluded from round-based gametypes on purpose - Arena_CheckRules already ends
+the round on exactly this condition, and awards the round win properly.
+
+A mutual wipe (both teams fully frozen on the same frame) resets both sides and
+scores for neither, since neither achieved anything the other did not.
+
+The two halves are separately switchable. g_freezeTeamWipeRespawn off leaves the
+frozen team frozen, which means the wipe condition stays true - hence the
+freezeTeamWipeScored latch, or it would score once per frame forever.
+=============
+*/
+void G_FreezeCheckTeamWipe( void ) {
+	qboolean	wiped[TEAM_NUM_TEAMS];
+	int			team;
+
+	if ( !G_FreezeEnabled() ) {
+		return;
+	}
+	if ( g_freezeTeamWipeScore.integer <= 0 && !g_freezeTeamWipeRespawn.integer ) {
+		return;
+	}
+	if ( !GT_IsTeam( g_gametype.integer ) || GT_IsRoundBased( g_gametype.integer ) ) {
+		return;
+	}
+	if ( level.intermissiontime || level.intermissionQueued || level.warmupTime ) {
+		return;
+	}
+
+	wiped[TEAM_RED] = G_FreezeTeamIsWiped( TEAM_RED );
+	wiped[TEAM_BLUE] = G_FreezeTeamIsWiped( TEAM_BLUE );
+
+	// Clear the latch as soon as a team is back in the fight, so the next wipe
+	// scores again.
+	for ( team = TEAM_RED ; team <= TEAM_BLUE ; team++ ) {
+		if ( !wiped[team] ) {
+			level.freezeTeamWipeScored[team] = qfalse;
+		}
+	}
+
+	if ( !wiped[TEAM_RED] && !wiped[TEAM_BLUE] ) {
+		return;
+	}
+
+	if ( g_freezeTeamWipeRespawn.integer ) {
+		if ( wiped[TEAM_RED] ) {
+			G_FreezeRespawnTeam( TEAM_RED );
+		}
+		if ( wiped[TEAM_BLUE] ) {
+			G_FreezeRespawnTeam( TEAM_BLUE );
+		}
+	}
+
+	// Mutual wipe: reset both, credit neither.
+	if ( wiped[TEAM_RED] && wiped[TEAM_BLUE] ) {
+		if ( !level.freezeTeamWipeScored[TEAM_RED] || !level.freezeTeamWipeScored[TEAM_BLUE] ) {
+			G_BroadcastServerCommand( -1, "print \"Both teams were frozen out.\n\"" );
+		}
+		level.freezeTeamWipeScored[TEAM_RED] = qtrue;
+		level.freezeTeamWipeScored[TEAM_BLUE] = qtrue;
+		return;
+	}
+
+	team = wiped[TEAM_RED] ? TEAM_RED : TEAM_BLUE;
+	if ( level.freezeTeamWipeScored[team] ) {
+		return;
+	}
+	level.freezeTeamWipeScored[team] = qtrue;
+
+	if ( team == TEAM_RED ) {
+		G_BroadcastServerCommand( -1, "print \"" S_COLOR_RED "Red" S_COLOR_WHITE " team was frozen out.\n\"" );
+	} else {
+		G_BroadcastServerCommand( -1, "print \"" S_COLOR_BLUE "Blue" S_COLOR_WHITE " team was frozen out.\n\"" );
+	}
+
+	if ( g_freezeTeamWipeScore.integer > 0 ) {
+		AddTeamScore( vec3_origin, OtherTeam( team ), g_freezeTeamWipeScore.integer );
+		CalculateRanks();
+	}
+}
+
+/*
+=============
 G_FreezeClientCanHelpThaw
 
 A helper must be a live, unfrozen, non-spectating teammate within the thaw

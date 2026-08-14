@@ -114,6 +114,42 @@ Listed so they don't get reintroduced:
   104 against 111 entries, which silently made every freeze cvar non-functional
   as a factory cvar.
 
+## Full-team freeze in the roundless team gametypes
+
+Freezing a whole team is the point of the mechanic, and in `GT_FREEZE` or CA the
+round layer resolves it: `Arena_CheckRules` ends the round and awards the win.
+Switch `g_freeze` on in CTF, 1FCTF, Harvester, Obelisk, TDM, Domination and
+there is no round to end. The wiped team simply stops existing until the
+`g_freezeAutoThawTime` timer expires, and the side that pulled it off gets
+nothing for it.
+
+`G_FreezeCheckTeamWipe` is the filler rule for exactly those modes - ticked from
+`G_RunFrame` beside `G_FreezeRunFrame`, gated on
+`GT_IsTeam && !GT_IsRoundBased`. When a team has at least one frozen member and
+nobody left fighting, that team is respawned (`g_freezeTeamWipeRespawn`) and the
+other scores (`g_freezeTeamWipeScore`). Both default to 1; either can be zeroed
+independently, and zeroing both disables the rule outright.
+
+Details worth knowing:
+
+- **The "at least one frozen" requirement is load-bearing.** Without it an empty
+  team, or one that merely got shot rather than frozen, reads as wiped and scores
+  for the other side every single frame.
+- **A mutual wipe scores for nobody.** Both sides reset, no points - neither team
+  did anything the other did not.
+- **Scoring is latched per team** (`level.freezeTeamWipeScored`). With
+  `g_freezeTeamWipeRespawn 0` the wiped team stays frozen, so the wipe condition
+  stays true and an unlatched award would fire every frame forever. The latch
+  clears the moment that team has somebody fighting again.
+- **It reuses the team score**, which in CTF is the capture count. That is a real
+  conflation: a scoreboard showing 3 will not say whether that was three captures
+  or two captures and a freeze-out. Living with it for now because the alternative
+  is a separate per-team stat and a scoreboard column; revisit if these hybrid
+  modes get played seriously.
+- Attack&Defend and Red Rover are treated as roundless here because
+  `GT_IsRoundBased` doesn't list them. If they ever gain real round structure
+  they should move to the round path and out of this rule.
+
 ## Beyond QL: proposed cvar expansion
 
 None of these exist yet. Listed as proposals, in rough order of how much they'd
