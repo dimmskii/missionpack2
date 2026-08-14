@@ -243,7 +243,7 @@ void G_FreezeFreezeClient( gentity_t *ent, qboolean environmental ) {
 
 	thawTime = g_freezeThawTime.integer;
 	if ( thawTime <= 0 ) {
-		thawTime = 3000;
+		thawTime = 2000;	// must match G_FreezeThawTotal's fallback, and QL's
 	}
 	client->freezeThawTimeRemaining = thawTime;
 
