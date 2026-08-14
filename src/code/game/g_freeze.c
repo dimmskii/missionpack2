@@ -640,8 +640,15 @@ qboolean G_FreezeHandlePlayerDeath( gentity_t *self, gentity_t *attacker, int me
 	if ( self->client->sess.sessionTeam == TEAM_SPECTATOR ) {
 		return qfalse;
 	}
-	// already frozen: a frozen player takes no damage, but be defensive
+	// Already frozen. In GT_FREEZE that is unreachable - the body is immune to
+	// everything - so swallow it defensively. Elsewhere hazard damage does reach a
+	// frozen body, and getting here means it has just been killed for real: drop
+	// the frozen state so player_die can run its normal course from this point on.
 	if ( self->client->freezeFrozen ) {
+		if ( !G_FreezeIsNativeGametype() ) {
+			G_FreezeInitClient( self );
+			return qfalse;
+		}
 		return qtrue;
 	}
 

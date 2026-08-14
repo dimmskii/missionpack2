@@ -1060,8 +1060,20 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 // velocity, so zeroing only the health loss here leaves them pushable while
 // keeping them frozen. Done here rather than with takedamage = qfalse, which
 // returns at the top of this function and would kill the knockback too.
+//
+// Hazard damage is the exception, and only outside GT_FREEZE. A frozen body is
+// otherwise indestructible, so one shoved into lava or the void can never die
+// and can never be thawed either - it just sits there until the auto-thaw two
+// minutes later. GT_FREEZE keeps that, because QL's takedamage = qfalse does the
+// same and its environmental respawn timer is the intended way out. Everywhere
+// else the world is allowed to finish the body off.
 	if ( G_FreezeIsFrozen( targ ) ) {
-		take = 0;
+		qboolean fromWorld;
+
+		fromWorld = ( !attacker || !attacker->client ) ? qtrue : qfalse;
+		if ( !fromWorld || G_FreezeIsNativeGametype() ) {
+			take = 0;
+		}
 	}
 // END Dimmskii
 
