@@ -526,13 +526,15 @@ static qboolean G_FreezeTeamIsWiped( int team ) {
 
 /*
 =============
-G_FreezeRespawnTeam
+G_FreezeRespawnFrozen
 
-Thaws and respawns every frozen member of one team. No thaw effects or assist
-credit - this is a board reset, not a rescue.
+Thaws and respawns frozen players: one team, or -1 for every frozen player on
+the server. No thaw effects or assist credit - this is a board reset, not a
+rescue. Only frozen players are touched, so nobody who is still playing gets
+yanked back to a spawn point.
 =============
 */
-static void G_FreezeRespawnTeam( int team ) {
+static void G_FreezeRespawnFrozen( int team ) {
 	int			i;
 	gentity_t	*ent;
 
@@ -541,7 +543,10 @@ static void G_FreezeRespawnTeam( int team ) {
 		if ( !ent->inuse || !ent->client ) {
 			continue;
 		}
-		if ( ent->client->sess.sessionTeam != team || !ent->client->freezeFrozen ) {
+		if ( !ent->client->freezeFrozen ) {
+			continue;
+		}
+		if ( team >= 0 && ent->client->sess.sessionTeam != team ) {
 			continue;
 		}
 
@@ -566,19 +571,32 @@ the round on exactly this condition, and awards the round win properly.
 A mutual wipe (both teams fully frozen on the same frame) resets both sides and
 scores for neither, since neither achieved anything the other did not.
 
-The two halves are separately switchable. g_freezeTeamWipeRespawn off leaves the
+The two halves are separately switchable. g_freezeTeamWipeRespawn 0 leaves the
 frozen team frozen, which means the wipe condition stays true - hence the
-freezeTeamWipeScored latch, or it would score once per frame forever.
+freezeTeamWipeScored latch, or it would score once per frame forever. Modes 1 and
+2 clear the condition on the spot, so only mode 0 actually leans on the latch.
 =============
 */
 void G_FreezeCheckTeamWipe( void ) {
 	qboolean	wiped[TEAM_NUM_TEAMS];
 	int			team;
+	int			respawnMode;
 
 	if ( !G_FreezeEnabled() ) {
 		return;
 	}
-	if ( g_freezeTeamWipeScore.integer <= 0 && !g_freezeTeamWipeRespawn.integer ) {
+
+	// 0 nobody, 1 the wiped side, 2 every frozen player on either side. Clamped so
+	// an out-of-range value lands on one of the three rather than doing nothing
+	// while the score still fires.
+	respawnMode = g_freezeTeamWipeRespawn.integer;
+	if ( respawnMode < 0 ) {
+		respawnMode = 0;
+	} else if ( respawnMode > 2 ) {
+		respawnMode = 2;
+	}
+
+	if ( g_freezeTeamWipeScore.integer <= 0 && respawnMode == 0 ) {
 		return;
 	}
 	if ( !GT_IsTeam( g_gametype.integer ) || GT_IsRoundBased( g_gametype.integer ) ) {
@@ -603,13 +621,15 @@ void G_FreezeCheckTeamWipe( void ) {
 		return;
 	}
 
-	if ( g_freezeTeamWipeRespawn.integer ) {
+	if ( respawnMode == 1 ) {
 		if ( wiped[TEAM_RED] ) {
-			G_FreezeRespawnTeam( TEAM_RED );
+			G_FreezeRespawnFrozen( TEAM_RED );
 		}
 		if ( wiped[TEAM_BLUE] ) {
-			G_FreezeRespawnTeam( TEAM_BLUE );
+			G_FreezeRespawnFrozen( TEAM_BLUE );
 		}
+	} else if ( respawnMode == 2 ) {
+		G_FreezeRespawnFrozen( -1 );
 	}
 
 	// Mutual wipe: reset both, credit neither.

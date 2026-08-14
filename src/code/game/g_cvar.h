@@ -215,7 +215,7 @@ G_CVAR( g_freezeResetHealthOnRound, "g_freezeResetHealthOnRound", "1", 0, 0, qtr
 G_CVAR( g_freezeResetArmorOnRound, "g_freezeResetArmorOnRound", "1", 0, 0, qtrue, qfalse )		// only consulted when weapons are not reset
 G_CVAR( g_freezeRemovePowerupsOnRound, "g_freezeRemovePowerupsOnRound", "1", 0, 0, qtrue, qfalse )	// only consulted when weapons are not reset
 G_CVAR( g_freezeTeamWipeScore, "g_freezeTeamWipeScore", "1", 0, 0, qtrue, qfalse )				// points for freezing a whole team in a roundless team game; 0 = off
-G_CVAR( g_freezeTeamWipeRespawn, "g_freezeTeamWipeRespawn", "1", 0, 0, qtrue, qfalse )			// respawn the frozen-out team in a roundless team game; 0 = leave them for the auto-thaw
+G_CVAR( g_freezeTeamWipeRespawn, "g_freezeTeamWipeRespawn", "2", 0, 0, qtrue, qfalse )			// who thaws on a full-team freeze: 0 nobody, 1 the wiped side, 2 every frozen player
 
 G_CVAR( g_teamVisibility, "g_teamVisibility", "1", CVAR_SERVERINFO, 0, qtrue, qfalse )
 G_CVAR( g_itemVisibility, "g_itemVisibility", "1", CVAR_SERVERINFO, 0, qtrue, qfalse )	// TODO: break up into perhaps g_flagVisibility, g_powerupVisibility, etc.

@@ -126,9 +126,22 @@ nothing for it.
 `G_FreezeCheckTeamWipe` is the filler rule for exactly those modes - ticked from
 `G_RunFrame` beside `G_FreezeRunFrame`, gated on
 `GT_IsTeam && !GT_IsRoundBased`. When a team has at least one frozen member and
-nobody left fighting, that team is respawned (`g_freezeTeamWipeRespawn`) and the
-other scores (`g_freezeTeamWipeScore`). Both default to 1; either can be zeroed
-independently, and zeroing both disables the rule outright.
+nobody left fighting, frozen players are thawed per `g_freezeTeamWipeRespawn` and
+the other side scores `g_freezeTeamWipeScore`. Respawn defaults to 2 and score to
+1; either can be zeroed independently, and zeroing both disables the rule
+outright.
+
+`g_freezeTeamWipeRespawn` selects **who gets thawed**, clamped to 0-2:
+
+| value | thaws |
+|---|---|
+| 0 | nobody - the wiped side waits out `g_freezeAutoThawTime` |
+| 1 | the wiped side only |
+| 2 | every frozen player, including the winning side's own (default) |
+
+Mode 2 is the default because a wipe is a board reset, and leaving the winners'
+frozen teammates iced through it is arbitrary - the wipe already resolved the
+fight, so both sides should start the next one on even footing.
 
 Details worth knowing:
 
@@ -140,7 +153,9 @@ Details worth knowing:
 - **Scoring is latched per team** (`level.freezeTeamWipeScored`). With
   `g_freezeTeamWipeRespawn 0` the wiped team stays frozen, so the wipe condition
   stays true and an unlatched award would fire every frame forever. The latch
-  clears the moment that team has somebody fighting again.
+  clears the moment that team has somebody fighting again. Modes 1 and 2 clear
+  the condition immediately, so mode 0 is the only one that actually needs it -
+  don't drop the latch after testing only the other two.
 - **It reuses the team score**, which in CTF is the capture count. That is a real
   conflation: a scoreboard showing 3 will not say whether that was three captures
   or two captures and a freeze-out. Living with it for now because the alternative
