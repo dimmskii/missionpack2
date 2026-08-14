@@ -1304,7 +1304,11 @@ void ClientSpawn(gentity_t *ent) {
 
 	// Disable shooting upon respawn in Arena or FT gamemodes if there is warmup time (  re-enabled on G_WarmupEnd in g_main.c  )
 	if ( GT_IsRoundBased(g_gametype.integer) ) {
-		if (!isSpectator && g_warmup.integer > 0) {
+		// level.warmupTime, not just the cvar: only G_WarmupEnd and Arena_ThawWeapons
+		// ever clear this flag, so a mid-round respawn (FT environmental recovery)
+		// used to stay disarmed for the rest of the round. ~Dimmskii
+//		if (!isSpectator && g_warmup.integer > 0) {
+		if (!isSpectator && g_warmup.integer > 0 && level.warmupTime != 0) {
 			client->ps.pm_flags |= PMF_NOSHOOT;
 		}
 	}
