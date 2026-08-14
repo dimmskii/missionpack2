@@ -100,6 +100,14 @@ void TossClientItems( gentity_t *self ) {
 	if ( g_gametype.integer != GT_TEAM ) {
 		angle = 45;
 		for ( i = 1 ; i < PW_NUM_POWERUPS ; i++ ) {
+// ~Dimmskii -- g_dropPowerups 0 destroys held powerups on death instead of
+// dropping them. Flags live in this same loop and must never be affected, or
+// CTF breaks: they are returned/dropped regardless of this cvar.
+			if ( !g_dropPowerups.integer
+				&& i != PW_REDFLAG && i != PW_BLUEFLAG && i != PW_NEUTRALFLAG ) {
+				continue;
+			}
+// END Dimmskii
 			if ( self->client->ps.powerups[ i ] > level.time ) {
 				item = BG_FindItemForPowerup( i );
 				if ( !item ) {

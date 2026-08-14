@@ -225,6 +225,7 @@ G_CVAR( g_allSpec, "g_allSpec", "0", CVAR_SERVERINFO, 0, qtrue, qfalse )
 
 G_CVAR( g_allowHandicap, "g_allowHandicap", "0", 0, 0, qtrue, qfalse )
 G_CVAR( g_allowKill, "g_allowKill", "1000", 0, 0, qtrue, qfalse ) // ms between /kill commands; 0 = instant, negative = disabled outright
+G_CVAR( g_dropPowerups, "g_dropPowerups", "1", 0, 0, qtrue, qfalse ) // 0 = held powerups (quad, regen, invis...) are destroyed on death instead of dropped; flags always drop
 
 // Starting health/armor
 G_CVAR( g_startingArmor, "g_startingArmor", "0", 0, 0, qtrue, qfalse )
