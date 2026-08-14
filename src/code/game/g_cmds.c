@@ -546,14 +546,46 @@ Cmd_Kill_f
 =================
 */
 void Cmd_Kill_f( gentity_t *ent ) {
+	int	cooldown;	// ~Dimmskii
+
 	if ( ent->client->sess.sessionTeam == TEAM_SPECTATOR ) {
 		return;
 	}
 	if (ent->health <= 0) {
 		return;
 	}
+// ~Dimmskii -- g_allowKill, ported from QL. Negative disables /kill outright and
+// says so; positive is a cooldown in ms measured against both the last spawn and
+// the last /kill, so it throttles suicide spam and spawn-suicides with one value.
+// Blocked attempts are silent, as they are in QL. Read straight off the cvar with
+// no validation: the negative sentinel is the point, and QL's own factory reader
+// clamps it away by mistake.
+	cooldown = g_allowKill.integer;
+	if ( cooldown < 0 ) {
+		trap_SendServerCommand( ent-g_entities, "print \"Kill is not enabled on this server.\n\"" );
+		return;
+	}
+
+	if ( cooldown > 0 ) {
+		int	spawnElapsed;
+		int	killElapsed;
+
+		spawnElapsed = level.time - ent->client->respawnTime;
+		if ( spawnElapsed < cooldown ) {
+			return;
+		}
+
+		if ( ent->client->pers.killCommandTime >= 0 ) {
+			killElapsed = level.time - ent->client->pers.killCommandTime;
+			if ( killElapsed < cooldown ) {
+				return;
+			}
+		}
+	}
+// END Dimmskii
 	ent->flags &= ~FL_GODMODE;
 	ent->client->ps.stats[STAT_HEALTH] = ent->health = -999;
+	ent->client->pers.killCommandTime = level.time;	// ~Dimmskii
 	player_die (ent, ent, ent, 100000, MOD_SUICIDE);
 }
 

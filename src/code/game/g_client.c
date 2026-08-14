@@ -882,6 +882,8 @@ const char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 //	areabits = client->areabits;
 	memset( client, 0, sizeof( *client ) );
 
+	client->pers.killCommandTime = -1;	// ~Dimmskii - never killed yet; 0 would be a real timestamp
+
 	client->ps.clientNum = clientNum;
 
 	if ( !ClientUserinfoChanged( clientNum ) ) {

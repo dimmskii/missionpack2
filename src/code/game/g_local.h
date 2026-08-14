@@ -247,6 +247,8 @@ typedef struct {
 	int			teamVoted;
 
 	qboolean	inGame;
+
+	int			killCommandTime;	// ~Dimmskii - level.time of the last /kill, -1 if never; drives the g_allowKill throttle
 } clientPersistant_t;
 
 // ~Dimmskii -- Per-match stats that have nowhere to go in ps.persistant[]: that

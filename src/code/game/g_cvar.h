@@ -68,6 +68,7 @@ G_CVAR( g_powerupRespawn, "g_powerupRespawn", "120", 0, 0, qtrue, qfalse )
 G_CVAR( g_holdableRespawn, "g_holdableRespawn", "60", 0, 0, qtrue, qfalse )
 //G_CVAR( g_holdableTeamRespawn, "g_holdableTeamRespawn", "60", 0, 0, qtrue, qfalse )
 G_CVAR( g_forcerespawn, "g_forcerespawn", "20", 0, 0, qtrue, qfalse )
+G_CVAR( g_allowKill, "g_allowKill", "1000", 0, 0, qtrue, qfalse )								// ms between /kill commands; 0 = instant, negative = disabled outright
 G_CVAR( g_inactivity, "g_inactivity", "0", 0, 0, qtrue, qfalse )
 G_CVAR( g_debugMove, "g_debugMove", "0", 0, 0, qfalse, qfalse )
 G_CVAR( g_debugDamage, "g_debugDamage", "0", 0, 0, qfalse, qfalse )
