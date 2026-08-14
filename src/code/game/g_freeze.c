@@ -171,6 +171,47 @@ static void G_FreezeAwardThawAssist( gentity_t *ent, int helperNum ) {
 
 /*
 =============
+G_FreezeDropFlags
+
+Hands back any flag the player is carrying. Mirrors player_die: dropped where
+the body fell, or returned outright from a nodrop volume.
+=============
+*/
+static void G_FreezeDropFlags( gentity_t *ent ) {
+	static const int	flagPowerups[3] = { PW_REDFLAG, PW_BLUEFLAG, PW_NEUTRALFLAG };
+	static const int	flagTeams[3] = { TEAM_RED, TEAM_BLUE, TEAM_FREE };
+	int			i;
+	float		angle;
+	qboolean	nodrop;
+
+	nodrop = ( trap_PointContents( ent->r.currentOrigin, -1 ) & CONTENTS_NODROP ) ? qtrue : qfalse;
+	angle = 45;
+
+	for ( i = 0 ; i < 3 ; i++ ) {
+		gitem_t	*item;
+
+		if ( !ent->client->ps.powerups[ flagPowerups[i] ] ) {
+			continue;
+		}
+
+		if ( nodrop ) {
+			Team_ReturnFlag( flagTeams[i] );
+		} else {
+			item = BG_FindItemForPowerup( flagPowerups[i] );
+			if ( item ) {
+				// LaunchItem gives IT_TEAM drops Team_DroppedFlagThink and the
+				// 30s base-return timer for free, so this needs nothing else.
+				Drop_Item( ent, item, angle );
+				angle += 45;
+			}
+		}
+
+		ent->client->ps.powerups[ flagPowerups[i] ] = 0;
+	}
+}
+
+/*
+=============
 G_FreezeFreezeClient
 
 Death replacement: the player is immobilised instead of killed. Health stays at
@@ -189,6 +230,11 @@ void G_FreezeFreezeClient( gentity_t *ent, qboolean environmental ) {
 	if ( client->freezeFrozen ) {
 		return;
 	}
+
+	// The intercept returns before player_die reaches TossClientItems, so without
+	// this an ice statue keeps carrying the flag for the rest of the round.
+	// Mirrors player_die: drop it where the body fell, return it from a nodrop.
+	G_FreezeDropFlags( ent );
 
 	client->freezeFrozen = qtrue;
 	client->freezeTime = level.time;

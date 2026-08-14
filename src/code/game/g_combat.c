@@ -604,7 +604,8 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 // the frag credit, awards and obituary all happen exactly as normal - including
 // our own scoring fixes - with no duplicated death logic. Everything below is
 // what a frozen player must NOT get: dropped items, a corpse, a respawn timer.
-// Flags are returned above, so a frozen flag carrier still drops the flag.
+// The flag return above only covers MOD_SUICIDE, and TossClientItems below is
+// skipped, so G_FreezeFreezeClient drops any carried flag itself.
 	if ( G_FreezeHandlePlayerDeath( self, attacker, meansOfDeath ) ) {
 		return;
 	}

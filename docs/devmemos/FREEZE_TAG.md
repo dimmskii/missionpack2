@@ -144,6 +144,27 @@ while the real question covers lava, crushers, trigger_hurt and any future
 hazard, and the disposal method should just be whatever the gametype already does
 to a corpse. `g_freezeMortalBodies` says the actual thing.
 
+### Flag handling on freeze
+
+Freezing drops any carried flag (`G_FreezeDropFlags`), because the death
+intercept returns before `player_die` reaches `TossClientItems` and an ice statue
+holding the enemy flag for a whole round is not a mechanic anyone asked for. It
+mirrors `player_die`: drop it where the body fell, or return it outright if the
+body is in a `CONTENTS_NODROP` volume.
+
+Note this only matters for our extension - QL has no Freeze-CTF, so retail never
+had to answer it. The behaviour is a choice, and *drop* was chosen because it is
+what a normal death does.
+
+**Proposal, out of scope here but adjacent:** alongside bringing `g_dropWeapon`
+and `g_dropPowerups` in line with QL, the same question deserves a knob for
+flags - `g_dropFlag` / `g_returnFlag`, or one tri-state - covering drop where you
+died, return to base immediately, or keep the current split where nodrop returns
+and everywhere else drops. Whatever shape it takes it belongs with the other two
+drop cvars rather than in the freeze block, since it is a CTF rule that freeze
+merely happens to trigger. Freeze would then just call it instead of deciding for
+itself.
+
 ### Smaller knobs, all currently hardcoded
 
 - **`g_freezeBodyFriction`** - the frozen-body slide. Hardcoded `0.25` in
