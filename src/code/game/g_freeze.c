@@ -320,6 +320,12 @@ void G_FreezeThawClient( gentity_t *ent, qboolean wasAuto, int helperNum ) {
 	ent->health = client->ps.stats[STAT_MAX_HEALTH];
 	client->ps.stats[STAT_HEALTH] = ent->health;
 
+	// You come back up where you fell, often with whoever killed you still
+	// standing there. QL-SRP grants a configurable grace window; off by default.
+	if ( g_freezeProtectedSpawnTime.integer > 0 ) {
+		client->invulnerabilityTime = level.time + g_freezeProtectedSpawnTime.integer;
+	}
+
 	if ( !wasAuto ) {
 		G_FreezeAwardThawAssist( ent, helperNum );
 	}
@@ -379,6 +385,64 @@ void G_FreezeThawWinningTeam( team_t winner ) {
 
 /*
 =============
+G_FreezeResetClientsForRound
+
+QL-SRP's G_FreezeResetClientForRound: a freeze round can restart without
+respawning anyone. With g_freezeResetWeaponsOnRound off, players keep their
+loadout and where they were standing, and only the pieces still switched on are
+restored in place.
+
+Returns qtrue once it has handled every client, so the caller skips its own
+respawnAll(). At the stock defaults it returns qfalse and nothing changes.
+=============
+*/
+qboolean G_FreezeResetClientsForRound( void ) {
+	int			i;
+	gentity_t	*ent;
+	gclient_t	*client;
+
+	if ( !G_FreezeEnabled() || g_freezeResetWeaponsOnRound.integer ) {
+		return qfalse;
+	}
+
+	for ( i = 0 ; i < level.maxclients ; i++ ) {
+		ent = &g_entities[i];
+		if ( !ent->inuse || !ent->client ) {
+			continue;
+		}
+
+		client = ent->client;
+		if ( client->pers.connected != CON_CONNECTED ) {
+			continue;
+		}
+		if ( client->sess.sessionTeam == TEAM_SPECTATOR ) {
+			continue;
+		}
+
+		// Nobody respawns on this path, so the frozen state has to be cleared by
+		// hand - ClientSpawn is what normally does it.
+		G_FreezeInitClient( ent );
+		client->ps.pm_type = PM_NORMAL;
+		client->respawnTime = level.time;
+		ent->takedamage = qtrue;
+
+		if ( g_freezeResetHealthOnRound.integer ) {
+			ent->health = client->ps.stats[STAT_MAX_HEALTH];
+			client->ps.stats[STAT_HEALTH] = ent->health;
+		}
+		if ( g_freezeResetArmorOnRound.integer ) {
+			client->ps.stats[STAT_ARMOR] = g_startingArmor.integer;
+		}
+		if ( g_freezeRemovePowerupsOnRound.integer ) {
+			memset( client->ps.powerups, 0, sizeof( client->ps.powerups ) );
+		}
+	}
+
+	return qtrue;
+}
+
+/*
+=============
 G_FreezeClientCanHelpThaw
 
 A helper must be a live, unfrozen, non-spectating teammate within the thaw
@@ -408,6 +472,19 @@ static qboolean G_FreezeClientCanHelpThaw( const gentity_t *ent, const gentity_t
 	VectorSubtract( helper->client->ps.origin, ent->client->ps.origin, delta );
 	if ( VectorLengthSquared( delta ) > thawRadiusSq ) {
 		return qfalse;
+	}
+
+	// A helper has to be able to see the body, not just stand near it - otherwise
+	// you thaw through the floor of the room above. Ported from QL-SRP, same
+	// MASK_SOLID ray and same cvar to switch it back off.
+	if ( !g_freezeThawThroughSurface.integer ) {
+		trace_t	trace;
+
+		trap_Trace( &trace, ent->r.currentOrigin, NULL, NULL, helper->r.currentOrigin,
+			ent->s.number, MASK_SOLID );
+		if ( trace.fraction < 1.0f && trace.entityNum != helper->s.number ) {
+			return qfalse;
+		}
 	}
 
 	return qtrue;
@@ -517,7 +594,7 @@ void G_FreezeRunFrame( void ) {
 
 			// one tick per whole second crossed, matching QL-SRP
 			newSec = client->freezeThawTimeRemaining / 1000;
-			if ( oldSec > 0 && oldSec != newSec ) {
+			if ( oldSec > 0 && oldSec != newSec && g_freezeThawTick.integer ) {
 				gentity_t *tent = G_TempEntity( client->ps.origin, EV_THAW_TICK );
 				tent->s.otherEntityNum = ent->s.number;
 			}
@@ -542,9 +619,13 @@ G_FreezeHandlePlayerDeath
 Death intercept. Returns qtrue when the death was converted into a freeze, in
 which case the caller must not run the normal death path at all.
 
-Environmental deaths (lava, void, crushing) still kill outright - freezing a
-player inside a hazard would strand them there permanently with no way for a
-teammate to reach them.
+Environmental deaths (lava, void, crushing) split by gametype. GT_FREEZE freezes
+them like QL does and lets g_freezeEnvironmentalRespawnDelay recover the body,
+because that is what retail does and parity is owed there. Everywhere else the
+mechanic reaches - through g_freeze in gametypes QL has no freeze for - they
+kill outright and each gametype's own death handling takes it from there: out
+until round end in the round-based modes, a normal respawn everywhere else.
+That also removes the free mid-round life a void death used to hand out.
 =============
 */
 qboolean G_FreezeHandlePlayerDeath( gentity_t *self, gentity_t *attacker, int meansOfDeath ) {
@@ -576,6 +657,13 @@ qboolean G_FreezeHandlePlayerDeath( gentity_t *self, gentity_t *attacker, int me
 	}
 	if ( trap_PointContents( self->r.currentOrigin, -1 ) & CONTENTS_NODROP ) {
 		environmental = qtrue;
+	}
+
+	// Outside GT_FREEZE, decline the intercept and let player_die run normally.
+	// No gametype test is needed downstream: the round layer already keeps a real
+	// corpse out until the round ends, and non-round modes already respawn it.
+	if ( environmental && !G_FreezeIsNativeGametype() ) {
+		return qfalse;
 	}
 
 #ifdef DEBUG

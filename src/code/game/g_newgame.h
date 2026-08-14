@@ -41,6 +41,7 @@ qboolean	Arena_MatchDecided(void);
 // alike - asks this rather than testing the gametype, so freeze can be switched
 // on inside other round-based gametypes via g_freeze.
 qboolean	G_FreezeEnabled(void);
+qboolean	G_FreezeIsNativeGametype(void);
 
 // g_freeze.c
 qboolean	G_FreezeIsFrozen( const gentity_t *ent );
@@ -50,5 +51,6 @@ void		G_FreezeThawClient( gentity_t *ent, qboolean wasAuto, int helperNum );
 void		G_FreezeRunFrame( void );
 qboolean	G_FreezeHandlePlayerDeath( gentity_t *self, gentity_t *attacker, int meansOfDeath );
 void		G_FreezeThawWinningTeam( team_t winner );
+qboolean	G_FreezeResetClientsForRound( void );
 
 int getHealthSoftLimit( void );

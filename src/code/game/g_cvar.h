@@ -207,6 +207,13 @@ G_CVAR( g_freezeAutoThawTime, "g_freezeAutoThawTime", "120000", 0, 0, qtrue, qfa
 G_CVAR( g_freezeRoundDelay, "g_freezeRoundDelay", "4000", 0, 0, qtrue, qfalse )					// ms between round end and next warmup
 G_CVAR( g_freezeEnvironmentalRespawnDelay, "g_freezeEnvironmentalRespawnDelay", "5000", 0, 0, qtrue, qfalse )	// ms before a lava/void freeze respawns
 G_CVAR( g_freezeThawWinningTeam, "g_freezeThawWinningTeam", "1", 0, 0, qtrue, qfalse )			// thaw+respawn the winners at round end
+G_CVAR( g_freezeThawTick, "g_freezeThawTick", "1", 0, 0, qtrue, qfalse )						// 0 = silent thaw, no per-second tick
+G_CVAR( g_freezeThawThroughSurface, "g_freezeThawThroughSurface", "0", 0, 0, qtrue, qfalse )	// 1 = thaw through walls, 0 = needs line of sight
+G_CVAR( g_freezeProtectedSpawnTime, "g_freezeProtectedSpawnTime", "0", 0, 0, qtrue, qfalse )	// ms of invulnerability after a thaw
+G_CVAR( g_freezeResetWeaponsOnRound, "g_freezeResetWeaponsOnRound", "1", 0, 0, qtrue, qfalse )	// 0 = keep loadout and position across rounds
+G_CVAR( g_freezeResetHealthOnRound, "g_freezeResetHealthOnRound", "1", 0, 0, qtrue, qfalse )	// only consulted when weapons are not reset
+G_CVAR( g_freezeResetArmorOnRound, "g_freezeResetArmorOnRound", "1", 0, 0, qtrue, qfalse )		// only consulted when weapons are not reset
+G_CVAR( g_freezeRemovePowerupsOnRound, "g_freezeRemovePowerupsOnRound", "1", 0, 0, qtrue, qfalse )	// only consulted when weapons are not reset
 
 G_CVAR( g_teamVisibility, "g_teamVisibility", "1", CVAR_SERVERINFO, 0, qtrue, qfalse )
 G_CVAR( g_itemVisibility, "g_itemVisibility", "1", CVAR_SERVERINFO, 0, qtrue, qfalse )	// TODO: break up into perhaps g_flagVisibility, g_powerupVisibility, etc.

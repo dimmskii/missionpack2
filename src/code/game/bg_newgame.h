@@ -185,12 +185,19 @@ static const char *GFACTORY_CVARS[] = {
 	"g_freezeRoundDelay",
 	"g_freezeEnvironmentalRespawnDelay",
 	"g_freezeThawWinningTeam",
+	"g_freezeThawTick",
+	"g_freezeThawThroughSurface",
+	"g_freezeProtectedSpawnTime",
+	"g_freezeResetWeaponsOnRound",
+	"g_freezeResetHealthOnRound",
+	"g_freezeResetArmorOnRound",
+	"g_freezeRemovePowerupsOnRound",
 
     NULL                    // Null-terminator for safe iteration loops
 };
 
 #define GFACTORY_MAX_CVAR_VALUE_LEN 64
-#define GFACTORY_CVARS_COUNT       104 	/* Total elements in GFACTORY_CVARS excluding NULL */
+#define GFACTORY_CVARS_COUNT       118 	/* Total elements in GFACTORY_CVARS excluding NULL */
 
 // QL-Compatible game factories
 typedef struct {

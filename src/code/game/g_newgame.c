@@ -140,6 +140,22 @@ qboolean G_FreezeEnabled( void ) {
 	return g_freeze.integer ? qtrue : qfalse;
 }
 
+/*
+=============
+G_FreezeIsNativeGametype
+
+True only for GT_FREEZE - the one mode we owe QL behavioural parity. Everything
+else reaches the mechanic through the g_freeze cvar, which QL has no equivalent
+of, so it takes our own defaults instead of inheriting QL's quirks.
+
+A named predicate rather than a bare == GT_FREEZE so the intent reads, and so
+there is still exactly one place to change the rule.
+=============
+*/
+qboolean G_FreezeIsNativeGametype( void ) {
+	return ( g_gametype.integer == GT_FREEZE ) ? qtrue : qfalse;
+}
+
 
 // ARENA / CA GAMETYPE LOGIC
 
@@ -170,7 +186,11 @@ void Arena_BeginRound( void ) {
 	trap_SetConfigstring( CS_ROUND_NUMBER, va("%i", level.roundNumber) );
 // END Dimmskii
 
-	respawnAll();
+	// Freeze can restart a round in place instead of respawning everyone; it
+	// returns qfalse at the stock defaults, which is the normal respawnAll path.
+	if ( !G_FreezeResetClientsForRound() ) {
+		respawnAll();
+	}
 	CalculateRanks(); // Make sure scoreboard is sorted immediately? -- AKA Fix my scores please fresh out of spec mod
 }
 
