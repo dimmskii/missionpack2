@@ -1560,6 +1560,17 @@ static void PM_Weapon( void ) {
 		return;
 	}
 
+// ~Dimmskii -- A frozen body must not run the weapon state machine at all. The
+// client keeps sending cmd.weapon, so the change block below would swap models and
+// fire EV_CHANGE_WEAPON on a statue. The dead check above misses it because a
+// frozen player is health 1 by design. Keyed on pm_type, never PMF_NOSHOOT: that
+// flag belongs to the round layer and freeze must not add or clear it.
+	if ( pm->ps->pm_type == PM_FREEZE ) {
+		pm->cmd.buttons &= ~BUTTON_ATTACK;
+		return;
+	}
+// END Dimmskii
+
 	// check for item using
 	if ( pm->cmd.buttons & BUTTON_USE_HOLDABLE ) {
 		if ( ! ( pm->ps->pm_flags & PMF_USE_ITEM_HELD ) ) {
@@ -1614,9 +1625,7 @@ static void PM_Weapon( void ) {
 	
 // ~Dimmskii
 	// don't allow attack with PMF_NOSHOOT flag (usually for Arena gamemodes' round prep)
-	// PM_FREEZE rides the same block: a frozen player can't shoot either, and unlike
-	// the movement strip this one isn't covered by the pm_type >= PM_DEAD case
-	if ( ( pm->ps->pm_flags & PMF_NOSHOOT ) || pm->ps->pm_type == PM_FREEZE ) {
+	if ( pm->ps->pm_flags & PMF_NOSHOOT ) {
 		pm->cmd.buttons &= ~BUTTON_ATTACK; // Take away BUTTON_ATTACK flag
 		return;
 	}
