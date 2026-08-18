@@ -984,6 +984,15 @@ static void G_InitGame( int levelTime, int randomSeed, int restart ) {
 	trap_LocateGameData( level.gentities, level.num_entities, sizeof( gentity_t ), 
 		&level.clients[0].ps, sizeof( level.clients[0] ) );
 
+// ~Dimmskii -- A fresh level memsets warmupTime to 0, which CheckTournament reads
+// as "round already running" and returns on before it can ever start a warmup.
+// Empty teams normally rescue it through the notEnough path, but a map reload
+// keeps everyone's team, so the round layer never starts. Begin waiting instead.
+	if ( GT_IsRoundBased( g_gametype.integer ) ) {
+		level.warmupTime = -1;
+	}
+// END Dimmskii
+
 	// reserve some spots for dead player bodies
 	InitBodyQue();
 
@@ -2068,10 +2077,13 @@ static void G_WarmupEnd( void )
 		isArena = qtrue;
 	}
 
+	// Everyone respawns as the round goes live, not just the dead: warmup is for
+	// wandering around, and a round has to start from spawn points with a clean
+	// loadout rather than wherever people drifted to and whatever they hoovered up.
 	// Must run before warmupTime is zeroed below (ClientSpawn would freeze the
 	// respawn) and before the loop that clears the PMF_NOSHOOT it re-sets.
 	if ( isArena ) {
-		Arena_ForceRespawnDead();
+		respawnAll();
 	}
 // END Dimmskii
 

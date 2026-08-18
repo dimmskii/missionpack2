@@ -588,6 +588,14 @@ void ClientEvents( gentity_t *ent, int oldEventSequence ) {
 			if ( g_dmflags.integer & DF_NO_FALLING ) {
 				break;
 			}
+// ~Dimmskii -- A frozen body still falls, so shoving one off a ledge used to land
+// real fall damage on it: MOD_FALLING has no attacker, which reads as world damage
+// and kills it outright outside GT_FREEZE. Landing is not a hazard - never hurt a
+// frozen player with it, in any gametype.
+			if ( G_FreezeIsFrozen( ent ) ) {
+				break;
+			}
+// END Dimmskii
 			if ( event == EV_FALL_FAR ) {
 				damage = 10;
 			} else {
