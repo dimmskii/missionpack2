@@ -1106,6 +1106,23 @@ void CG_EntityEvent( centity_t *cent, vec3_t position, int entityNum ) {
 					//
 					CG_AddBufferedSound( cgs.media.redFlagReturnedSound );
 					break;
+// ~Dimmskii -- the same cue the flag returns use, deliberately: it is what Freeze
+// has always sounded like. Just no announcer VO behind it, which is the whole
+// reason these are not GTS_*_RETURN. Named for the thawed player's own team, so
+// there is no crossed mapping here.
+				case GTS_RED_THAW:
+					if ( cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED )
+						CG_AddBufferedSound( cgs.media.returnYourTeamSound );
+					else
+						CG_AddBufferedSound( cgs.media.returnOpponentSound );
+					break;
+				case GTS_BLUE_THAW:
+					if ( cg.snap->ps.persistant[PERS_TEAM] == TEAM_BLUE )
+						CG_AddBufferedSound( cgs.media.returnYourTeamSound );
+					else
+						CG_AddBufferedSound( cgs.media.returnOpponentSound );
+					break;
+// END Dimmskii
 
 				case GTS_RED_TAKEN: // CTF: red team took blue flag, 1FCTF: blue team took the neutral flag
 					// if this player picked up the flag then a sound is played in CG_CheckLocalSounds

@@ -290,15 +290,18 @@ void G_FreezeFreezeClient( gentity_t *ent, qboolean environmental ) {
 =============
 G_FreezeEmitThawCompletionEvents
 
-The obituary and team sound QL fires on a completed thaw. The sound reuses the
-CTF flag-return cue, which works in Freeze because the announcer VO samples
-behind it are only registered for GT_CTF, so only the generic teamplay sample
-survives.
+The obituary and team sound QL fires on a completed thaw.
 
-Note the ternary is flipped from QL-SRP. Theirs picks the sound slot the way
-vanilla's Team_ReturnFlagSound does - keyed to the *flag's* team - which lands
-the "your team" cue on the opposite team to the one that just got a player back.
-Ours plays the friendly cue to the thawed player's own team.
+QL-SRP sends GTS_RED_RETURN/GTS_BLUE_RETURN here and relies on GT_FREEZE never
+registering the CTF announcer VO, so only the generic teamplay cue survives. That
+breaks the moment g_freeze is switched on inside a flag gametype, where the VO is
+registered and every thaw announces a flag return - and it feeds the bots a false
+flag-status reset besides. Our own GTS values keep the same audible result
+without borrowing an event that already means something else.
+
+Keyed to the thawed player's team, so the friendly cue reaches the side that just
+got a player back. QL-SRP keys it to the flag's team instead, landing it on the
+opposite side.
 =============
 */
 static void G_FreezeEmitThawCompletionEvents( gentity_t *ent, int helperNum ) {
@@ -326,7 +329,7 @@ static void G_FreezeEmitThawCompletionEvents( gentity_t *ent, int helperNum ) {
 	tent->s.otherEntityNum2 = thawerNum;
 	tent->r.svFlags = SVF_BROADCAST;
 
-	sound = ( client->sess.sessionTeam == TEAM_BLUE ) ? GTS_BLUE_RETURN : GTS_RED_RETURN;
+	sound = ( client->sess.sessionTeam == TEAM_BLUE ) ? GTS_BLUE_THAW : GTS_RED_THAW;
 
 	tent = G_TempEntity( ent->s.pos.trBase, EV_GLOBAL_TEAM_SOUND );
 	tent->s.eventParm = sound;
