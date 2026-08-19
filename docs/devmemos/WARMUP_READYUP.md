@@ -219,6 +219,66 @@ Keep ours. QL's model exists because a restart is how it re-runs
 transitions and `Arena_BeginRound()` already does the equivalent work. Porting
 the restart would drag the whole round cycle with it for no gain.
 
+## Round 1 is not a round begin, and that is the same problem
+
+Added after `da2c8fa` restored `Arena_ForceRespawnDead()` at warmup end. The
+round-1-versus-rounds-2+ asymmetry that change left in place is not a separate
+bug - it is this same missing state machine seen from the other side.
+
+Our two round-start paths:
+
+**Round 1.** `CheckTournament` arms `level.warmupTime` (`g_main.c:2344`). Nothing
+respawns anyone. The countdown runs. `G_WarmupEnd` respawns the dead and frozen,
+zeroes `warmupTime`, and claims `level.roundNumber = 1` (`g_main.c:2119`).
+
+**Rounds 2+.** `Arena_EndRound` sets `level.arenaRoundQueued` (`g_newgame.c:296`).
+`Arena_CheckRules` waits out `ARENA_ROUND_DELAY_TIME` (2000 ms) or
+`g_freezeRoundDelay` (4000 ms), then calls `Arena_BeginRound`
+(`g_newgame.c:163`), which respawns everyone, increments `level.roundNumber`
+(`g_newgame.c:185`), and arms `level.warmupTime` *again*. The countdown runs.
+`G_WarmupEnd` then does the same go-live it does for round 1.
+
+Three things fall out of that, and all three are the warmup state being asked to
+mean two different things:
+
+1. **`level.warmupTime > 0` is overloaded.** For round 1 it means "pre-match
+   warmup"; for rounds 2+ it means "inter-round countdown". Nothing in the value
+   distinguishes them - the only tell is whether `level.roundNumber` is still 0.
+   That is exactly the test QL's cgame uses to pick "Freeze Tag / Starts in: N"
+   over "Round Begins in / 3", which is a hint that the distinction wants a name
+   rather than an inference.
+2. **`level.roundNumber` has two owners.** `G_WarmupEnd` claims round 1;
+   `Arena_BeginRound` claims every round after. Two functions writing one counter,
+   each correct only because the other checks `== 0` first.
+3. **Nobody puts players on spawn points before a countdown starts.** Round 1
+   never did; rounds 2+ do it in `Arena_BeginRound`, but players can still walk
+   during the countdown - `PMF_NOSHOOT` blocks firing, not movement - so they
+   drift off their spawns before the round goes live either way. That drift is
+   what `474034b` was really reacting to when it reached for `respawnAll` at
+   warmup end, and it is why fixing it there was the wrong seam.
+
+QL keeps these separate:
+
+- **`level.roundState`** - an explicit enum, `ROUNDSTATE_INACTIVE` /
+  `ROUNDSTATE_WARMUP` / `ROUNDSTATE_ACTIVE` / `ROUNDSTATE_COMPLETE`
+  (`g_local.h:697`), set at every transition. The phase is stored, never derived
+  from a timestamp's sign.
+- **`level.roundTransitionTime` + `g_roundWarmupDelay`** - the *round* countdown,
+  a separate timer from `level.warmupTime`. `level.warmupTime` stays the match
+  warmup and nothing else. Note `g_roundWarmupDelay` is milliseconds, being a QL
+  addition, while `g_warmup` is seconds - the unit rule in `QL_CVAR_SYNC.md`
+  again, and the reason retail ships both `g_warmup 10` and
+  `g_roundWarmupDelay 10000`.
+- **`level.roundNumber` is derived, not incremented** - e.g.
+  `level.roundNumber = level.teamScores[TEAM_RED] + level.teamScores[TEAM_BLUE] + 1`
+  (`g_active.c:3262`). It cannot drift and it cannot have two owners.
+
+None of that is a prerequisite for step 1 below, and none of it should be
+attempted alongside it. But it means the asymmetry should not be "fixed" by
+special-casing round 1 in `G_WarmupEnd` - that would be the same mistake
+`474034b` made one layer up. The fix is a real round phase, and it belongs after
+the warmup path stops being the thing that carries it.
+
 ## Staging
 
 Three independently valuable steps, in dependency order.
