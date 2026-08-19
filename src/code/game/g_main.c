@@ -988,12 +988,8 @@ static void G_InitGame( int levelTime, int randomSeed, int restart ) {
 // as "round already running" and returns on before it can ever start a warmup.
 // Empty teams normally rescue it through the notEnough path, but a map reload
 // keeps everyone's team, so the round layer never starts. Begin waiting instead.
-// Published too: CheckTournament's own publish is change-gated on warmupTime being
-// something other than -1, so without this the client never hears about the wait
-// and draws neither "Waiting for players" nor a countdown.
 	if ( GT_IsRoundBased( g_gametype.integer ) ) {
 		level.warmupTime = -1;
-		trap_SetConfigstring( CS_WARMUP, va( "%i", level.warmupTime ) );
 	}
 // END Dimmskii
 
