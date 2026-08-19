@@ -2077,13 +2077,14 @@ static void G_WarmupEnd( void )
 		isArena = qtrue;
 	}
 
-	// Everyone respawns as the round goes live, not just the dead: warmup is for
-	// wandering around, and a round has to start from spawn points with a clean
-	// loadout rather than wherever people drifted to and whatever they hoovered up.
+	// Only the dead and the frozen respawn as the round goes live - Arena_ForceRespawnDead
+	// already treats a frozen body as out of the fight, so freeze needs nothing extra
+	// here. Anyone still standing keeps their position; respawnAll would teleport the
+	// whole server off its feet at FIGHT.
 	// Must run before warmupTime is zeroed below (ClientSpawn would freeze the
 	// respawn) and before the loop that clears the PMF_NOSHOOT it re-sets.
 	if ( isArena ) {
-		respawnAll();
+		Arena_ForceRespawnDead();
 	}
 // END Dimmskii
 
