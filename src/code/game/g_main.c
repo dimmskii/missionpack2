@@ -2077,14 +2077,14 @@ static void G_WarmupEnd( void )
 		isArena = qtrue;
 	}
 
-	// Only the dead and the frozen respawn as the round goes live - Arena_ForceRespawnDead
-	// already treats a frozen body as out of the fight, so freeze needs nothing extra
-	// here. Anyone still standing keeps their position; respawnAll would teleport the
-	// whole server off its feet at FIGHT.
-	// Must run before warmupTime is zeroed below (ClientSpawn would freeze the
-	// respawn) and before the loop that clears the PMF_NOSHOOT it re-sets.
+	// Freeze has item pickups during the wait, so it starts from spawn points; the
+	// arena modes only top up the dead. Must run before warmupTime is zeroed below.
 	if ( isArena ) {
-		Arena_ForceRespawnDead();
+		if ( G_FreezeIsNativeGametype() ) {
+			respawnAll();
+		} else {
+			Arena_ForceRespawnDead();
+		}
 	}
 // END Dimmskii
 
