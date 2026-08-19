@@ -129,13 +129,19 @@ G_FreezeEnabled
 
 The single gate for the whole freeze/thaw mechanic. QL-SRP tests the gametype
 directly in ~12 places on top of its own predicate; we deliberately funnel
-everything through here instead, so g_freeze can enable freeze inside any
-round-based gametype and there is exactly one place to change the rule.
+everything through here instead, so g_freeze can enable freeze inside any team
+or round-based gametype and there is exactly one place to change the rule. The
+client agrees for free - G_UpdateServerSettingsConfigstrings publishes this
+result, not the raw cvar.
 =============
 */
 qboolean G_FreezeEnabled( void ) {
 	if ( g_gametype.integer == GT_FREEZE ) {
 		return qtrue;
+	}
+	// Freeze cannot be enabled in non-round-based non-team games (FFA, Tourney, Race)
+	if ( !GT_IsTeam( g_gametype.integer ) && !GT_IsRoundBased( g_gametype.integer ) ) {
+		return qfalse;
 	}
 	return g_freeze.integer ? qtrue : qfalse;
 }
