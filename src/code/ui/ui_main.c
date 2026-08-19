@@ -6782,7 +6782,7 @@ static void UI_DrawGameFactoryInfo(rectDef_t *rect, float scale, vec4_t color, i
 
 	Text_Paint( rect->x + 2, rect->y+50, smolScale, color, "Game Type:", 0, 64, textStyle );
 	Text_Paint( rect->x + 70, rect->y+50, smolScale, color, uiInfo.gameTypes[gt].gameType, 0, 64, textStyle );
-	if ( GT_IsArenaGame(uiInfo.gameTypes[ui_gameType.integer].gtEnum) ) {
+	if ( GT_IsRoundBased(uiInfo.gameTypes[ui_gameType.integer].gtEnum) ) {
 		Text_Paint( rect->x + 2, rect->y+60, smolScale, color, "Round Limit:", 0, 64, textStyle );
 		Text_Paint( rect->x + 70, rect->y+60, smolScale, color, fact->cvar_values[BG_FactoryCvarIndex("roundlimit")], 0, 64, textStyle );
 		Text_Paint( rect->x + 2, rect->y+70, smolScale, color, "Round Time:", 0, 64, textStyle );
