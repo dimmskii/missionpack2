@@ -219,6 +219,7 @@ void	G_TouchTriggers( gentity_t *ent ) {
 	gentity_t	*hit;
 	trace_t		trace;
 	vec3_t		mins, maxs;
+	qboolean	frozen;	// ~Dimmskii
 	static vec3_t	range = { 40, 40, 52 };
 
 	if ( !ent->client ) {
@@ -239,7 +240,17 @@ void	G_TouchTriggers( gentity_t *ent ) {
 // QL-SRP gets this for free instead - its frozen players sit in a pm_type that
 // bails out of pmove early, so nothing is ever touched. We run full physics on
 // purpose, so it has to be explicit.
-	if ( G_FreezeIsFrozen( ent ) ) {
+//
+// Hazard triggers are the exception outside GT_FREEZE, and they are why this is
+// a filter rather than a return: a body shoved into a pit or the void has to be
+// able to reach the trigger_hurt at the bottom. It used to die on the way, to
+// landing damage against its own health of 1, which is not a hazard and is no
+// longer applied - so without this it just lies in the lava. GT_FREEZE keeps the
+// blanket return: there the body is meant to be indestructible and
+// g_freezeEnvironmentalRespawnDelay is the way out. Damage policy still lives in
+// one place, G_Damage; this only decides what is allowed to ask.
+	frozen = G_FreezeIsFrozen( ent );
+	if ( frozen && G_FreezeIsNativeGametype() ) {
 		return;
 	}
 // END Dimmskii
@@ -260,6 +271,11 @@ void	G_TouchTriggers( gentity_t *ent ) {
 			continue;
 		}
 		if ( !( hit->r.contents & CONTENTS_TRIGGER ) ) {
+			continue;
+		}
+
+		// ~Dimmskii - a frozen body only reaches hazards; see the note above
+		if ( frozen && hit->touch != hurt_touch ) {
 			continue;
 		}
 
