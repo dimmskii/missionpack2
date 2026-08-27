@@ -1016,7 +1016,7 @@ void Cmd_FollowCycle_f( gentity_t *ent, int dir ) {
 	int		clientnum;
 	int		original;
 	gclient_t	*client;
-	qboolean	isDeadArenaPlayer;
+	qboolean	isDeadThisRound;
 
 	// if they are playing a tournement game, count as a loss
 	if ( (g_gametype.integer == GT_TOURNAMENT )
@@ -1026,13 +1026,13 @@ void Cmd_FollowCycle_f( gentity_t *ent, int dir ) {
 
 	client = ent->client;
 
-	isDeadArenaPlayer = ( GT_IsArenaGame(g_gametype.integer)
+	isDeadThisRound = ( GT_IsRoundBased(g_gametype.integer)
 		&& !level.warmupTime
 		&& client->sess.sessionTeam != TEAM_SPECTATOR
 		&& ( client->sess.spectatorState == SPECTATOR_FOLLOW
 			|| client->ps.stats[STAT_HEALTH] <= 0 ) );
 
-	if ( !isDeadArenaPlayer ) {
+	if ( !isDeadThisRound ) {
 		// first set them to spectator
 		if ( client->sess.spectatorState == SPECTATOR_NOT ) {
 			SetTeam( ent, "spectator" );
@@ -1064,12 +1064,12 @@ void Cmd_FollowCycle_f( gentity_t *ent, int dir ) {
 			continue;
 		}
 
-		if ( isDeadArenaPlayer ) {
-			// dead arena players should only follow alive players
+		if ( isDeadThisRound ) {
+			// players dead this round should only follow alive players
 			if ( g_entities[ clientnum ].health <= 0 ) {
 				continue;
 			}
-			// dead arena players should only follow teammates unless g_allSpec > 0
+			// players dead this round should only follow teammates unless g_allSpec > 0
 			if ( level.clients[ clientnum ].sess.sessionTeam != client->sess.sessionTeam && g_allSpec.integer < 1 ) {
 				continue;
 			}

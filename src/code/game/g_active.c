@@ -900,8 +900,8 @@ void ClientThink_real( gentity_t *ent ) {
 	}
 
 // ~DIMMSKII
-	// dead players in arena modes act as spectators
-	if ( GT_IsArenaGame(g_gametype.integer)
+	// dead players in round-based modes act as spectators
+	if ( GT_IsRoundBased(g_gametype.integer)
 		&& !level.warmupTime
 		&& client->sess.sessionTeam != TEAM_SPECTATOR
 		&& client->sess.spectatorState == SPECTATOR_FOLLOW ) {
@@ -1104,8 +1104,8 @@ void ClientThink_real( gentity_t *ent ) {
 	// check for respawning
 	if ( client->ps.stats[STAT_HEALTH] <= 0 ) {
 // ~DIMMSKII
-		// in arena modes, transition to spectator follow after death anim plays
-		if ( GT_IsArenaGame(g_gametype.integer)
+		// in round-based modes, transition to spectator follow after death anim plays
+		if ( GT_IsRoundBased(g_gametype.integer)
 			&& !level.warmupTime ) {
 			if ( level.time > client->respawnTime ) {
 				BG_PlayerStateToEntityState( &ent->client->ps, &ent->s, qtrue );
@@ -1187,9 +1187,9 @@ SpectatorClientEndFrame
 void SpectatorClientEndFrame( gentity_t *ent ) {
 	gclient_t	*cl;
 // ~DIMMSKII
-	qboolean	isDeadArenaPlayer;
+	qboolean	isDeadThisRound;
 
-	isDeadArenaPlayer = ( GT_IsArenaGame(g_gametype.integer)
+	isDeadThisRound = ( GT_IsRoundBased(g_gametype.integer)
 		&& !level.warmupTime
 		&& ent->client->sess.sessionTeam != TEAM_SPECTATOR
 		&& ent->client->sess.spectatorState == SPECTATOR_FOLLOW );
@@ -1248,8 +1248,8 @@ void SpectatorClientEndFrame( gentity_t *ent ) {
 				if ( ent->client->sess.spectatorClient >= 0 ) {
 					ent->client->sess.spectatorState = SPECTATOR_FREE;
 // ~DIMMSKII
-					// dead arena players should not respawn via ClientBegin
-					if ( !isDeadArenaPlayer )
+					// players dead this round should not respawn via ClientBegin
+					if ( !isDeadThisRound )
 // END DIMMSKII
 					ClientBegin( ent->client - level.clients );
 				}
@@ -1292,8 +1292,8 @@ void ClientEndFrame( gentity_t *ent ) {
 	}
 
 // ~DIMMSKII
-	// dead players in arena modes follow like spectators
-	if ( GT_IsArenaGame(g_gametype.integer)
+	// dead players in round-based modes follow like spectators
+	if ( GT_IsRoundBased(g_gametype.integer)
 		&& !level.warmupTime
 		&& ent->client->sess.sessionTeam != TEAM_SPECTATOR
 		&& ent->client->sess.spectatorState == SPECTATOR_FOLLOW ) {

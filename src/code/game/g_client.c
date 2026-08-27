@@ -1418,8 +1418,8 @@ void ClientSpawn(gentity_t *ent) {
 	ClientEndFrame( ent );
 
 // ~Dimmskii
-	// find someone to follow for mid-round arena spawns
-	if ( GT_IsArenaGame(g_gametype.integer)
+	// find someone to follow for mid-round spawns in round-based games
+	if ( GT_IsRoundBased(g_gametype.integer)
 		&& !level.warmupTime
 		&& client->sess.sessionTeam != TEAM_SPECTATOR
 		&& client->sess.spectatorState == SPECTATOR_FOLLOW ) {
@@ -1474,8 +1474,8 @@ void ClientDisconnect( int clientNum ) {
 	for ( i = 0 ; i < level.maxclients ; i++ ) {
 		if ( level.clients[i].sess.spectatorState == SPECTATOR_FOLLOW
 			&& level.clients[i].sess.spectatorClient == clientNum ) {
-			// dead arena players should cycle to next player, not become spectators
-			if ( GT_IsArenaGame(g_gametype.integer)
+			// players dead this round should cycle to next player, not become spectators
+			if ( GT_IsRoundBased(g_gametype.integer)
 				&& level.clients[i].sess.sessionTeam != TEAM_SPECTATOR ) {
 				Cmd_FollowCycle_f( &g_entities[i], 1 );
 			} else if ( level.clients[i].sess.sessionTeam == TEAM_SPECTATOR ) {
