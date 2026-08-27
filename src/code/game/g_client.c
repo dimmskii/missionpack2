@@ -1387,8 +1387,8 @@ void ClientSpawn(gentity_t *ent) {
 	// back still carrying the marker.
 	G_FreezeInitClient( ent );
 
-	// Set the entity/client hp, etc back to zero (kill again) if spawned mid-round in an arena game
-	if ( GT_IsArenaGame(g_gametype.integer) ) {
+	// Set the entity/client hp, etc back to zero (kill again) if spawned mid-round in a round-based game
+	if ( GT_IsRoundBased(g_gametype.integer) ) {
 		if (!level.warmupTime && !level.intermissiontime && client->sess.sessionTeam != TEAM_SPECTATOR) {
 			ent->health = -500;
 			client->ps.stats[STAT_HEALTH] = -500;
