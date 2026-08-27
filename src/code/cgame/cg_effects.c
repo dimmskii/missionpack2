@@ -568,6 +568,84 @@ Generated a bunch of gibs launching out from the bodies location
 */
 #define	GIB_VELOCITY	250
 #define	GIB_JUMP		250
+// ~Dimmskii
+/*
+==================
+CG_LaunchThawGib
+
+Same fragment as a gib, but marked as ice so it leaves no blood behind, and
+coated in an ice shader. Retail flies the gib models bare, which reads as meat
+rather than ice - the coat is ours.
+==================
+*/
+static void CG_LaunchThawGib( const vec3_t origin, const vec3_t velocity, qhandle_t hModel ) {
+	localEntity_t	*le;
+	refEntity_t		*re;
+
+	le = CG_AllocLocalEntity();
+	re = &le->refEntity;
+
+	le->leType = LE_FRAGMENT;
+	le->startTime = cg.time;
+	le->endTime = le->startTime + 5000 + random() * 3000;
+
+	VectorCopy( origin, re->origin );
+	AxisCopy( axisDefault, re->axis );
+	re->hModel = hModel;
+	re->customShader = cgs.media.iceShardShader;
+
+	le->pos.trType = TR_GRAVITY;
+	VectorCopy( origin, le->pos.trBase );
+	VectorCopy( velocity, le->pos.trDelta );
+	le->pos.trTime = cg.time;
+
+	le->bounceFactor = 0.6f;
+
+	le->leBounceSoundType = LEBS_ICE;
+	le->leMarkType = LEMT_ICE;
+}
+
+/*
+==================
+CG_ThawPlayer
+
+The ice shattering when a frozen player is freed. Ported from QL, which reuses
+the gib fragments rather than shipping shard models - seven of them, alternating
+brain and abdomen, starting with brain.
+==================
+*/
+void CG_ThawPlayer( const vec3_t playerOrigin ) {
+	vec3_t		origin, velocity;
+	qhandle_t	thawModels[7];
+	int			i;
+
+	if ( !cg_blood.integer ) {
+		return;
+	}
+
+	if ( !cgs.media.gibBrain || !cgs.media.gibAbdomen ) {
+		return;
+	}
+
+	thawModels[0] = cgs.media.gibBrain;
+	thawModels[1] = cgs.media.gibAbdomen;
+	thawModels[2] = cgs.media.gibBrain;
+	thawModels[3] = cgs.media.gibAbdomen;
+	thawModels[4] = cgs.media.gibBrain;
+	thawModels[5] = cgs.media.gibAbdomen;
+	thawModels[6] = cgs.media.gibBrain;
+
+	VectorCopy( playerOrigin, origin );
+
+	for ( i = 0; i < 7; i++ ) {
+		velocity[0] = crandom() * GIB_VELOCITY;
+		velocity[1] = crandom() * GIB_VELOCITY;
+		velocity[2] = GIB_JUMP + crandom() * GIB_VELOCITY;
+		CG_LaunchThawGib( origin, velocity, thawModels[i] );
+	}
+}
+// END Dimmskii
+
 void CG_GibPlayer( const vec3_t playerOrigin ) {
 	vec3_t	origin, velocity;
 

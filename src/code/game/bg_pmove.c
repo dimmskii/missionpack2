@@ -203,6 +203,13 @@ static void PM_Friction( void ) {
 		drop += speed*pm_spectatorfriction*pml.frametime;
 	}
 
+	// ~Dimmskii A frozen body keeps most of its momentum, so knockback shoves it
+	// along the floor instead of stopping dead. Quarter drop, same as retail QL.
+	if ( pm->ps->pm_type == PM_FREEZE ) {
+		drop *= 0.25f;
+	}
+	// END Dimmskii
+
 	// scale the velocity
 	newspeed = speed - drop;
 	if (newspeed < 0) {
@@ -1553,6 +1560,17 @@ static void PM_Weapon( void ) {
 		return;
 	}
 
+// ~Dimmskii -- A frozen body must not run the weapon state machine at all. The
+// client keeps sending cmd.weapon, so the change block below would swap models and
+// fire EV_CHANGE_WEAPON on a statue. The dead check above misses it because a
+// frozen player is health 1 by design. Keyed on pm_type, never PMF_NOSHOOT: that
+// flag belongs to the round layer and freeze must not add or clear it.
+	if ( pm->ps->pm_type == PM_FREEZE ) {
+		pm->cmd.buttons &= ~BUTTON_ATTACK;
+		return;
+	}
+// END Dimmskii
+
 	// check for item using
 	if ( pm->cmd.buttons & BUTTON_USE_HOLDABLE ) {
 		if ( ! ( pm->ps->pm_flags & PMF_USE_ITEM_HELD ) ) {
@@ -1977,9 +1995,17 @@ void PmoveSingle (pmove_t *pmove) {
 		return;
 	}
 
-	if (pm->ps->pm_type == PM_FREEZE) {
-		return;		// no movement at all
-	}
+//	if (pm->ps->pm_type == PM_FREEZE) {
+//		return;		// no movement at all
+//	}
+// ~Dimmskii Falling through instead of returning is what gives a frozen body real
+// physics. The return skipped PM_CheckDuck, so pm->mins/maxs stayed zeroed and the
+// entity got a zero-size bbox - the walk-through ghosts hovering in mid-air. Self
+// movement is already killed further down by the vanilla pm_type >= PM_DEAD strip,
+// and PM_Friction slides them. Retail QL runs pmove for PM_FREEZE too; QL-SRP keeps
+// this return only because it inherited it from vanilla, contradicting its own
+// PM_FREEZE friction case.
+// END Dimmskii
 
 	if ( pm->ps->pm_type == PM_INTERMISSION || pm->ps->pm_type == PM_SPINTERMISSION) {
 		return;		// no movement at all

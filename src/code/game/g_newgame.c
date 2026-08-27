@@ -123,6 +123,46 @@ void G_LoadFactories( void ) {
 
 
 
+/*
+=============
+G_FreezeEnabled
+
+The single gate for the whole freeze/thaw mechanic. QL-SRP tests the gametype
+directly in ~12 places on top of its own predicate; we deliberately funnel
+everything through here instead, so g_freeze can enable freeze inside any
+team-based gametype and there is exactly one place to change the rule. The
+client agrees for free - G_UpdateServerSettingsConfigstrings publishes this
+result, not the raw cvar.
+=============
+*/
+qboolean G_FreezeEnabled( void ) {
+	if ( g_gametype.integer == GT_FREEZE ) {
+		return qtrue;
+	}
+	// Freeze cannot be enabled in non-team games
+	if ( !GT_IsTeam( g_gametype.integer ) ) {
+		return qfalse;
+	}
+	return g_freeze.integer ? qtrue : qfalse;
+}
+
+/*
+=============
+G_FreezeIsNativeGametype
+
+True only for GT_FREEZE - the one mode we owe QL behavioural parity. Everything
+else reaches the mechanic through the g_freeze cvar, which QL has no equivalent
+of, so it takes our own defaults instead of inheriting QL's quirks.
+
+A named predicate rather than a bare == GT_FREEZE so the intent reads, and so
+there is still exactly one place to change the rule.
+=============
+*/
+qboolean G_FreezeIsNativeGametype( void ) {
+	return ( g_gametype.integer == GT_FREEZE ) ? qtrue : qfalse;
+}
+
+
 // ARENA / CA GAMETYPE LOGIC
 
 
@@ -152,7 +192,11 @@ void Arena_BeginRound( void ) {
 	trap_SetConfigstring( CS_ROUND_NUMBER, va("%i", level.roundNumber) );
 // END Dimmskii
 
-	respawnAll();
+	// Freeze can restart a round in place instead of respawning everyone; it
+	// returns qfalse at the stock defaults, which is the normal respawnAll path.
+	if ( !G_FreezeResetClientsForRound() ) {
+		respawnAll();
+	}
 	CalculateRanks(); // Make sure scoreboard is sorted immediately? -- AKA Fix my scores please fresh out of spec mod
 }
 
@@ -189,6 +233,10 @@ void Arena_ResetMatchScores( void ) {
 		client->ps.persistant[PERS_DEFEND_COUNT] = 0;
 		client->ps.persistant[PERS_ASSIST_COUNT] = 0;
 		client->ps.persistant[PERS_GAUNTLET_FRAG_COUNT] = 0;
+
+		// matchStats lives outside persistant[], so nothing else clears it here.
+		// ClientConnect memsets it per map; this covers an abandoned segment.
+		memset( &client->matchStats, 0, sizeof( client->matchStats ) );
 	}
 
 	CalculateRanks();
@@ -256,6 +304,10 @@ void Arena_EndRound( team_t winningTeam ) {
 	Arena_FreezeSurvivorWeapons();
 
 	if ( winningTeam == TEAM_RED || winningTeam == TEAM_BLUE ) { // CA
+		// Freeze: the winning side's frozen players are freed as part of winning,
+		// not left waiting for the round reset. No-op outside freeze.
+		G_FreezeThawWinningTeam( winningTeam );
+
 		AddTeamScore(zeroVec3, winningTeam, 1);
 		trap_SetConfigstring( CS_SCORES1, va("%i", level.teamScores[TEAM_RED]) );
 		trap_SetConfigstring( CS_SCORES2, va("%i", level.teamScores[TEAM_BLUE]) );
@@ -272,8 +324,12 @@ void Arena_EndRound( team_t winningTeam ) {
 			if ( !clientEnt->inuse )
 				continue;
 			
-			// If not spectator and alive, add arena score
-			if ( clientEnt->client->sess.sessionTeam != TEAM_SPECTATOR && clientEnt->health > 0 ) {
+			// If not spectator and still fighting, add arena score. Frozen players
+			// sit at health 1, so the frozen test matters here too or the round
+			// win goes unawarded when freeze is on.
+			if ( clientEnt->client->sess.sessionTeam != TEAM_SPECTATOR
+				&& clientEnt->health > 0
+				&& !G_FreezeIsFrozen( clientEnt ) ) {
 				clientEntWon = clientEnt;
 				aliveCount ++;
 			}
@@ -303,21 +359,41 @@ void Arena_EndRound( team_t winningTeam ) {
 	
 }
 
+/*
+=============
+Arena_TimeoutRound
+
+Resolves a round that ran out the clock rather than ending by elimination.
+
+QL decides this on living player count first and only falls through to health to
+break a count tie - G_CAResolveRoundWinner and G_FreezeEvaluateRoundWinner share
+the same ladder, so every round-based mode there resolves identically. Health
+means health alone; armor is never part of either stage.
+
+FFA arena falls straight through both stages, since its players are TEAM_FREE and
+both tallies come back zero. Arena_EndRound's own survivor check handles it.
+=============
+*/
 void Arena_TimeoutRound( void ) {
-	int totalRed, totalBlue;
-	
-	totalRed = Team_CountTotalHealth(TEAM_RED,qfalse)+Team_CountTotalArmor(TEAM_RED,qfalse);
-	totalBlue = Team_CountTotalHealth(TEAM_BLUE,qfalse)+Team_CountTotalArmor(TEAM_BLUE,qfalse);
-	
-	// Decided Team Arena round end
-	if ( totalRed > totalBlue ) {
-		Arena_EndRound( TEAM_RED );
-		return;
-	} else if ( totalBlue > totalRed ) {
-		Arena_EndRound( TEAM_BLUE );
+	int countRed, countBlue;
+	int healthRed, healthBlue;
+
+	countRed = Team_PlayerCountFighting( TEAM_RED );
+	countBlue = Team_PlayerCountFighting( TEAM_BLUE );
+
+	if ( countRed != countBlue ) {
+		Arena_EndRound( ( countRed > countBlue ) ? TEAM_RED : TEAM_BLUE );
 		return;
 	}
-	
+
+	healthRed = Team_CountTotalHealth( TEAM_RED, qfalse );
+	healthBlue = Team_CountTotalHealth( TEAM_BLUE, qfalse );
+
+	if ( healthRed != healthBlue ) {
+		Arena_EndRound( ( healthRed > healthBlue ) ? TEAM_RED : TEAM_BLUE );
+		return;
+	}
+
 	Arena_EndRound( TEAM_FREE ); // FFA Arena and undecided Team Arena round end
 }
 
@@ -386,7 +462,10 @@ void Arena_ForceRespawnDead( void ) {
 		if ( ent->client->sess.sessionTeam == TEAM_SPECTATOR ) {
 			continue;
 		}
-		if ( ent->health > 0 ) {
+		// Frozen counts as "not in the fight" even though health is 1, so a player
+		// still frozen when a round goes live gets respawned rather than starting
+		// the round stuck. respawn() -> ClientSpawn() clears the frozen state.
+		if ( ent->health > 0 && !G_FreezeIsFrozen( ent ) ) {
 			continue;
 		}
 		respawn( ent );
@@ -411,7 +490,12 @@ void Arena_CheckRules( void ) {
 	}
 	
 	if ( level.arenaRoundQueued ) {
-		if ( level.time - level.arenaRoundQueued >= ARENA_ROUND_DELAY_TIME ) {
+		// Freeze runs a longer gap between rounds than the arena modes do.
+		int roundDelay = ARENA_ROUND_DELAY_TIME;
+		if ( G_FreezeEnabled() && g_freezeRoundDelay.integer > 0 ) {
+			roundDelay = g_freezeRoundDelay.integer;
+		}
+		if ( level.time - level.arenaRoundQueued >= roundDelay ) {
 			// Don't spin up a new round once the match is already decided;
 			// CheckExitRules will queue the intermission shortly.
 			if ( Arena_MatchDecided() ) {
@@ -423,19 +507,22 @@ void Arena_CheckRules( void ) {
 		return;
 	}
 	
+	// Team_PlayerCountFighting, not ...Alive: a frozen player sits at health 1 and
+	// would otherwise keep the round open forever. Identical to the alive count
+	// when freeze is off, so this needs no gating.
 	if ( g_gametype.integer == GT_ARENA ) {
 		// Check if one person remains on FFA team
-		if ( Team_PlayerCountAlive(TEAM_FREE) < 2 ) {
+		if ( Team_PlayerCountFighting(TEAM_FREE) < 2 ) {
 			Arena_EndRound( TEAM_FREE ); // The round wins the round
 		}
 	} else if ( g_gametype.integer == GT_CLAN_ARENA || g_gametype.integer == GT_FREEZE ) {
 		// Check if either team has no players remaining ; if so, call Arena_EndRound
-		if ( Team_PlayerCountAlive(TEAM_RED) < 1 ) {
+		if ( Team_PlayerCountFighting(TEAM_RED) < 1 ) {
 			Arena_EndRound( TEAM_BLUE ); // Blue wins the round
-		} else if ( Team_PlayerCountAlive(TEAM_BLUE) < 1 ) {
+		} else if ( Team_PlayerCountFighting(TEAM_BLUE) < 1 ) {
 			Arena_EndRound( TEAM_RED ); // Red wins the round
 		}
-	} 
+	}
 }
 
 

@@ -882,6 +882,8 @@ const char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 //	areabits = client->areabits;
 	memset( client, 0, sizeof( *client ) );
 
+	client->pers.killCommandTime = -1;	// ~Dimmskii - never killed yet; 0 would be a real timestamp
+
 	client->ps.clientNum = clientNum;
 
 	if ( !ClientUserinfoChanged( clientNum ) ) {
@@ -1302,9 +1304,13 @@ void ClientSpawn(gentity_t *ent) {
 	client->ps.ammo[WP_GAUNTLET] = -1;				
 	client->ps.ammo[WP_GRAPPLING_HOOK] = -1;
 
-	// Disable shooting upon respawn in Arena gamemodes if there is warmup time (  re-enabled on G_WarmupEnd in g_main.c  )
-	if ( GT_IsArenaGame(g_gametype.integer) ) {
-		if (!isSpectator && g_warmup.integer > 0) {
+	// Disable shooting upon respawn in Arena or FT gamemodes if there is warmup time (  re-enabled on G_WarmupEnd in g_main.c  )
+	if ( GT_IsRoundBased(g_gametype.integer) ) {
+		// level.warmupTime, not just the cvar: only G_WarmupEnd and Arena_ThawWeapons
+		// ever clear this flag, so a mid-round respawn (FT environmental recovery)
+		// used to stay disarmed for the rest of the round. ~Dimmskii
+//		if (!isSpectator && g_warmup.integer > 0) {
+		if (!isSpectator && g_warmup.integer > 0 && level.warmupTime != 0) {
 			client->ps.pm_flags |= PMF_NOSHOOT;
 		}
 	}
@@ -1376,8 +1382,13 @@ void ClientSpawn(gentity_t *ent) {
 	}
 	
 // ~Dimmskii
-	// Set the entity/client hp, etc back to zero (kill again) if spawned mid-round in an arena game
-	if ( GT_IsArenaGame(g_gametype.integer) ) {
+	// A freshly spawned player is never frozen. Clear it before the mid-round
+	// guard below, so a player frozen at the moment a round ended doesn't come
+	// back still carrying the marker.
+	G_FreezeInitClient( ent );
+
+	// Set the entity/client hp, etc back to zero (kill again) if spawned mid-round in a round-based game
+	if ( GT_IsRoundBased(g_gametype.integer) ) {
 		if (!level.warmupTime && !level.intermissiontime && client->sess.sessionTeam != TEAM_SPECTATOR) {
 			ent->health = -500;
 			client->ps.stats[STAT_HEALTH] = -500;
@@ -1407,8 +1418,8 @@ void ClientSpawn(gentity_t *ent) {
 	ClientEndFrame( ent );
 
 // ~Dimmskii
-	// find someone to follow for mid-round arena spawns
-	if ( GT_IsArenaGame(g_gametype.integer)
+	// find someone to follow for mid-round spawns in round-based games
+	if ( GT_IsRoundBased(g_gametype.integer)
 		&& !level.warmupTime
 		&& client->sess.sessionTeam != TEAM_SPECTATOR
 		&& client->sess.spectatorState == SPECTATOR_FOLLOW ) {
@@ -1463,8 +1474,8 @@ void ClientDisconnect( int clientNum ) {
 	for ( i = 0 ; i < level.maxclients ; i++ ) {
 		if ( level.clients[i].sess.spectatorState == SPECTATOR_FOLLOW
 			&& level.clients[i].sess.spectatorClient == clientNum ) {
-			// dead arena players should cycle to next player, not become spectators
-			if ( GT_IsArenaGame(g_gametype.integer)
+			// players dead this round should cycle to next player, not become spectators
+			if ( GT_IsRoundBased(g_gametype.integer)
 				&& level.clients[i].sess.sessionTeam != TEAM_SPECTATOR ) {
 				Cmd_FollowCycle_f( &g_entities[i], 1 );
 			} else if ( level.clients[i].sess.sessionTeam == TEAM_SPECTATOR ) {

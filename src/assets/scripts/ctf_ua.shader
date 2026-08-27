@@ -1,3 +1,13 @@
+sprites/frozen
+{
+	nomipmaps
+	nopicmip
+	{
+		map sprites/frozen.tga
+		blendfunc GL_SRC_ALPHA GL_ONE_MINUS_SRC_ALPHA
+	}
+}
+
 textures/ctf2/blue_banner01
 {       	
 	surfaceparm alphashadow

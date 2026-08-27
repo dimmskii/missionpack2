@@ -35,11 +35,37 @@ qboolean GT_IsDMGame( int gt ) {
 ===============
 GT_IsArenaGame
 
-Returns whether or not gametype is round-based. See GT_ enums in bg_public.h
+The *elimination* gametypes: a dead player is out of the round and becomes a
+following spectator, items don't spawn, and bodies go to the bodyque.
+
+Freeze Tag is deliberately NOT here. It shares the round structure (see
+GT_IsRoundBased) but not the eliminated-player model - a frozen player stays in
+the world as a thawable body, so the dead-spectator machinery, the item
+stripping and the bodyque handling must all skip it.
 ===============
 */
 qboolean GT_IsArenaGame( int gt ) {
-	if (gt == GT_CLAN_ARENA || gt == GT_ARENA || gt == GT_FREEZE) { // GT_FREEZE should behave identically to Clan Arena; in that case, we might just flip on the g_freeze cvar upon detecting it. QL reverse-compat.
+	if (gt == GT_CLAN_ARENA || gt == GT_ARENA) {
+		return qtrue;
+	}
+	return qfalse;
+}
+
+/*
+===============
+GT_IsRoundBased
+
+Gametypes played as a series of rounds rather than one continuous match: warmup
+between rounds, a roundlimit and roundtimelimit instead of a fraglimit, scores
+that survive the round reset.
+
+This is the wider set - everything GT_IsArenaGame covers, plus Freeze Tag. New
+round-based gametypes (Red Rover, Team Tournament) belong here, and only here
+unless they also eliminate players.
+===============
+*/
+qboolean GT_IsRoundBased( int gt ) {
+	if ( GT_IsArenaGame( gt ) || gt == GT_FREEZE ) {
 		return qtrue;
 	}
 	return qfalse;

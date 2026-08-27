@@ -100,6 +100,14 @@ void TossClientItems( gentity_t *self ) {
 	if ( g_gametype.integer != GT_TEAM ) {
 		angle = 45;
 		for ( i = 1 ; i < PW_NUM_POWERUPS ; i++ ) {
+// ~Dimmskii -- g_dropPowerups 0 destroys held powerups on death instead of
+// dropping them. Flags live in this same loop and must never be affected, or
+// CTF breaks: they are returned/dropped regardless of this cvar.
+			if ( !g_dropPowerups.integer
+				&& i != PW_REDFLAG && i != PW_BLUEFLAG && i != PW_NEUTRALFLAG ) {
+				continue;
+			}
+// END Dimmskii
 			if ( self->client->ps.powerups[ i ] > level.time ) {
 				item = BG_FindItemForPowerup( i );
 				if ( !item ) {
@@ -599,6 +607,18 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 		}
 	}
 
+// ~Dimmskii -- Freeze Tag intercept. Deliberately placed here rather than at the
+// top of player_die (where QL-SRP puts it): everything above has already run, so
+// the frag credit, awards and obituary all happen exactly as normal - including
+// our own scoring fixes - with no duplicated death logic. Everything below is
+// what a frozen player must NOT get: dropped items, a corpse, a respawn timer.
+// The flag return above only covers MOD_SUICIDE, and TossClientItems below is
+// skipped, so G_FreezeFreezeClient drops any carried flag itself.
+	if ( G_FreezeHandlePlayerDeath( self, attacker, meansOfDeath ) ) {
+		return;
+	}
+// END Dimmskii
+
 	// if client is in a nodrop area, don't drop anything (but return CTF flags!)
 	contents = trap_PointContents( self->r.currentOrigin, -1 );
 	if ( !( contents & CONTENTS_NODROP )) {
@@ -1044,6 +1064,28 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 	}
 	take = damage;
 
+// ~Dimmskii -- A frozen player takes no damage but must still be shovable: the
+// knockback above is computed from `damage` and already applied to their
+// velocity, so zeroing only the health loss here leaves them pushable while
+// keeping them frozen. Done here rather than with takedamage = qfalse, which
+// returns at the top of this function and would kill the knockback too.
+//
+// Hazard damage is the exception, and only outside GT_FREEZE. A frozen body is
+// otherwise indestructible, so one shoved into lava or the void can never die
+// and can never be thawed either - it just sits there until the auto-thaw two
+// minutes later. GT_FREEZE keeps that, because QL's takedamage = qfalse does the
+// same and its environmental respawn timer is the intended way out. Everywhere
+// else the world is allowed to finish the body off.
+	if ( G_FreezeIsFrozen( targ ) ) {
+		qboolean fromWorld;
+
+		fromWorld = ( !attacker || !attacker->client ) ? qtrue : qfalse;
+		if ( !fromWorld || G_FreezeIsNativeGametype() ) {
+			take = 0;
+		}
+	}
+// END Dimmskii
+
     // save some from armor
     asave = CheckArmor( targ, take, dflags );
     take -= asave;
@@ -1081,7 +1123,12 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 */
 
 // ~DIMMSKII
+	// A frozen player is health 1, so the health test alone still counts a hit and
+	// beeps at the shooter. QL gets this for free by setting takedamage = qfalse,
+	// which we can't do - that returns above, before the knockback that keeps a
+	// frozen body shovable. Excluded explicitly instead. ~Dimmskii
 	if ( attacker->client && client && targ != attacker && targ->health > 0
+			&& !G_FreezeIsFrozen( targ )
 			&& targ->s.eType != ET_MISSILE
 			&& targ->s.eType != ET_GENERAL) {
 

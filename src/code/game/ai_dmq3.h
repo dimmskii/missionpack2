@@ -139,6 +139,7 @@ void BotObeliskSeekGoals(bot_state_t *bs);
 void BotObeliskRetreatGoals(bot_state_t *bs);
 void BotGoHarvest(bot_state_t *bs);
 void BotHarvesterSeekGoals(bot_state_t *bs);
+void BotFreezeSeekGoals(bot_state_t *bs);	// ~Dimmskii
 void BotHarvesterRetreatGoals(bot_state_t *bs);
 int BotTeamCubeCarrierVisible(bot_state_t *bs);
 int BotEnemyCubeCarrierVisible(bot_state_t *bs);

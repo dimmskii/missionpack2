@@ -13,7 +13,8 @@ DeathmatchScoreboardMessage
 ==================
 */
 void DeathmatchScoreboardMessage( gentity_t *ent ) {
-	char		entry[256]; // enough to hold 14 integers
+//	char		entry[256]; // enough to hold 14 integers
+	char		entry[256]; // enough to hold 18 integers ~Dimmskii
 	char		string[MAX_STRING_CHARS-1];
 	int			stringlength;
 	int			i, j, ping, prefix;
@@ -67,7 +68,7 @@ void DeathmatchScoreboardMessage( gentity_t *ent ) {
 
 */
 // ~Dimmskii
-		j = BG_sprintf( entry, " %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i",
+		j = BG_sprintf( entry, " %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i",
 			level.sortedClients[i],
 			cl->ps.persistant[PERS_SCORE],
 			ping,
@@ -82,7 +83,15 @@ void DeathmatchScoreboardMessage( gentity_t *ent ) {
 			cl->ps.persistant[PERS_ASSIST_COUNT],
 			perfect,
 			cl->ps.persistant[PERS_CAPTURES],
-			cl->ps.persistant[PERS_ROUNDWINS]);
+			cl->ps.persistant[PERS_ROUNDWINS],
+			// Freeze stats ride here because persistant[] is full at 16/16 and is
+			// inside playerState_t, so growing it would be a protocol change. Sent
+			// unconditionally to keep SCORE_FIELDS a constant on both ends. Parsed
+			// into score_t but not drawn yet - the scoreboard columns land with the
+			// per-gametype HUD work. ~Dimmskii
+			cl->matchStats.thawsGiven,
+			cl->matchStats.thawsReceived,
+			cl->matchStats.timesFrozen);
 			// TODO: A PERS_DAMAGE stat instead of misusing score
 // END Dimmskii
 
@@ -537,14 +546,46 @@ Cmd_Kill_f
 =================
 */
 void Cmd_Kill_f( gentity_t *ent ) {
+	int	cooldown;	// ~Dimmskii
+
 	if ( ent->client->sess.sessionTeam == TEAM_SPECTATOR ) {
 		return;
 	}
 	if (ent->health <= 0) {
 		return;
 	}
+// ~Dimmskii -- g_allowKill, ported from QL. Negative disables /kill outright and
+// says so; positive is a cooldown in ms measured against both the last spawn and
+// the last /kill, so it throttles suicide spam and spawn-suicides with one value.
+// Blocked attempts are silent, as they are in QL. Read straight off the cvar with
+// no validation: the negative sentinel is the point, and QL's own factory reader
+// clamps it away by mistake.
+	cooldown = g_allowKill.integer;
+	if ( cooldown < 0 ) {
+		trap_SendServerCommand( ent-g_entities, "print \"Kill is not enabled on this server.\n\"" );
+		return;
+	}
+
+	if ( cooldown > 0 ) {
+		int	spawnElapsed;
+		int	killElapsed;
+
+		spawnElapsed = level.time - ent->client->respawnTime;
+		if ( spawnElapsed < cooldown ) {
+			return;
+		}
+
+		if ( ent->client->pers.killCommandTime >= 0 ) {
+			killElapsed = level.time - ent->client->pers.killCommandTime;
+			if ( killElapsed < cooldown ) {
+				return;
+			}
+		}
+	}
+// END Dimmskii
 	ent->flags &= ~FL_GODMODE;
 	ent->client->ps.stats[STAT_HEALTH] = ent->health = -999;
+	ent->client->pers.killCommandTime = level.time;	// ~Dimmskii
 	player_die (ent, ent, ent, 100000, MOD_SUICIDE);
 }
 
@@ -975,7 +1016,7 @@ void Cmd_FollowCycle_f( gentity_t *ent, int dir ) {
 	int		clientnum;
 	int		original;
 	gclient_t	*client;
-	qboolean	isDeadArenaPlayer;
+	qboolean	isDeadThisRound;
 
 	// if they are playing a tournement game, count as a loss
 	if ( (g_gametype.integer == GT_TOURNAMENT )
@@ -985,13 +1026,13 @@ void Cmd_FollowCycle_f( gentity_t *ent, int dir ) {
 
 	client = ent->client;
 
-	isDeadArenaPlayer = ( GT_IsArenaGame(g_gametype.integer)
+	isDeadThisRound = ( GT_IsRoundBased(g_gametype.integer)
 		&& !level.warmupTime
 		&& client->sess.sessionTeam != TEAM_SPECTATOR
 		&& ( client->sess.spectatorState == SPECTATOR_FOLLOW
 			|| client->ps.stats[STAT_HEALTH] <= 0 ) );
 
-	if ( !isDeadArenaPlayer ) {
+	if ( !isDeadThisRound ) {
 		// first set them to spectator
 		if ( client->sess.spectatorState == SPECTATOR_NOT ) {
 			SetTeam( ent, "spectator" );
@@ -1023,12 +1064,12 @@ void Cmd_FollowCycle_f( gentity_t *ent, int dir ) {
 			continue;
 		}
 
-		if ( isDeadArenaPlayer ) {
-			// dead arena players should only follow alive players
+		if ( isDeadThisRound ) {
+			// players dead this round should only follow alive players
 			if ( g_entities[ clientnum ].health <= 0 ) {
 				continue;
 			}
-			// dead arena players should only follow teammates unless g_allSpec > 0
+			// players dead this round should only follow teammates unless g_allSpec > 0
 			if ( level.clients[ clientnum ].sess.sessionTeam != client->sess.sessionTeam && g_allSpec.integer < 1 ) {
 				continue;
 			}

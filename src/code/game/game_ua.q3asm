@@ -18,6 +18,7 @@ ai_chat
 ai_cmd
 g_active
 g_newgame
+g_freeze
 g_arenas
 g_bot
 g_client

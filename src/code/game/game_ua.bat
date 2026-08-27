@@ -55,6 +55,8 @@ rem @if errorlevel 1 goto errorquit
 @if errorlevel 1 goto errorquit
 %cc% ../g_newgame.c 
 @if errorlevel 1 goto errorquit
+%cc% ../g_freeze.c 
+@if errorlevel 1 goto errorquit
 %cc% ../g_arenas.c
 @if errorlevel 1 goto errorquit
 %cc% ../g_bot.c

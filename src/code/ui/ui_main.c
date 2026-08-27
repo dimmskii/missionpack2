@@ -105,14 +105,18 @@ static const int gameTypes_missionpack2[] = { // So we can filter to our own gam
 	GT_FFA,
 	GT_TOURNAMENT,
 	GT_SINGLE_PLAYER,
-	GT_ARENA,
 	GT_TEAM,
 	GT_TEAMARENA,
-	GT_FREEZETAG,
 	GT_CTF,	
 	GT_1FCTF,
 	GT_OBELISK,	
 	GT_HARVESTER,
+	GT_FREEZE,		// freeze tag
+	GT_DOMINATION,
+	GT_ATTACK_DEFEND,
+	GT_RED_ROVER,
+	GT_TEAMTOURNAMENT,	// team tournament
+	GT_ARENA,
 };
 
 static const int gameTypes_baseq3[] = {
@@ -2536,17 +2540,17 @@ static qboolean UI_OwnerDrawVisible(int flags) {
 			flags &= ~UI_SHOW_NETANYNONTEAMGAME;
 		} */
 // ~Dimmskii
-		if (flags & UI_SHOW_ARENAGAME) {
-			if ( !GT_IsArenaGame(uiInfo.gameTypes[ui_gameType.integer].gtEnum) ) {
+		if (flags & UI_SHOW_ROUNDGAME) {
+			if ( !GT_IsRoundBased(uiInfo.gameTypes[ui_gameType.integer].gtEnum) ) {
 				vis = qfalse;
 			}
-			flags &= ~UI_SHOW_ARENAGAME;
+			flags &= ~UI_SHOW_ROUNDGAME;
 		} 
-		if (flags & UI_SHOW_NOTARENAGAME) {
-			if ( GT_IsArenaGame(uiInfo.gameTypes[ui_gameType.integer].gtEnum) ) {
+		if (flags & UI_SHOW_NOTROUNDGAME) {
+			if ( GT_IsRoundBased(uiInfo.gameTypes[ui_gameType.integer].gtEnum) ) {
 				vis = qfalse;
 			}
-			flags &= ~UI_SHOW_NOTARENAGAME;
+			flags &= ~UI_SHOW_NOTROUNDGAME;
 		} 
 // End Dimmskii
 		if (flags & UI_SHOW_NEWHIGHSCORE) {
@@ -6778,7 +6782,7 @@ static void UI_DrawGameFactoryInfo(rectDef_t *rect, float scale, vec4_t color, i
 
 	Text_Paint( rect->x + 2, rect->y+50, smolScale, color, "Game Type:", 0, 64, textStyle );
 	Text_Paint( rect->x + 70, rect->y+50, smolScale, color, uiInfo.gameTypes[gt].gameType, 0, 64, textStyle );
-	if ( GT_IsArenaGame(uiInfo.gameTypes[ui_gameType.integer].gtEnum) ) {
+	if ( GT_IsRoundBased(uiInfo.gameTypes[ui_gameType.integer].gtEnum) ) {
 		Text_Paint( rect->x + 2, rect->y+60, smolScale, color, "Round Limit:", 0, 64, textStyle );
 		Text_Paint( rect->x + 70, rect->y+60, smolScale, color, fact->cvar_values[BG_FactoryCvarIndex("roundlimit")], 0, 64, textStyle );
 		Text_Paint( rect->x + 2, rect->y+70, smolScale, color, "Round Time:", 0, 64, textStyle );

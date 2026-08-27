@@ -128,6 +128,48 @@ void CG_BloodTrail( localEntity_t *le ) {
 }
 
 
+// ~Dimmskii
+/*
+================
+CG_IceTrail
+
+Thaw shard trail, the ice counterpart of CG_BloodTrail above. Same cadence and
+puff parameters as QL.
+================
+*/
+void CG_IceTrail( localEntity_t *le ) {
+	int		t;
+	int		t2;
+	int		step;
+	vec3_t	newOrigin;
+	localEntity_t	*trail;
+
+	if ( !cgs.media.iceTrailShader ) {
+		return;
+	}
+
+	step = 150;
+	t = step * ( (cg.time - cg.frametime + step ) / step );
+	t2 = step * ( cg.time / step );
+
+	for ( ; t <= t2; t += step ) {
+		BG_EvaluateTrajectory( &le->pos, t, newOrigin );
+
+		trail = CG_SmokePuff( newOrigin, vec3_origin,
+					  20,		// radius
+					  1, 1, 1, 1,	// color
+					  2000,		// trailTime
+					  t,		// startTime
+					  0,		// fadeInTime
+					  0,		// flags
+					  cgs.media.iceTrailShader );
+		trail->leType = LE_FALL_SCALE_FADE;
+		trail->pos.trDelta[2] = 40;
+	}
+}
+// END Dimmskii
+
+
 /*
 ================
 CG_FragmentBounceMark
@@ -145,6 +187,11 @@ void CG_FragmentBounceMark( localEntity_t *le, trace_t *trace ) {
 
 		radius = 8 + (rand()&15);
 		CG_ImpactMark( cgs.media.burnMarkShader, trace->endpos, trace->plane.normal, random()*360,
+			1,1,1,1, qtrue, radius, qfalse );
+	} else if ( le->leMarkType == LEMT_ICE ) { // ~Dimmskii same radius as blood, per QL
+
+		radius = 16 + (rand()&31);
+		CG_ImpactMark( cgs.media.iceMarkShader, trace->endpos, trace->plane.normal, random()*360,
 			1,1,1,1, qtrue, radius, qfalse );
 	}
 
@@ -270,6 +317,8 @@ static void CG_AddFragment( localEntity_t *le ) {
 		// add a blood trail
 		if ( le->leBounceSoundType == LEBS_BLOOD ) {
 			CG_BloodTrail( le );
+		} else if ( le->leBounceSoundType == LEBS_ICE ) { // ~Dimmskii
+			CG_IceTrail( le );
 		}
 
 		return;

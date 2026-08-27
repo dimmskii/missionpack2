@@ -473,6 +473,11 @@ typedef enum {
 	EV_TAUNT_GETFLAG,
 	EV_TAUNT_GUARDBASE,
 	EV_TAUNT_PATROL,
+// ~Dimmskii -- Freeze Tag. Appended, never inserted: the event index rides an
+// 8-bit field (EV_EVENT_BIT1 == 0x100), so renumbering would desync qagame/cgame.
+	EV_THAW_PLAYER,
+	EV_THAW_TICK,
+// END Dimmskii
 	EV_MAX
 
 } entity_event_t;
@@ -492,7 +497,26 @@ typedef enum {
 	GTS_REDTEAM_TOOK_LEAD,
 	GTS_BLUETEAM_TOOK_LEAD,
 	GTS_TEAMS_ARE_TIED,
-	GTS_KAMIKAZE
+//	GTS_KAMIKAZE
+	GTS_KAMIKAZE,	// ~Dimmskii - comma, the block below extends the enum
+// ~Dimmskii -- QL's own extension of this enum, taken verbatim so the numbering
+// can never drift from retail. Only the thaw pair at the end is implemented so
+// far; the rest are reserved so a later port drops in without renumbering.
+// 21 and 22 are gaps QL-SRP has not recovered - leave them unclaimed.
+	GTS_REDTEAM_WINS			= 14,
+	GTS_BLUETEAM_WINS			= 15,
+	GTS_REDTEAM_WINS_ROUND		= 16,
+	GTS_BLUETEAM_WINS_ROUND		= 17,
+	GTS_ROUND_DRAW				= 18,
+	GTS_LAST_STANDING			= 19,
+	GTS_ROUND_OVER				= 20,
+	GTS_DOMINATION_POINT_EVENT	= 23,
+	GTS_SURVIVOR_WARNING		= 24,
+	// Ours, past QL's block so both can coexist. Named for the thawed player's
+	// own team, so cgame needs no crossed mapping the way the flag cues do.
+	GTS_RED_THAW				= 25,
+	GTS_BLUE_THAW				= 26
+// END Dimmskii
 } global_team_sound_t;
 
 // animations
@@ -677,6 +701,9 @@ typedef enum {
 	MOD_HMG,
 // END Dimmskii
 	MOD_GRAPPLE
+// ~Dimmskii -- Freeze Tag; appended last so no existing MOD_ value shifts
+	,MOD_THAW
+// END Dimmskii
 } meansOfDeath_t;
 
 

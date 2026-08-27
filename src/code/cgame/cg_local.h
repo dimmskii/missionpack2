@@ -254,13 +254,16 @@ typedef enum {
 typedef enum {
 	LEMT_NONE,
 	LEMT_BURN,
-	LEMT_BLOOD
+	LEMT_BLOOD,
+	LEMT_ICE				// ~Dimmskii thaw shards - no mark shader yet, so cg_localents
+							// leaves it unhandled, which is the point: not blood
 } leMarkType_t;			// fragment local entities can leave marks on walls
 
 typedef enum {
 	LEBS_NONE,
 	LEBS_BLOOD,
-	LEBS_BRASS
+	LEBS_BRASS,
+	LEBS_ICE				// ~Dimmskii thaw shards - see LEMT_ICE
 } leBounceSoundType_t;	// fragment local entities can make sounds on impacts
 
 typedef struct localEntity_s {
@@ -312,6 +315,10 @@ typedef struct {
 	qboolean		perfect;
 // ~Dimmskii
 	int				roundWins;
+	// Parsed but not drawn yet - the columns land with the per-gametype scoreboard.
+	int				thawsGiven;
+	int				thawsReceived;
+	int				timesFrozen;
 // END Dimmskii
 	team_t			team;
 
@@ -778,6 +785,7 @@ typedef struct {
 	qhandle_t	lightningShader;
 
 	qhandle_t	friendShader;
+	qhandle_t	frozenFriendShader; // ~Dimmskii
 
 	qhandle_t	balloonShader;
 	qhandle_t	connectionShader;
@@ -796,6 +804,8 @@ typedef struct {
 	qhandle_t	plasmaBallShader;
 	qhandle_t	waterBubbleShader;
 	qhandle_t	bloodTrailShader;
+	qhandle_t	iceShardShader;	// ~Dimmskii thaw shard coating
+	qhandle_t	iceTrailShader;	// ~Dimmskii
 	qhandle_t	grappleShader;	// leilei - grapple hook
 //#ifdef MISSIONPACK
 	qhandle_t	nailPuffShader;
@@ -811,6 +821,7 @@ typedef struct {
 	// wall mark shaders
 	qhandle_t	wakeMarkShader;
 	qhandle_t	bloodMarkShader;
+	qhandle_t	iceMarkShader;	// ~Dimmskii
 	qhandle_t	bulletMarkShader;
 	qhandle_t	burnMarkShader;
 	qhandle_t	holeMarkShader;
@@ -823,6 +834,11 @@ typedef struct {
 	qhandle_t	invisShader;
 	qhandle_t	regenShader;
 	qhandle_t	battleSuitShader;
+	// ~Dimmskii QL's three-layer frozen shell, names taken from retail gfx.shader
+	qhandle_t	ice1Shader;
+	qhandle_t	ice2Shader;
+	qhandle_t	ice3Shader;
+	// END Dimmskii
 	qhandle_t	battleWeaponShader;
 	qhandle_t	hastePuffShader;
 //#ifdef MISSIONPACK
@@ -934,6 +950,7 @@ typedef struct {
 	sfxHandle_t	teleOutSound;
 	sfxHandle_t	noAmmoSound;
 	sfxHandle_t	respawnSound;
+	sfxHandle_t	thawTickSound;	// ~Dimmskii
 	sfxHandle_t talkSound;
 	sfxHandle_t landSound;
 	sfxHandle_t jumpPadSound;
@@ -1096,6 +1113,7 @@ typedef struct {
 	int				g_teamVisibility;
 	int				g_itemVisibility;	// TODO: break up into perhaps g_flagVisibility, g_powerupVisibility, etc.
 	int				g_itemTimers;
+	qboolean		freezeEnabled;		// resolved freeze gate from CS_SERVER_SETTINGS_INFO_A
 // END ~Dimmskii
 	int				timelimit;
 	int				maxclients;
@@ -1200,6 +1218,7 @@ typedef struct {
     int         serverTime;
     int         prevServerTime;
     qboolean    valid;
+    qboolean    frozen;		// only source of frozen state for an off-PVS teammate
 } teammatePos_t;
 
 typedef struct {
@@ -1493,6 +1512,7 @@ void CG_LightningBoltBeam( vec3_t start, vec3_t end );
 void CG_ScorePlum( int client, const vec3_t origin, int score );
 
 void CG_GibPlayer( const vec3_t playerOrigin );
+void CG_ThawPlayer( const vec3_t playerOrigin );	// ~Dimmskii
 void CG_BigExplode( vec3_t playerOrigin );
 
 void CG_Bleed( const vec3_t origin, int entityNum );

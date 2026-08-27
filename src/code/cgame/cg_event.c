@@ -92,7 +92,9 @@ static void CG_Obituary( entityState_t *ent ) {
 // ~Dimmskii
 	// QL-style kill confirmation beep: play locally when we're the one
 	// who scored the kill (not a suicide/world death).
-	if ( cg_killBeep.integer > 0 && attacker == cg.snap->ps.clientNum && attacker != target ) {
+	// ~Dimmskii MOD_THAW rides this event too, and thawing someone is not a kill
+	if ( cg_killBeep.integer > 0 && attacker == cg.snap->ps.clientNum && attacker != target
+		&& mod != MOD_THAW ) {
 		trap_S_StartLocalSound( cgs.media.killBeepSound, CHAN_LOCAL_SOUND );
 	}
 	// A frag or our own death both change scores/round-wins the VQ3 HUD's
@@ -144,6 +146,16 @@ static void CG_Obituary( entityState_t *ent ) {
 	case MOD_TRIGGER_HURT:
 		message = "was in the wrong place";
 		break;
+// ~Dimmskii A player thaw is reported by the attacker-side switch below instead,
+// so only the timer-driven one gets a line here.
+	case MOD_THAW:
+		if ( attacker == ENTITYNUM_WORLD ) {
+			message = "was auto-thawed";
+		} else {
+			message = NULL;
+		}
+		break;
+// END Dimmskii
 	default:
 		message = NULL;
 		break;
@@ -225,9 +237,11 @@ static void CG_Obituary( entityState_t *ent ) {
 
 //		if ( cgs.gametype < GT_TEAM ) {
 // ~Dimmskii
-		if ( !GT_IsTeam(cgs.gametype) && !GT_IsArenaGame(cgs.gametype) ) { // Show only in FFA non-Arena modes
+		if ( cgs.freezeEnabled && mod == MOD_THAW ) { // ~Dimmskii gated on the cvar, not GT_FREEZE like QL
+			s = va("You thawed %s.", targetName );
+		} else if ( !GT_IsTeam(cgs.gametype) && !GT_IsRoundBased(cgs.gametype) ) { // Show only in FFA non-Arena modes
 // END ~Dimmskii
-			s = va("You fragged %s\n%s place with %i", targetName, 
+			s = va("You fragged %s\n%s place with %i", targetName,
 				CG_PlaceString( cg.snap->ps.persistant[PERS_RANK] + 1 ),
 				cg.snap->ps.persistant[PERS_SCORE] );
 		} else {
@@ -308,6 +322,9 @@ static void CG_Obituary( entityState_t *ent ) {
 			break;
 		case MOD_LIGHTNING:
 			message = "was electrocuted by";
+			break;
+		case MOD_THAW:
+			message = "was thawed by"; // ~Dimmskii
 			break;
 		case MOD_BFG:
 		case MOD_BFG_SPLASH:
@@ -1089,6 +1106,23 @@ void CG_EntityEvent( centity_t *cent, vec3_t position, int entityNum ) {
 					//
 					CG_AddBufferedSound( cgs.media.redFlagReturnedSound );
 					break;
+// ~Dimmskii -- the same cue the flag returns use, deliberately: it is what Freeze
+// has always sounded like. Just no announcer VO behind it, which is the whole
+// reason these are not GTS_*_RETURN. Named for the thawed player's own team, so
+// there is no crossed mapping here.
+				case GTS_RED_THAW:
+					if ( cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED )
+						CG_AddBufferedSound( cgs.media.returnYourTeamSound );
+					else
+						CG_AddBufferedSound( cgs.media.returnOpponentSound );
+					break;
+				case GTS_BLUE_THAW:
+					if ( cg.snap->ps.persistant[PERS_TEAM] == TEAM_BLUE )
+						CG_AddBufferedSound( cgs.media.returnYourTeamSound );
+					else
+						CG_AddBufferedSound( cgs.media.returnOpponentSound );
+					break;
+// END Dimmskii
 
 				case GTS_RED_TAKEN: // CTF: red team took blue flag, 1FCTF: blue team took the neutral flag
 					// if this player picked up the flag then a sound is played in CG_CheckLocalSounds
@@ -1248,6 +1282,19 @@ void CG_EntityEvent( centity_t *cent, vec3_t position, int entityNum ) {
 		CG_Beam( cent );
 		break;
 
+// ~Dimmskii -- Freeze Tag. These MUST have cases even while the visuals are
+// still to come: any event the server emits without a case here falls through
+// to the default below and CG_Error kills the client.
+	case EV_THAW_PLAYER:
+		CG_ThawPlayer( position );
+		break;
+
+	case EV_THAW_TICK:
+		if ( cgs.media.thawTickSound ) {
+			trap_S_StartSound( NULL, es->number, CHAN_BODY, cgs.media.thawTickSound );
+		}
+		break;
+// END Dimmskii
 
 	default:
 		CG_Error( "Unknown event: %i", event );

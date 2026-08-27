@@ -1325,6 +1325,93 @@ void BotHarvesterRetreatGoals(bot_state_t *bs) {
 BotTeamGoals
 ==================
 */
+// ~Dimmskii
+/*
+==================
+BotFreezeFindFrozenTeammate
+
+Nearest frozen team mate, or -1. Deliberately not routed through the usual
+entity scans: EntityIsDead is true for a frozen player (PM_FREEZE fails its
+pm_type != PM_NORMAL test), which is what keeps bots from shooting them, but it
+would also hide them from exactly the sweep we need here.
+==================
+*/
+static int BotFreezeFindFrozenTeammate(bot_state_t *bs) {
+	int			i, best;
+	float		dist, bestdist;
+	vec3_t		dir;
+	gentity_t	*ent;
+
+	best = -1;
+	bestdist = 0;
+
+	for ( i = 0; i < level.maxclients; i++ ) {
+		if ( i == bs->client ) {
+			continue;
+		}
+
+		ent = &g_entities[i];
+		if ( !ent->inuse || !ent->client ) {
+			continue;
+		}
+		if ( ent->client->sess.sessionTeam == TEAM_SPECTATOR ) {
+			continue;
+		}
+		if ( !BotSameTeam( bs, i ) ) {
+			continue;
+		}
+		if ( !G_FreezeIsFrozen( ent ) ) {
+			continue;
+		}
+
+		VectorSubtract( ent->client->ps.origin, bs->origin, dir );
+		dist = VectorLengthSquared( dir );
+		if ( best < 0 || dist < bestdist ) {
+			best = i;
+			bestdist = dist;
+		}
+	}
+
+	return best;
+}
+
+/*
+==================
+BotFreezeSeekGoals
+
+Freeze Tag has no flags or obelisks to want, so BotTeamGoals used to leave these
+bots with nothing at all. Thawing is the objective, so it becomes the team goal.
+==================
+*/
+void BotFreezeSeekGoals(bot_state_t *bs) {
+	int		teammate;
+
+	// already on the way to someone - let the goal handler retire it once they thaw
+	if ( bs->ltgtype == LTG_UNFREEZE ) {
+		return;
+	}
+
+	// don't trample an order a team mate gave this bot
+	if ( bs->ltgtype && bs->ordered ) {
+		return;
+	}
+
+	teammate = BotFreezeFindFrozenTeammate( bs );
+	if ( teammate < 0 ) {
+		return;
+	}
+
+	bs->ltgtype = LTG_UNFREEZE;
+	bs->teammate = teammate;
+	bs->teamgoal_time = FloatTime() + TEAM_HELP_TIME;
+	bs->teammessage_time = 0;		// chat comes later, see devmemo
+	bs->decisionmaker = bs->client;
+	bs->ordered = qfalse;
+
+	BotSetTeamStatus( bs );
+}
+// END Dimmskii
+
 void BotTeamGoals(bot_state_t *bs, int retreat) {
 
 	if ( retreat ) {
@@ -1359,6 +1446,12 @@ void BotTeamGoals(bot_state_t *bs, int retreat) {
 			BotHarvesterSeekGoals(bs);
 		}
 //#endif
+		// ~Dimmskii Last, so a gametype with real objectives keeps its own goals
+		// even when g_freeze is switched on inside it
+		else if ( G_FreezeEnabled() && GT_IsTeam( gametype ) ) {
+			BotFreezeSeekGoals(bs);
+		}
+		// END Dimmskii
 	}
 	// reset the order time which is used to see if
 	// we decided to refuse an order
@@ -3606,6 +3699,15 @@ void BotCheckAttack(bot_state_t *bs) {
 	attackentity = bs->enemy;
 	//
 	BotEntityInfo(attackentity, &entinfo);
+// ~Dimmskii Never shoot a frozen player. EntityIsDead already stops a bot picking
+// one as a new enemy (PM_FREEZE fails its pm_type != PM_NORMAL test), but this is
+// the one gate every firing path passes through, so it also covers an enemy that
+// freezes mid-fight before the battle node has dropped them.
+	if ( attackentity >= 0 && attackentity < MAX_CLIENTS
+		&& G_FreezeIsFrozen( &g_entities[attackentity] ) ) {
+		return;
+	}
+// END Dimmskii
 	// if not attacking a player
 	if (attackentity >= MAX_CLIENTS) {
 //#ifdef MISSIONPACK
@@ -5528,7 +5630,9 @@ void BotArenaPickEnemyToKill(bot_state_t *bs) {
 		// If on specified team and alive (health > 0), add to alive count
 //		if ( gametype < GT_TEAM || clientEnt->client->sess.sessionTeam != BotTeam(bs) ) {
 		if ( !GT_IsTeam(gametype) || clientEnt->client->sess.sessionTeam != BotTeam(bs) ) { // ~Dimmskii
-			if ( bs->client != clientEnt->client->ps.clientNum && clientEnt->client->sess.sessionTeam != TEAM_SPECTATOR && clientEnt->health > 0 ) {
+			// ~Dimmskii - a frozen player has health 1, so the health test alone
+			// still picks them; hunting a body nobody can kill just stalls the bot
+			if ( bs->client != clientEnt->client->ps.clientNum && clientEnt->client->sess.sessionTeam != TEAM_SPECTATOR && clientEnt->health > 0 && !G_FreezeIsFrozen( clientEnt ) ) {
 	#ifdef DEBUG
 				ClientName(bs->client, botname, sizeof(botname));
 				ClientName( clientEnt->client->ps.clientNum, othername, sizeof( othername ) );

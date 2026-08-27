@@ -709,17 +709,29 @@ static void G_UpdateWeaponReloadConfigstring( qboolean forceBroadcast ) {
 G_UpdateServerSettingsConfigstrings
 
 Publishes scalar server settings the client needs (shotgun pellets/spread)
-as an info string into CS_SERVER_SETTINGS_INFO_B. INFO_A is reserved for
-future boolean flags and left empty this pass.
+as an info string into CS_SERVER_SETTINGS_INFO_B, and the boolean gameplay
+flags the client gates on into CS_SERVER_SETTINGS_INFO_A.
 =================
 */
 static void G_UpdateServerSettingsConfigstrings( qboolean forceBroadcast ) {
+	static char	s_serverSettingsPayloadA[MAX_INFO_STRING];
 	static char	s_serverSettingsPayloadB[MAX_INFO_STRING];
+	char		payloadA[MAX_INFO_STRING];
 	char		payloadB[MAX_INFO_STRING];
+
+	// INFO_A - booleans. "freeze" is the resolved gate, not the raw cvar, so the
+	// client never has to know whether it came from the gametype or g_freeze.
+	payloadA[0] = '\0';
+	Info_SetValueForKey( payloadA, "freeze", G_FreezeEnabled() ? "1" : "0" );
 
 	payloadB[0] = '\0';
 	Info_SetValueForKey( payloadB, "sgPellets", va( "%i", g_sgPellets.integer ) );
 	Info_SetValueForKey( payloadB, "sgSpread",  va( "%i", g_sgPelletSpread.integer ) );
+
+	if ( forceBroadcast || Q_stricmp( payloadA, s_serverSettingsPayloadA ) != 0 ) {
+		trap_SetConfigstring( CS_SERVER_SETTINGS_INFO_A, payloadA );
+		Q_strncpyz( s_serverSettingsPayloadA, payloadA, sizeof( s_serverSettingsPayloadA ) );
+	}
 
 	if ( forceBroadcast || Q_stricmp( payloadB, s_serverSettingsPayloadB ) != 0 ) {
 		trap_SetConfigstring( CS_SERVER_SETTINGS_INFO_B, payloadB );
@@ -971,6 +983,15 @@ static void G_InitGame( int levelTime, int randomSeed, int restart ) {
 	// let the server system know where the entites are
 	trap_LocateGameData( level.gentities, level.num_entities, sizeof( gentity_t ), 
 		&level.clients[0].ps, sizeof( level.clients[0] ) );
+
+// ~Dimmskii -- A fresh level memsets warmupTime to 0, which CheckTournament reads
+// as "round already running" and returns on before it can ever start a warmup.
+// Empty teams normally rescue it through the notEnough path, but a map reload
+// keeps everyone's team, so the round layer never starts. Begin waiting instead.
+	if ( GT_IsRoundBased( g_gametype.integer ) ) {
+		level.warmupTime = -1;
+	}
+// END Dimmskii
 
 	// reserve some spots for dead player bodies
 	InitBodyQue();
@@ -1910,7 +1931,7 @@ static void CheckExitRules_old( void ) { // ~Dimmskii
 	}
 	
 // ~Dimmskii
-	if ( GT_IsArenaGame(g_gametype.integer) && g_roundtimelimit.integer && !level.warmupTime && !level.arenaRoundQueued && !Arena_MatchDecided() ) {
+	if ( GT_IsRoundBased(g_gametype.integer) && g_roundtimelimit.integer && !level.warmupTime && !level.arenaRoundQueued && !Arena_MatchDecided() ) {
 		if ( level.time - level.startTime >= g_roundtimelimit.integer*1000 ) {
 			G_BroadcastServerCommand( -1, "print \"Round timelimit hit.\n\"");
 			Arena_TimeoutRound();
@@ -1928,7 +1949,7 @@ static void CheckExitRules_old( void ) { // ~Dimmskii
 	if ( g_timelimit.integer && !level.warmupTime ) {
 		if ( level.time - level.startTime >= g_timelimit.integer*60000 ) {
 // ~Dimmskii
-			if ( GT_IsArenaGame(g_gametype.integer) ) {
+			if ( GT_IsRoundBased(g_gametype.integer) ) {
 				return;
 			}
 // END Dimmskii
@@ -1960,7 +1981,7 @@ static void CheckExitRules_old( void ) { // ~Dimmskii
 				return;
 			}
 		}
-	} else if ( g_gametype.integer == GT_TEAMARENA && g_roundlimit.integer ) {
+	} else if ( (g_gametype.integer == GT_CLAN_ARENA || g_gametype.integer == GT_FREEZE) && g_roundlimit.integer ) {
 
 		if ( level.teamScores[TEAM_RED] >= g_roundlimit.integer ) {
 			G_BroadcastServerCommand( -1, "print \"Red hit the roundlimit.\n\"" );
@@ -1975,8 +1996,8 @@ static void CheckExitRules_old( void ) { // ~Dimmskii
 		}
 	}
 	
-	// Don't check any more fraglimit or capture limit stuff in Arena gametypes
-	if ( GT_IsArenaGame(g_gametype.integer) ) {
+	// Don't check any more fraglimit or capture limit stuff in Arena or FT gametypes
+	if ( GT_IsRoundBased(g_gametype.integer) ) {
 		return;
 	}
 // END Dimmskii
@@ -2052,14 +2073,18 @@ static void G_WarmupEnd( void )
 	qboolean isArena = qfalse;
 	
 // ~Dimmskii
-	if ( GT_IsArenaGame(g_gametype.integer) ) {
+	if ( GT_IsRoundBased(g_gametype.integer) ) {
 		isArena = qtrue;
 	}
 
-	// Must run before warmupTime is zeroed below (ClientSpawn would freeze the
-	// respawn) and before the loop that clears the PMF_NOSHOOT it re-sets.
+	// Freeze has item pickups during the wait, so it starts from spawn points; the
+	// arena modes only top up the dead. Must run before warmupTime is zeroed below.
 	if ( isArena ) {
-		Arena_ForceRespawnDead();
+		if ( G_FreezeIsNativeGametype() ) {
+			respawnAll();
+		} else {
+			Arena_ForceRespawnDead();
+		}
 	}
 // END Dimmskii
 
@@ -2268,7 +2293,7 @@ static void CheckTournament( void ) {
 	// Arena's live rounds run at warmupTime 0, where the stock gate blocks the
 	// "Waiting for players" path and leaves lone joiners frozen mid-round.
 	} else if ( g_gametype.integer != GT_SINGLE_PLAYER
-		&& ( level.warmupTime != 0 || GT_IsArenaGame(g_gametype.integer) ) ) { // ~Dimmskii
+		&& ( level.warmupTime != 0 || GT_IsRoundBased(g_gametype.integer) ) ) { // ~Dimmskii
 		int		counts[TEAM_NUM_TEAMS];
 		qboolean	notEnough = qfalse;
 
@@ -2295,7 +2320,7 @@ static void CheckTournament( void ) {
 				trap_SetConfigstring( CS_ROUND_NUMBER, "0" );
 				// Scores go with it - an abandoned match must not bleed into the
 				// next one. Arena only; other gametypes never reach here mid-match.
-				if ( GT_IsArenaGame(g_gametype.integer) ) {
+				if ( GT_IsRoundBased(g_gametype.integer) ) {
 					Arena_ResetMatchScores();
 				}
 // END Dimmskii
@@ -2322,7 +2347,7 @@ static void CheckTournament( void ) {
 				// The round is now imminent, so re-apply the freeze
 				// Arena_ThawWeapons has been lifting all through the wait. Only
 				// ClientSpawn sets it otherwise, and everyone already spawned.
-				if ( GT_IsArenaGame(g_gametype.integer) ) {
+				if ( GT_IsRoundBased(g_gametype.integer) ) {
 					Arena_FreezeSurvivorWeapons();
 				}
 // END Dimmskii
@@ -2703,7 +2728,16 @@ static void G_RunFrame( int levelTime ) {
 */
 	
 // ~Dimmskii
-	if ( GT_IsArenaGame(g_gametype.integer) ) {
+	// Thaw ticking. Outside the arena branch on purpose - g_freeze can enable the
+	// mechanic in gametypes GT_IsArenaGame doesn't cover. Returns immediately when
+	// freeze is off or nobody is frozen.
+	G_FreezeRunFrame();
+
+	// Full-team-freeze rule for the roundless team gametypes. Gated inside; the
+	// round-based modes resolve the same condition through Arena_CheckRules.
+	G_FreezeCheckTeamWipe();
+
+	if ( GT_IsRoundBased(g_gametype.integer) ) {
 		// see if Clan arena is
 		Arena_CheckRules();
 	} else {
