@@ -454,7 +454,7 @@ void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops ) {
 			if ( ps->persistant[PERS_RANK] != ops->persistant[PERS_RANK] ) {
 //				if ( cgs.gametype < GT_TEAM) {
 // ~Dimmskii
-				if ( !GT_IsTeam(cgs.gametype) && !GT_IsArenaGame(cgs.gametype) ) { // Only play on non-team, non-arena games.
+				if ( !GT_IsTeam(cgs.gametype) && !GT_IsRoundBased(cgs.gametype) ) { // Only play on non-team, non-round-based games.
 // END ~Dimmskii
 					if (  ps->persistant[PERS_RANK] == 0 ) {
 						CG_AddBufferedSound(cgs.media.takenLeadSound);
@@ -471,7 +471,7 @@ void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops ) {
 	// timelimit warnings
 //	if ( cgs.timelimit > 0 && !cg.warmup && cg.warmupFightSound < cg.time ) {
 // ~Dimmskii
-	if ( !GT_IsArenaGame(cgs.gametype) && cgs.timelimit > 0 && !cg.warmup && cg.warmupFightSound < cg.time ) {
+	if ( !GT_IsRoundBased(cgs.gametype) && cgs.timelimit > 0 && !cg.warmup && cg.warmupFightSound < cg.time ) {
 // END Dimmskii
 		int		msec;
 

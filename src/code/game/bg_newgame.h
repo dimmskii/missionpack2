@@ -63,6 +63,8 @@ static const char *GFACTORY_CVARS[] = {
 	"g_railJumpDamage",
 	
 	"g_forcerespawn",
+	"g_allowKill",
+	"g_dropPowerups",
 	"g_1FRespawn",
 	
 	"g_gravity",
@@ -176,12 +178,30 @@ static const char *GFACTORY_CVARS[] = {
 	"g_obeliskRegenPeriod",
 	"g_obeliskRegenAmount",
 	"g_obeliskRespawnDelay",
-	
+
+	// Freeze Tag
+	"g_freeze",
+	"g_freezeThawTime",
+	"g_freezeThawRadius",
+	"g_freezeAutoThawTime",
+	"g_freezeRoundDelay",
+	"g_freezeEnvironmentalRespawnDelay",
+	"g_freezeThawWinningTeam",
+	"g_freezeThawTick",
+	"g_freezeThawThroughSurface",
+	"g_freezeProtectedSpawnTime",
+	"g_freezeResetWeaponsOnRound",
+	"g_freezeResetHealthOnRound",
+	"g_freezeResetArmorOnRound",
+	"g_freezeRemovePowerupsOnRound",
+	"g_freezeTeamWipeScore",
+	"g_freezeTeamWipeRespawn",
+
     NULL                    // Null-terminator for safe iteration loops
 };
 
 #define GFACTORY_MAX_CVAR_VALUE_LEN 64
-#define GFACTORY_CVARS_COUNT       104 	/* Total elements in GFACTORY_CVARS excluding NULL */
+#define GFACTORY_CVARS_COUNT       122 	/* Total elements in GFACTORY_CVARS excluding NULL */
 
 // QL-Compatible game factories
 typedef struct {
@@ -204,7 +224,8 @@ extern const char *const s_gametypeSpawnNames[GT_MAX_GAME_TYPE][MAX_GAMETYPE_NAM
 
 qboolean GT_IsTeam( int gt );
 qboolean GT_IsDMGame( int gt );
-qboolean GT_IsArenaGame( int gt );
+qboolean GT_IsArenaGame( int gt );		// elimination modes: CA, Arena (NOT Freeze)
+qboolean GT_IsRoundBased( int gt );		// round structure: CA, Arena, Freeze
 qboolean GT_IsFlagGame( int gt );
 
 // Factories parsed from scripts/factories.txt plus any scripts/*.factories

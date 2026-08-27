@@ -2760,7 +2760,7 @@ static void CG_Draw2D( stereoFrame_t stereoFrame )
 		CG_DrawCrosshair();
 		CG_DrawCrosshairNames();
 // ~Dimmskii
-	} else if ( GT_IsArenaGame(cgs.gametype)
+	} else if ( GT_IsRoundBased(cgs.gametype)
 		&& cg.snap->ps.stats[STAT_HEALTH] <= 0
 		&& ( cg.snap->ps.pm_flags & PMF_FOLLOW ) ) {
 		CG_DrawCrosshair();
@@ -3329,7 +3329,7 @@ CG_DrawTeammatePOI
 Draws a single teammate POI marker at world position.
 =============
 */
-static void CG_DrawTeammatePOI( const char *name, int health, int armor, vec3_t worldPos ) {
+static void CG_DrawTeammatePOI( const char *name, int health, int armor, vec3_t worldPos, qboolean frozen ) {
 	vec4_t	nameColor;
 	
 	// nameColor based on HP. FIXME: do it better
@@ -3337,7 +3337,7 @@ static void CG_DrawTeammatePOI( const char *name, int health, int armor, vec3_t 
 	nameColor[1] = nameColor[2] = (float)health/100.0f;
 	nameColor[3] = 1.0f;
 
-	CG_DrawPOI( ( (cg_teammateNames.integer > 1) || (CG_IsTargetedPOI(worldPos)&&cg_teammateNames.integer>0) ) ? name : "", nameColor, (float)health/100.0f, worldPos, cgs.media.friendShader, cg_teammatePOIsIconSize.value, cg_teammatePOIsIconMinSize.value, cg_teammatePOIsIconMaxSize.value, colorWhite );
+	CG_DrawPOI( ( (cg_teammateNames.integer > 1) || (CG_IsTargetedPOI(worldPos)&&cg_teammateNames.integer>0) ) ? name : "", nameColor, (float)health/100.0f, worldPos, (frozen ? cgs.media.frozenFriendShader : cgs.media.friendShader), cg_teammatePOIsIconSize.value, cg_teammatePOIsIconMinSize.value, cg_teammatePOIsIconMaxSize.value, colorWhite );
 }
 
 /*
@@ -3422,7 +3422,7 @@ static void CG_DrawTeammatePOIs( void ) {
 			pos[2] += CG_TEAMMATE_POI_WORLD_Z_OFFSET; // Add offset AFTER trace
 
 			// Draw the marker
-			CG_DrawTeammatePOI( ci->name, health, armor, pos );
+			CG_DrawTeammatePOI( ci->name, health, armor, pos, (cgs.freezeEnabled && ( cent->currentState.powerups & ( 1 << PW_NUM_POWERUPS ) ) ) ? qtrue : qfalse );
 		}
 		return;
 	}
@@ -3449,7 +3449,7 @@ static void CG_DrawTeammatePOIs( void ) {
              !( cent->currentState.eFlags & EF_DEAD ) ) {
             VectorCopy( cent->lerpOrigin, pos );
             pos[2] += CG_TEAMMATE_POI_WORLD_Z_OFFSET;
-			CG_DrawTeammatePOI( ci->name, ci->health, ci->armor, pos );
+			CG_DrawTeammatePOI( ci->name, ci->health, ci->armor, pos, (cgs.freezeEnabled && ( cent->currentState.powerups & ( 1 << PW_NUM_POWERUPS ) ) ) ? qtrue : qfalse );
             continue;
         }
 
@@ -3477,7 +3477,7 @@ static void CG_DrawTeammatePOIs( void ) {
 
         pos[2] += CG_TEAMMATE_POI_WORLD_Z_OFFSET;
 
-		CG_DrawTeammatePOI( ci->name, ci->health, ci->armor, pos );
+		CG_DrawTeammatePOI( ci->name, ci->health, ci->armor, pos, tp->frozen );
     }
 }
 

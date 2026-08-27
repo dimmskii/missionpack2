@@ -69,7 +69,7 @@ hostgametypes {
   { "One Flag CTF" 6 }
   { "Overload" 7 }
   { "Harvester" 8 }
-//  { "Freeze Tag" 9 }
+  { "Freeze Tag" 9 }
 //  { "Domination" 10 }
 //  { "Attack & Defend" 11 }
 //  { "Red Rover" 12 }

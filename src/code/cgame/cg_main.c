@@ -583,6 +583,7 @@ static void CG_RegisterSounds( void ) {
 	cgs.media.teleInSound = trap_S_RegisterSound( "sound/world/telein.wav", qfalse );
 	cgs.media.teleOutSound = trap_S_RegisterSound( "sound/world/teleout.wav", qfalse );
 	cgs.media.respawnSound = trap_S_RegisterSound( "sound/items/respawn1.wav", qfalse );
+	cgs.media.thawTickSound = trap_S_RegisterSound( "sound/misc/tim_pump.wav", qfalse ); // ~Dimmskii same sample QL uses for thaw ticks
 
 	cgs.media.noAmmoSound = trap_S_RegisterSound( "sound/weapons/noammo.wav", qfalse );
 
@@ -814,6 +815,8 @@ static void CG_RegisterGraphics( void ) {
 //#endif
 	cgs.media.plasmaBallShader = trap_R_RegisterShader( "sprites/plasma1" );
 	cgs.media.bloodTrailShader = trap_R_RegisterShader( "bloodTrail" );
+	cgs.media.iceShardShader = trap_R_RegisterShader( "gfx/misc/iceshard" ); // ~Dimmskii
+	cgs.media.iceTrailShader = trap_R_RegisterShader( "iceTrail" ); // ~Dimmskii
 	cgs.media.lagometerShader = trap_R_RegisterShader("lagometer" );
 	cgs.media.connectionShader = trap_R_RegisterShader( "disconnected" );
 
@@ -837,6 +840,11 @@ static void CG_RegisterGraphics( void ) {
 	cgs.media.battleWeaponShader = trap_R_RegisterShader("powerups/battleWeapon" );
 	cgs.media.invisShader = trap_R_RegisterShader("powerups/invisibility" );
 	cgs.media.regenShader = trap_R_RegisterShader("powerups/regen" );
+	// ~Dimmskii Freeze Tag body shell, three layers like retail QL
+	cgs.media.ice1Shader = trap_R_RegisterShader("powerups/ice1" );
+	cgs.media.ice2Shader = trap_R_RegisterShader("powerups/ice2" );
+	cgs.media.ice3Shader = trap_R_RegisterShader("powerups/ice3" );
+	// END Dimmskii
 	cgs.media.hastePuffShader = trap_R_RegisterShader("hasteSmokePuff" );
 
 //#ifdef MISSIONPACK
@@ -907,6 +915,7 @@ static void CG_RegisterGraphics( void ) {
 //	if ( cgs.gametype >= GT_TEAM || cg_buildScript.integer ) {
 	if ( GT_IsTeam(cgs.gametype) || cg_buildScript.integer ) { // ~Dimmskii
 		cgs.media.friendShader = trap_R_RegisterShader( "sprites/foe" );
+		cgs.media.frozenFriendShader = trap_R_RegisterShader( "sprites/frozen" );	// ~Dimmskii
 		cgs.media.redQuadShader = trap_R_RegisterShader("powerups/blueflag" );
 		cgs.media.teamStatusBar = trap_R_RegisterShader( "gfx/2d/colorbar.tga" );
 //#ifdef MISSIONPACK
@@ -1020,6 +1029,7 @@ static void CG_RegisterGraphics( void ) {
 	cgs.media.shadowMarkShader = trap_R_RegisterShader( "markShadow" );
 	cgs.media.wakeMarkShader = trap_R_RegisterShader( "wake" );
 	cgs.media.bloodMarkShader = trap_R_RegisterShader( "bloodMark" );
+	cgs.media.iceMarkShader = trap_R_RegisterShader( "iceMark" ); // ~Dimmskii
 
 	// register the inline models
 	cgs.numInlineModels = trap_CM_NumInlineModels();

@@ -24,6 +24,7 @@ set(GAME_SOURCES
   bg_slidemove.c
   g_active.c
   g_newgame.c
+  g_freeze.c
   g_arenas.c
   g_bot.c
   g_client.c

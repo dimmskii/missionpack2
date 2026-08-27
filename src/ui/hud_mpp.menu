@@ -536,7 +536,7 @@ menuDef {
     	fullScreen MENU_FALSE
     	visible MENU_TRUE
     	rect 418 455 150 24
-	ownerdrawflag CG_SHOW_NONTEAM_NONARENA 
+	ownerdrawflag CG_SHOW_ANYNONTEAMNONROUNDGAME 
 
 
 	itemDef {
@@ -599,7 +599,7 @@ menuDef {
     	fullScreen MENU_FALSE
     	visible MENU_TRUE
     	rect 418 455 150 24
-	ownerdrawflag CG_SHOW_FFA_ARENA
+	ownerdrawflag CG_SHOW_ANYNONTEAMROUNDGAME
 
 
 	itemDef {

@@ -138,6 +138,20 @@
   
   {
     "cvars": {
+	  "g_freeze": "1",
+	  "g_allowKill": "-1"
+    },
+    "author": "UA Dev Team",
+    "description": "Capture the flag and freeze the enemy team.",
+    "basegt": "ctf",
+    "id": "fctf",
+    "title": "Freeze CTF"
+  },
+  
+  
+  
+  {
+    "cvars": {
 	  "g_gametype": "6",
 	  "g_startingHealth": "100",
 	  "g_startingHealthBonus": "25",
@@ -187,6 +201,49 @@
     "basegt": "har",
     "id": "har",
     "title": "Harvester"
+  },
+  
+  
+  
+  {
+    "cvars": {
+	  "g_gametype": "9",
+	  "g_startingHealth": "100",
+	  "g_startingHealthBonus": "25",
+      "roundlimit": "10",
+      "roundtimelimit": "300",
+	  "g_warmup": "10",
+	  "dmflags": "0",
+	  "g_dropCmds": "6",
+	  "g_overtime": "0",
+	  "g_allowKill": "-1"
+    },
+    "author": "UA Dev Team",
+    "description": "Default gametype settings.",
+    "basegt": "ft",
+    "id": "ft",
+    "title": "Freeze Tag"
+  },
+  
+  
+  
+  {
+    "cvars": {
+      "g_dropCmds": "0",
+      "g_freezeThawTime": "1000",
+      "g_instagib": "1",
+	  "g_startingHealthBonus": "0",
+      "g_startingWeapons": "65",
+      "roundtimelimit": "180",
+      "dmflags": "8",
+      "g_allowKill": "-1",
+      "g_overtime": "0"
+    },
+    "author": "UA Dev Team",
+    "description": "Railgun and Gauntlet only. One shot, one kill.",
+    "basegt": "ft",
+    "id": "ift",
+    "title": "Instagib FT"
   },
   
   

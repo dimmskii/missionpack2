@@ -219,6 +219,7 @@ void	G_TouchTriggers( gentity_t *ent ) {
 	gentity_t	*hit;
 	trace_t		trace;
 	vec3_t		mins, maxs;
+	qboolean	frozen;	// ~Dimmskii
 	static vec3_t	range = { 40, 40, 52 };
 
 	if ( !ent->client ) {
@@ -229,6 +230,30 @@ void	G_TouchTriggers( gentity_t *ent ) {
 	if ( ent->client->ps.stats[STAT_HEALTH] <= 0 ) {
 		return;
 	}
+
+// ~Dimmskii -- and neither do frozen ones. Items are triggers, so this is what
+// stops a frozen player picking anything up; it also keeps a body that has been
+// shoved onto a jump pad or into a teleporter from setting it off. Sits here
+// with the dead-client guard because it is the same idea: out of the fight, so
+// not interacting with the world.
+//
+// QL-SRP gets this for free instead - its frozen players sit in a pm_type that
+// bails out of pmove early, so nothing is ever touched. We run full physics on
+// purpose, so it has to be explicit.
+//
+// Hazard triggers are the exception outside GT_FREEZE, and they are why this is
+// a filter rather than a return: a body shoved into a pit or the void has to be
+// able to reach the trigger_hurt at the bottom. It used to die on the way, to
+// landing damage against its own health of 1, which is not a hazard and is no
+// longer applied - so without this it just lies in the lava. GT_FREEZE keeps the
+// blanket return: there the body is meant to be indestructible and
+// g_freezeEnvironmentalRespawnDelay is the way out. Damage policy still lives in
+// one place, G_Damage; this only decides what is allowed to ask.
+	frozen = G_FreezeIsFrozen( ent );
+	if ( frozen && G_FreezeIsNativeGametype() ) {
+		return;
+	}
+// END Dimmskii
 
 	VectorSubtract( ent->client->ps.origin, range, mins );
 	VectorAdd( ent->client->ps.origin, range, maxs );
@@ -246,6 +271,11 @@ void	G_TouchTriggers( gentity_t *ent ) {
 			continue;
 		}
 		if ( !( hit->r.contents & CONTENTS_TRIGGER ) ) {
+			continue;
+		}
+
+		// ~Dimmskii - a frozen body only reaches hazards; see the note above
+		if ( frozen && hit->touch != hurt_touch ) {
 			continue;
 		}
 
@@ -574,6 +604,14 @@ void ClientEvents( gentity_t *ent, int oldEventSequence ) {
 			if ( g_dmflags.integer & DF_NO_FALLING ) {
 				break;
 			}
+// ~Dimmskii -- A frozen body still falls, so shoving one off a ledge used to land
+// real fall damage on it: MOD_FALLING has no attacker, which reads as world damage
+// and kills it outright outside GT_FREEZE. Landing is not a hazard - never hurt a
+// frozen player with it, in any gametype.
+			if ( G_FreezeIsFrozen( ent ) ) {
+				break;
+			}
+// END Dimmskii
 			if ( event == EV_FALL_FAR ) {
 				damage = 10;
 			} else {
@@ -796,6 +834,23 @@ void ClientThink_real( gentity_t *ent ) {
     if ( client->ps.pm_flags & PMF_NOSHOOT && client->sess.sessionTeam != TEAM_SPECTATOR && client->ps.stats[STAT_HEALTH] > 0 && !level.intermissiontime ) { // Only on alive non-spectator players, so that we can still click for respawn/ready/cycle/etc
         ucmd->buttons &= ~BUTTON_ATTACK; // Server-sided gaunt hack fix: If one has the PMF_NOSHOOT flag, switching to gauntlet while holding +attack hits once
     }
+
+    // Freeze Tag immobilisation. Same gating as the PMF_NOSHOOT strip directly
+    // above - alive, non-spectator, not intermission - so spectator controls and
+    // the respawn/ready/cycle clicks are never touched.
+    //
+    // Input is stripped rather than parking the player in a no-movement pm_type:
+    // those bail out of pmove before PM_CheckDuck fills pm->mins/maxs, and
+    // ClientThink_real copies those onto the entity, so the body would end up
+    // with a zero-size bounding box - no collision, no gravity, a ghost stuck in
+    // mid-air. Letting pmove run in full and taking the input away instead keeps
+    // a frozen body colliding, falling, sliding under friction and shovable.
+    if ( G_FreezeIsFrozen( ent ) && client->sess.sessionTeam != TEAM_SPECTATOR && client->ps.stats[STAT_HEALTH] > 0 && !level.intermissiontime ) {
+        ucmd->forwardmove = 0;
+        ucmd->rightmove = 0;
+        ucmd->upmove = 0;
+        ucmd->buttons &= ~BUTTON_ATTACK;
+    }
 // END Dimmskii
 
 	// unlagged
@@ -845,8 +900,8 @@ void ClientThink_real( gentity_t *ent ) {
 	}
 
 // ~DIMMSKII
-	// dead players in arena modes act as spectators
-	if ( GT_IsArenaGame(g_gametype.integer)
+	// dead players in round-based modes act as spectators
+	if ( GT_IsRoundBased(g_gametype.integer)
 		&& !level.warmupTime
 		&& client->sess.sessionTeam != TEAM_SPECTATOR
 		&& client->sess.spectatorState == SPECTATOR_FOLLOW ) {
@@ -865,13 +920,25 @@ void ClientThink_real( gentity_t *ent ) {
 		client->ps.eFlags &= ~EF_AWARDS;
 	}
 
+//	if ( client->noclip ) {
+//		client->ps.pm_type = PM_NOCLIP;
+//	} else if ( client->ps.stats[STAT_HEALTH] <= 0 ) {
+//		client->ps.pm_type = PM_DEAD;
+//	} else {
+//		client->ps.pm_type = PM_NORMAL;
+//	}
+// ~Dimmskii This chain reruns every frame, so a frozen player has to be re-asserted
+// here or the next frame hands them straight back to PM_NORMAL.
 	if ( client->noclip ) {
 		client->ps.pm_type = PM_NOCLIP;
 	} else if ( client->ps.stats[STAT_HEALTH] <= 0 ) {
 		client->ps.pm_type = PM_DEAD;
+	} else if ( G_FreezeIsFrozen( ent ) ) {
+		client->ps.pm_type = PM_FREEZE;
 	} else {
 		client->ps.pm_type = PM_NORMAL;
 	}
+// END Dimmskii
 
 	client->ps.gravity = g_gravity.value;
 
@@ -1037,8 +1104,8 @@ void ClientThink_real( gentity_t *ent ) {
 	// check for respawning
 	if ( client->ps.stats[STAT_HEALTH] <= 0 ) {
 // ~DIMMSKII
-		// in arena modes, transition to spectator follow after death anim plays
-		if ( GT_IsArenaGame(g_gametype.integer)
+		// in round-based modes, transition to spectator follow after death anim plays
+		if ( GT_IsRoundBased(g_gametype.integer)
 			&& !level.warmupTime ) {
 			if ( level.time > client->respawnTime ) {
 				BG_PlayerStateToEntityState( &ent->client->ps, &ent->s, qtrue );
@@ -1120,9 +1187,9 @@ SpectatorClientEndFrame
 void SpectatorClientEndFrame( gentity_t *ent ) {
 	gclient_t	*cl;
 // ~DIMMSKII
-	qboolean	isDeadArenaPlayer;
+	qboolean	isDeadThisRound;
 
-	isDeadArenaPlayer = ( GT_IsArenaGame(g_gametype.integer)
+	isDeadThisRound = ( GT_IsRoundBased(g_gametype.integer)
 		&& !level.warmupTime
 		&& ent->client->sess.sessionTeam != TEAM_SPECTATOR
 		&& ent->client->sess.spectatorState == SPECTATOR_FOLLOW );
@@ -1181,8 +1248,8 @@ void SpectatorClientEndFrame( gentity_t *ent ) {
 				if ( ent->client->sess.spectatorClient >= 0 ) {
 					ent->client->sess.spectatorState = SPECTATOR_FREE;
 // ~DIMMSKII
-					// dead arena players should not respawn via ClientBegin
-					if ( !isDeadArenaPlayer )
+					// players dead this round should not respawn via ClientBegin
+					if ( !isDeadThisRound )
 // END DIMMSKII
 					ClientBegin( ent->client - level.clients );
 				}
@@ -1225,8 +1292,8 @@ void ClientEndFrame( gentity_t *ent ) {
 	}
 
 // ~DIMMSKII
-	// dead players in arena modes follow like spectators
-	if ( GT_IsArenaGame(g_gametype.integer)
+	// dead players in round-based modes follow like spectators
+	if ( GT_IsRoundBased(g_gametype.integer)
 		&& !level.warmupTime
 		&& ent->client->sess.sessionTeam != TEAM_SPECTATOR
 		&& ent->client->sess.spectatorState == SPECTATOR_FOLLOW ) {

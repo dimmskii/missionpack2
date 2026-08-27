@@ -290,7 +290,7 @@ void CG_DrawInformation( void ) {
 	y += PROP_HEIGHT;
 		
 // ~Dimmskii
-	if ( !GT_IsArenaGame(cgs.gametype) ) { // ~Dimmskii
+	if ( !GT_IsRoundBased(cgs.gametype) ) { // ~Dimmskii
 // END ~Dimmskii
 
 	value = atoi( Info_ValueForKey( info, "timelimit" ) );
@@ -305,7 +305,7 @@ void CG_DrawInformation( void ) {
 // END ~Dimmskii
 
 	//if (cgs.gametype < GT_CTF ) {
-	if ( !GT_IsFlagGame(cgs.gametype) && !GT_IsArenaGame(cgs.gametype) ) { // ~Dimmskii
+	if ( !GT_IsFlagGame(cgs.gametype) && !GT_IsRoundBased(cgs.gametype) ) { // ~Dimmskii
 		value = atoi( Info_ValueForKey( info, "fraglimit" ) );
 		if ( value ) {
 			UI_DrawProportionalString( 320, y, va( "fraglimit %i", value ),
@@ -325,7 +325,7 @@ void CG_DrawInformation( void ) {
 	}
 	
 // ~Dimmskii
-	if ( GT_IsArenaGame(cgs.gametype) ) {
+	if ( GT_IsRoundBased(cgs.gametype) ) {
 
 		value = atoi( Info_ValueForKey( info, "roundtimelimit" ) );
 		if ( value ) {

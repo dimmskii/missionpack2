@@ -1039,3 +1039,110 @@ pois/flags/neutral3
 
 
 
+
+
+//===================================================
+// FREEZE TAG ~Dimmskii
+//
+// Body shell, transcribed from retail QL scripts/gfx.shader. cgame registers
+// all three and applies them as customShader passes in
+// CG_AddRefEntityWithPowerups, the choke point legs, torso and head all take.
+//
+// The three differ only in deformVertexes amplitude (1, 2, 3) and scroll speed,
+// which drops as the shell grows - together they read as concentric layers of
+// ice sliding at different rates. Zero wave amplitude and frequency make each a
+// constant outward push, not a pulse; that is what separates frozen from the
+// pulsing powerup shells above.
+//
+// All three want textures/effects/icemap - 64x64 in retail, additive, so alpha
+// goes unused. The .tga matches retail's shader text even though retail ships a
+// .jpg; the renderer falls back across extensions.
+
+powerups/ice1
+{
+	nopicmip
+	deformVertexes wave 100 sin 1 0 0 0
+	{
+		map textures/effects/icemap.tga
+		blendfunc add
+		tcGen environment
+		tcmod rotate 30
+		tcmod scroll 0.75 -0.075
+	}
+}
+
+powerups/ice2
+{
+	nopicmip
+	deformVertexes wave 100 sin 2 0 0 0
+	{
+		map textures/effects/icemap.tga
+		blendfunc add
+		tcGen environment
+		tcmod rotate 30
+		tcmod scroll 0.5 -0.05
+	}
+}
+
+powerups/ice3
+{
+	nopicmip
+	deformVertexes wave 100 sin 3 0 0 0
+	{
+		map textures/effects/icemap.tga
+		blendfunc add
+		tcGen environment
+		tcmod rotate 30
+		tcmod scroll 0.25 -0.025
+	}
+}
+
+// Wall stain a thaw shard leaves where it bounces, and the trail it throws off in
+// flight. Both transcribed from retail gfx.shader - the ice counterparts of
+// bloodMark and bloodTrail, and used at the same radius and cadence.
+
+iceMark
+{
+	nopicmip			// make sure a border remains
+	polygonOffset
+	{
+		clampmap gfx/damage/ice_stain.tga
+		blendfunc blend
+		rgbGen identityLighting
+		alphaGen vertex
+	}
+}
+
+iceTrail
+{
+	nopicmip			// make sure a border remains
+	entityMergable		// allow all the sprites to be merged together
+	{
+		clampmap gfx/damage/ice_spurt.tga
+		blendfunc blend
+		rgbGen vertex
+		alphaGen vertex
+	}
+}
+
+// Shards thrown when a player is thawed, applied as a customShader over the gib
+// fragment models. Retail flies those models bare, which reads as meat rather
+// than ice - this coats them instead. First stage is opaque so the chunk is
+// solid, second is the same envmap added back over it for glint.
+gfx/misc/iceshard
+{
+	nopicmip
+	{
+		map textures/effects/icemap.tga
+		rgbGen identity
+		tcGen environment
+	}
+	{
+		map textures/effects/icemap.tga
+		blendfunc add
+		rgbGen identity
+		tcGen environment
+		tcmod rotate 40
+		tcmod scroll 0.4 -0.04
+	}
+}

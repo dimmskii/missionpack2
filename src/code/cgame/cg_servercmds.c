@@ -95,7 +95,9 @@ static void CG_ParseScores( void ) {
 */
 
 // ~Dimmskii
-#define SCORE_FIELDS 15
+// Must match the field count in DeathmatchScoreboardMessage exactly - every row is
+// indexed as i * SCORE_FIELDS + n, so a mismatch shifts every client past the first.
+#define SCORE_FIELDS 18
 
 static void CG_ParseScores( void ) {
 	int		i, powerups;
@@ -126,6 +128,9 @@ static void CG_ParseScores( void ) {
 		cg.scores[i].perfect = atoi(CG_Argv(i * SCORE_FIELDS + 16));
 		cg.scores[i].captures = atoi(CG_Argv(i * SCORE_FIELDS + 17));
 		cg.scores[i].roundWins = atoi(CG_Argv(i * SCORE_FIELDS + 18));
+		cg.scores[i].thawsGiven = atoi(CG_Argv(i * SCORE_FIELDS + 19));
+		cg.scores[i].thawsReceived = atoi(CG_Argv(i * SCORE_FIELDS + 20));
+		cg.scores[i].timesFrozen = atoi(CG_Argv(i * SCORE_FIELDS + 21));
 
 		if ( cg.scores[i].client < 0 || cg.scores[i].client >= MAX_CLIENTS ) {
 			cg.scores[i].client = 0;
@@ -347,12 +352,17 @@ static void CG_ParseWeaponReloadConfigString( void ) {
 ================
 CG_ParseServerSettingsConfigString
 
-Decodes the CS_SERVER_SETTINGS_INFO_B scalar info string into the cgs.*
-fields the client reads (shotgun pellet count/spread).
+Decodes CS_SERVER_SETTINGS_INFO_A (boolean gameplay flags) and
+CS_SERVER_SETTINGS_INFO_B (scalars) into the cgs.* fields the client reads.
 ================
 */
 static void CG_ParseServerSettingsConfigString( void ) {
 	const char	*info;
+
+	// INFO_A carries the already-resolved freeze gate, so the client never has to
+	// know whether the server enabled it by gametype or by g_freeze.
+	info = CG_ConfigString( CS_SERVER_SETTINGS_INFO_A );
+	cgs.freezeEnabled    = atoi( Info_ValueForKey( info, "freeze" ) ) ? qtrue : qfalse;
 
 	info = CG_ConfigString( CS_SERVER_SETTINGS_INFO_B );
 	cgs.g_sgPellets      = atoi( Info_ValueForKey( info, "sgPellets" ) );
@@ -529,7 +539,7 @@ static void CG_ConfigStringModified( void ) {
 	else if ( num == CS_WEAPON_RELOAD_TIMES ) {
 		CG_ParseWeaponReloadConfigString();
 	}
-	else if ( num == CS_SERVER_SETTINGS_INFO_B ) {
+	else if ( num == CS_SERVER_SETTINGS_INFO_A || num == CS_SERVER_SETTINGS_INFO_B ) {
 		CG_ParseServerSettingsConfigString();
 	}
 	// END Dimmskii
@@ -1344,22 +1354,28 @@ CG_ParseTeamPositions
 Parses team origins message when the server allows full team visibility.
 ====================
 */
+// Must match the field count TeamplayPositionMessage writes in g_team.c exactly -
+// each teammate is indexed as i * TPOS_FIELDS + n, so a mismatch shifts every
+// teammate past the first.
+#define TPOS_FIELDS 5
+
 static void CG_ParseTeamPositions( void ) {
     int     i, count, client;
 
     count = atoi( CG_Argv( 1 ) );
 
     for ( i = 0; i < count; i++ ) {
-        client = atoi( CG_Argv( i * 4 + 2 ) );
+        client = atoi( CG_Argv( i * TPOS_FIELDS + 2 ) );
         if ( (unsigned)client >= MAX_CLIENTS )
             continue;
 
         VectorCopy( cg_teammatePositions[client].origin, cg_teammatePositions[client].prevOrigin );
         cg_teammatePositions[client].prevServerTime = cg_teammatePositions[client].serverTime;
 
-        cg_teammatePositions[client].origin[0] = atoi( CG_Argv( i * 4 + 3 ) );
-        cg_teammatePositions[client].origin[1] = atoi( CG_Argv( i * 4 + 4 ) );
-        cg_teammatePositions[client].origin[2] = atoi( CG_Argv( i * 4 + 5 ) );
+        cg_teammatePositions[client].origin[0] = atoi( CG_Argv( i * TPOS_FIELDS + 3 ) );
+        cg_teammatePositions[client].origin[1] = atoi( CG_Argv( i * TPOS_FIELDS + 4 ) );
+        cg_teammatePositions[client].origin[2] = atoi( CG_Argv( i * TPOS_FIELDS + 5 ) );
+        cg_teammatePositions[client].frozen = atoi( CG_Argv( i * TPOS_FIELDS + 6 ) ) ? qtrue : qfalse;
         cg_teammatePositions[client].serverTime = cg.snap->serverTime;
         cg_teammatePositions[client].valid = qtrue;
     }

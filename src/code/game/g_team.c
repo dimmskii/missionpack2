@@ -141,9 +141,45 @@ int Team_PlayerCountAlive( team_t team ) {
 			count++;
 		}
 	}
-	
+
 	return count;
 }
+
+// ~Dimmskii
+/*
+================
+Team_PlayerCountFighting
+
+Players on a team who can still contest the round: alive AND not frozen.
+
+A frozen player is deliberately left at health 1 rather than 0, so
+Team_PlayerCountAlive counts them and a round-end test built on it would never
+fire once a team is fully frozen. This is the count the round logic wants.
+
+Identical to Team_PlayerCountAlive whenever freeze is off, since nothing is ever
+frozen then - so callers can use it unconditionally without gating.
+================
+*/
+int Team_PlayerCountFighting( team_t team ) {
+	int			i;
+	gentity_t	*clientEnt;
+	int count = 0;
+
+	for ( i = 0 ; i < level.maxclients ; i++ ) {
+		clientEnt = g_entities + i;
+		if ( !clientEnt->inuse )
+			continue;
+
+		if ( clientEnt->client->sess.sessionTeam == team
+			&& clientEnt->health > 0
+			&& !G_FreezeIsFrozen( clientEnt ) ) {
+			count++;
+		}
+	}
+
+	return count;
+}
+// END Dimmskii
 
 
 /*
@@ -165,7 +201,8 @@ int Team_CountTotalHealth( team_t team, qboolean includeDead ) {
 			continue;
 		
 		// If on specified team, add their health
-		if ( clientEnt->client->sess.sessionTeam == team && (clientEnt->health > 0 || includeDead) ) {
+//		if ( clientEnt->client->sess.sessionTeam == team && (clientEnt->health > 0 || includeDead) ) {
+		if ( clientEnt->client->sess.sessionTeam == team && !G_FreezeIsFrozen( clientEnt ) && (clientEnt->health > 0 || includeDead) ) {	// ~Dimmskii - Frozen sits at health 1 by design, so exclude it like QL's pm_type != PM_NORMAL does or a fully frozen team banks health into a round timeout tiebreak
 			totalHealth += clientEnt->health;
 		}
 	}
@@ -205,7 +242,10 @@ int Team_CountTotalArmor( team_t team, qboolean includeDead ) {
 TeamplayPositionMessage
 
 Lightweight position-only message for teammates
-Format: "tpos <count> <clientNum> <x> <y> <z> ..."
+Format: "tpos <count> <clientNum> <x> <y> <z> <frozen> ..."
+
+Field count must stay in lockstep with TPOS_FIELDS in cg_servercmds.c - the parser
+strides by it, so a mismatch shifts every teammate past the first.
 ==================
 */
 static void TeamplayPositionMessage( gentity_t *ent ) {
@@ -244,11 +284,15 @@ static void TeamplayPositionMessage( gentity_t *ent ) {
 			continue;
 		}
 
-        j = BG_sprintf( entry, " %i %i %i %i",
+        // Frozen rides along because this message exists for teammates the client
+        // cannot see: off-PVS there is no entity state to read the powerup marker
+        // from, so the POI has nothing else to gate its icon on.
+        j = BG_sprintf( entry, " %i %i %i %i %i",
             i,
             (int)player->client->ps.origin[0],
             (int)player->client->ps.origin[1],
-            (int)player->client->ps.origin[2] );
+            (int)player->client->ps.origin[2],
+            G_FreezeIsFrozen( player ) ? 1 : 0 );
 
         if ( stringlength + j >= sizeof( string ) )
             break;

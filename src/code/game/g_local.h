@@ -247,7 +247,20 @@ typedef struct {
 	int			teamVoted;
 
 	qboolean	inGame;
+
+	int			killCommandTime;	// ~Dimmskii - level.time of the last /kill, -1 if never; drives the g_allowKill throttle
 } clientPersistant_t;
+
+// ~Dimmskii -- Per-match stats that have nowhere to go in ps.persistant[]: that
+// array is full (MAX_PERSISTANT 16, PERS_ROUNDWINS is index 15) and lives inside
+// playerState_t, so growing it would be a protocol change. QL keeps its extra
+// stats server-side the same way and ships them out with the scoreboard.
+typedef struct {
+	int			thawsGiven;			// frozen teammates this player freed
+	int			thawsReceived;		// times this player was freed by someone
+	int			timesFrozen;		// times this player was frozen
+} clientMatchStats_t;
+// END Dimmskii
 
 // unlagged
 #define NUM_CLIENT_HISTORY 18
@@ -313,6 +326,23 @@ struct gclient_s {
 	gentity_t	*hook;				// grapple hook if out
 
 	int			switchTeamTime;		// time the player switched teams
+
+// ~Dimmskii -- Freeze Tag per-client state. Server-side only; the client learns
+// a player is frozen from the PW_NUM_POWERUPS marker bit, so none of this is
+// protocol. See g_freeze.c.
+	qboolean	freezeFrozen;			// currently frozen
+	int			freezeTime;				// level.time we were frozen
+	int			freezeThawTimeRemaining;// ms of contact still needed to thaw
+	int			freezeLastHelper;		// clientNum of the last thawer, -1 for none
+	int			freezeAutoThawTime;		// level.time to auto-thaw at, 0 = never
+	int			freezeEnvRespawnTime;	// level.time to respawn an environmentally frozen player, 0 = n/a
+
+	// Per-match stats that cannot live in ps.persistant[] - that array is full at
+	// MAX_PERSISTANT (16/16, PERS_ROUNDWINS is the last slot) and sits inside
+	// playerState_t, so adding to it would change the network protocol. Server
+	// side only; reaches clients through the scoreboard payload like QL does.
+	clientMatchStats_t	matchStats;
+// END Dimmskii
 
 	// timeResidual is used to handle events that happen every second
 	// like health / armor countdowns and regeneration
@@ -434,6 +464,7 @@ typedef struct {
 // ~DIMMSKII
 	int			arenaRoundQueued;		// Same as intermission time for ARENA_ROUND_DELAY_TIME (see g_team.c)
 	int			roundNumber;			// current round for round-based gametypes; set to 1 in G_WarmupEnd, incremented in Arena_BeginRound. Broadcast via CS_ROUND_NUMBER for CG_ROUND.
+	qboolean	freezeTeamWipeScored[TEAM_NUM_TEAMS];	// latch so a full-team freeze scores once, not once per frame, when g_freezeTeamWipeRespawn leaves the team frozen
 // END ~DIMMSKII
 	
 	vec3_t		intermission_origin;	// also used for spectator spawns
@@ -591,6 +622,7 @@ void Touch_DoorTrigger( gentity_t *ent, gentity_t *other, trace_t *trace );
 // g_trigger.c
 //
 void trigger_teleporter_touch (gentity_t *self, gentity_t *other, trace_t *trace );
+void hurt_touch( gentity_t *self, gentity_t *other, trace_t *trace );	// ~Dimmskii - so G_TouchTriggers can single out hazard triggers
 
 
 //

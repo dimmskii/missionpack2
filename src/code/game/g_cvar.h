@@ -196,6 +196,27 @@ G_CVAR( g_capturelimit, "capturelimit", "8", CVAR_SERVERINFO | CVAR_NORESTART, 0
 G_CVAR( g_roundlimit, "roundlimit", "10", CVAR_SERVERINFO | CVAR_NORESTART, 0, qtrue, qfalse )
 G_CVAR( g_roundtimelimit, "roundtimelimit", "180", CVAR_SERVERINFO | CVAR_NORESTART, 0, qtrue, qfalse )
 
+// Freeze Tag. The mechanic is gated on G_FreezeEnabled() - gametype GT_FREEZE OR
+// this cvar - so it can also be switched on inside other round-based gametypes.
+// Reaches the client through CS_SERVER_SETTINGS_INFO_A, not serverinfo.
+// Defaults mirror QL-SRP's so a stock Freeze game plays like retail.
+G_CVAR( g_freeze, "g_freeze", "0", 0, 0, qtrue, qfalse )
+G_CVAR( g_freezeThawTime, "g_freezeThawTime", "2000", 0, 0, qtrue, qfalse )						// ms of contact to thaw
+G_CVAR( g_freezeThawRadius, "g_freezeThawRadius", "96", 0, 0, qtrue, qfalse )					// units a helper must be within
+G_CVAR( g_freezeAutoThawTime, "g_freezeAutoThawTime", "120000", 0, 0, qtrue, qfalse )			// 0 = never auto-thaw
+G_CVAR( g_freezeRoundDelay, "g_freezeRoundDelay", "4000", 0, 0, qtrue, qfalse )					// ms between round end and next warmup
+G_CVAR( g_freezeEnvironmentalRespawnDelay, "g_freezeEnvironmentalRespawnDelay", "5000", 0, 0, qtrue, qfalse )	// ms before a lava/void freeze respawns
+G_CVAR( g_freezeThawWinningTeam, "g_freezeThawWinningTeam", "1", 0, 0, qtrue, qfalse )			// thaw+respawn the winners at round end
+G_CVAR( g_freezeThawTick, "g_freezeThawTick", "1", 0, 0, qtrue, qfalse )						// 0 = silent thaw, no per-second tick
+G_CVAR( g_freezeThawThroughSurface, "g_freezeThawThroughSurface", "0", 0, 0, qtrue, qfalse )	// 1 = thaw through walls, 0 = needs line of sight
+G_CVAR( g_freezeProtectedSpawnTime, "g_freezeProtectedSpawnTime", "0", 0, 0, qtrue, qfalse )	// ms of invulnerability after a thaw
+G_CVAR( g_freezeResetWeaponsOnRound, "g_freezeResetWeaponsOnRound", "1", 0, 0, qtrue, qfalse )	// 0 = keep loadout and position across rounds
+G_CVAR( g_freezeResetHealthOnRound, "g_freezeResetHealthOnRound", "1", 0, 0, qtrue, qfalse )	// only consulted when weapons are not reset
+G_CVAR( g_freezeResetArmorOnRound, "g_freezeResetArmorOnRound", "1", 0, 0, qtrue, qfalse )		// only consulted when weapons are not reset
+G_CVAR( g_freezeRemovePowerupsOnRound, "g_freezeRemovePowerupsOnRound", "1", 0, 0, qtrue, qfalse )	// only consulted when weapons are not reset
+G_CVAR( g_freezeTeamWipeScore, "g_freezeTeamWipeScore", "1", 0, 0, qtrue, qfalse )				// points for freezing a whole team in a roundless team game; 0 = off
+G_CVAR( g_freezeTeamWipeRespawn, "g_freezeTeamWipeRespawn", "2", 0, 0, qtrue, qfalse )			// who thaws on a full-team freeze: 0 nobody, 1 the wiped side, 2 every frozen player
+
 G_CVAR( g_teamVisibility, "g_teamVisibility", "1", CVAR_SERVERINFO, 0, qtrue, qfalse )
 G_CVAR( g_itemVisibility, "g_itemVisibility", "1", CVAR_SERVERINFO, 0, qtrue, qfalse )	// TODO: break up into perhaps g_flagVisibility, g_powerupVisibility, etc.
 G_CVAR( g_itemTimers, "g_itemTimers", "1", CVAR_SERVERINFO, 0, qtrue, qfalse )
@@ -203,6 +224,8 @@ G_CVAR( g_itemTimers, "g_itemTimers", "1", CVAR_SERVERINFO, 0, qtrue, qfalse )
 G_CVAR( g_allSpec, "g_allSpec", "0", CVAR_SERVERINFO, 0, qtrue, qfalse )
 
 G_CVAR( g_allowHandicap, "g_allowHandicap", "0", 0, 0, qtrue, qfalse )
+G_CVAR( g_allowKill, "g_allowKill", "1000", 0, 0, qtrue, qfalse ) // ms between /kill commands; 0 = instant, negative = disabled outright
+G_CVAR( g_dropPowerups, "g_dropPowerups", "1", 0, 0, qtrue, qfalse ) // 0 = held powerups (quad, regen, invis...) are destroyed on death instead of dropped; flags always drop
 
 // Starting health/armor
 G_CVAR( g_startingArmor, "g_startingArmor", "0", 0, 0, qtrue, qfalse )

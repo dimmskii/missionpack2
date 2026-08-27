@@ -1117,14 +1117,14 @@ qboolean CG_OwnerDrawVisible(int flags) {
 	}
 
 // ~Dimmskii
-	if (flags & CG_SHOW_ANYARENAGAME) {
-		if( !GT_IsArenaGame(cgs.gametype) ) {
+	if (flags & CG_SHOW_ANYROUNDGAME) {
+		if( !GT_IsRoundBased(cgs.gametype) ) {
 			return qfalse;
 		}
 	}
 
-	if (flags & CG_SHOW_ANYNONARENAGAME) {
-		if( GT_IsArenaGame(cgs.gametype)  ) {
+	if (flags & CG_SHOW_ANYNONROUNDGAME) {
+		if( GT_IsRoundBased(cgs.gametype)  ) {
 			return qfalse;
 		}
 	}
@@ -1186,11 +1186,24 @@ qboolean CG_OwnerDrawVisible(int flags) {
 		}
 	}
 
-	if (flags & CG_SHOW_SINGLEPLAYER) {
-		if( cgs.gametype == GT_SINGLE_PLAYER ) {
+//	if (flags & CG_SHOW_SINGLEPLAYER) {
+//		if( cgs.gametype == GT_SINGLE_PLAYER ) {
+//			return qtrue;
+//		}
+//	}
+
+// ~Dimmskii
+	if (flags & CG_SHOW_CLAN_ARENA) {	// QL Compat
+		if( cgs.gametype == GT_CLAN_ARENA ) {
 			return qtrue;
 		}
 	}
+	if (flags & CG_SHOW_DOMINATION) {	// QL Compat
+		if( cgs.gametype == GT_DOMINATION ) {
+			return qtrue;
+		}
+	}
+// END Dimmskii
 
 	if (flags & CG_SHOW_TOURNAMENT) {
 		if( cgs.gametype == GT_TOURNAMENT ) {
@@ -1198,8 +1211,8 @@ qboolean CG_OwnerDrawVisible(int flags) {
 		}
 	}
 
-	if (flags & CG_SHOW_DURINGINCOMINGVOICE) {
-	}
+//	if (flags & CG_SHOW_DURINGINCOMINGVOICE) {	// FIXME: ?
+//	}
 
 	if (flags & CG_SHOW_IF_PLAYER_HAS_FLAG) {
 		if (cg.snap->ps.powerups[PW_REDFLAG] || cg.snap->ps.powerups[PW_BLUEFLAG] || cg.snap->ps.powerups[PW_NEUTRALFLAG]) {
@@ -1280,7 +1293,7 @@ static void CG_DrawCapFragLimit(rectDef_t *rect, float scale, vec4_t color, qhan
 	//int limit = (cgs.gametype >= GT_CTF) ? cgs.capturelimit : cgs.fraglimit;
 // ~Dimmskii
 	int limit;
-	if ( GT_IsArenaGame(cgs.gametype) ) {
+	if ( GT_IsRoundBased(cgs.gametype) ) {
 		limit = cgs.roundlimit;
 	} else if ( GT_IsFlagGame(cgs.gametype) ) {
 		limit = cgs.capturelimit;
